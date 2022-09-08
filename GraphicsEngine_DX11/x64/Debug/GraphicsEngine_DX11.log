@@ -1,0 +1,10 @@
+﻿  pch.cpp
+  Device.cpp
+  dllmain.cpp
+  EnginePch.cpp
+  GraphicsEngine_DX11.cpp
+  Graphics_Interface.cpp
+  코드를 생성하고 있습니다...
+  LINK : C:\Users\KOCCA06\Desktop\NewBieEngine\Output\GraphicsEngine_DX11.dll을(를) 찾을 수 없거나 마지막 증분 링크에 의해 빌드되지 않았습니다. 전체 링크를 수행하고 있습니다.
+     C:\Users\KOCCA06\Desktop\NewBieEngine\Output\GraphicsEngine_DX11.lib 라이브러리 및 C:\Users\KOCCA06\Desktop\NewBieEngine\Output\GraphicsEngine_DX11.exp 개체를 생성하고 있습니다.
+  GraphicsEngine_DX11.vcxproj -> C:\Users\KOCCA06\Desktop\NewBieEngine\Output\GraphicsEngine_DX11.dll
