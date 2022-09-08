@@ -33,3 +33,7 @@
 *.ipch
 *.db
 *.config
+.vs/GraphicsEngine_DX11/v16/Browse.VC.opendb
+.vs/GraphicsEngine_DX11/v16/Browse.VC.db-wal
+.vs/GraphicsEngine_DX11/v16/Browse.VC.db-shm
+.vs/GraphicsEngine_DX11/v16/.suo
