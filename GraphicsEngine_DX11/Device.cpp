@@ -3,7 +3,7 @@
 
 namespace GraphicsEngine
 {
-	void GraphicsEngine::Device::Initialize(WindowInfo& info)
+	void Device::Initialize(WindowInfo& info)
 	{
 		D3D_FEATURE_LEVEL featureLevel;						// 피쳐 레벨
 		UINT createDeviceFlags = 0;							// 플래그
@@ -35,7 +35,7 @@ namespace GraphicsEngine
 		assert(info.MSAAQuality_4x > 0);					// 4X MSAA가 항상 지원되므로, 반환된 품질 수준 값은 반드시 0보다 커야 한다.
 	}
 
-	void GraphicsEngine::Device::Release()
+	void Device::Release()
 	{
 		_device.ReleaseAndGetAddressOf();
 		_deviceContext.ReleaseAndGetAddressOf();

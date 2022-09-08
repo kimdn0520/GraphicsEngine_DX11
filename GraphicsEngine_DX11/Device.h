@@ -1,5 +1,6 @@
 #pragma once
 #include "WindowInfo.h"
+
 namespace GraphicsEngine
 {
 	class Device

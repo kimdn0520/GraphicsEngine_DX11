@@ -2,7 +2,7 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>C:\Users\KOCCA06\Desktop\NewBieEngine\Output\GraphicsEngine_DX11.dll</FullPath>
+      <FullPath>D:\GraphicsEngine_DX11\Output\GraphicsEngine_DX11.dll</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />

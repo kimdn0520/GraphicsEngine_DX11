@@ -1,8 +1,13 @@
 #pragma once
 #include "Graphics_Interface.h"
+#include "WindowInfo.h"
 
 namespace GraphicsEngine
 {
+	class Device;
+	class SwapChain;
+	class DepthStencilState;
+		
 	class GraphicsEngine_DX11 : public Graphics_Interface
 	{
 	public:
@@ -10,6 +15,15 @@ namespace GraphicsEngine
 		virtual ~GraphicsEngine_DX11() = default;
 
 	private:
+		WindowInfo _windowInfo;
+
+		Device* _device;
+		SwapChain* _swapChain;
+
+		DepthStencilState* _depthStencilState;
+		DepthStencilState* _disableDepthStencilState;
+		DepthStencilState* _skyBoxDepthStencilState;
+
 		
 
 	public:

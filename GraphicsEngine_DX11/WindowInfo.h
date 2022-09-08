@@ -10,5 +10,7 @@ namespace GraphicsEngine
 
 		bool enable4xMSAA;
 		unsigned int MSAAQuality_4x;
+
+		bool fullScreen;
 	};
 }
