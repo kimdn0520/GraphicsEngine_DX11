@@ -7,6 +7,9 @@ namespace GraphicsEngine
 	class Device;
 	class SwapChain;
 	class DepthStencilState;
+	class RasterizerState;
+	class RenderTargetView;
+	class BlendState;
 		
 	class GraphicsEngine_DX11 : public Graphics_Interface
 	{
@@ -24,7 +27,13 @@ namespace GraphicsEngine
 		DepthStencilState* _disableDepthStencilState;
 		DepthStencilState* _skyBoxDepthStencilState;
 
-		
+		RasterizerState* _wireRasterizerState;
+		RasterizerState* _solidRasterizerState;
+		RasterizerState* _solidNoneCullRasterizerState;
+
+		RenderTargetView* _mainRenderTargetView;
+
+		BlendState* _alphaBlendState;
 
 	public:
 		virtual void Initialize(HWND hwnd, int screenWidth, int screenHeight) override;

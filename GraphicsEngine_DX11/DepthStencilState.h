@@ -10,7 +10,7 @@ namespace GraphicsEngine
 	public:
 		ComPtr<ID3D11DepthStencilState> GetDepthStencilState() { return _depthStencilState; }
 
-		void Init(ComPtr<ID3D11Device> device, bool depthEnable, D3D11_COMPARISON_FUNC depthFuc);
+		void Initialize(ComPtr<ID3D11Device> device, bool depthEnable, D3D11_COMPARISON_FUNC depthFuc);
 
 		void Release();
 	};

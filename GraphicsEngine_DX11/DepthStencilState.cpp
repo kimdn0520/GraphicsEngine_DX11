@@ -3,7 +3,7 @@
 
 namespace GraphicsEngine
 {
-	void DepthStencilState::Init(ComPtr<ID3D11Device> device, bool depthEnable, D3D11_COMPARISON_FUNC depthFuc)
+	void DepthStencilState::Initialize(ComPtr<ID3D11Device> device, bool depthEnable, D3D11_COMPARISON_FUNC depthFuc)
 	{
 		D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
 		ZeroMemory(&depthStencilDesc, sizeof(D3D11_DEPTH_STENCIL_DESC));
