@@ -42,9 +42,11 @@ namespace GraphicsEngine
 
 		virtual void OnResize(const int& screenWidth, const int& screenHeight) override;
 
-		// beginrenderbackbuffer -> 백버퍼 초기화
+		virtual void MainBackBufferRender() override;
 		 
-		// endrender -> present
+		virtual void RenderingDataRender() override;
+
+		virtual void Present() override;
 	};
 }
 

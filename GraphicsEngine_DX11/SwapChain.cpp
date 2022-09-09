@@ -70,5 +70,6 @@ namespace GraphicsEngine
 	void SwapChain::Release()
 	{
 		_swapChain.ReleaseAndGetAddressOf();
+		delete this;
 	}
 }

@@ -19,6 +19,12 @@ public:
 	virtual GraphicsEngine_DLL void Release() abstract;
 
 	virtual GraphicsEngine_DLL void OnResize(const int& screenWidth, const int& screenHeight) abstract;
+
+	virtual GraphicsEngine_DLL void MainBackBufferRender() abstract;
+
+	virtual GraphicsEngine_DLL void RenderingDataRender() abstract;
+
+	virtual GraphicsEngine_DLL void Present() abstract;
 };
 
 

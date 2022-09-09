@@ -34,15 +34,15 @@ namespace GraphicsEngine
 
 	void GraphicsEngine_DX11::Release()
 	{
-		_device->Release();
-
 		_swapChain->Release();
-
 		_depthStencilState->Release();
-
 		_disableDepthStencilState->Release();
-
 		_skyBoxDepthStencilState->Release();
+		_wireRasterizerState->Release();
+		_solidRasterizerState->Release();
+		_solidNoneCullRasterizerState->Release();
+		_alphaBlendState->Release();
+		_device->Release();
 	}
 
 	void GraphicsEngine_DX11::OnResize(const int& screenWidth, const int& screenHeight)
@@ -73,5 +73,35 @@ namespace GraphicsEngine
 			// OnResize 시 주의 
 			_device->GetDeviceContext()->OMSetDepthStencilState(_depthStencilState->GetDepthStencilState().Get(), 1);
 		}
+	}
+
+	void GraphicsEngine_DX11::MainBackBufferRender()
+	{
+		float color[4];
+
+		// Setup the color to clear the buffer to. 
+		color[0] = 0.5f;
+		color[1] = 0.5f;
+		color[2] = 0.5f;
+		color[3] = 0.5f;
+
+		// Clear the back buffer.
+		_device->GetDeviceContext()->ClearRenderTargetView(_mainRenderTargetView->GetRenderTargetView().Get(), color);
+		
+		// Clear the depth buffer. 
+		_device->GetDeviceContext()->ClearDepthStencilView(_mainRenderTargetView->GetDepthStencilView().Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	}
+
+	void GraphicsEngine_DX11::RenderingDataRender()
+	{
+		// 렌더 전에 라이트부터 업데이트 시키자
+		/*LightManager::GetInstance()->Update();
+
+		RenderManager::GetInstance()->Render();*/
+	}
+
+	void GraphicsEngine_DX11::Present()
+	{
+		_swapChain->GetSwapChain()->Present(0, 0);
 	}
 }

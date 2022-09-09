@@ -31,6 +31,7 @@ namespace GraphicsEngine
 	void DepthStencilState::Release()
 	{
 		_depthStencilState.ReleaseAndGetAddressOf();
+		delete this;
 	}
 }
 

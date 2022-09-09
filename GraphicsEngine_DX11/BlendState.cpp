@@ -27,5 +27,6 @@ namespace GraphicsEngine
 	void BlendState::Release()
 	{
 		_blendState.ReleaseAndGetAddressOf();
+		delete this;
 	}
 }

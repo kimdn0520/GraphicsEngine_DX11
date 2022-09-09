@@ -39,6 +39,7 @@ namespace GraphicsEngine
 	{
 		_device.ReleaseAndGetAddressOf();
 		_deviceContext.ReleaseAndGetAddressOf();
+		delete this;
 	}
 }
 

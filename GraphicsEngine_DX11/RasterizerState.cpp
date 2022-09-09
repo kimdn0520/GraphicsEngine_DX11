@@ -26,5 +26,6 @@ namespace GraphicsEngine
 	void RasterizerState::Release()
 	{
 		_rasterizerState.ReleaseAndGetAddressOf();
+		delete this;
 	}
 }
