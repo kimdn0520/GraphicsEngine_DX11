@@ -11,6 +11,18 @@
     <Filter Include="Core">
       <UniqueIdentifier>{3e8f1a9c-fbe3-4af7-b50b-8d7cee62a749}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Manager">
+      <UniqueIdentifier>{482951d7-d80a-426f-b206-5e92c45d7669}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils\Define">
+      <UniqueIdentifier>{ff0a88c4-55c6-487e-b377-b4e22d512b76}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Export">
+      <UniqueIdentifier>{3bb40674-fc55-4211-89a9-6949d48f80ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{08fa4b76-6719-457b-9d27-3254545f6853}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -49,6 +61,33 @@
     <ClInclude Include="BlendState.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="LightManager.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderManager.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="ConstantBufferDefine.h">
+      <Filter>Utils\Define</Filter>
+    </ClInclude>
+    <ClInclude Include="SamplerStateDefine.h">
+      <Filter>Utils\Define</Filter>
+    </ClInclude>
+    <ClInclude Include="VertexDefine.h">
+      <Filter>Utils\Define</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics_PerFrameData.h">
+      <Filter>Export</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceManager.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EnginePch.cpp">
@@ -83,6 +122,21 @@
     </ClCompile>
     <ClCompile Include="BlendState.cpp">
       <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="LightManager.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderManager.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManager.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Resources</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

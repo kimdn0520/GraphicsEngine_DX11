@@ -47,6 +47,10 @@ namespace GraphicsEngine
 		virtual void RenderingDataRender() override;
 
 		virtual void Present() override;
+
+		virtual ComPtr<ID3D11Device> GetDevice() override;
+
+		virtual ComPtr<ID3D11DeviceContext> GetDeviceContext() override;
 	};
 }
 

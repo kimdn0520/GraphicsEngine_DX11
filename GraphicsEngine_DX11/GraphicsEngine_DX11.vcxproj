@@ -160,16 +160,25 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="BlendState.h" />
+    <ClInclude Include="ConstantBufferDefine.h" />
     <ClInclude Include="DepthStencilState.h" />
     <ClInclude Include="Device.h" />
     <ClInclude Include="EnginePch.h" />
     <ClInclude Include="GraphicsEngineDLL.h" />
     <ClInclude Include="GraphicsEngine_DX11.h" />
     <ClInclude Include="Graphics_Interface.h" />
+    <ClInclude Include="Graphics_PerFrameData.h" />
+    <ClInclude Include="LightManager.h" />
+    <ClInclude Include="Mesh.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="RasterizerState.h" />
+    <ClInclude Include="RenderManager.h" />
     <ClInclude Include="RenderTargetView.h" />
+    <ClInclude Include="ResourceManager.h" />
+    <ClInclude Include="SamplerStateDefine.h" />
     <ClInclude Include="SwapChain.h" />
+    <ClInclude Include="Texture.h" />
+    <ClInclude Include="VertexDefine.h" />
     <ClInclude Include="WindowInfo.h" />
   </ItemGroup>
   <ItemGroup>
@@ -180,6 +189,8 @@
     <ClCompile Include="EnginePch.cpp" />
     <ClCompile Include="GraphicsEngine_DX11.cpp" />
     <ClCompile Include="Graphics_Interface.cpp" />
+    <ClCompile Include="LightManager.cpp" />
+    <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -187,8 +198,11 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="RasterizerState.cpp" />
+    <ClCompile Include="RenderManager.cpp" />
     <ClCompile Include="RenderTargetView.cpp" />
+    <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="SwapChain.cpp" />
+    <ClCompile Include="Texture.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

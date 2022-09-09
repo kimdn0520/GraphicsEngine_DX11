@@ -7,6 +7,9 @@
 #include "RenderTargetView.h"
 #include "BlendState.h"
 
+#include "LightManager.h"
+#include "ResourceManager.h"
+
 namespace GraphicsEngine
 {
 	void GraphicsEngine_DX11::Initialize(HWND hwnd, int screenWidth, int screenHeight)
@@ -30,10 +33,17 @@ namespace GraphicsEngine
 		_swapChain->Initialize(_windowInfo, _device);
 		
 		OnResize(screenWidth, screenHeight);
+
+		// Manager initialize
+		LightManager::Get()->Initialize();
+		ResourceManager::Get()->Initialize();
 	}
 
 	void GraphicsEngine_DX11::Release()
 	{
+		LightManager::Get()->ResetLightInfo();
+		ResourceManager::Get()->Release();
+
 		_swapChain->Release();
 		_depthStencilState->Release();
 		_disableDepthStencilState->Release();
@@ -95,13 +105,23 @@ namespace GraphicsEngine
 	void GraphicsEngine_DX11::RenderingDataRender()
 	{
 		// 렌더 전에 라이트부터 업데이트 시키자
-		/*LightManager::GetInstance()->Update();
+		LightManager::Get()->Update();
 
-		RenderManager::GetInstance()->Render();*/
+		//RenderManager::Get()->Render();
 	}
 
 	void GraphicsEngine_DX11::Present()
 	{
 		_swapChain->GetSwapChain()->Present(0, 0);
+	}
+
+	ComPtr<ID3D11Device> GraphicsEngine_DX11::GetDevice()
+	{
+		return _device->GetDevice();
+	}
+
+	ComPtr<ID3D11DeviceContext> GraphicsEngine_DX11::GetDeviceContext()
+	{
+		return _device->GetDeviceContext();
 	}
 }

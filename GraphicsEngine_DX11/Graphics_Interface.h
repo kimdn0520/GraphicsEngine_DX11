@@ -25,6 +25,10 @@ public:
 	virtual GraphicsEngine_DLL void RenderingDataRender() abstract;
 
 	virtual GraphicsEngine_DLL void Present() abstract;
+
+	virtual GraphicsEngine_DLL ComPtr<ID3D11Device> GetDevice() abstract;
+
+	virtual GraphicsEngine_DLL ComPtr<ID3D11DeviceContext> GetDeviceContext() abstract;
 };
 
 
