@@ -31,6 +31,9 @@ namespace GraphicsEngine
 
 		_device->Initialize(_windowInfo);
 		_swapChain->Initialize(_windowInfo, _device);
+		_solidRasterizerState->Initialize(_device->GetDevice(), D3D11_CULL_BACK, D3D11_FILL_SOLID);
+		_wireRasterizerState->Initialize(_device->GetDevice(), D3D11_CULL_BACK, D3D11_FILL_WIREFRAME);
+		_solidNoneCullRasterizerState->Initialize(_device->GetDevice(), D3D11_CULL_NONE, D3D11_FILL_SOLID);
 		
 		OnResize(screenWidth, screenHeight);
 
@@ -123,5 +126,20 @@ namespace GraphicsEngine
 	ComPtr<ID3D11DeviceContext> GraphicsEngine_DX11::GetDeviceContext()
 	{
 		return _device->GetDeviceContext();
+	}
+
+	ComPtr<ID3D11RasterizerState> GraphicsEngine_DX11::GetWire()
+	{
+		return _wireRasterizerState->GetrasterizerState();
+	}
+
+	ComPtr<ID3D11RasterizerState> GraphicsEngine_DX11::GetSolid()
+	{
+		return _solidRasterizerState->GetrasterizerState();
+	}
+
+	ComPtr<ID3D11RasterizerState> GraphicsEngine_DX11::GetSolidNoneCull()
+	{
+		return _solidNoneCullRasterizerState->GetrasterizerState();
 	}
 }

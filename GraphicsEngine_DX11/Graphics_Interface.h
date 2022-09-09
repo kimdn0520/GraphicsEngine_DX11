@@ -29,6 +29,12 @@ public:
 	virtual GraphicsEngine_DLL ComPtr<ID3D11Device> GetDevice() abstract;
 
 	virtual GraphicsEngine_DLL ComPtr<ID3D11DeviceContext> GetDeviceContext() abstract;
+
+	virtual GraphicsEngine_DLL ComPtr<ID3D11RasterizerState> GetWire() abstract;
+
+	virtual GraphicsEngine_DLL ComPtr<ID3D11RasterizerState> GetSolid() abstract;
+
+	virtual GraphicsEngine_DLL ComPtr<ID3D11RasterizerState> GetSolidNoneCull() abstract;
 };
 
 

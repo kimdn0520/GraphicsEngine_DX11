@@ -54,4 +54,9 @@ namespace GraphicsEngine
 
 		_textures.insert(make_pair(name, texture));
 	}
+
+	Mesh* ResourceManager::GetMesh(std::string name)
+	{
+		return _meshs[name];
+	}
 }

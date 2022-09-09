@@ -34,7 +34,7 @@ namespace GraphicsEngine
 		RenderTargetView* _mainRenderTargetView;
 
 		BlendState* _alphaBlendState;
-
+		
 	public:
 		virtual void Initialize(HWND hwnd, int screenWidth, int screenHeight) override;
 
@@ -51,6 +51,12 @@ namespace GraphicsEngine
 		virtual ComPtr<ID3D11Device> GetDevice() override;
 
 		virtual ComPtr<ID3D11DeviceContext> GetDeviceContext() override;
+
+		virtual ComPtr<ID3D11RasterizerState> GetWire() override;
+
+		virtual ComPtr<ID3D11RasterizerState> GetSolid() override;
+
+		virtual ComPtr<ID3D11RasterizerState> GetSolidNoneCull() override;
 	};
 }
 

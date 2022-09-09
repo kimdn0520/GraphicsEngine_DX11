@@ -171,14 +171,19 @@
     <ClInclude Include="LightManager.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="PixelShader.h" />
     <ClInclude Include="RasterizerState.h" />
     <ClInclude Include="RenderManager.h" />
     <ClInclude Include="RenderTargetView.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="SamplerStateDefine.h" />
+    <ClInclude Include="ShaderBase.h" />
+    <ClInclude Include="ShaderManager.h" />
+    <ClInclude Include="ShaderResource.h" />
     <ClInclude Include="SwapChain.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="VertexDefine.h" />
+    <ClInclude Include="VertexShader.h" />
     <ClInclude Include="WindowInfo.h" />
   </ItemGroup>
   <ItemGroup>
@@ -197,12 +202,17 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="PixelShader.cpp" />
     <ClCompile Include="RasterizerState.cpp" />
     <ClCompile Include="RenderManager.cpp" />
     <ClCompile Include="RenderTargetView.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
+    <ClCompile Include="ShaderBase.cpp" />
+    <ClCompile Include="ShaderManager.cpp" />
+    <ClCompile Include="ShaderResource.cpp" />
     <ClCompile Include="SwapChain.cpp" />
     <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="VertexShader.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

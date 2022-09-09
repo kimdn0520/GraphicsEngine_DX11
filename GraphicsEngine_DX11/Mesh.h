@@ -10,6 +10,8 @@ namespace GraphicsEngine
 
 		ComPtr<ID3D11Buffer> indexBuffer;
 
+		ComPtr<ID3D11RasterizerState> rasterState;
+
 		D3D11_PRIMITIVE_TOPOLOGY topology;
 
 		unsigned int indexBufferSize;
@@ -21,6 +23,22 @@ namespace GraphicsEngine
 		void CreateVertexBuffer(const std::vector<T>& vertices);
 
 		void CreateIndexBuffer(const std::vector<unsigned int>& indexBuffer);
+	
+		unsigned int& GetIdxBufferSize() { return indexBufferSize; }
+
+		const ComPtr<ID3D11Buffer>& GetVertexBuffer() { return vertexBuffer; }
+
+		const ComPtr<ID3D11Buffer>& GetIndexBuffer() { return indexBuffer; }
+
+		const ComPtr<ID3D11RasterizerState>& GetRasterState() { return rasterState; }
+
+		D3D11_PRIMITIVE_TOPOLOGY GetPrimitiveTopology() { return topology; }
+
+		void SetRenderState(ComPtr<ID3D11RasterizerState> rasterState) { rasterState = rasterState; }
+
+		void SetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY topology) { topology = topology; }
+
+		void SetIndexBufferSize(unsigned int indexBufferSize) { indexBufferSize = indexBufferSize; }
 	};
 
 	template<typename T>

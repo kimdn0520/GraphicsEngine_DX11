@@ -14,14 +14,35 @@
     <Filter Include="Manager">
       <UniqueIdentifier>{482951d7-d80a-426f-b206-5e92c45d7669}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Utils\Define">
-      <UniqueIdentifier>{ff0a88c4-55c6-487e-b377-b4e22d512b76}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Export">
       <UniqueIdentifier>{3bb40674-fc55-4211-89a9-6949d48f80ff}</UniqueIdentifier>
     </Filter>
     <Filter Include="Resources">
       <UniqueIdentifier>{08fa4b76-6719-457b-9d27-3254545f6853}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader">
+      <UniqueIdentifier>{690a0eef-8a51-443b-96b1-99a5053f022b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader\Define">
+      <UniqueIdentifier>{ff0a88c4-55c6-487e-b377-b4e22d512b76}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader\HLSL">
+      <UniqueIdentifier>{d12ce04e-d0fa-4a43-a1f4-b39778ffcf7f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader\ShaderBase">
+      <UniqueIdentifier>{f4b3cc69-a9a4-4344-aa74-f2b9b26938fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader\Pass">
+      <UniqueIdentifier>{adb446a2-09dc-43ce-a332-7216208eae9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader\VertexShader">
+      <UniqueIdentifier>{a405c9d0-b9f2-4edf-9127-51697819793d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader\PixelShader">
+      <UniqueIdentifier>{871447cc-3401-46c1-bc5f-9d443299b856}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader\ShaderResource">
+      <UniqueIdentifier>{07508f74-3f57-4d6b-bf55-119b16b8d66f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -68,13 +89,13 @@
       <Filter>Manager</Filter>
     </ClInclude>
     <ClInclude Include="ConstantBufferDefine.h">
-      <Filter>Utils\Define</Filter>
+      <Filter>Shader\Define</Filter>
     </ClInclude>
     <ClInclude Include="SamplerStateDefine.h">
-      <Filter>Utils\Define</Filter>
+      <Filter>Shader\Define</Filter>
     </ClInclude>
     <ClInclude Include="VertexDefine.h">
-      <Filter>Utils\Define</Filter>
+      <Filter>Shader\Define</Filter>
     </ClInclude>
     <ClInclude Include="Graphics_PerFrameData.h">
       <Filter>Export</Filter>
@@ -87,6 +108,21 @@
     </ClInclude>
     <ClInclude Include="Mesh.h">
       <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderManager.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderBase.h">
+      <Filter>Shader\ShaderBase</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderResource.h">
+      <Filter>Shader\ShaderResource</Filter>
+    </ClInclude>
+    <ClInclude Include="VertexShader.h">
+      <Filter>Shader\VertexShader</Filter>
+    </ClInclude>
+    <ClInclude Include="PixelShader.h">
+      <Filter>Shader\PixelShader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -137,6 +173,21 @@
     </ClCompile>
     <ClCompile Include="Mesh.cpp">
       <Filter>Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderManager.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderBase.cpp">
+      <Filter>Shader\ShaderBase</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderResource.cpp">
+      <Filter>Shader\ShaderResource</Filter>
+    </ClCompile>
+    <ClCompile Include="VertexShader.cpp">
+      <Filter>Shader\VertexShader</Filter>
+    </ClCompile>
+    <ClCompile Include="PixelShader.cpp">
+      <Filter>Shader\PixelShader</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
