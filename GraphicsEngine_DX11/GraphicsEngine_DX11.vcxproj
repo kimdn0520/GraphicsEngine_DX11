@@ -168,6 +168,7 @@
     <ClInclude Include="GraphicsEngine_DX11.h" />
     <ClInclude Include="Graphics_Interface.h" />
     <ClInclude Include="Graphics_PerFrameData.h" />
+    <ClInclude Include="Graphics_RenderingData.h" />
     <ClInclude Include="LightManager.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="pch.h" />

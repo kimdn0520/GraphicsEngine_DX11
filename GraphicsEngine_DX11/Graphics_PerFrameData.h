@@ -19,3 +19,13 @@ struct LightInfo
 	float		range;
 	float		spot;
 };
+
+struct CameraInfo
+{
+	DirectX::SimpleMath::Vector3 worldPos;
+
+	DirectX::SimpleMath::Matrix viewTM;
+	DirectX::SimpleMath::Matrix projTM;
+	DirectX::SimpleMath::Matrix orthoProjTM;
+	DirectX::SimpleMath::Matrix reflectionTM;
+};

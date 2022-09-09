@@ -9,6 +9,7 @@
 
 #include "LightManager.h"
 #include "ResourceManager.h"
+#include "ShaderManager.h"
 
 namespace GraphicsEngine
 {
@@ -40,12 +41,15 @@ namespace GraphicsEngine
 		// Manager initialize
 		LightManager::Get()->Initialize();
 		ResourceManager::Get()->Initialize();
+		ShaderManager::Get()->SetFilePath(L"Data/Shader/");
+		ShaderManager::Get()->CreateAllShaders();
 	}
 
 	void GraphicsEngine_DX11::Release()
 	{
 		LightManager::Get()->ResetLightInfo();
 		ResourceManager::Get()->Release();
+		ShaderManager::Get()->Release();
 
 		_swapChain->Release();
 		_depthStencilState->Release();
