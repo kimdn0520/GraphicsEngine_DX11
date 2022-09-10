@@ -3,7 +3,7 @@
 class GameEngine
 {
 public:
-	void Init(HWND hwnd, int width, int height);
+	void Initialize(HWND hwnd, int width, int height);
 
 	void Update();
 		

@@ -19,6 +19,16 @@ public:
 
 public:
 	void Initialize(HWND hWnd, int screenWidth, int screenHeight);
+
+	void Release();
+
+	void OnResize(int width, int height);
+
+	void MainBackBufferRender();
+
+	void RenderingDataRender();
+
+	void Present();
 };
 
 

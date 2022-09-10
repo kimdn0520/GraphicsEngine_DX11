@@ -13,6 +13,18 @@
     <Filter Include="Manager">
       <UniqueIdentifier>{61a1f9b8-f0e7-45b2-8e92-352501449985}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Components">
+      <UniqueIdentifier>{0a1e4b0f-7b98-4712-9ef8-07b5925bfe81}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\ComponentBase">
+      <UniqueIdentifier>{43625f69-00b7-477b-8003-ab2a0364ea3a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject">
+      <UniqueIdentifier>{6fcca4ce-9f2c-4c29-a72f-3875c24f1377}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\MonoBehaviour">
+      <UniqueIdentifier>{fa8a7fc5-a7c2-46b6-b134-a8f6ba45a15e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -30,6 +42,15 @@
     <ClInclude Include="GraphicsManager.h">
       <Filter>Manager</Filter>
     </ClInclude>
+    <ClInclude Include="Component.h">
+      <Filter>Components\ComponentBase</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="MonoBehaviour.h">
+      <Filter>Components\MonoBehaviour</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -46,6 +67,15 @@
     </ClCompile>
     <ClCompile Include="GraphicsManager.cpp">
       <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Component.cpp">
+      <Filter>Components\ComponentBase</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="MonoBehaviour.cpp">
+      <Filter>Components\MonoBehaviour</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

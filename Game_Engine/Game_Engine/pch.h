@@ -9,7 +9,27 @@
 
 #define WIN32_LEAN_AND_MEAN             // 거의 사용되지 않는 내용을 Windows 헤더에서 제외합니다.
 // Windows 헤더 파일
+// include
 #include <windows.h>
+#include <tchar.h>
+#include <memory>
+#include <string>
+#include <vector>
+#include <queue>
+#include <array>
+#include <list>
+#include <map>
+#include <unordered_map>
+#include <sstream>
+#include <fstream>
+#include <algorithm> 
+
+#include "SimpleMath.h"
+
+// using
+using namespace DirectX;
+using namespace std;
+using namespace SimpleMath;
 
 
 #endif //PCH_H
