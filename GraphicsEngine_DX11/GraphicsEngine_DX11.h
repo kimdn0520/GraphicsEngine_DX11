@@ -2,62 +2,58 @@
 #include "Graphics_Interface.h"
 #include "WindowInfo.h"
 
-namespace GraphicsEngine
+class Device;
+class SwapChain;
+class DepthStencilState;
+class RasterizerState;
+class RenderTargetView;
+class BlendState;
+		
+class GraphicsEngine_DX11 : public Graphics_Interface
 {
-	class Device;
-	class SwapChain;
-	class DepthStencilState;
-	class RasterizerState;
-	class RenderTargetView;
-	class BlendState;
+public:
+	GraphicsEngine_DX11() = default;
+	virtual ~GraphicsEngine_DX11() = default;
+
+private:
+	WindowInfo _windowInfo;
+
+	Device* _device;
+	SwapChain* _swapChain;
+
+	DepthStencilState* _depthStencilState;
+	DepthStencilState* _disableDepthStencilState;
+	DepthStencilState* _skyBoxDepthStencilState;
+
+	RasterizerState* _wireRasterizerState;
+	RasterizerState* _solidRasterizerState;
+	RasterizerState* _solidNoneCullRasterizerState;
+
+	RenderTargetView* _mainRenderTargetView;
+
+	BlendState* _alphaBlendState;
 		
-	class GraphicsEngine_DX11 : public Graphics_Interface
-	{
-	public:
-		GraphicsEngine_DX11() = default;
-		virtual ~GraphicsEngine_DX11() = default;
+public:
+	virtual void Initialize(HWND hwnd, int screenWidth, int screenHeight) override;
 
-	private:
-		WindowInfo _windowInfo;
+	virtual void Release() override;
 
-		Device* _device;
-		SwapChain* _swapChain;
+	virtual void OnResize(const int& screenWidth, const int& screenHeight) override;
 
-		DepthStencilState* _depthStencilState;
-		DepthStencilState* _disableDepthStencilState;
-		DepthStencilState* _skyBoxDepthStencilState;
-
-		RasterizerState* _wireRasterizerState;
-		RasterizerState* _solidRasterizerState;
-		RasterizerState* _solidNoneCullRasterizerState;
-
-		RenderTargetView* _mainRenderTargetView;
-
-		BlendState* _alphaBlendState;
-		
-	public:
-		virtual void Initialize(HWND hwnd, int screenWidth, int screenHeight) override;
-
-		virtual void Release() override;
-
-		virtual void OnResize(const int& screenWidth, const int& screenHeight) override;
-
-		virtual void MainBackBufferRender() override;
+	virtual void MainBackBufferRender() override;
 		 
-		virtual void RenderingDataRender() override;
+	virtual void RenderingDataRender() override;
 
-		virtual void Present() override;
+	virtual void Present() override;
 
-		virtual ComPtr<ID3D11Device> GetDevice() override;
+	virtual Device* GetDeviceClass() override;
 
-		virtual ComPtr<ID3D11DeviceContext> GetDeviceContext() override;
+	virtual RasterizerState* GetWire() override;
 
-		virtual ComPtr<ID3D11RasterizerState> GetWire() override;
+	virtual RasterizerState* GetSolid() override;
 
-		virtual ComPtr<ID3D11RasterizerState> GetSolid() override;
+	virtual RasterizerState* GetSolidNoneCull() override;
+};
 
-		virtual ComPtr<ID3D11RasterizerState> GetSolidNoneCull() override;
-	};
-}
 
 

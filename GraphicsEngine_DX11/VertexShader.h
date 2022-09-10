@@ -1,26 +1,24 @@
 #pragma once
 #include "ShaderBase.h"
 
-namespace GraphicsEngine
+class VertexShader : public ShaderBase
 {
-	class VertexShader : public ShaderBase
-	{
-	public:
-		VertexShader(const std::wstring& shaderName, const std::wstring& path, std::string entryPoint, const D3D_SHADER_MACRO* macro);
-		~VertexShader();
+public:
+	VertexShader(const std::wstring& shaderName, const std::wstring& path, std::string entryPoint, const D3D_SHADER_MACRO* macro);
+	~VertexShader();
 
-	private:
-		ComPtr<ID3D11VertexShader> _vs;
+private:
+	ComPtr<ID3D11VertexShader> _vs;
 
-		ComPtr<ID3D11InputLayout> _inputLayout;
+	ComPtr<ID3D11InputLayout> _inputLayout;
 
-	public:
-		void CreateShader(const std::wstring& path, std::string entryPoint, const D3D_SHADER_MACRO* macro) override;
+public:
+	void CreateShader(const std::wstring& path, std::string entryPoint, const D3D_SHADER_MACRO* macro) override;
 
-		void Update() override;
+	void Update() override;
 
-		void Release() override;
-	};
-}
+	void Release() override;
+};
+
 
 

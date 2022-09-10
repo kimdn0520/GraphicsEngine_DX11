@@ -1,21 +1,19 @@
 #pragma once
 #include "WindowInfo.h"
 
-namespace GraphicsEngine
+class Device;
+
+class SwapChain
 {
-	class Device;
+private:
+	ComPtr<IDXGISwapChain> _swapChain;
 
-	class SwapChain
-	{
-	private:
-		ComPtr<IDXGISwapChain> _swapChain;
+public:
+	ComPtr<IDXGISwapChain> GetSwapChain() { return _swapChain; }
 
-	public:
-		ComPtr<IDXGISwapChain> GetSwapChain() { return _swapChain; }
+	void Initialize(WindowInfo& windowInfo, Device* _device);
 
-		void Initialize(WindowInfo& windowInfo, Device* _device);
+	void Release();
+};
 
-		void Release();
-	};
-}
 

@@ -1,18 +1,18 @@
 #pragma once
 
-namespace GraphicsEngine
+class Device;
+
+class BlendState
 {
-	class BlendState
-	{
-	private:
-		ComPtr<ID3D11BlendState> _blendState;
+private:
+	ComPtr<ID3D11BlendState> _blendState;
 
-	public:
-		void Initialize(ComPtr<ID3D11Device> device);
+public:
+	void Initialize(Device* device);
 
-		ComPtr<ID3D11BlendState> GetBlendState() { return _blendState; }
+	ComPtr<ID3D11BlendState> GetBlendState() { return _blendState; }
 
-		void Release();
-	};
-}
+	void Release();
+};
+
 

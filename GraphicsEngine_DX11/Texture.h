@@ -1,35 +1,33 @@
 #pragma once
 
-namespace GraphicsEngine
+class Texture
 {
-	class Texture
-	{
-	public:
-		Texture();
-		~Texture();
+public:
+	Texture();
+	~Texture();
 
-	private:
-		ComPtr<ID3D11ShaderResourceView> _mapSRV;
+private:
+	ComPtr<ID3D11ShaderResourceView> _mapSRV;
 
-		ScratchImage _image;
+	ScratchImage _image;
 
-		ComPtr<ID3D11Texture2D> _texResource;
+	ComPtr<ID3D11Texture2D> _texResource;
 
-		DXGI_FORMAT _format;
+	DXGI_FORMAT _format;
 
-		unsigned int _levels;
+	unsigned int _levels;
 
-		unsigned int _width;
+	unsigned int _width;
 
-		unsigned int _height;
+	unsigned int _height;
 
-	public:
-		ComPtr<ID3D11ShaderResourceView> GetMapSRV() { return _mapSRV; }
+public:
+	ComPtr<ID3D11ShaderResourceView> GetMapSRV() { return _mapSRV; }
 
-		void Initialize(const std::wstring& path);
-		
-		void Release();
-	};
-}
+	void Initialize(const std::wstring& path);
+
+	void Release();
+};
+
 
 

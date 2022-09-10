@@ -3,60 +3,57 @@
 #include "Texture.h"
 #include "Mesh.h"
 
-namespace GraphicsEngine
+ResourceManager* ResourceManager::resourceManager = nullptr;
+
+ResourceManager* ResourceManager::Get()
 {
-	ResourceManager* ResourceManager::resourceManager = nullptr;
+	if (resourceManager == nullptr)
+		resourceManager = new ResourceManager();
 
-	ResourceManager* ResourceManager::Get()
-	{
-		if (resourceManager == nullptr)
-			resourceManager = new ResourceManager();
+	return resourceManager;
+}
 
-		return resourceManager;
-	}
+void ResourceManager::Initialize()
+{
+	_texturePath = L"Data/Texture/";
+}
 
-	void ResourceManager::Initialize()
-	{
-		_texturePath = L"Data/Texture/";
-	}
+void ResourceManager::Release()
+{
+	for (auto texture : _textures)
+		texture.second->Release();
 
-	void ResourceManager::Release()
-	{
-		for(auto texture : _textures)
-			texture.second->Release();
-		
-		for(auto mesh : _meshs)
-			delete mesh.second;
+	for (auto mesh : _meshs)
+		delete mesh.second;
 
-		_textures.clear();
-		
-		_meshs.clear();
-	}
-	
-	Texture* ResourceManager::GetTexture(const std::wstring& name)
-	{
-		auto findIt = _textures.find(name);
+	_textures.clear();
 
-		if (findIt != _textures.end())
-			return findIt->second;
+	_meshs.clear();
+}
 
-		std::wstring path = _texturePath + name;
+Texture* ResourceManager::GetTexture(const std::wstring& name)
+{
+	auto findIt = _textures.find(name);
 
-		CreateTexture(name, path);
+	if (findIt != _textures.end())
+		return findIt->second;
 
-		return _textures[name];
-	}
-	
-	void ResourceManager::CreateTexture(const std::wstring& name, const std::wstring& path)
-	{
-		Texture* texture = new Texture();
-		texture->Initialize(path);									// 텍스쳐 srv 생성
+	std::wstring path = _texturePath + name;
 
-		_textures.insert(make_pair(name, texture));
-	}
+	CreateTexture(name, path);
 
-	Mesh* ResourceManager::GetMesh(std::string name)
-	{
-		return _meshs[name];
-	}
+	return _textures[name];
+}
+
+void ResourceManager::CreateTexture(const std::wstring& name, const std::wstring& path)
+{
+	Texture* texture = new Texture();
+	texture->Initialize(path);									// 텍스쳐 srv 생성
+
+	_textures.insert(make_pair(name, texture));
+}
+
+Mesh* ResourceManager::GetMesh(std::string name)
+{
+	return _meshs[name];
 }

@@ -1,6 +1,12 @@
 #pragma once
 #include "GraphicsEngineDLL.h"
 
+class DepthStencilState;
+class BlendState;
+class RenderTargetView;
+class Device;
+class RasterizerState;
+
 class Graphics_Interface
 {
 public:
@@ -26,15 +32,13 @@ public:
 
 	virtual GraphicsEngine_DLL void Present() abstract;
 
-	virtual GraphicsEngine_DLL ComPtr<ID3D11Device> GetDevice() abstract;
-
-	virtual GraphicsEngine_DLL ComPtr<ID3D11DeviceContext> GetDeviceContext() abstract;
-
-	virtual GraphicsEngine_DLL ComPtr<ID3D11RasterizerState> GetWire() abstract;
-
-	virtual GraphicsEngine_DLL ComPtr<ID3D11RasterizerState> GetSolid() abstract;
-
-	virtual GraphicsEngine_DLL ComPtr<ID3D11RasterizerState> GetSolidNoneCull() abstract;
+	virtual GraphicsEngine_DLL Device* GetDeviceClass() abstract;
+							   
+	virtual GraphicsEngine_DLL RasterizerState* GetWire() abstract;
+							   
+	virtual GraphicsEngine_DLL RasterizerState* GetSolid() abstract;
+							   
+	virtual GraphicsEngine_DLL RasterizerState* GetSolidNoneCull() abstract;
 };
 
 

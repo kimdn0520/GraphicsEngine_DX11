@@ -1,46 +1,43 @@
 #include "pch.h"
 #include "RenderManager.h"
 
-namespace GraphicsEngine
+RenderManager* RenderManager::renderManager = nullptr;
+CameraInfo RenderManager::s_cameraInfo;
+
+RenderManager* RenderManager::Get()
 {
-	RenderManager* RenderManager::renderManager = nullptr;
-	CameraInfo RenderManager::s_cameraInfo;
+	if (renderManager == nullptr)
+		renderManager = new RenderManager();
 
-	RenderManager* RenderManager::Get()
-	{
-		if (renderManager == nullptr)
-			renderManager = new RenderManager();
+	return renderManager;
+}
 
-		return renderManager;
-	}
-
-	void RenderManager::Initialize()
-	{
-		isInit = true;
+void RenderManager::Initialize()
+{
+	isInit = true;
 
 
-	}
+}
 
-	void RenderManager::OnResize(int width, int height)
-	{
-		// pass 마다의 resize
-	}
-	
-	void RenderManager::Release()
-	{
-		for(auto it : _renderData)
-			delete it;
+void RenderManager::OnResize(int width, int height)
+{
+	// pass 마다의 resize
+}
 
-		_renderData.clear();
-	}
+void RenderManager::Release()
+{
+	for (auto it : _renderData)
+		delete it;
 
-	void RenderManager::PushRenderData(ObjectInfo* objectInfo)
-	{
-		_renderData.push_back(objectInfo);
-	}
-	
-	void RenderManager::Render()
-	{
-	
-	}
+	_renderData.clear();
+}
+
+void RenderManager::PushRenderData(ObjectInfo* objectInfo)
+{
+	_renderData.push_back(objectInfo);
+}
+
+void RenderManager::Render()
+{
+
 }

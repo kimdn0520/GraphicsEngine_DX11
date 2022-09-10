@@ -2,47 +2,45 @@
 #include "ConstantBufferDefine.h"
 #include "Graphics_PerFrameData.h"
 
-namespace GraphicsEngine
+enum class LIGHT_TYPE
 {
-	enum class LIGHT_TYPE
-	{
-		DIRECTIONAL_LIGHT,
-		POINT_LIGHT,
-		SPOT_LIGHT,
-	};
+	DIRECTIONAL_LIGHT,
+	POINT_LIGHT,
+	SPOT_LIGHT,
+};
 
-	class LightManager
-	{
-	public:
-		LightManager() {};
-		~LightManager() {};
+class LightManager
+{
+public:
+	LightManager() {};
+	~LightManager() {};
 
-	private:
-		static LightManager* lightManager;
+private:
+	static LightManager* lightManager;
 
-	public:
-		static LightManager* Get();
+public:
+	static LightManager* Get();
 
-	public:
-		// 이름, 정보가 들어간댜
-		static std::map<std::string, LightInfo> dirLights;
-		static std::map<std::string, LightInfo> pointLights;
-		static std::map<std::string, LightInfo> spotLights;
+public:
+	// 이름, 정보가 들어간댜
+	static std::map<std::string, LightInfo> dirLights;
+	static std::map<std::string, LightInfo> pointLights;
+	static std::map<std::string, LightInfo> spotLights;
 
-		// 전역으로 쓸 light constantBuffer
-		static cbLight		cbLightBuffer;
+	// 전역으로 쓸 light constantBuffer
+	static cbLight		cbLightBuffer;
 
-	public:
-		void Initialize();
-		
-		void SetLightInfo(LightInfo lightInfo);
+public:
+	void Initialize();
 
-		void UpdateLightInfo(LightInfo lightInfo);
+	void SetLightInfo(LightInfo lightInfo);
 
-		void ResetLightInfo();
+	void UpdateLightInfo(LightInfo lightInfo);
 
-		void Update();
-	};
-}
+	void ResetLightInfo();
+
+	void Update();
+};
+
 
 

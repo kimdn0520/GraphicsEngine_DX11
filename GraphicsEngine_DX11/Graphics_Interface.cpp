@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "Graphics_Interface.h"
 #include "GraphicsEngine_DX11.h"
+#include "Device.h"
+
 
 Graphics_Interface* Graphics_Interface::graphicsEngine = nullptr;
 
@@ -8,7 +10,7 @@ Graphics_Interface* Graphics_Interface::graphicsEngine = nullptr;
 Graphics_Interface* Graphics_Interface::Get()
 {
 	if (graphicsEngine == nullptr)
-		graphicsEngine = new GraphicsEngine::GraphicsEngine_DX11();
+		graphicsEngine = new GraphicsEngine_DX11();
 
 	return graphicsEngine;
 }

@@ -1,0 +1,6 @@
+﻿  GameClient.cpp
+  GameProcess.cpp
+C:\Users\김동민\Desktop\GraphicsEngine_DX11\GameClient\GameClient\GameProcess.cpp(195,2): warning C4065: switch문에 'default'가 있으나 'case' 레이블이 없습니다.
+  pch.cpp
+  코드를 생성하고 있습니다...
+LINK : fatal error LNK1104: 'Game_Engine.lib' 파일을 열 수 없습니다.

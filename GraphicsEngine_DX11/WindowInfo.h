@@ -1,16 +1,13 @@
 #pragma once
 
-namespace GraphicsEngine
+struct WindowInfo
 {
-	struct WindowInfo
-	{
-		HWND hwnd;
-		int screenWidth;
-		int screenHeight;
+	HWND hwnd;
+	int screenWidth;
+	int screenHeight;
 
-		bool enable4xMSAA;
-		unsigned int MSAAQuality_4x;
+	bool enable4xMSAA;
+	unsigned int MSAAQuality_4x;
 
-		bool fullScreen;
-	};
-}
+	bool fullScreen;
+};

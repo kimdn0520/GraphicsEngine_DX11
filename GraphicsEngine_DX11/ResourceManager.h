@@ -1,65 +1,63 @@
 #pragma once
 #include "Mesh.h"
 
-namespace GraphicsEngine
+class Texture;
+
+class ResourceManager
 {
-	class Texture;
+public:
+	ResourceManager() {};
+	~ResourceManager() {};
 
-	class ResourceManager
-	{
-	public:
-		ResourceManager() {};
-		~ResourceManager() {};
+private:
+	static ResourceManager* resourceManager;
 
-	private:
-		static ResourceManager* resourceManager;
+public:
+	static ResourceManager* Get();
 
-	public:
-		static ResourceManager* Get();
+private:
+	std::wstring _texturePath;
 
-	private:
-		std::wstring _texturePath;
-		
-		std::unordered_map<std::wstring, Texture*> _textures;
+	std::unordered_map<std::wstring, Texture*> _textures;
 
-		std::unordered_map<std::string, Mesh*> _meshs;
+	std::unordered_map<std::string, Mesh*> _meshs;
 
-	public:
-		void Initialize();
+public:
+	void Initialize();
 
-		void Release();
+	void Release();
 
-		Texture* GetTexture(const std::wstring& name);
-		
-		void CreateTexture(const std::wstring& name, const std::wstring& path);
+	Texture* GetTexture(const std::wstring& name);
 
-		Mesh* GetMesh(std::string name);
+	void CreateTexture(const std::wstring& name, const std::wstring& path);
 
-		template <typename T>
-		void CreateMesh(std::vector<T> vertices, std::vector<unsigned int> indices, std::string name, int topology, int rasterizerState);
-	};
+	Mesh* GetMesh(std::string name);
 
-	template<typename T>
-	inline void ResourceManager::CreateMesh(std::vector<T> vertices, std::vector<unsigned int> indices, std::string name, int topology, int rasterizerState)
-	{
-		Mesh* mesh = new Mesh();
+	template <typename T>
+	void CreateMesh(std::vector<T> vertices, std::vector<unsigned int> indices, std::string name, int topology, int rasterizerState);
+};
 
-		if (topology == 0)
-			mesh->SetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		else if (topology == 1)
-			mesh->SetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
+template<typename T>
+inline void ResourceManager::CreateMesh(std::vector<T> vertices, std::vector<unsigned int> indices, std::string name, int topology, int rasterizerState)
+{
+	Mesh* mesh = new Mesh();
 
-		if (rasterizerState == 0)
-			mesh->SetRenderState(Graphics_Interface::Get()->GetWireState());
-		else if (rasterizerState == 1)
-			mesh->SetRenderState(Graphics_Interface::Get()->GetSolidState());
+	if (topology == 0)
+		mesh->SetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	else if (topology == 1)
+		mesh->SetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
 
-		mesh->CreateVertexBuffer(vertices);
-		mesh->CreateIndexBuffer(indices);
-		mesh->SetIndexBufferSize(indices.size());
-		mesh->stride = sizeof(T);
+	if (rasterizerState == 0)
+		mesh->SetRenderState(Graphics_Interface::Get()->GetWireState());
+	else if (rasterizerState == 1)
+		mesh->SetRenderState(Graphics_Interface::Get()->GetSolidState());
 
-		_meshs.insert(make_pair(name, mesh));
-	}
+	mesh->CreateVertexBuffer(vertices);
+	mesh->CreateIndexBuffer(indices);
+	mesh->SetIndexBufferSize(indices.size());
+	mesh->stride = sizeof(T);
+
+	_meshs.insert(make_pair(name, mesh));
 }
+
 
