@@ -1,1 +1,5 @@
-﻿  GameClient.vcxproj -> C:\Users\김동민\Desktop\GraphicsEngine_DX11\Output\GameClient.exe
+﻿  GameClient.cpp
+C:\Users\김동민\Desktop\GraphicsEngine_DX11\GameClient\GameClient\GameClient.cpp(3): warning C4603: '_CRTDBG_MAP_ALLOC': 매크로가 정의되지 않았거나 미리 컴파일된 헤더 사용 후와 정의가 다릅니다.
+C:\Users\김동민\Desktop\GraphicsEngine_DX11\GameClient\GameClient\GameClient.cpp(3): message : 여기에서 정의하지 않고 미리 컴파일된 헤더에 매크로 추가
+C:\Users\김동민\Desktop\GraphicsEngine_DX11\GameClient\GameClient\GameClient.cpp(5): message : 미리 컴파일된 헤더 사용
+  GameClient.vcxproj -> C:\Users\김동민\Desktop\GraphicsEngine_DX11\Output\GameClient.exe

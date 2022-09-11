@@ -157,22 +157,33 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AlignedAllocationPolicy.h" />
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="GameEngine.h" />
     <ClInclude Include="GameEngineDLL.h" />
     <ClInclude Include="GameEngine_Interface.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GraphicsManager.h" />
+    <ClInclude Include="InputManager.h" />
     <ClInclude Include="MonoBehaviour.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="Scene.h" />
+    <ClInclude Include="SceneManager.h" />
+    <ClInclude Include="Text.h" />
+    <ClInclude Include="TimeManager.h" />
+    <ClInclude Include="Transform.h" />
+    <ClInclude Include="UI.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="GameEngine.cpp" />
     <ClCompile Include="GameEngine_Interface.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GraphicsManager.cpp" />
+    <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="MonoBehaviour.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -180,6 +191,12 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="SceneManager.cpp" />
+    <ClCompile Include="Text.cpp" />
+    <ClCompile Include="TimeManager.cpp" />
+    <ClCompile Include="Transform.cpp" />
+    <ClCompile Include="UI.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

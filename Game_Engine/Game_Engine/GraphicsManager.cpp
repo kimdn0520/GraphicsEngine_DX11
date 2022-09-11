@@ -6,7 +6,7 @@ GraphicsManager* GraphicsManager::graphicsManager = nullptr;
 GraphicsManager* GraphicsManager::Get()
 {
 	if (graphicsManager == nullptr)
-		graphicsManager = GraphicsManager::Get();
+		graphicsManager = new GraphicsManager();
 
 	return graphicsManager;
 }
@@ -43,4 +43,14 @@ void GraphicsManager::RenderingDataRender()
 void GraphicsManager::Present()
 {
 	graphicsEngine->Present();
+}
+
+int GraphicsManager::GetScreenWidth()
+{
+	return graphicsEngine->GetScreenWidth();
+}
+
+int GraphicsManager::GetScreenHeight()
+{
+	return graphicsEngine->GetScreenHeight();
 }

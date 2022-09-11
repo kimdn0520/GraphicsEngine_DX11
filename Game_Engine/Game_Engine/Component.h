@@ -7,7 +7,6 @@ enum class COMPONENT_TYPE
 	// 이동 행렬 -> 물리(움직이고 충돌을 했으면 물리작용?) 
 	TRANSFORM,					// FIXED UPDATE 
 	COLLIDER,					// FIXED UPDATE
-	RIGIDBODY,					// FIXED UPDATE
 
 	ANIMATOR,					// UPDATE
 	SKINANIMATOR,				// UPDATE

@@ -20,6 +20,7 @@ void GraphicsEngine_DX11::Initialize(HWND hwnd, int screenWidth, int screenHeigh
 			
 	_device = new Device();
 	_swapChain = new SwapChain();
+	_mainRenderTargetView = new RenderTargetView();
 	_depthStencilState = new DepthStencilState();			// Z on
 	_disableDepthStencilState = new DepthStencilState();	// Z off
 	_skyBoxDepthStencilState = new DepthStencilState();		// skybox
@@ -118,6 +119,16 @@ void GraphicsEngine_DX11::RenderingDataRender()
 void GraphicsEngine_DX11::Present()
 {
 	_swapChain->GetSwapChain()->Present(0, 0);
+}
+
+int GraphicsEngine_DX11::GetScreenWidth()
+{
+	return _windowInfo.screenWidth;
+}
+
+int GraphicsEngine_DX11::GetScreenHeight()
+{
+	return _windowInfo.screenHeight;
 }
 
 Device* GraphicsEngine_DX11::GetDeviceClass()

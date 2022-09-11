@@ -51,8 +51,6 @@ public:
 
 	GameEngine_DLL Transform* GetTransform();
 
-	GameEngine_DLL ColliderBase* GetColliderBase();
-
 	GameEngine_DLL UI* GetUI();
 
 	GameEngine_DLL Text* GetText();
@@ -103,7 +101,7 @@ inline TComponent* GameObject::GetComponent()
 {
 	for (int i = 0; i < COMPONENT_COUNT; i++)
 	{
-		TComponent* castedComponent = dynamic_cast<TComponent>(_components[i]);
+		TComponent* castedComponent = dynamic_cast<TComponent*>(_components[i]);
 
 		if (castedComponent != nullptr)
 			return castedComponent;
@@ -115,7 +113,7 @@ inline TComponent* GameObject::GetComponent()
 template<typename TComponent>
 inline TComponent* GameObject::GetScript()
 {
-	TComponent* castedComponent = dynamic_cast<TComponent>(_script);
+	TComponent* castedComponent = dynamic_cast<TComponent*>(_script);
 
 	if (castedComponent != nullptr)
 		return castedComponent;

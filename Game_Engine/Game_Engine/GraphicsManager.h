@@ -29,6 +29,10 @@ public:
 	void RenderingDataRender();
 
 	void Present();
+
+	int GetScreenWidth();
+
+	int GetScreenHeight();
 };
 
 

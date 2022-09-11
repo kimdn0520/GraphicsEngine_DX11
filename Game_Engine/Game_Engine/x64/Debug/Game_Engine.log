@@ -1,6 +1,2 @@
-﻿  Component.cpp
-  GameObject.cpp
-  MonoBehaviour.cpp
-  코드를 생성하고 있습니다...
-     C:\Users\김동민\Desktop\GraphicsEngine_DX11\Output\Game_Engine.lib 라이브러리 및 C:\Users\김동민\Desktop\GraphicsEngine_DX11\Output\Game_Engine.exp 개체를 생성하고 있습니다.
+﻿  GraphicsManager.cpp
   Game_Engine.vcxproj -> C:\Users\김동민\Desktop\GraphicsEngine_DX11\Output\Game_Engine.dll

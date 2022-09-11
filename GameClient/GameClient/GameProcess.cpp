@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "GameProcess.h"
+#include "GameEngine_Interface.h"
 
 const int screenWidth = 1920;
 const int screenHeight = 1080;
@@ -105,9 +106,9 @@ void GameProcess::Run()
 		}
 		else
 		{
-			//EngineUpdate();
+			EngineUpdate();
 
-			//EngineRender();
+			EngineRender();
 		}
 	}
 }
@@ -141,7 +142,7 @@ void GameProcess::Init()
 {
 	InitializeWindows(screenWidth, screenHeight);
 
-	//EngineInit(_hWnd, screenWidth, screenHeight);
+	EngineInit(_hWnd, screenWidth, screenHeight);
 
 	{
 		//SceneManager::GetInstance()->InputScene<TestScene>("TestScene");
@@ -152,7 +153,7 @@ void GameProcess::Init()
 
 void GameProcess::Shutdown()
 {
-	//EngineShutdown();
+	EngineShutdown();
 
 	//DataManager::GetInstance()->Release();
 
@@ -188,10 +189,10 @@ LRESULT GameProcess::MessageHandler(HWND hWnd, UINT umsg, WPARAM wparam, LPARAM 
 	switch (umsg)
 	{
 		// 다른 모든 메시지는 애플리케이션에서 사용하지 않기 때문에 기본 메시지 핸들러로 전송됩니다.
-	default:
-	{
-		return DefWindowProc(hWnd, umsg, wparam, lparam);
-	}
+		default:
+		{
+			return DefWindowProc(hWnd, umsg, wparam, lparam);
+		}
 	}
 }
 
@@ -199,31 +200,31 @@ LRESULT CALLBACK GameProcess::WndProc(HWND hwnd, UINT umessage, WPARAM wparam, L
 {
 	switch (umessage)
 	{
-	case WM_SIZE:
-	{
-		if (wparam != SIZE_MINIMIZED)
+		case WM_SIZE:
 		{
-			// ResizeWindow(LOWORD(lparam), HIWORD(lparam));
-		}
+			if (wparam != SIZE_MINIMIZED)
+			{
+				ResizeWindow(LOWORD(lparam), HIWORD(lparam));
+			}
 
-		return 0;
-	}
-	// Check if the window is being destroyed. 
-	case WM_DESTROY:
-	{
-		PostQuitMessage(0);
-		return 0;
-	}
-	// Check if the window is being closed. 
-	case WM_CLOSE:
-	{
-		PostQuitMessage(0);
-		return 0;
-	}
-	// All other messages pass to the message handler in the system class. 
-	default:
-	{
-		return ApplicationHandle->MessageHandler(hwnd, umessage, wparam, lparam);
-	}
+			return 0;
+		}
+		// Check if the window is being destroyed. 
+		case WM_DESTROY:
+		{
+			PostQuitMessage(0);
+			return 0;
+		}
+		// Check if the window is being closed. 
+		case WM_CLOSE:
+		{
+			PostQuitMessage(0);
+			return 0;
+		}
+		// All other messages pass to the message handler in the system class. 
+		default:
+		{
+			return ApplicationHandle->MessageHandler(hwnd, umessage, wparam, lparam);
+		}
 	}
 }

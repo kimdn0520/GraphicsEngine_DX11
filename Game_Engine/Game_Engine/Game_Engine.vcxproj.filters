@@ -25,6 +25,30 @@
     <Filter Include="Components\MonoBehaviour">
       <UniqueIdentifier>{fa8a7fc5-a7c2-46b6-b134-a8f6ba45a15e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Components\Camera">
+      <UniqueIdentifier>{82de42cd-b822-468d-9a04-85bf8275c696}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\Light">
+      <UniqueIdentifier>{d43afc06-0291-4140-a25d-43c00ccc73dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\Renderer">
+      <UniqueIdentifier>{5fbef701-3e85-48e3-afc5-d952a1a86feb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\Text">
+      <UniqueIdentifier>{d85e63f3-d203-4ac3-82a4-3982ecbfea87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\Transform">
+      <UniqueIdentifier>{f528f599-de6c-49e3-b8f2-ca26d3aaf8d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\UI">
+      <UniqueIdentifier>{bab4dc22-0a71-40d5-8f3a-58495d89a02e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{09f4ae3c-5530-47c1-8ec3-45f905da376c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{bf4ec7a1-6cf6-4632-a13f-b75db7326ad0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -51,6 +75,33 @@
     <ClInclude Include="MonoBehaviour.h">
       <Filter>Components\MonoBehaviour</Filter>
     </ClInclude>
+    <ClInclude Include="TimeManager.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="InputManager.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Components\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="AlignedAllocationPolicy.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.h">
+      <Filter>Components\Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneManager.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="UI.h">
+      <Filter>Components\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Text.h">
+      <Filter>Components\Text</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -76,6 +127,30 @@
     </ClCompile>
     <ClCompile Include="MonoBehaviour.cpp">
       <Filter>Components\MonoBehaviour</Filter>
+    </ClCompile>
+    <ClCompile Include="TimeManager.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="InputManager.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Components\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Transform.cpp">
+      <Filter>Components\Transform</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneManager.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="UI.cpp">
+      <Filter>Components\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Text.cpp">
+      <Filter>Components\Text</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

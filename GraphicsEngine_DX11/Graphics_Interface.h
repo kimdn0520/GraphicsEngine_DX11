@@ -6,6 +6,7 @@ class BlendState;
 class RenderTargetView;
 class Device;
 class RasterizerState;
+class WindowInfo;
 
 class Graphics_Interface
 {
@@ -31,6 +32,10 @@ public:
 	virtual GraphicsEngine_DLL void RenderingDataRender() abstract;
 
 	virtual GraphicsEngine_DLL void Present() abstract;
+
+	virtual	int GetScreenWidth() abstract;
+
+	virtual	int GetScreenHeight() abstract;
 
 	virtual GraphicsEngine_DLL Device* GetDeviceClass() abstract;
 							   

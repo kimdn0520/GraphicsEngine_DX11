@@ -46,6 +46,10 @@ public:
 
 	virtual void Present() override;
 
+	virtual	int GetScreenWidth() override;
+	
+	virtual	int GetScreenHeight() override;
+	
 	virtual Device* GetDeviceClass() override;
 
 	virtual RasterizerState* GetWire() override;
@@ -53,6 +57,7 @@ public:
 	virtual RasterizerState* GetSolid() override;
 
 	virtual RasterizerState* GetSolidNoneCull() override;
+
 };
 
 

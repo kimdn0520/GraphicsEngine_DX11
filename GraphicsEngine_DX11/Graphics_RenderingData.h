@@ -42,3 +42,15 @@ struct ObjectInfo
 
 	bool isSkinned = false;
 };
+
+struct TextInfo
+{
+	int x;
+	int y;
+
+	std::string text;
+	
+	Vector4 color;
+	
+	float scale;
+};
