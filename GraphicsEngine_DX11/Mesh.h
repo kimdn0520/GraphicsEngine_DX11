@@ -56,7 +56,7 @@ inline void Mesh::CreateVertexBuffer(const std::vector<T>& vertices)
 	D3D11_SUBRESOURCE_DATA vertexInitData;
 	vertexInitData.pSysMem = vertices.data();
 
-	Graphics_Interface::Get()->GetDevice->
+	Graphics_Interface::Get()->GetDeviceClass()->GetDevice()->
 		CreateBuffer(&vertexBufferDesc, &vertexInitData, vertexBuffer.GetAddressOf());
 }
 

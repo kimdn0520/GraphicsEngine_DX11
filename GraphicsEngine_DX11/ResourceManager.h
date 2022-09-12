@@ -48,9 +48,9 @@ inline void ResourceManager::CreateMesh(std::vector<T> vertices, std::vector<uns
 		mesh->SetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
 
 	if (rasterizerState == 0)
-		mesh->SetRenderState(Graphics_Interface::Get()->GetWireState());
+		mesh->SetRenderState(Graphics_Interface::Get()->GetWire()->GetrasterizerState());
 	else if (rasterizerState == 1)
-		mesh->SetRenderState(Graphics_Interface::Get()->GetSolidState());
+		mesh->SetRenderState(Graphics_Interface::Get()->GetSolid()->GetrasterizerState());
 
 	mesh->CreateVertexBuffer(vertices);
 	mesh->CreateIndexBuffer(indices);

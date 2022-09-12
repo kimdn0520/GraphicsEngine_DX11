@@ -59,3 +59,13 @@ void GraphicsManager::SendObjectRenderingData(ObjectInfo* objectInfo)
 {
 	graphicsEngine->SendObjectRenderingData(objectInfo);
 }
+
+void GraphicsManager::CreateMesh(std::vector<StaticMeshVertex> vertices, std::vector<unsigned int> indicies, std::string name, int topology, int rasterState)
+{
+	graphicsEngine->CreateMesh(vertices, indicies, name, topology, rasterState);
+}
+
+void GraphicsManager::CreateMesh(std::vector<SkinnedMeshVertex> vertices, std::vector<unsigned int> indicies, std::string name, int topology, int rasterState)
+{
+	graphicsEngine->CreateMesh(vertices, indicies, name, topology, rasterState);
+}
