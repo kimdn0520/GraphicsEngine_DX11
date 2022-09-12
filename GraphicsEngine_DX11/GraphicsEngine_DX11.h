@@ -58,6 +58,7 @@ public:
 
 	virtual RasterizerState* GetSolidNoneCull() override;
 
+	virtual void SendObjectRenderingData(ObjectInfo* objectInfo) override;
 };
 
 

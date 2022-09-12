@@ -54,3 +54,8 @@ int GraphicsManager::GetScreenHeight()
 {
 	return graphicsEngine->GetScreenHeight();
 }
+
+void GraphicsManager::SendObjectRenderingData(ObjectInfo* objectInfo)
+{
+	graphicsEngine->SendObjectRenderingData(objectInfo);
+}

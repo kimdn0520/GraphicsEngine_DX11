@@ -31,9 +31,6 @@
     <Filter Include="Components\Light">
       <UniqueIdentifier>{d43afc06-0291-4140-a25d-43c00ccc73dc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Components\Renderer">
-      <UniqueIdentifier>{5fbef701-3e85-48e3-afc5-d952a1a86feb}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Components\Text">
       <UniqueIdentifier>{d85e63f3-d203-4ac3-82a4-3982ecbfea87}</UniqueIdentifier>
     </Filter>
@@ -48,6 +45,9 @@
     </Filter>
     <Filter Include="Scene">
       <UniqueIdentifier>{bf4ec7a1-6cf6-4632-a13f-b75db7326ad0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\MeshRenderer">
+      <UniqueIdentifier>{5fbef701-3e85-48e3-afc5-d952a1a86feb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -102,6 +102,12 @@
     <ClInclude Include="Text.h">
       <Filter>Components\Text</Filter>
     </ClInclude>
+    <ClInclude Include="MeshRenderer.h">
+      <Filter>Components\MeshRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -152,5 +158,14 @@
     <ClCompile Include="Text.cpp">
       <Filter>Components\Text</Filter>
     </ClCompile>
+    <ClCompile Include="MeshRenderer.cpp">
+      <Filter>Components\MeshRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Resources.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint" />
   </ItemGroup>
 </Project>

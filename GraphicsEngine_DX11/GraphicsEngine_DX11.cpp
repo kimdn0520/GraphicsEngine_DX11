@@ -151,3 +151,8 @@ RasterizerState* GraphicsEngine_DX11::GetSolidNoneCull()
 	return _solidNoneCullRasterizerState;
 }
 
+void GraphicsEngine_DX11::SendObjectRenderingData(ObjectInfo* objectInfo)
+{
+
+}
+

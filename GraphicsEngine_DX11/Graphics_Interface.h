@@ -1,5 +1,6 @@
 #pragma once
 #include "GraphicsEngineDLL.h"
+#include "Graphics_RenderingData.h"
 
 class DepthStencilState;
 class BlendState;
@@ -44,6 +45,8 @@ public:
 	virtual GraphicsEngine_DLL RasterizerState* GetSolid() abstract;
 							   
 	virtual GraphicsEngine_DLL RasterizerState* GetSolidNoneCull() abstract;
+
+	virtual GraphicsEngine_DLL void SendObjectRenderingData(ObjectInfo* objectInfo) abstract;
 };
 
 

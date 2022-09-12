@@ -33,6 +33,8 @@ public:
 	int GetScreenWidth();
 
 	int GetScreenHeight();
+
+	void SendObjectRenderingData(ObjectInfo* objectInfo);
 };
 
 

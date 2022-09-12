@@ -16,7 +16,7 @@ enum class COMPONENT_TYPE
 	UI,							// UPDATE, LATEUPDATE, RENDER
 
 	TEXT,						// Render
-	RENDERER,					// Render
+	MESHRENDERER,				// Render
 
 	MONO_BEHAVIOUR,				// script
 	END,
