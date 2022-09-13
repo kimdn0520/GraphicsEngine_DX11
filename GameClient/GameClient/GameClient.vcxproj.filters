@@ -13,6 +13,15 @@
     <Filter Include="GameProcess">
       <UniqueIdentifier>{e7d71e46-0257-4757-bc9f-f945bbcc6c89}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Manager">
+      <UniqueIdentifier>{dadc5a37-f639-4560-a1b5-6f1dc82d3a96}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{db568e0c-a7cf-44cc-9abb-c710f642a8db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scripts">
+      <UniqueIdentifier>{5395d781-2754-4282-8dd2-7f2a51511afe}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -32,6 +41,15 @@
     </ClInclude>
     <ClInclude Include="GameProcess.h">
       <Filter>GameProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="DataManager.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="TestScene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraScript.h">
+      <Filter>Scripts</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -56,6 +74,15 @@
     </ClCompile>
     <ClCompile Include="GameProcess.cpp">
       <Filter>GameProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="DataManager.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="TestScene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraScript.cpp">
+      <Filter>Scripts</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

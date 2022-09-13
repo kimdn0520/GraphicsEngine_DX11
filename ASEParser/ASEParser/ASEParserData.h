@@ -129,11 +129,7 @@ namespace ASEData
 		std::vector<Vertex>				vertices;
 		std::vector<unsigned int>		indices;
 
-		unsigned int materialID;
-
 		DirectX::SimpleMath::Matrix nodeTM;
-
-		bool isAnimation;	// 애니메이션 보유 여부
 
 		std::vector<ASEAnimation*> animationClips;
 
@@ -152,5 +148,7 @@ namespace ASEData
 		std::vector<ASEMeshInfo*> meshInfos;
 
 		std::vector<ASEMaterialInfo*> materials;
+	
+		bool isAnimation;	// 애니메이션 보유 여부
 	};
 }

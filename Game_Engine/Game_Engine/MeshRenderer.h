@@ -20,14 +20,14 @@ private:
 	bool _isBone = false;				// 본인지 아닌지(본은 안 그릴거라서)
 
 public:
-	vector<GameObject*> boneObjList;
+	std::vector<GameObject*> boneObjList;
 
-	vector<std::string> boneNameList;
+	std::vector<std::string> boneNameList;
 
 public:
 	ObjectInfo* GetObjectInfo() { return _objectInfo; }
 
-	GameEngine_DLL void SetMeshName(string meshName) { _objectInfo->name = meshName; }
+	GameEngine_DLL void SetMeshName(std::string meshName) { _objectInfo->name = meshName; }
 
 	GameEngine_DLL void SetMaterial(Material* material);
 

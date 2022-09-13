@@ -2,6 +2,7 @@
 #include "GameEngineDLL.h"
 
 class ASEParser;
+class GameObject;
 
 constexpr int RasterState_WIRE = 0;
 constexpr int RasterState_SOLID = 1;
@@ -40,7 +41,7 @@ public:
 
 	void LoadScreenMesh(int topology, int rasterState);
 
-	// GameEngine_DLL MeshData* LoadASE(string path, int topology, int rasterizerState);
+	GameEngine_DLL std::vector<GameObject*> LoadASE(std::string path, int topology, int rasterizerState);
 
 	// GameEngine_DLL MeshData* LoadFBX(const wstring& path, int topology, int rasterizerState, int pass);
 };

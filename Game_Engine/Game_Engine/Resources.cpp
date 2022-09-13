@@ -2,6 +2,10 @@
 #include "Resources.h"
 #include "ASEParser.h"
 #include "GraphicsManager.h"
+#include "GameObject.h"
+#include "MonoBehaviour.h"
+#include "Transform.h"
+#include "MeshRenderer.h"
 
 Resources* Resources::resources = nullptr;
 
@@ -219,5 +223,109 @@ void Resources::LoadGridMesh(int topology, int rasterState)
 void Resources::LoadScreenMesh(int topology, int rasterState)
 {
 
+}
+
+std::vector<GameObject*> Resources::LoadASE(std::string path, int topology, int rasterizerState)
+{
+	// 모델을 로드한다.
+	ASEData::ASEModel* aseModel = _aseParser->Load(path);
+
+	// 게임오브젝트들로 바꾸어서 반환할거임.
+	vector<GameObject*> gameObjects;
+
+	// Animation이 있는 경우 대부분 SkinnedMesh
+	if(aseModel->isAnimation)
+	{
+
+	}
+	// Animation이 없는 경우 StaticMesh
+	else
+	{
+		for (auto mesh : aseModel->meshInfos)
+		{
+			std::vector<StaticMeshVertex> staticMeshVertices;
+
+			for (auto vertex : mesh->vertices)
+			{
+				StaticMeshVertex staticMeshVertex;
+				staticMeshVertex.position = vertex.pos;
+				staticMeshVertex.color = ::Color::White;
+				staticMeshVertex.uv = vertex.uv;
+				staticMeshVertex.normal = vertex.normal;
+				staticMeshVertex.tangent = vertex.tangent;
+
+				staticMeshVertices.push_back(staticMeshVertex);
+			}
+
+			// 해당 메시의 vertices, indices, name 그래픽스 ResourceManager에등록
+			GraphicsManager::Get()->CreateMesh(
+				staticMeshVertices,
+				mesh->indices,
+				mesh->meshName,
+				topology,
+				rasterizerState);
+
+			GameObject* gameObject = new GameObject();
+			gameObject->SetName(mesh->meshName);
+			gameObject->AddComponent<Transform>();
+			gameObject->GetComponent<Transform>()->SetNodeTM(mesh->nodeTM);
+			gameObject->AddComponent<MeshRenderer>();
+			gameObject->GetComponent<MeshRenderer>()->SetMeshName(mesh->meshName);
+
+			for (auto mat : aseModel->materials)
+			{
+				Material* material = new Material();
+				material->ambient = mat->ambient;
+				material->diffuse = mat->diffuse;
+				material->specular = mat->specular;
+				material->diffuseTexture = mat->diffuseTexName;
+				material->normalTexture = mat->normalTexName;
+				material->specularTexture = mat->specularTexName;
+				material->isDiffuse = mat->isDiffuse;
+				material->isNormal = mat->isNormal;
+				material->isSpecular = mat->isSpecular;
+				
+				gameObject->GetComponent<MeshRenderer>()->SetMaterial(material); 
+			}
+
+			Vector3 localScale = { 1.0f, 1.0f, 1.0f };
+			Vector3 localRotation = { 0.f, 0.f, 0.f };
+			Vector3 localTranslation = { 0.f, .0f, 0.f };
+
+			if (mesh->parentName != "")
+			{
+				// 움.. 부모가 먼저 생기긴해
+				for (auto& gameObj : gameObjects)
+				{
+					if (gameObj->GetName() == mesh->parentName)
+					{
+						gameObject->GetTransform()->SetParent(gameObj->GetTransform());
+						gameObj->SetChild(gameObject);
+						XMMATRIX parentMatrixInverse = XMMatrixInverse(nullptr, gameObj->GetComponent<Transform>()->GetWorldMatrix());
+						XMMATRIX multipleMatrix = XMMatrixMultiply(gameObject->GetTransform()->GetNodeMatrix(), parentMatrixInverse);
+
+						Transform::DecomposeMatrix(multipleMatrix, localScale, localRotation, localTranslation);
+						break;
+					}
+				}
+			}
+			else
+			{
+				Transform::DecomposeMatrix(gameObject->GetTransform()->GetNodeMatrix(), localScale, localRotation, localTranslation);
+			}
+
+			gameObject->GetComponent<Transform>()->SetLocalScale(localScale);
+			gameObject->GetComponent<Transform>()->SetLocalRotation(localRotation);
+			gameObject->GetComponent<Transform>()->SetLocalPosition(localTranslation);
+			gameObject->GetComponent<Transform>()->SetOriScale(localScale);
+			gameObject->GetComponent<Transform>()->SetOriRot(localRotation);
+			gameObject->GetComponent<Transform>()->SetOriTrans(localTranslation);
+			gameObject->GetComponent<Transform>()->FixedUpdate();
+
+			gameObjects.push_back(gameObject);
+		}		
+	}
+
+	return gameObjects;
 }
 

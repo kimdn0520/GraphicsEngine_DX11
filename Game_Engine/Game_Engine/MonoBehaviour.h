@@ -18,10 +18,10 @@ public:
 	// 오브젝트가 꺼질때
 	virtual void OnDisable() {};
 
-	GameEngine_DLL void Instantiate(shared_ptr<GameObject> prefab, Vector3 pos);
+	GameEngine_DLL void Instantiate(GameObject* prefab, DirectX::SimpleMath::Vector3 pos);
 
 	// 프로그램 실행중에 게임오브젝트를 삭제할 수 있도록 해준다.
-	GameEngine_DLL void Destroy(shared_ptr<GameObject> gameObject);
+	GameEngine_DLL void Destroy(GameObject* gameObject);
 
 	virtual void OnTriggerEnter(ColliderBase* other) {};
 	virtual void OnTriggerStay(ColliderBase* other) {};

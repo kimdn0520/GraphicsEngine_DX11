@@ -44,6 +44,10 @@ GameEngine_DLL Text* GameObject::GetText()
 
 void GameObject::Awake()
 {
+	static int objectCount = 0;
+
+	_objectID = objectCount++;
+
 	if (_script != nullptr)
 		_script->Awake();
 

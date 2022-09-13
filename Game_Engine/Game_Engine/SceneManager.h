@@ -19,9 +19,9 @@ public:
 private:
 	Scene* _activeScene;
 	Scene* _nextScene;
-	map<string, Scene*> _sceneList;
+	map<std::string, Scene*> _sceneList;
 
-	string _nextSceneName;
+	std::string _nextSceneName;
 
 	std::queue<GameObject*> _destroyObjList;
 
@@ -46,14 +46,14 @@ public:
 	//const bool& IsReservedLoadScene() { return _isReservedLoadScene; }
 
 	// 저장되어있는 씬리스트들 겟또다제~
-	const map<string, Scene*> GetSceneList() { return _sceneList; }
+	const map<std::string, Scene*> GetSceneList() { return _sceneList; }
 
 	// 씬을 넣어주는 함수~
 	template <typename TScene>
-	void InputScene(string sceneName);
+	void InputScene(std::string sceneName);
 
 	// 씬을 불러옵니다~
-	GameEngine_DLL void LoadScene(string sceneName);
+	GameEngine_DLL void LoadScene(std::string sceneName);
 
 	// 예약된 씬을 불러올거야~
 	void ReservedSceneLoad();
@@ -70,15 +70,15 @@ public:
 	// 생성 예약된 오브젝트를 생성합니다.
 	void ReservedInstantiateGameObject();
 
-	GameEngine_DLL string& GetLoadSceneName() { return _nextSceneName; }
+	GameEngine_DLL std::string& GetLoadSceneName() { return _nextSceneName; }
 
-	GameEngine_DLL void SetLoadSceneName(string name) { _nextSceneName = name; }
+	GameEngine_DLL void SetLoadSceneName(std::string name) { _nextSceneName = name; }
 
 	void Release();
 };
 
 template<typename TScene>
-inline void SceneManager::InputScene(string sceneName)
+inline void SceneManager::InputScene(std::string sceneName)
 {
 	_sceneList[sceneName] = new TScene();
 }

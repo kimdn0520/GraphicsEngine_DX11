@@ -1,6 +1,10 @@
 #include "pch.h"
 #include "GameProcess.h"
 #include "GameEngine_Interface.h"
+#include "TestScene.h"
+
+#include "SceneManager.h"
+#include "DataManager.h"
 
 const int screenWidth = 1920;
 const int screenHeight = 1080;
@@ -145,9 +149,9 @@ void GameProcess::Init()
 	EngineInit(_hWnd, screenWidth, screenHeight);
 
 	{
-		//SceneManager::GetInstance()->InputScene<TestScene>("TestScene");
+		SceneManager::Get()->InputScene<TestScene>("TestScene");
 	
-		//SceneManager::GetInstance()->LoadScene("TitleScene");			
+		SceneManager::Get()->LoadScene("TestScene");			
 	}
 }
 
@@ -155,7 +159,7 @@ void GameProcess::Shutdown()
 {
 	EngineShutdown();
 
-	//DataManager::GetInstance()->Release();
+	DataManager::Get()->Release();
 
 	ShutdownWindows();
 }

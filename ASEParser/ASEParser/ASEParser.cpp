@@ -5,7 +5,10 @@
 
 ASEParser::ASEParser()
 	: _lexer(new Lexer())
-{}
+{
+	_parsingMeshInfo->meshName = "";
+	_parsingMeshInfo->parentName = "";
+}
 
 ASEParser::~ASEParser()
 {}
@@ -318,7 +321,7 @@ ASEData::ASEModel* ASEParser::Load(string filePath)
 			//-----------------------------------------
 		case TOKENR_TM_ANIMATION:
 		{
-			_parsingMeshInfo->isAnimation = true;		// 애니메이션을 갖고있는 오브젝트다..
+			_ASEModel->isAnimation = true;		// 애니메이션을 갖고있는 오브젝트다..
 
 			ASEData::ASEAnimation* animationClip = new ASEData::ASEAnimation();
 			_parsingMeshInfo->animationClips.push_back(animationClip);
@@ -731,6 +734,9 @@ void ASEParser::ResetData()
 	_normalIdx = 0;
 
 	_isNegativeScale = false;
+
+	_parsingMeshInfo->meshName = "";
+	_parsingMeshInfo->parentName = "";
 }
 
 void ASEParser::PushMesh()

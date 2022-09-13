@@ -29,11 +29,11 @@ public:
 public:
 	GameEngine_DLL Camera* GetMainCamera();
 
-	const vector<GameObject*>& GetGameObjects() { return _gameObjects; }
+	const std::vector<GameObject*>& GetGameObjects() { return _gameObjects; }
 
-	const vector<UI*>& GetUI() { return _ui; }
+	const std::vector<UI*>& GetUI() { return _ui; }
 
-	const vector<Text*>& GetText() { return _text; }
+	const std::vector<Text*>& GetText() { return _text; }
 
 	// 현재 씬에 게임오브젝트를 넣을거얌
 	GameEngine_DLL void AddGameObject(GameObject* gameObject);

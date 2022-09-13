@@ -5,7 +5,6 @@
 class MonoBehaviour;
 class Camera;
 class Transform;
-class ColliderBase;
 class UI;
 class Text;
 
@@ -24,10 +23,14 @@ public:
 
 private:
 	Tag _tag = Tag::Default;
-	string _name;
+	
+	std::string _name;
 
-	array<Component*, COMPONENT_COUNT> _components;			// 게임오브젝트가 갖고있는 컴포넌트들
+	std::array<Component*, COMPONENT_COUNT> _components;	// 게임오브젝트가 갖고있는 컴포넌트들
+	
 	MonoBehaviour* _script;									// 게임오브젝트당 스크립트는 하나만 들어간다.
+
+	int _objectID = 0;
 
 public:
 	bool isCheckFrustum = false;	// 프러스텀 체크해야할 오브젝트인가?
@@ -55,9 +58,9 @@ public:
 
 	GameEngine_DLL Text* GetText();
 
-	string GetName() { return _name; }
+	std::string GetName() { return _name; }
 
-	GameEngine_DLL void SetName(string name)
+	GameEngine_DLL void SetName(std::string name)
 	{
 		_name = name;
 	};
@@ -66,11 +69,13 @@ public:
 
 	GameEngine_DLL void SetTag(Tag tag) { _tag = tag; }
 
-	vector<GameObject*> _childs;
+	int GetObjectID() { return _objectID; }
 
-	vector<GameObject*>& GetChilds() { return _childs; }
+	std::vector<GameObject*> _childs;
 
-	GameEngine_DLL void PlayAnim(GameObject* gameObject, string name, bool isLoop);
+	std::vector<GameObject*>& GetChilds() { return _childs; }
+
+	GameEngine_DLL void PlayAnim(GameObject* gameObject, std::string name, bool isLoop);
 
 	GameEngine_DLL void SetChild(GameObject* child)
 	{
@@ -80,11 +85,11 @@ public:
 	GameEngine_DLL void SetActive(bool value);
 
 public:
-	void OnTriggerEnter(ColliderBase* other);
+	/*void OnTriggerEnter(ColliderBase* other);
 
 	void OnTriggerStay(ColliderBase* other);
 
-	void OnTriggerExit(ColliderBase* other);
+	void OnTriggerExit(ColliderBase* other);*/
 
 public:
 	void Awake();
@@ -134,6 +139,6 @@ inline void GameObject::AddComponent()
 	}
 	else
 	{
-		_script = dynamic_cast<MonoBehaviour>(newComponent);
+		_script = dynamic_cast<MonoBehaviour*>(newComponent);
 	}
 }
