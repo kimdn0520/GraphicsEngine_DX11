@@ -36,6 +36,12 @@ public:
 
 	void SendObjectRenderingData(ObjectInfo* objectInfo);
 
+	void SendCameraData(CameraInfo* cameraInfo);
+
+	void SendLightData(LightInfo* lightInfo);
+
+	void UpdateLightData(LightInfo* lightInfo);
+
 	void CreateMesh(std::vector<StaticMeshVertex> vertices, std::vector<unsigned int> indicies, std::string name, int topology, int rasterState);
 
 	void CreateMesh(std::vector<SkinnedMeshVertex> vertices, std::vector<unsigned int> indicies, std::string name, int topology, int rasterState);

@@ -1,6 +1,7 @@
 #pragma once
 #include "GraphicsEngineDLL.h"
 #include "Graphics_RenderingData.h"
+#include "Graphics_PerFrameData.h"
 #include "VertexDefine.h"
 
 class DepthStencilState;
@@ -48,6 +49,12 @@ public:
 	virtual GraphicsEngine_DLL RasterizerState* GetSolidNoneCull() abstract;
 
 	virtual GraphicsEngine_DLL void SendObjectRenderingData(ObjectInfo* objectInfo) abstract;
+
+	virtual GraphicsEngine_DLL void SendCameraData(CameraInfo* cameraInfo) abstract;
+
+	virtual GraphicsEngine_DLL void SendLightData(LightInfo* lightInfo) abstract;
+
+	virtual GraphicsEngine_DLL void UpdateLightData(LightInfo* lightInfo) abstract;
 
 	virtual GraphicsEngine_DLL void CreateMesh(std::vector<StaticMeshVertex> vertices, std::vector<unsigned int> indicies, std::string name, int topology, int rasterState) abstract;
 	

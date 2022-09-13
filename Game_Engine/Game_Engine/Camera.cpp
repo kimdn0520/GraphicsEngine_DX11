@@ -9,7 +9,8 @@ Camera::Camera(GameObject* gameObject)
 	_cameraTransform(gameObject->GetComponent<Transform>()),
 	_nearZ(1.0f), _farZ(500.0f), _fov(XM_PI / 4.f),
 	_width(static_cast<float>(GraphicsManager::Get()->GetScreenWidth())),
-	_height(static_cast<float>(GraphicsManager::Get()->GetScreenHeight()))
+	_height(static_cast<float>(GraphicsManager::Get()->GetScreenHeight())),
+	_cameraInfo(new CameraInfo())
 {}
 
 Camera::~Camera()
@@ -63,10 +64,10 @@ void Camera::Update()
 	UpdateViewMatrix();
 	UpdatePerspectiveMatrix();
 
-	_cameraInfo.worldPos = _cameraTransform->GetWorldPosition();
-	_cameraInfo.viewTM = _viewTM;
-	_cameraInfo.projTM = _projTM;
-	_cameraInfo.orthoProjTM = _orthoProjTM;
+	_cameraInfo->worldPos = _cameraTransform->GetWorldPosition();
+	_cameraInfo->viewTM = _viewTM;
+	_cameraInfo->projTM = _projTM;
+	_cameraInfo->orthoProjTM = _orthoProjTM;
 
-	// GraphicsEngineManager::GetInstance()->SetCameraInfo(_cameraInfo);
+	GraphicsManager::Get()->SendCameraData(_cameraInfo);
 }

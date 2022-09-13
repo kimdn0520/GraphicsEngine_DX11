@@ -38,7 +38,7 @@ private:
 	Matrix _orthoProjTM = {};
 	Matrix _reflectionTM = {};
 
-	CameraInfo _cameraInfo;
+	CameraInfo* _cameraInfo;
 
 public:
 	Matrix GetViewTM() { return _viewTM; }

@@ -10,6 +10,7 @@
 #include "LightManager.h"
 #include "ResourceManager.h"
 #include "ShaderManager.h"
+#include "RenderManager.h"
 
 void GraphicsEngine_DX11::Initialize(HWND hwnd, int screenWidth, int screenHeight)
 {
@@ -113,7 +114,7 @@ void GraphicsEngine_DX11::RenderingDataRender()
 	// 렌더 전에 라이트부터 업데이트 시키자
 	LightManager::Get()->Update();
 
-	//RenderManager::Get()->Render();
+	RenderManager::Get()->Render();
 }
 
 void GraphicsEngine_DX11::Present()
@@ -153,7 +154,22 @@ RasterizerState* GraphicsEngine_DX11::GetSolidNoneCull()
 
 void GraphicsEngine_DX11::SendObjectRenderingData(ObjectInfo* objectInfo)
 {
+	RenderManager::Get()->PushRenderData(objectInfo);
+}
 
+void GraphicsEngine_DX11::SendCameraData(CameraInfo* cameraInfo)
+{
+	RenderManager::s_cameraInfo = cameraInfo;
+}
+
+void GraphicsEngine_DX11::SendLightData(LightInfo* lightInfo)
+{
+	LightManager::Get()->SetLightInfo(lightInfo);
+}
+
+void GraphicsEngine_DX11::UpdateLightData(LightInfo* lightInfo)
+{
+	LightManager::Get()->UpdateLightInfo(lightInfo);
 }
 
 void GraphicsEngine_DX11::CreateMesh(std::vector<StaticMeshVertex> vertices, std::vector<unsigned int> indicies, std::string name, int topology, int rasterState)

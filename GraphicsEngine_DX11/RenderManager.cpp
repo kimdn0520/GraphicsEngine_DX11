@@ -2,7 +2,7 @@
 #include "RenderManager.h"
 
 RenderManager* RenderManager::renderManager = nullptr;
-CameraInfo RenderManager::s_cameraInfo;
+CameraInfo* RenderManager::s_cameraInfo;
 
 RenderManager* RenderManager::Get()
 {
@@ -39,5 +39,11 @@ void RenderManager::PushRenderData(ObjectInfo* objectInfo)
 
 void RenderManager::Render()
 {
-
+	// 섀도우
+	// 디퍼드 렌더
+	// SSAO
+	// 알파
+	// 포스트 프로세싱
+	// UI
+	// Debug..
 }

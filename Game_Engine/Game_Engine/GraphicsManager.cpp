@@ -60,6 +60,21 @@ void GraphicsManager::SendObjectRenderingData(ObjectInfo* objectInfo)
 	graphicsEngine->SendObjectRenderingData(objectInfo);
 }
 
+void GraphicsManager::SendCameraData(CameraInfo* cameraInfo)
+{
+	graphicsEngine->SendCameraData(cameraInfo);
+}
+
+void GraphicsManager::SendLightData(LightInfo* lightInfo)
+{
+	graphicsEngine->SendLightData(lightInfo);
+}
+
+void GraphicsManager::UpdateLightData(LightInfo* lightInfo)
+{
+	graphicsEngine->UpdateLightData(lightInfo);
+}
+
 void GraphicsManager::CreateMesh(std::vector<StaticMeshVertex> vertices, std::vector<unsigned int> indicies, std::string name, int topology, int rasterState)
 {
 	graphicsEngine->CreateMesh(vertices, indicies, name, topology, rasterState);

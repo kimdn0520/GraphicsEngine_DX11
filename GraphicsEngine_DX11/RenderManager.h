@@ -14,7 +14,7 @@ private:
 public:
 	static RenderManager* Get();
 
-	static CameraInfo s_cameraInfo;
+	static CameraInfo* s_cameraInfo;
 
 private:
 	// pass
