@@ -9,7 +9,6 @@ private:
 
 	ComPtr<ID3D11Texture2D> _depthStencilBuffer;
 	ComPtr<ID3D11DepthStencilView> _depthStencilView;
-	D3D11_VIEWPORT _screenViewport;
 
 
 public:
@@ -26,7 +25,6 @@ public:
 	ComPtr<ID3D11RenderTargetView> GetRenderTargetView() { return _renderTargetView; }
 	ComPtr<ID3D11ShaderResourceView> GetSRV() { return _shaderResourceView; }
 	ComPtr<ID3D11DepthStencilView> GetDepthStencilView() { return _depthStencilView; }
-	D3D11_VIEWPORT& GetViewPort() { return _screenViewport; }
 
 	void ClearRenderTarget(ComPtr<ID3D11DeviceContext> deviceContext, Vector4 inputColor);
 

@@ -74,6 +74,11 @@ __declspec(align(16)) struct cbMesh
 	unsigned int objectID;
 };
 
+__declspec(align(16)) struct cbSkinned
+{
+	Matrix gBoneTransforms[96];
+};
+
 __declspec(align(16)) struct cbLight
 {
 	DirectionalLight gDirLight[DIRECTION_LIGHT_COUNT];

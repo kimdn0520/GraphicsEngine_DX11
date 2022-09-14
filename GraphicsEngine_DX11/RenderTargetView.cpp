@@ -68,16 +68,16 @@ void RenderTargetView::BackBufferRenderTarget(
 	// 렌더타겟뷰, 뎁스/스탠실뷰를 파이프라인에 바인딩한다.
 	deviceContext->OMSetRenderTargets(1, _renderTargetView.GetAddressOf(), _depthStencilView.Get());
 
-	// Set the viewport transform.
-	/// 뷰포트 변환을 셋팅한다.
-	_screenViewport.TopLeftX = 0;
-	_screenViewport.TopLeftY = 0;
-	_screenViewport.Width = static_cast<float>(width);
-	_screenViewport.Height = static_cast<float>(height);
-	_screenViewport.MinDepth = 0.0f;
-	_screenViewport.MaxDepth = 1.0f;
+	// 따로 빼주었다.
+	// 뷰포트 변환을 셋팅한다.
+	//_screenViewport.TopLeftX = 0;
+	//_screenViewport.TopLeftY = 0;
+	//_screenViewport.Width = static_cast<float>(width);
+	//_screenViewport.Height = static_cast<float>(height);
+	//_screenViewport.MinDepth = 0.0f;
+	//_screenViewport.MaxDepth = 1.0f;
 
-	deviceContext->RSSetViewports(1, &_screenViewport);
+	//deviceContext->RSSetViewports(1, &_screenViewport);
 }
 
 bool RenderTargetView::RenderTargetTextureInit(ComPtr<ID3D11Device> device, int width, int height, DXGI_FORMAT format)
@@ -176,16 +176,6 @@ bool RenderTargetView::RenderTargetTextureInit(ComPtr<ID3D11Device> device, int 
 	{
 		return false;
 	}
-
-	// Set the viewport transform.
-	/// 뷰포트 변환을 셋팅한다.
-	ZeroMemory(&_screenViewport, sizeof(D3D11_VIEWPORT));
-	_screenViewport.TopLeftX = 0;
-	_screenViewport.TopLeftY = 0;
-	_screenViewport.Width = static_cast<float>(width);
-	_screenViewport.Height = static_cast<float>(height);
-	_screenViewport.MinDepth = 0.0f;
-	_screenViewport.MaxDepth = 1.0f;
 
 	return true;
 }

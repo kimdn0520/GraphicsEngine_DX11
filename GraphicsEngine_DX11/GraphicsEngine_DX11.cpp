@@ -6,6 +6,7 @@
 #include "RasterizerState.h"
 #include "RenderTargetView.h"
 #include "BlendState.h"
+#include "ViewPort.h"
 
 #include "LightManager.h"
 #include "ResourceManager.h"
@@ -29,13 +30,15 @@ void GraphicsEngine_DX11::Initialize(HWND hwnd, int screenWidth, int screenHeigh
 	_solidRasterizerState = new RasterizerState();			// solid
 	_solidNoneCullRasterizerState = new RasterizerState();	// solidNoneCull
 	_alphaBlendState = new BlendState();
+	_mainViewPort = new ViewPort();
 
 	_device->Initialize(_windowInfo);
 	_swapChain->Initialize(_windowInfo, _device);
 	_solidRasterizerState->Initialize(_device, D3D11_CULL_BACK, D3D11_FILL_SOLID);
 	_wireRasterizerState->Initialize(_device, D3D11_CULL_BACK, D3D11_FILL_WIREFRAME);
 	_solidNoneCullRasterizerState->Initialize(_device, D3D11_CULL_NONE, D3D11_FILL_SOLID);
-		
+	_mainViewPort->Initialize(Vector2::Zero, screenWidth, screenHeight);
+
 	OnResize(screenWidth, screenHeight);
 
 	// Manager initialize
@@ -60,6 +63,7 @@ void GraphicsEngine_DX11::Release()
 	_solidNoneCullRasterizerState->Release();
 	_alphaBlendState->Release();
 	_device->Release();
+	_mainViewPort->Release();
 }
 
 void GraphicsEngine_DX11::OnResize(const int& screenWidth, const int& screenHeight)
@@ -86,6 +90,10 @@ void GraphicsEngine_DX11::OnResize(const int& screenWidth, const int& screenHeig
 		_disableDepthStencilState->Initialize(_device, false, D3D11_COMPARISON_LESS);
 		_skyBoxDepthStencilState->Initialize(_device, false, D3D11_COMPARISON_LESS_EQUAL);
 		_alphaBlendState->Initialize(_device);
+		_mainViewPort->OnResize(screenWidth, screenHeight);
+
+		// RSSetViewports
+		_mainViewPort->SetViewPort(_device->GetDeviceContext());
 
 		// OnResize ½Ã ÁÖÀÇ 
 		_device->GetDeviceContext()->OMSetDepthStencilState(_depthStencilState->GetDepthStencilState().Get(), 1);

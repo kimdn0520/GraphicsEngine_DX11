@@ -5,6 +5,7 @@
 #include "Transform.h"
 #include "Camera.h"
 #include "MeshRenderer.h"
+#include "Light.h"
 
 #include "CameraScript.h"
 
@@ -24,6 +25,22 @@ void TestScene::Initialize()
 	camera->GetComponent<Transform>()->SetLocalPosition(DirectX::SimpleMath::Vector3(0.f, 10.f, 10.f));
 	camera->GetComponent<Transform>()->LookAt(DirectX::SimpleMath::Vector3(0.f, 0.f, 0.f));
 	AddGameObject(camera);
+
+	//---------------------------------------------------------------------------------------------------------
+	// Directional Light
+	//---------------------------------------------------------------------------------------------------------
+	GameObject* dirLight = new GameObject();
+	dirLight->SetName("dirLight");
+	dirLight->AddComponent<Transform>();
+	dirLight->AddComponent<Light>();
+	dirLight->GetComponent<Transform>()->SetLocalPosition(Vector3(20000.f, 20000.f, 20000.f));
+	dirLight->GetComponent<Light>()->SetLightType(LIGHT_TYPE::DIRECTIONAL_LIGHT);
+	dirLight->GetComponent<Light>()->SetLightDirection(Vector3(0.57735f, -0.57735f, 0.57735f));
+	dirLight->GetComponent<Light>()->SetDiffuse(Vector4(0.6f, 0.6f, 0.6f, 1.0f));	// 기본0.5 
+	dirLight->GetComponent<Light>()->SetAmbient(Vector4(0.6f, 0.6f, 0.6f, 1.0f));	// 기본0.2
+	dirLight->GetComponent<Light>()->SetSpecular(Vector4(0.2f, 0.2f, 0.2f, 1.0f));  // 기본0.5
+	dirLight->GetComponent<Light>()->SendLightInfo();
+	AddGameObject(dirLight);
 
 	//---------------------------------------------------------------------------------------------------------
 	// SkyBox

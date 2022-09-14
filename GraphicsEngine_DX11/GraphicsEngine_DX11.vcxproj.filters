@@ -44,6 +44,30 @@
     <Filter Include="Shader\ShaderResource">
       <UniqueIdentifier>{07508f74-3f57-4d6b-bf55-119b16b8d66f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader\Pass\Shadow">
+      <UniqueIdentifier>{b7b3ba5c-cb46-4fab-a844-91d571c48dd1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader\Pass\Deferred">
+      <UniqueIdentifier>{5d4ca583-484e-46dc-acfd-c25aaf7fb13d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader\Pass\SSAO">
+      <UniqueIdentifier>{9a58d98e-087b-4a7d-b174-8686a980204e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader\Pass\PostProcessing">
+      <UniqueIdentifier>{b35aa459-ed57-40c1-9739-59d2ba5dc62a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader\Pass\Alpha">
+      <UniqueIdentifier>{3cbd1dfc-a691-4048-a06e-cc9823ab57e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader\Pass\UI">
+      <UniqueIdentifier>{5d1ef5fd-aa73-486c-8b3f-7c7503ea00d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader\Pass\Text">
+      <UniqueIdentifier>{a75f7eb4-3f16-47e9-9311-618b1fb89deb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader\Pass\PassBase">
+      <UniqueIdentifier>{8d75046d-c6e1-4093-ade9-7c5442a7fa30}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -127,6 +151,15 @@
     <ClInclude Include="Graphics_RenderingData.h">
       <Filter>Export</Filter>
     </ClInclude>
+    <ClInclude Include="DeferredPass.h">
+      <Filter>Shader\Pass\Deferred</Filter>
+    </ClInclude>
+    <ClInclude Include="PassBase.h">
+      <Filter>Shader\Pass\PassBase</Filter>
+    </ClInclude>
+    <ClInclude Include="ViewPort.h">
+      <Filter>Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EnginePch.cpp">
@@ -192,5 +225,27 @@
     <ClCompile Include="PixelShader.cpp">
       <Filter>Shader\PixelShader</Filter>
     </ClCompile>
+    <ClCompile Include="DeferredPass.cpp">
+      <Filter>Shader\Pass\Deferred</Filter>
+    </ClCompile>
+    <ClCompile Include="PassBase.cpp">
+      <Filter>Shader\Pass\PassBase</Filter>
+    </ClCompile>
+    <ClCompile Include="ViewPort.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\GameClient\GameClient\Data\Shader\Model_VS.hlsl">
+      <Filter>Shader\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="..\GameClient\GameClient\Data\Shader\Model_PS.hlsl">
+      <Filter>Shader\HLSL</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\GameClient\GameClient\Data\Shader\LightHeader.hlsli">
+      <Filter>Shader\HLSL</Filter>
+    </None>
   </ItemGroup>
 </Project>

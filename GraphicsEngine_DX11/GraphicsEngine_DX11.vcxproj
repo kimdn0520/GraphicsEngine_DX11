@@ -161,6 +161,7 @@
   <ItemGroup>
     <ClInclude Include="BlendState.h" />
     <ClInclude Include="ConstantBufferDefine.h" />
+    <ClInclude Include="DeferredPass.h" />
     <ClInclude Include="DepthStencilState.h" />
     <ClInclude Include="Device.h" />
     <ClInclude Include="EnginePch.h" />
@@ -171,6 +172,7 @@
     <ClInclude Include="Graphics_RenderingData.h" />
     <ClInclude Include="LightManager.h" />
     <ClInclude Include="Mesh.h" />
+    <ClInclude Include="PassBase.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="PixelShader.h" />
     <ClInclude Include="RasterizerState.h" />
@@ -185,10 +187,12 @@
     <ClInclude Include="Texture.h" />
     <ClInclude Include="VertexDefine.h" />
     <ClInclude Include="VertexShader.h" />
+    <ClInclude Include="ViewPort.h" />
     <ClInclude Include="WindowInfo.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BlendState.cpp" />
+    <ClCompile Include="DeferredPass.cpp" />
     <ClCompile Include="DepthStencilState.cpp" />
     <ClCompile Include="Device.cpp" />
     <ClCompile Include="dllmain.cpp" />
@@ -197,6 +201,7 @@
     <ClCompile Include="Graphics_Interface.cpp" />
     <ClCompile Include="LightManager.cpp" />
     <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="PassBase.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -214,6 +219,32 @@
     <ClCompile Include="SwapChain.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="VertexShader.cpp" />
+    <ClCompile Include="ViewPort.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\GameClient\GameClient\Data\Shader\Model_PS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Model_PS</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Model_PS</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="..\GameClient\GameClient\Data\Shader\Model_VS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Model_VS</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Model_VS</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\GameClient\GameClient\Data\Shader\LightHeader.hlsli" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

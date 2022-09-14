@@ -28,13 +28,13 @@ void ShaderBase::ReleaseData()
 	_shaderResourceViewData.clear();
 
 	for (auto it : _constantBuffers)
-		delete it.ReleaseAndGetAddressOf();
+		it.Reset();
 
 	for (auto it : _samplerStates)
-		delete it.ReleaseAndGetAddressOf();
+		it.Reset();
 
 	for (auto it : _shaderResourceViews)
-		delete it.ReleaseAndGetAddressOf();
+		it.Reset();
 
 	_constantBuffers.clear();
 	_samplerStates.clear();

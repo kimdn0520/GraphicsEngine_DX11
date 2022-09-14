@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "RenderManager.h"
+#include "PassBase.h"
 
 RenderManager* RenderManager::renderManager = nullptr;
 CameraInfo* RenderManager::s_cameraInfo;
@@ -16,7 +17,7 @@ void RenderManager::Initialize()
 {
 	isInit = true;
 
-
+	PassBase::Initialize();
 }
 
 void RenderManager::OnResize(int width, int height)
@@ -30,6 +31,8 @@ void RenderManager::Release()
 		delete it;
 
 	_renderData.clear();
+	
+	PassBase::Reset();
 }
 
 void RenderManager::PushRenderData(ObjectInfo* objectInfo)

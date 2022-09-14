@@ -8,6 +8,7 @@ class DepthStencilState;
 class RasterizerState;
 class RenderTargetView;
 class BlendState;
+class ViewPort;
 		
 class GraphicsEngine_DX11 : public Graphics_Interface
 {
@@ -32,6 +33,8 @@ private:
 	RenderTargetView* _mainRenderTargetView;
 
 	BlendState* _alphaBlendState;
+
+	ViewPort* _mainViewPort;
 		
 public:
 	virtual void Initialize(HWND hwnd, int screenWidth, int screenHeight) override;

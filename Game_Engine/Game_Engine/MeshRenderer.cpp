@@ -10,6 +10,8 @@ MeshRenderer::MeshRenderer(GameObject* gameObject)
 	_objectInfo(new ObjectInfo())
 {
 	ZeroMemory(_objectInfo->finalBoneListMatrix, sizeof(XMMATRIX) * 96);
+
+	_objectInfo->objectID = GetGameObject()->GetObjectID();
 }
 
 MeshRenderer::~MeshRenderer()

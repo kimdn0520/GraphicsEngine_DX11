@@ -5,10 +5,7 @@
 
 ASEParser::ASEParser()
 	: _lexer(new Lexer())
-{
-	_parsingMeshInfo->meshName = "";
-	_parsingMeshInfo->parentName = "";
-}
+{}
 
 ASEParser::~ASEParser()
 {}

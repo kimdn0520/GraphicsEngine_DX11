@@ -23,7 +23,10 @@ void DataManager::Release()
 {
 	for (auto data : _dataResources)
 	{
-		delete& data.second;
+		for (auto gameObj : data.second)
+		{
+			delete gameObj;
+		}
 	}
 
 	_dataResources.clear();
