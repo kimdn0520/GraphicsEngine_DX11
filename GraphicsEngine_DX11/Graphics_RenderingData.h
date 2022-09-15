@@ -32,8 +32,9 @@ struct ObjectInfo
 	OBJECT_TYPE type = OBJECT_TYPE::DEFAULT;
 	
 	unsigned int objectID;
+
+	size_t meshID;
 	
-	std::string name;
 	DirectX::SimpleMath::Matrix worldTM;
 	DirectX::SimpleMath::Vector3 worldPos;
 	DirectX::SimpleMath::Matrix finalBoneListMatrix[96];

@@ -5,6 +5,8 @@
 
 ResourceManager* ResourceManager::resourceManager = nullptr;
 
+size_t ResourceManager::meshID = 0;
+
 ResourceManager* ResourceManager::Get()
 {
 	if (resourceManager == nullptr)
@@ -53,7 +55,7 @@ void ResourceManager::CreateTexture(const std::wstring& name, const std::wstring
 	_textures.insert(make_pair(name, texture));
 }
 
-Mesh* ResourceManager::GetMesh(std::string name)
+Mesh* ResourceManager::GetMesh(size_t id)
 {
-	return _meshs[name];
+	return _meshs[id];
 }

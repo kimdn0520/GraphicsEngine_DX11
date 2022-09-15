@@ -69,9 +69,9 @@ public:
 
 	virtual void UpdateLightData(LightInfo* lightInfo) override;
 
-	virtual void CreateMesh(std::vector<StaticMeshVertex> vertices, std::vector<unsigned int> indicies, std::string name, int topology, int rasterState) override;
+	virtual size_t CreateMesh(std::vector<StaticMeshVertex> vertices, std::vector<unsigned int> indicies, int topology, int rasterState) override;
 	
-	virtual void CreateMesh(std::vector<SkinnedMeshVertex> vertices, std::vector<unsigned int> indicies, std::string name, int topology, int rasterState) override;
+	virtual size_t CreateMesh(std::vector<SkinnedMeshVertex> vertices, std::vector<unsigned int> indicies, int topology, int rasterState) override;
 };
 
 

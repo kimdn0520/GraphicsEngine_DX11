@@ -61,7 +61,7 @@ void TestScene::Initialize()
 	box->GetComponent<Transform>()->SetLocalPosition(DirectX::SimpleMath::Vector3(0.f, 150.f, 0.f));
 	box->GetComponent<Transform>()->LookAt(DirectX::SimpleMath::Vector3(0.f, 0.f, 0.f));
 	box->AddComponent<MeshRenderer>();
-	box->GetComponent<MeshRenderer>()->SetMeshName("CubeMesh");
+	box->GetComponent<MeshRenderer>()->SetMeshID(0);				// cube´Â 0
 	Material* boxMaterial = new Material();
 	boxMaterial->ambient = Vector4(0.6f, 0.6f, 0.6f, 1.0f);
 	boxMaterial->diffuse = Vector4(0.6f, 0.6f, 0.6f, 1.0f);

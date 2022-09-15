@@ -96,7 +96,6 @@ void Resources::LoadCubeMesh(int topology, int rasterState)
 	GraphicsManager::Get()->CreateMesh(
 		vertices,
 		idx,
-		"CubeMesh",
 		topology,
 		rasterState);
 }
@@ -187,7 +186,6 @@ void Resources::LoadSphereMesh(int topology, int rasterState)
 	GraphicsManager::Get()->CreateMesh(
 		vertices,
 		idx,
-		"SphereMesh",
 		topology,
 		rasterState);
 }
@@ -210,7 +208,6 @@ void Resources::LoadAxisMesh(int topology, int rasterState)
 	GraphicsManager::Get()->CreateMesh(
 		vertices,
 		idx,
-		"AxisMesh",
 		topology,
 		rasterState);
 }
@@ -241,11 +238,11 @@ std::vector<GameObject*> Resources::LoadASE(std::string path, int topology, int 
 	// Animation이 없는 경우 StaticMesh
 	else
 	{
-		for (auto mesh : aseModel->meshInfos)
+		for (auto& mesh : aseModel->meshInfos)
 		{
 			std::vector<StaticMeshVertex> staticMeshVertices;
 
-			for (auto vertex : mesh->vertices)
+			for (auto& vertex : mesh->vertices)
 			{
 				StaticMeshVertex staticMeshVertex;
 				staticMeshVertex.position = vertex.pos;
@@ -257,11 +254,10 @@ std::vector<GameObject*> Resources::LoadASE(std::string path, int topology, int 
 				staticMeshVertices.push_back(staticMeshVertex);
 			}
 
-			// 해당 메시의 vertices, indices, name 그래픽스 ResourceManager에등록
-			GraphicsManager::Get()->CreateMesh(
+			// 해당 메시의 vertices, indices 그래픽스 ResourceManager에등록과 해당 meshID를 가져온다.
+			size_t meshID = GraphicsManager::Get()->CreateMesh(
 				staticMeshVertices,
 				mesh->indices,
-				mesh->meshName,
 				topology,
 				rasterizerState);
 
@@ -270,9 +266,9 @@ std::vector<GameObject*> Resources::LoadASE(std::string path, int topology, int 
 			gameObject->AddComponent<Transform>();
 			gameObject->GetComponent<Transform>()->SetNodeTM(mesh->nodeTM);
 			gameObject->AddComponent<MeshRenderer>();
-			gameObject->GetComponent<MeshRenderer>()->SetMeshName(mesh->meshName);
+			gameObject->GetComponent<MeshRenderer>()->SetMeshID(meshID);		// meshID 등록
 
-			for (auto mat : aseModel->materials)
+			for (auto& mat : aseModel->materials)
 			{
 				Material* material = new Material();
 				material->ambient = mat->ambient;

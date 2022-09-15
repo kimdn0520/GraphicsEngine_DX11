@@ -27,7 +27,7 @@ public:
 public:
 	ObjectInfo* GetObjectInfo() { return _objectInfo; }
 
-	GameEngine_DLL void SetMeshName(std::string meshName) { _objectInfo->name = meshName; }
+	GameEngine_DLL void SetMeshID(std::size_t meshID) { _objectInfo->meshID = meshID; }
 
 	GameEngine_DLL void SetMaterial(Material* material);
 

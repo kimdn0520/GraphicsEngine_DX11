@@ -31,15 +31,15 @@ public:
 
 	void Release();
 
-	void LoadCubeMesh(int topology, int rasterState);
+	void LoadCubeMesh(int topology, int rasterState);			// 0
 
-	void LoadSphereMesh(int topology, int rasterState);
+	void LoadSphereMesh(int topology, int rasterState);			// 1
 
-	void LoadAxisMesh(int topology, int rasterState);
+	void LoadAxisMesh(int topology, int rasterState);			// 2
 
-	void LoadGridMesh(int topology, int rasterState);
+	void LoadGridMesh(int topology, int rasterState);			// 3
 
-	void LoadScreenMesh(int topology, int rasterState);
+	void LoadScreenMesh(int topology, int rasterState);			// 4
 
 	GameEngine_DLL std::vector<GameObject*> LoadASE(std::string path, int topology, int rasterizerState);
 

@@ -15,12 +15,15 @@ private:
 public:
 	static ResourceManager* Get();
 
+public:
+	static size_t meshID;
+
 private:
 	std::wstring _texturePath;
 
 	std::unordered_map<std::wstring, Texture*> _textures;
 
-	std::unordered_map<std::string, Mesh*> _meshs;
+	std::unordered_map<std::size_t, Mesh*> _meshs;
 
 public:
 	void Initialize();
@@ -31,14 +34,14 @@ public:
 
 	void CreateTexture(const std::wstring& name, const std::wstring& path);
 
-	Mesh* GetMesh(std::string name);
+	Mesh* GetMesh(size_t id);
 
 	template <typename T>
-	void CreateMesh(std::vector<T> vertices, std::vector<unsigned int> indices, std::string name, int topology, int rasterizerState);
+	size_t CreateMesh(std::vector<T> vertices, std::vector<unsigned int> indices, int topology, int rasterizerState);
 };
 
 template<typename T>
-inline void ResourceManager::CreateMesh(std::vector<T> vertices, std::vector<unsigned int> indices, std::string name, int topology, int rasterizerState)
+inline size_t ResourceManager::CreateMesh(std::vector<T> vertices, std::vector<unsigned int> indices, int topology, int rasterizerState)
 {
 	Mesh* mesh = new Mesh();
 
@@ -56,8 +59,12 @@ inline void ResourceManager::CreateMesh(std::vector<T> vertices, std::vector<uns
 	mesh->CreateIndexBuffer(indices);
 	mesh->SetIndexBufferSize(indices.size());
 	mesh->stride = sizeof(T);
+	
+	mesh->meshID = meshID++;
 
-	_meshs.insert(make_pair(name, mesh));
+	_meshs.insert(std::make_pair(mesh->meshID, mesh));
+
+	return mesh->meshID;
 }
 
 

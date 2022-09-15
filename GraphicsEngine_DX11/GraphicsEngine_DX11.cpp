@@ -180,13 +180,13 @@ void GraphicsEngine_DX11::UpdateLightData(LightInfo* lightInfo)
 	LightManager::Get()->UpdateLightInfo(lightInfo);
 }
 
-void GraphicsEngine_DX11::CreateMesh(std::vector<StaticMeshVertex> vertices, std::vector<unsigned int> indicies, std::string name, int topology, int rasterState)
+size_t GraphicsEngine_DX11::CreateMesh(std::vector<StaticMeshVertex> vertices, std::vector<unsigned int> indicies, int topology, int rasterState)
 {
-	ResourceManager::Get()->CreateMesh(vertices, indicies, name, topology, rasterState);
+	return ResourceManager::Get()->CreateMesh(vertices, indicies, topology, rasterState);
 }
 
-void GraphicsEngine_DX11::CreateMesh(std::vector<SkinnedMeshVertex> vertices, std::vector<unsigned int> indicies, std::string name, int topology, int rasterState)
+size_t GraphicsEngine_DX11::CreateMesh(std::vector<SkinnedMeshVertex> vertices, std::vector<unsigned int> indicies, int topology, int rasterState)
 {
-	ResourceManager::Get()->CreateMesh(vertices, indicies, name, topology, rasterState);
+	return ResourceManager::Get()->CreateMesh(vertices, indicies, topology, rasterState);
 }
 

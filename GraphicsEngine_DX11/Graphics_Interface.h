@@ -56,9 +56,9 @@ public:
 
 	virtual GraphicsEngine_DLL void UpdateLightData(LightInfo* lightInfo) abstract;
 
-	virtual GraphicsEngine_DLL void CreateMesh(std::vector<StaticMeshVertex> vertices, std::vector<unsigned int> indicies, std::string name, int topology, int rasterState) abstract;
+	virtual GraphicsEngine_DLL size_t CreateMesh(std::vector<StaticMeshVertex> vertices, std::vector<unsigned int> indicies, int topology, int rasterState) abstract;
 	
-	virtual GraphicsEngine_DLL void CreateMesh(std::vector<SkinnedMeshVertex> vertices, std::vector<unsigned int> indicies, std::string name, int topology, int rasterState) abstract;
+	virtual GraphicsEngine_DLL size_t CreateMesh(std::vector<SkinnedMeshVertex> vertices, std::vector<unsigned int> indicies, int topology, int rasterState) abstract;
 };
 
 

@@ -4,6 +4,9 @@
 class Mesh
 {
 public:
+	size_t meshID = 0;
+
+public:
 	ComPtr<ID3D11Buffer> vertexBuffer;
 
 	ComPtr<ID3D11Buffer> indexBuffer;

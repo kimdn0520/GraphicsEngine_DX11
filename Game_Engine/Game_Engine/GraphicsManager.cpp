@@ -75,12 +75,12 @@ void GraphicsManager::UpdateLightData(LightInfo* lightInfo)
 	graphicsEngine->UpdateLightData(lightInfo);
 }
 
-void GraphicsManager::CreateMesh(std::vector<StaticMeshVertex> vertices, std::vector<unsigned int> indicies, std::string name, int topology, int rasterState)
+size_t GraphicsManager::CreateMesh(std::vector<StaticMeshVertex> vertices, std::vector<unsigned int> indicies, int topology, int rasterState)
 {
-	graphicsEngine->CreateMesh(vertices, indicies, name, topology, rasterState);
+	return graphicsEngine->CreateMesh(vertices, indicies, topology, rasterState);
 }
 
-void GraphicsManager::CreateMesh(std::vector<SkinnedMeshVertex> vertices, std::vector<unsigned int> indicies, std::string name, int topology, int rasterState)
+size_t GraphicsManager::CreateMesh(std::vector<SkinnedMeshVertex> vertices, std::vector<unsigned int> indicies, int topology, int rasterState)
 {
-	graphicsEngine->CreateMesh(vertices, indicies, name, topology, rasterState);
+	return graphicsEngine->CreateMesh(vertices, indicies, topology, rasterState);
 }
