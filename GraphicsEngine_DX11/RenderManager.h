@@ -2,6 +2,8 @@
 #include "Graphics_PerFrameData.h"
 #include "Graphics_RenderingData.h"
 
+class DeferredPass;
+
 class RenderManager
 {
 public:
@@ -17,7 +19,7 @@ public:
 	static CameraInfo* s_cameraInfo;
 
 private:
-	// pass
+	DeferredPass* _deferredPass;
 
 	std::vector<ObjectInfo*> _renderData;
 
@@ -34,6 +36,8 @@ public:
 	void Release();
 
 	void PushRenderData(ObjectInfo* objectInfo);
+	
+	void DeferredRender();
 
 	void Render();
 };

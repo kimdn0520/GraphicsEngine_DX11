@@ -1,6 +1,7 @@
 #pragma once
 #include "Graphics_Interface.h"
 #include "ShaderResource.h"
+#include "Device.h"
 
 enum class SHADER_TYPE
 {
@@ -62,7 +63,7 @@ inline void ShaderBase::ConstantBufferUpdate(T* cbuffer, std::string name)
 	case D3D11_USAGE_DEFAULT:
 	case D3D11_USAGE_IMMUTABLE:
 	{
-		Graphics_Interface::Get()->GetDeviceContext()
+		Graphics_Interface::Get()->GetDeviceClass()->GetDeviceContext()
 			->UpdateSubresource(_constantBuffers[it->second->register_slot].Get(),
 				0, nullptr,
 				cbuffer, 0, 0);
@@ -75,14 +76,14 @@ inline void ShaderBase::ConstantBufferUpdate(T* cbuffer, std::string name)
 		ZeroMemory(&mappedResource, sizeof(D3D11_MAPPED_SUBRESOURCE));
 
 		// GPU Access Lock Buffer Data..
-		Graphics_Interface::Get()->GetDeviceContext()->
-			Map(_constantBuffers[it->second->register_slot].Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+		Graphics_Interface::Get()->GetDeviceClass()->GetDeviceContext()
+			->Map(_constantBuffers[it->second->register_slot].Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 
 		// Copy Resource Data..
 		memcpy(mappedResource.pData, cbuffer, it->second->size);
 
 		// GPU Access UnLock Buffer Data..
-		Graphics_Interface::Get()->GetDeviceContext()
+		Graphics_Interface::Get()->GetDeviceClass()->GetDeviceContext()
 			->Unmap(_constantBuffers[it->second->register_slot].Get(), 0);
 	}
 	break;

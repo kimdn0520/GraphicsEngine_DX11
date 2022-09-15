@@ -91,3 +91,16 @@ __declspec(align(16)) struct cbLight
 	int gPointLightCnt;
 	int gSpotLightCnt;
 };
+
+__declspec(align(16)) struct cbMaterial
+{
+	Vector4 gMaterialAmbient;
+	Vector4 gMaterialDiffuse;
+	Vector4 gMaterialSpecular;
+	Vector4 gMaterialReflection;
+
+	BOOL isDiffuseTexture;			// hlsl에서 bool타입은 4byte 이므로 일로 구조체 넘겨줄때 BOOL로 넘겨줘야한대
+	BOOL isNormalTexture;
+	BOOL isSpecularTexture;
+	BOOL isLight = true;
+};

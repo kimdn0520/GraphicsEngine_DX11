@@ -3,9 +3,19 @@
 #include "Graphics_Interface.h"
 #include "RenderTargetView.h"
 #include "ViewPort.h"
+#include "VertexShader.h"
+#include "PixelShader.h"
+
+#include "RenderManager.h"
+#include "ShaderManager.h"
+#include "ResourceManager.h"
 
 void DeferredPass::Start()
 {
+	_model_VS = dynamic_cast<VertexShader*>(ShaderManager::Get()->GetShader(L"Model_VS"));
+	_model_Skinned_VS = dynamic_cast<VertexShader*>(ShaderManager::Get()->GetShader(L"Model_Skinned_VS"));
+	_model_PS = dynamic_cast<PixelShader*>(ShaderManager::Get()->GetShader(L"Model_PS"));
+
 	for (int i = 0; i < DEFERRED_COUNT - 1; i++)
 	{
 		_gBuffers[i] = new RenderTargetView();
@@ -75,8 +85,82 @@ void DeferredPass::BeginRender()
 	_screenViewPort->SetViewPort(g_deviceContext);
 }
 
-void DeferredPass::Render(std::vector<ObjectInfo*> mesh)
+void DeferredPass::Render(std::vector<ObjectInfo*> meshs)
 {
+	for (auto& mesh : meshs)
+	{
+		for (auto& mat : mesh->materials)
+		{
+			switch (mesh->type)
+			{
+			case OBJECT_TYPE::DEFAULT:
+			{
+				cbMesh cbMeshBuffer;
+				cbMeshBuffer.gWorld = mesh->worldTM;
+				cbMeshBuffer.gWorldViewProj = mesh->worldTM * RenderManager::s_cameraInfo->viewTM * RenderManager::s_cameraInfo->projTM;
+				cbMeshBuffer.objectID = mesh->objectID;
+				XMVECTOR det = XMMatrixDeterminant(mesh->worldTM);
+				cbMeshBuffer.gWorldInvTranspose = XMMatrixTranspose(XMMatrixInverse(&det, mesh->worldTM));
+
+				// Skinned Mesh
+				if (mesh->isSkinned)
+				{
+					cbSkinned cbSkinnedBuffer;
+					memcpy(&cbSkinnedBuffer.gBoneTransforms, mesh->finalBoneListMatrix, sizeof(Matrix) * 96);
+					_model_Skinned_VS->ConstantBufferUpdate(&cbMeshBuffer, "cbMesh");
+					_model_Skinned_VS->ConstantBufferUpdate(&cbSkinnedBuffer, "cbSkinned");
+					_model_Skinned_VS->Update();
+				}
+				// Static Mesh
+				else
+				{
+					_model_VS->ConstantBufferUpdate(&cbMeshBuffer, "cbMesh");
+					_model_VS->Update();
+				}
+
+				cbMaterial cbMaterialBuffer;
+				cbMaterialBuffer.gMaterialAmbient = mat->ambient;
+				cbMaterialBuffer.gMaterialDiffuse = mat->diffuse;
+				cbMaterialBuffer.gMaterialSpecular = mat->specular;
+				cbMaterialBuffer.gMaterialReflection = mat->reflection;
+				cbMaterialBuffer.isDiffuseTexture = mat->isDiffuse;
+				cbMaterialBuffer.isNormalTexture = mat->isNormal;
+				cbMaterialBuffer.isSpecularTexture = mat->isSpecular;
+
+				if (mat->isDiffuse)
+					_model_PS->SetResourceViewBuffer(mat->diffuseTexture, "gDiffuseMap");
+
+				if (mat->isNormal)
+					_model_PS->SetResourceViewBuffer(mat->normalTexture, "gNormalMap");
+
+				if (mat->isSpecular)
+					_model_PS->SetResourceViewBuffer(mat->specularTexture, "gSpecularMap");
+				
+				_model_PS->ConstantBufferUpdate(&cbMeshBuffer, "cbMesh");
+				_model_PS->ConstantBufferUpdate(&cbMaterialBuffer, "cbMaterial");
+
+				_model_PS->Update();
+
+				g_deviceContext->RSSetState(ResourceManager::Get()->GetMesh(mesh->name)->GetRasterState().Get());
+
+				unsigned int stride = ResourceManager::Get()->GetMesh(mesh->name)->stride;
+				unsigned int offset = 0;
+
+				g_deviceContext->IASetPrimitiveTopology(ResourceManager::Get()->GetMesh(mesh->name)->GetPrimitiveTopology());
+
+				g_deviceContext->IASetIndexBuffer(ResourceManager::Get()->GetMesh(mesh->name)->GetIndexBuffer().Get(), DXGI_FORMAT_R32_UINT, 0);
+
+				g_deviceContext->DrawIndexed(ResourceManager::Get()->GetMesh(mesh->name)->GetIdxBufferSize(), 0, 0);
+			}
+			case OBJECT_TYPE::SKY_BOX:
+			{
+
+			}
+			default:
+				break;
+			}
+		}
+	}
 }
 
 void DeferredPass::EndRender()

@@ -26,6 +26,11 @@ private:
 
 	ViewPort* _screenViewPort;
 
+private:
+	VertexShader* _model_VS;
+	VertexShader* _model_Skinned_VS;
+	PixelShader* _model_PS;
+
 public:
 	void Start() override;
 
@@ -35,7 +40,7 @@ public:
 
 	void BeginRender();
 
-	void Render(std::vector<ObjectInfo*> mesh);
+	void Render(std::vector<ObjectInfo*> meshs);
 
 	void EndRender();
 };

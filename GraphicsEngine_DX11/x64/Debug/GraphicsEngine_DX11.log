@@ -1,4 +1,14 @@
-﻿  ShaderBase.cpp
+﻿  DeferredPass.cpp
 D:\GraphicsEngine_DX11\GraphicsEngine_DX11\WindowInfo.h(4,1): warning C4099: 'WindowInfo': 처음에는 'class'을(를) 사용하여 형식 이름을 표시했는데 이제는 'struct'을(를) 사용하여 표시합니다.
 D:\GraphicsEngine_DX11\GraphicsEngine_DX11\WindowInfo.h(3): message : 'WindowInfo' 선언을 참조하십시오.
+  GraphicsEngine_DX11.cpp
+D:\GraphicsEngine_DX11\GraphicsEngine_DX11\WindowInfo.h(4,1): warning C4099: 'WindowInfo': 처음에는 'class'을(를) 사용하여 형식 이름을 표시했는데 이제는 'struct'을(를) 사용하여 표시합니다.
+D:\GraphicsEngine_DX11\GraphicsEngine_DX11\WindowInfo.h(3): message : 'WindowInfo' 선언을 참조하십시오.
+D:\GraphicsEngine_DX11\GraphicsEngine_DX11\ResourceManager.h(57,1): warning C4267: '인수': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\GraphicsEngine_DX11\GraphicsEngine_DX11\GraphicsEngine_DX11.cpp(185): message : 컴파일되는 함수 템플릿 인스턴스화 'void ResourceManager::CreateMesh<StaticMeshVertex>(std::vector<StaticMeshVertex,std::allocator<StaticMeshVertex>>,std::vector<std::seed_seq::result_type,std::allocator<std::seed_seq::result_type>>,std::string,int,int)'에 대한 참조를 확인하세요.
+D:\GraphicsEngine_DX11\GraphicsEngine_DX11\Mesh.h(49,1): warning C4267: '=': 'size_t'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\GraphicsEngine_DX11\GraphicsEngine_DX11\ResourceManager.h(55): message : 컴파일되는 함수 템플릿 인스턴스화 'void Mesh::CreateVertexBuffer<StaticMeshVertex>(const std::vector<StaticMeshVertex,std::allocator<StaticMeshVertex>> &)'에 대한 참조를 확인하세요.
+D:\GraphicsEngine_DX11\GraphicsEngine_DX11\GraphicsEngine_DX11.cpp(185): message : 컴파일되는 함수 템플릿 인스턴스화 'void ResourceManager::CreateMesh<StaticMeshVertex>(std::vector<StaticMeshVertex,std::allocator<StaticMeshVertex>>,std::vector<std::seed_seq::result_type,std::allocator<std::seed_seq::result_type>>,std::string,int,int)'에 대한 참조를 확인하세요.
+  RenderManager.cpp
+  코드를 생성하고 있습니다...
   GraphicsEngine_DX11.vcxproj -> D:\GraphicsEngine_DX11\Output\GraphicsEngine_DX11.dll

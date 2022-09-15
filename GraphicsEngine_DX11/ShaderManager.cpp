@@ -45,6 +45,8 @@ void ShaderManager::Release()
 void ShaderManager::SetInfo()
 {
 	_cbufferUsageList.insert(std::make_pair("cbMesh", D3D11_USAGE_DEFAULT));
+	_cbufferUsageList.insert(std::make_pair("cbSkinned", D3D11_USAGE_DEFAULT));
+	_cbufferUsageList.insert(std::make_pair("cbMaterial", D3D11_USAGE_DEFAULT));
 	_cbufferUsageList.insert(std::make_pair("cbLight", D3D11_USAGE_DEFAULT));
 
 	_samplerList.insert(std::make_pair("samAnisotropicWrap", (int)SAMSTATE::AnisotropicWrap));

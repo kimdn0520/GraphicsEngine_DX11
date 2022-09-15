@@ -3,7 +3,6 @@
 #include "SamplerStateDefine.h"
 #include "ResourceManager.h"
 #include "Texture.h"
-#include "Device.h"
 
 ShaderBase::ShaderBase(SHADER_TYPE shaderType, std::wstring shaderName)
 	: _shaderType(shaderType), _shaderName(shaderName)
