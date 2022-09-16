@@ -37,8 +37,6 @@ public:
 
 	void PushRenderData(ObjectInfo* objectInfo);
 	
-	void DeferredRender();
-
 	void Render();
 };
 

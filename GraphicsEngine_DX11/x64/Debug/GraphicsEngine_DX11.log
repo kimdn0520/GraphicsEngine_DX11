@@ -1,4 +1,2 @@
-﻿  DeferredPass.cpp
-C:\Users\김동민\Desktop\GraphicsEngine_DX11\GraphicsEngine_DX11\WindowInfo.h(4,1): warning C4099: 'WindowInfo': 처음에는 'class'을(를) 사용하여 형식 이름을 표시했는데 이제는 'struct'을(를) 사용하여 표시합니다.
-C:\Users\김동민\Desktop\GraphicsEngine_DX11\GraphicsEngine_DX11\WindowInfo.h(3): message : 'WindowInfo' 선언을 참조하십시오.
-  GraphicsEngine_DX11.vcxproj -> C:\Users\김동민\Desktop\GraphicsEngine_DX11\Output\GraphicsEngine_DX11.dll
+﻿  RenderManager.cpp
+  GraphicsEngine_DX11.vcxproj -> D:\GraphicsEngine_DX11\Output\GraphicsEngine_DX11.dll

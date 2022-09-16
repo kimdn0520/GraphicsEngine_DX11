@@ -68,7 +68,7 @@ void DeferredPass::OnResize(int width, int height)
 	_screenViewPort->OnResize(width, height);
 }
 
-void DeferredPass::BeginRender()
+void DeferredPass::RenderStart()
 {
 	for (int i = 0; i < DEFERRED_COUNT; i++)
 	{
@@ -87,6 +87,8 @@ void DeferredPass::BeginRender()
 
 void DeferredPass::Render(std::vector<ObjectInfo*> meshs)
 {
+	RenderStart();
+
 	for (auto& mesh : meshs)
 	{
 		for (auto& mat : mesh->materials)
@@ -161,52 +163,11 @@ void DeferredPass::Render(std::vector<ObjectInfo*> meshs)
 			}
 		}
 	}
+
+	RenderEnd();
 }
 
-void DeferredPass::EndRender()
+void DeferredPass::RenderEnd()
 {
-	//// 렌더링 타겟을 다시 백버퍼로 돌린다.
-	//GraphicsEngineAPI::GetInstance()->SetBackBufferRenderTarget();
-
-	//// z버퍼를 꺼준다.
-	//GraphicsEngineAPI::GetInstance()->TurnZBufferOff();
-
-	//// left ~ right : -1.0f ~ 1.0f 군요..!
-	//// top ~ bottom : 1.0f ~ -1.0f 군요..!
-	//_deferredWindow->Render(g_deviceContext, Vector4(-1.0f, 1.0f, 1.0f, -1.0f));	// 크기 얘로 조절
-
-	//// Solid로 설정
-	//g_deviceContext->RSSetState(GraphicsEngineAPI::GetInstance()->GetSolidClass()->GetRasterizerState().Get());
-
-	//// 버텍스 쉐이더 업데이트
-	//_deferred_VS->Update();
-
-	//// 픽셀 쉐이더에 SRV 셋팅 
-	//_deferred_PS->SetResourceViewBuffer(_gBuffers[0]->GetSRV().Get(), "Albedo");
-	//_deferred_PS->SetResourceViewBuffer(_gBuffers[1]->GetSRV().Get(), "Depth");
-	//_deferred_PS->SetResourceViewBuffer(_gBuffers[2]->GetSRV().Get(), "Normal");
-	//_deferred_PS->SetResourceViewBuffer(_gBuffers[3]->GetSRV().Get(), "Position");
-	//_deferred_PS->SetResourceViewBuffer(_gBuffers[4]->GetSRV().Get(), "MaterialID");		// 빛을 받을지 안받을지 // 이름을 바꿔준다.
-
-	///*_deferred_PS->SetResourceViewBuffer(_gReflectionSkySRV, "ReflectionSkyTexture");
-	//_deferred_PS->SetResourceViewBuffer(_gReflectionObjectSRV, "ReflectionObjectTexture");*/
-
-	////_deferred_PS->SetResourceViewBuffer(ResourceManager::)
-
-	//_deferred_PS->ConstantBufferUpdate(&LightManager::cbLightBuffer, "cbLight");
-	//_deferred_PS->ConstantBufferUpdate(&ResourceManager::cbMaterialBuffer, "cbMaterial");
-
-	//_cbTextureBuf.textureInfo = Vector4(												// 이녀석으로 텍스쳐의 uint를 뽑으려고 텍스쳐 사이즈 건네줌
-	//	static_cast<float>(GraphicsEngineAPI::GetInstance()->GetWindowInfo().width),
-	//	static_cast<float>(GraphicsEngineAPI::GetInstance()->GetWindowInfo().height),
-	//	1.f / GraphicsEngineAPI::GetInstance()->GetWindowInfo().width, 1.f / GraphicsEngineAPI::GetInstance()->GetWindowInfo().height);
-	//_deferred_PS->ConstantBufferUpdate(&_cbTextureBuf, "cbTexture");
-
-	//_deferred_PS->Update();
-
-	//// 그린다!
-	//g_deviceContext->DrawIndexed(_deferredWindow->GetIndexCount(), 0, 0);
-
-	//// z버퍼 다시 켜준다.
-	//GraphicsEngineAPI::GetInstance()->TurnZBufferOn();
+	
 }

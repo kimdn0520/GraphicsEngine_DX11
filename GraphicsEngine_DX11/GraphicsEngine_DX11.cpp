@@ -140,6 +140,28 @@ int GraphicsEngine_DX11::GetScreenHeight()
 	return _windowInfo.screenHeight;
 }
 
+void GraphicsEngine_DX11::RenderToBackBuffer()
+{
+	_device->GetDeviceContext()->OMSetRenderTargets(1, _mainRenderTargetView->GetRenderTargetView().GetAddressOf(), _mainRenderTargetView->GetDepthStencilView().Get());
+
+	_mainViewPort->SetViewPort(_device->GetDeviceContext());
+}
+
+void GraphicsEngine_DX11::TurnZBufferOn()
+{
+	_device->GetDeviceContext()->OMSetDepthStencilState(_depthStencilState->GetDepthStencilState().Get(), 1);
+}
+
+void GraphicsEngine_DX11::TurnZBufferOff()
+{
+	_device->GetDeviceContext()->OMSetDepthStencilState(_disableDepthStencilState->GetDepthStencilState().Get(), 1);
+}
+
+void GraphicsEngine_DX11::TurnSkyboxOn()
+{
+	_device->GetDeviceContext()->OMSetDepthStencilState(_skyBoxDepthStencilState->GetDepthStencilState().Get(), 1);
+}
+
 Device* GraphicsEngine_DX11::GetDeviceClass()
 {
 	return _device;

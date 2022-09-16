@@ -40,6 +40,14 @@ public:
 
 	virtual	int GetScreenHeight() abstract;
 
+	virtual void RenderToBackBuffer() abstract;
+
+	virtual void TurnZBufferOn() abstract;
+
+	virtual void TurnZBufferOff() abstract;
+
+	virtual void TurnSkyboxOn() abstract;
+
 	virtual GraphicsEngine_DLL Device* GetDeviceClass() abstract;
 							   
 	virtual GraphicsEngine_DLL RasterizerState* GetWire() abstract;

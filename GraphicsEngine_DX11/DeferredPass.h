@@ -19,9 +19,10 @@ public:
 	DeferredPass() = default;
 	~DeferredPass() = default;
 
-private:
+public:
 	RenderTargetView* _gBuffers[DEFERRED_COUNT];
 
+private:
 	ComPtr<ID3D11RenderTargetView> _gBufferViews[DEFERRED_COUNT];
 
 	ViewPort* _screenViewPort;
@@ -38,10 +39,10 @@ public:
 
 	void OnResize(int width, int height) override;
 
-	void BeginRender();
+	void RenderStart();
 
 	void Render(std::vector<ObjectInfo*> meshs);
 
-	void EndRender();
+	void RenderEnd();
 };
 

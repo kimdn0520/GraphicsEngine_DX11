@@ -53,6 +53,14 @@ public:
 	
 	virtual	int GetScreenHeight() override;
 	
+	virtual void RenderToBackBuffer() override;
+
+	virtual void TurnZBufferOn() override;
+
+	virtual void TurnZBufferOff() override;
+
+	virtual void TurnSkyboxOn() override;
+
 	virtual Device* GetDeviceClass() override;
 
 	virtual RasterizerState* GetWire() override;

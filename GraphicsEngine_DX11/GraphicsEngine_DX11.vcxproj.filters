@@ -68,6 +68,9 @@
     <Filter Include="Shader\Pass\PassBase">
       <UniqueIdentifier>{8d75046d-c6e1-4093-ade9-7c5442a7fa30}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader\Pass\Light">
+      <UniqueIdentifier>{4016d365-60d7-4dcc-9ae6-af9a0b4d00db}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -160,6 +163,9 @@
     <ClInclude Include="ViewPort.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="LightPass.h">
+      <Filter>Shader\Pass\Light</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EnginePch.cpp">
@@ -233,6 +239,9 @@
     </ClCompile>
     <ClCompile Include="ViewPort.cpp">
       <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="LightPass.cpp">
+      <Filter>Shader\Pass\Light</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
