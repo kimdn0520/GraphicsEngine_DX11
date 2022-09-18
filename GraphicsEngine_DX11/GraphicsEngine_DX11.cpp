@@ -19,7 +19,7 @@ void GraphicsEngine_DX11::Initialize(HWND hwnd, int screenWidth, int screenHeigh
 	_windowInfo.screenWidth = screenWidth;
 	_windowInfo.screenWidth = screenHeight;
 	_windowInfo.hwnd = hwnd;
-	_windowInfo.enable4xMSAA = true;
+	_windowInfo.enable4xMSAA = false;
 			
 	_device = new Device();
 	_swapChain = new SwapChain();
@@ -40,7 +40,7 @@ void GraphicsEngine_DX11::Initialize(HWND hwnd, int screenWidth, int screenHeigh
 	_wireRasterizerState->Initialize(_device, D3D11_CULL_BACK, D3D11_FILL_WIREFRAME);
 	_solidNoneCullRasterizerState->Initialize(_device, D3D11_CULL_NONE, D3D11_FILL_SOLID);
 	_mainViewPort->Initialize(Vector2::Zero, screenWidth, screenHeight);
-	_depthStencilView->Initialize(_device->GetDevice(), screenWidth, screenHeight, true);
+	_depthStencilView->Initialize(_device->GetDevice(), screenWidth, screenHeight, false);
 
 	OnResize(screenWidth, screenHeight);
 

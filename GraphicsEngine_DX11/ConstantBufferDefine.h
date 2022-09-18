@@ -109,3 +109,8 @@ __declspec(align(16)) struct cbTexture
 {
 	Vector4 textureInfo;
 };
+
+__declspec(align(16)) struct cbLightViewProj
+{
+	Matrix lightViewProj;
+};

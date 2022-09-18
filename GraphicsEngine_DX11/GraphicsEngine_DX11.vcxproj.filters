@@ -175,6 +175,9 @@
     <ClInclude Include="FinalPass.h">
       <Filter>Shader\Pass\Final</Filter>
     </ClInclude>
+    <ClInclude Include="ShadowPass.h">
+      <Filter>Shader\Pass\Shadow</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EnginePch.cpp">
@@ -258,6 +261,9 @@
     <ClCompile Include="FinalPass.cpp">
       <Filter>Shader\Pass\Final</Filter>
     </ClCompile>
+    <ClCompile Include="ShadowPass.cpp">
+      <Filter>Shader\Pass\Shadow</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\GameClient\GameClient\Data\Shader\Model_VS.hlsl">
@@ -270,6 +276,9 @@
       <Filter>Shader\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="..\GameClient\GameClient\Data\Shader\Light_PS.hlsl">
+      <Filter>Shader\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="..\GameClient\GameClient\Data\Shader\Shadow_VS.hlsl">
       <Filter>Shader\HLSL</Filter>
     </FxCompile>
   </ItemGroup>

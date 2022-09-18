@@ -37,7 +37,7 @@ void TestScene::Initialize()
 	dirLight->GetComponent<Light>()->SetLightType(LIGHT_TYPE::DIRECTIONAL_LIGHT);
 	dirLight->GetComponent<Light>()->SetLightDirection(Vector3(0.57735f, -0.57735f, 0.57735f));
 	dirLight->GetComponent<Light>()->SetDiffuse(Vector4(0.6f, 0.6f, 0.6f, 1.0f));	// 기본0.5 
-	dirLight->GetComponent<Light>()->SetAmbient(Vector4(0.6f, 0.6f, 0.6f, 1.0f));	// 기본0.2
+	dirLight->GetComponent<Light>()->SetAmbient(Vector4(0.7f, 0.7f, 0.7f, 1.0f));	// 기본0.2
 	dirLight->GetComponent<Light>()->SetSpecular(Vector4(0.2f, 0.2f, 0.2f, 1.0f));  // 기본0.5
 	dirLight->GetComponent<Light>()->SendLightInfo();
 	AddGameObject(dirLight);
@@ -71,8 +71,8 @@ void TestScene::Initialize()
 	GameObject* box = new GameObject();
 	box->SetName("box");
 	box->AddComponent<Transform>();
-	box->GetComponent<Transform>()->SetLocalPosition(DirectX::SimpleMath::Vector3(10.f, 0.f, 0.f));
-	box->GetComponent<Transform>()->SetLocalScale(DirectX::SimpleMath::Vector3(5.f, 5.f, 5.f));
+	box->GetComponent<Transform>()->SetLocalPosition(DirectX::SimpleMath::Vector3(0.f, 0.f, 0.f));
+	box->GetComponent<Transform>()->SetLocalScale(DirectX::SimpleMath::Vector3(20.f, 1.0f, 20.f));
 	box->AddComponent<MeshRenderer>();
 	box->GetComponent<MeshRenderer>()->SetMeshID(0);				// cube는 0
 	Material* boxMaterial = new Material();
@@ -82,6 +82,6 @@ void TestScene::Initialize()
 	box->GetComponent<MeshRenderer>()->SetMaterial(boxMaterial);
 	AddGameObject(box);
 
-	GenjiPrefab* genji = new GenjiPrefab(Vector3(0.f, 0.f, 0.f));
+	GenjiPrefab* genji = new GenjiPrefab(Vector3(0.f, 0.5f, 0.f));
 	AddGameObject(genji);
 }

@@ -21,10 +21,14 @@ void ShaderManager::CreateAllShaders()
 	// 타입, 셰이더 파일이름, 경로, entrypoint, 셰이더 매니저에 저장될 이름, 셰이더 매크로
 	CreateShader(SHADER_TYPE::VERTEX, L"Quad_VS.hlsl", _filepath, "Quad_VS", L"Quad_VS", nullptr);
 	
-	D3D_SHADER_MACRO model_MacroVS_1[] = { {"Skinned"}, {NULL, NULL} };										 // 스킨드 
+	D3D_SHADER_MACRO model_MacroVS_1[] = { {"Skinned"}, {NULL, NULL} };										  
 	CreateShader(SHADER_TYPE::VERTEX, L"Model_VS.hlsl", _filepath, "Model_VS", L"Model_VS", nullptr);
 	CreateShader(SHADER_TYPE::VERTEX, L"Model_VS.hlsl", _filepath, "Model_VS", L"Model_Skinned_VS", model_MacroVS_1);
 	CreateShader(SHADER_TYPE::PIXEL, L"Model_PS.hlsl", _filepath, "Model_PS", L"Model_PS", nullptr);
+
+	D3D_SHADER_MACRO shadow_MacroVS_1[] = { {"Skinned"}, {NULL, NULL} };										
+	CreateShader(SHADER_TYPE::VERTEX, L"Shadow_VS.hlsl", _filepath, "Shadow_VS", L"Shadow_VS", nullptr);
+	CreateShader(SHADER_TYPE::VERTEX, L"Shadow_VS.hlsl", _filepath, "Shadow_VS", L"Shadow_Skinned_VS", shadow_MacroVS_1);
 
 	CreateShader(SHADER_TYPE::PIXEL, L"Light_PS.hlsl", _filepath, "Light_PS", L"Light_PS", nullptr);
 
@@ -53,6 +57,7 @@ void ShaderManager::SetInfo()
 	_cbufferUsageList.insert(std::make_pair("cbMaterial", D3D11_USAGE_DEFAULT));
 	_cbufferUsageList.insert(std::make_pair("cbLight", D3D11_USAGE_DEFAULT));
 	_cbufferUsageList.insert(std::make_pair("cbTexture", D3D11_USAGE_DEFAULT));
+	_cbufferUsageList.insert(std::make_pair("cbLightViewProj", D3D11_USAGE_DEFAULT));
 
 	_samplerList.insert(std::make_pair("samAnisotropicWrap", (int)SAMSTATE::AnisotropicWrap));
 	_samplerList.insert(std::make_pair("samAnisotropicClamp", (int)SAMSTATE::AnisotropicClamp));

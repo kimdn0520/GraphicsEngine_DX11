@@ -74,8 +74,8 @@ float4 Light_PS(LightPixelIN input) : SV_Target
 
 		for (int i = 0; i < gDirLightCnt; i++)
 		{
-			ComputeDirectionalLight(float4(0.6f, 0.6f, 0.6f, 1.f), float4(0.6f, 0.6f, 0.6f, 1.f),
-				float4(0.3f, 0.3f, 0.3f, 1.f), float4(0.3f, 0.3f, 0.3f, 1.f),
+			ComputeDirectionalLight(float4(0.7f, 0.7f, 0.7f, 1.f), float4(0.7f, 0.7f, 0.7f, 1.f),
+				float4(0.4f, 0.4f, 0.4f, 1.f), float4(0.3f, 0.3f, 0.3f, 1.f),
 				gDirLight[i], normal, toEye,
 				A, D, S);
 

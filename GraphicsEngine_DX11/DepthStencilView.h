@@ -7,12 +7,19 @@ private:
 	
 	ComPtr<ID3D11DepthStencilView> _depthStencilView;
 
+	// shadow..?
+	ComPtr<ID3D11ShaderResourceView> _shaderResourceView;
+
 	bool _enable4xMsaa;
+
+	bool _isShadow = false;
 
 public:
 	ComPtr<ID3D11DepthStencilView> GetDepthStencilView() { return _depthStencilView; }
 
 	void Initialize(ComPtr<ID3D11Device> device, int width, int height, bool enable4xMsaa = false);
+
+	void InitializeShadowMap(ComPtr<ID3D11Device> device, int width, int height, bool enable4xMsaa = false);
 
 	void OnResize(ComPtr<ID3D11Device> device, int width, int height);
 

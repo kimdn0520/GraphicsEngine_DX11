@@ -49,12 +49,14 @@ Texture2D gSpecularMap : register(t2);
 
 SamplerState samAnisotropicWrap : register(s0);
 SamplerState samLinearWrap : register(s1);
+SamplerState samLinearClamp : register(s2);
 
 PS_OUT Model_PS(ModelPixelIn input) : SV_Target
 {
 	if (isDiffuseTexture)
 	{
-		input.color = gDiffuseMap.Sample(samAnisotropicWrap, input.uv);
+		// GammaCorrection 적용
+		input.color = pow(gDiffuseMap.Sample(samLinearClamp, input.uv), 2.2f);
 	}
 
 	// 0 <= r, g, b <= 1 을 만족하는 정규화된 성분들로 이루어진 (r,g,b)가 설정되었다. 
@@ -62,7 +64,7 @@ PS_OUT Model_PS(ModelPixelIn input) : SV_Target
 	// NormalSampleToWorldSpace 함수에서 단위벡터범위인 [-1, 1]로 비례 시켜준다.
 	if (isNormalTexture)
 	{
-		float3 normalMapSample = gNormalMap.Sample(samLinearWrap, input.uv).rgb;
+		float3 normalMapSample = gNormalMap.Sample(samLinearClamp, input.uv).rgb;
 		input.normal = NormalSampleToWorldSpace(normalMapSample, input.normal, input.tangent);
 	}
 

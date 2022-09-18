@@ -18,6 +18,9 @@
     <ContentFile>
       <FullPath>C:\Users\김동민\Desktop\GraphicsEngine_DX11\Output\Quad_VS.cso</FullPath>
     </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\김동민\Desktop\GraphicsEngine_DX11\Output\Shadow_VS.cso</FullPath>
+    </ContentFile>
   </ContentFiles>
   <SatelliteDlls />
   <NonRecipeFileRefs />
