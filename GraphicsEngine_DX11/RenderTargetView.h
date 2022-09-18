@@ -7,10 +7,6 @@ private:
 	ComPtr<ID3D11RenderTargetView> _renderTargetView;			// ∑ª¥ı≈∏∞Ÿ ∫‰
 	ComPtr<ID3D11ShaderResourceView> _shaderResourceView;		// ºŒ¿Ã¥ı ∏Æº“Ω∫ ∫‰
 
-	ComPtr<ID3D11Texture2D> _depthStencilBuffer;
-	ComPtr<ID3D11DepthStencilView> _depthStencilView;
-
-
 public:
 	void BackBufferRenderTarget(
 		const ComPtr<ID3D11Device>& device,
@@ -24,7 +20,6 @@ public:
 
 	ComPtr<ID3D11RenderTargetView> GetRenderTargetView() { return _renderTargetView; }
 	ComPtr<ID3D11ShaderResourceView> GetSRV() { return _shaderResourceView; }
-	ComPtr<ID3D11DepthStencilView> GetDepthStencilView() { return _depthStencilView; }
 
 	void ClearRenderTarget(ComPtr<ID3D11DeviceContext> deviceContext, Vector4 inputColor);
 

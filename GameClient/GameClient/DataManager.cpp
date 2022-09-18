@@ -21,13 +21,13 @@ void DataManager::DataLoad()
 
 void DataManager::Release()
 {
-	for (auto data : _dataResources)
+	/*for (auto data : _dataResources)
 	{
 		for (auto gameObj : data.second)
 		{
 			delete gameObj;
 		}
-	}
+	}*/
 
 	_dataResources.clear();
 }

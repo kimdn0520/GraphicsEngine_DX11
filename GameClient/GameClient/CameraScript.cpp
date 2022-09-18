@@ -8,7 +8,7 @@
 CameraScript::CameraScript(GameObject* gameObject)
 	: MonoBehaviour(gameObject),
 	_transform(gameObject->GetTransform()),
-	_speed(70.f)
+	_speed(20.f)
 {}
 
 CameraScript::~CameraScript()

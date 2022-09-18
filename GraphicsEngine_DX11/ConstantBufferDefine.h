@@ -104,3 +104,8 @@ __declspec(align(16)) struct cbMaterial
 	BOOL isSpecularTexture;
 	BOOL isLight = true;
 };
+
+__declspec(align(16)) struct cbTexture
+{
+	Vector4 textureInfo;
+};

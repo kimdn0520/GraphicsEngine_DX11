@@ -11,13 +11,14 @@ public:
 
 	ComPtr<ID3D11Buffer> indexBuffer;
 
-	ComPtr<ID3D11RasterizerState> rasterState;
-
-	D3D11_PRIMITIVE_TOPOLOGY topology;
-
-	unsigned int indexBufferSize;
-
 	unsigned int stride = 0;
+
+private:
+	unsigned int _indexBufferSize;
+
+	ComPtr<ID3D11RasterizerState> _rasterState;
+
+	D3D11_PRIMITIVE_TOPOLOGY _topology;
 
 public:
 	template <typename T>
@@ -25,21 +26,21 @@ public:
 
 	void CreateIndexBuffer(const std::vector<unsigned int>& indexBuffer);
 
-	unsigned int& GetIdxBufferSize() { return indexBufferSize; }
+	unsigned int& GetIdxBufferSize() { return _indexBufferSize; }
 
 	const ComPtr<ID3D11Buffer>& GetVertexBuffer() { return vertexBuffer; }
 
 	const ComPtr<ID3D11Buffer>& GetIndexBuffer() { return indexBuffer; }
 
-	const ComPtr<ID3D11RasterizerState>& GetRasterState() { return rasterState; }
+	const ComPtr<ID3D11RasterizerState>& GetRasterState() { return _rasterState; }
 
-	D3D11_PRIMITIVE_TOPOLOGY GetPrimitiveTopology() { return topology; }
+	D3D11_PRIMITIVE_TOPOLOGY GetPrimitiveTopology() { return _topology; }
 
-	void SetRenderState(ComPtr<ID3D11RasterizerState> rasterState) { rasterState = rasterState; }
+	void SetRenderState(ComPtr<ID3D11RasterizerState> rasterState) { _rasterState = rasterState; }
 
-	void SetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY topology) { topology = topology; }
+	void SetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY topology) { _topology = topology; }
 
-	void SetIndexBufferSize(unsigned int indexBufferSize) { indexBufferSize = indexBufferSize; }
+	void SetIndexBufferSize(unsigned int indexBufferSize) { _indexBufferSize = indexBufferSize; }
 };
 
 template<typename T>

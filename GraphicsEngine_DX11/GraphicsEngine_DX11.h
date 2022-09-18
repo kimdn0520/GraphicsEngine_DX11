@@ -7,6 +7,7 @@ class SwapChain;
 class DepthStencilState;
 class RasterizerState;
 class RenderTargetView;
+class DepthStencilView;
 class BlendState;
 class ViewPort;
 		
@@ -31,6 +32,8 @@ private:
 	RasterizerState* _solidNoneCullRasterizerState;
 
 	RenderTargetView* _mainRenderTargetView;
+
+	DepthStencilView* _depthStencilView;
 
 	BlendState* _alphaBlendState;
 

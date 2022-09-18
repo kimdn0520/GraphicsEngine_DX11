@@ -2,6 +2,7 @@
 #include "DeferredPass.h"
 #include "Graphics_Interface.h"
 #include "RenderTargetView.h"
+#include "DepthStencilView.h"
 #include "ViewPort.h"
 #include "VertexShader.h"
 #include "PixelShader.h"
@@ -16,21 +17,27 @@ void DeferredPass::Start()
 	_model_Skinned_VS = dynamic_cast<VertexShader*>(ShaderManager::Get()->GetShader(L"Model_Skinned_VS"));
 	_model_PS = dynamic_cast<PixelShader*>(ShaderManager::Get()->GetShader(L"Model_PS"));
 
+	gBuffers.resize(DEFERRED_COUNT);
+
 	for (int i = 0; i < DEFERRED_COUNT - 1; i++)
 	{
-		_gBuffers[i] = new RenderTargetView();
+		gBuffers[i] = new RenderTargetView();
 
-		_gBuffers[i]->RenderTargetTextureInit(g_device, Graphics_Interface::Get()->GetScreenWidth(), Graphics_Interface::Get()->GetScreenHeight(), DXGI_FORMAT_R32G32B32A32_FLOAT);
+		gBuffers[i]->RenderTargetTextureInit(g_device, Graphics_Interface::Get()->GetScreenWidth(), Graphics_Interface::Get()->GetScreenHeight(), DXGI_FORMAT_R32G32B32A32_FLOAT);
 
-		_gBufferViews[i] = _gBuffers[i]->GetRenderTargetView();	// rtv 가져온다.
+		_gBufferViews[i] = gBuffers[i]->GetRenderTargetView();	// rtv 가져온다.
 	}
 
-	_gBuffers[DEFERRED_COUNT - 1] = new RenderTargetView();
+	gBuffers[DEFERRED_COUNT - 1] = new RenderTargetView();
 
 	// !!! 얘는 DXGI_FORMAT_R32_UINT로 해줘야해 SV_Target을 uint로 뽑을거기때문에
-	_gBuffers[DEFERRED_COUNT - 1]->RenderTargetTextureInit(g_device, Graphics_Interface::Get()->GetScreenWidth(), Graphics_Interface::Get()->GetScreenHeight(), DXGI_FORMAT_R32_UINT);
+	gBuffers[DEFERRED_COUNT - 1]->RenderTargetTextureInit(g_device, Graphics_Interface::Get()->GetScreenWidth(), Graphics_Interface::Get()->GetScreenHeight(), DXGI_FORMAT_R32_UINT);
 
-	_gBufferViews[DEFERRED_COUNT - 1] = _gBuffers[DEFERRED_COUNT - 1]->GetRenderTargetView();
+	_gBufferViews[DEFERRED_COUNT - 1] = gBuffers[DEFERRED_COUNT - 1]->GetRenderTargetView();
+
+	_deferredDSV = new DepthStencilView();
+
+	_deferredDSV->Initialize(g_device, Graphics_Interface::Get()->GetScreenWidth(), Graphics_Interface::Get()->GetScreenHeight());
 
 	_screenViewPort = new ViewPort();
 
@@ -41,10 +48,12 @@ void DeferredPass::Release()
 {
 	for (int i = 0; i < DEFERRED_COUNT; i++)
 	{
-		_gBuffers[i]->Release();
+		gBuffers[i]->Release();
 
 		_gBufferViews[i].ReleaseAndGetAddressOf();	// 오류 나려나?
 	}
+	
+	_deferredDSV->Release();
 
 	_screenViewPort->Release();
 }
@@ -53,17 +62,19 @@ void DeferredPass::OnResize(int width, int height)
 {
 	for (int i = 0; i < DEFERRED_COUNT - 1; i++)
 	{
-		_gBuffers[i]->RenderTargetTextureInit(g_device, width, height, DXGI_FORMAT_R32G32B32A32_FLOAT);
+		gBuffers[i]->RenderTargetTextureInit(g_device, width, height, DXGI_FORMAT_R32G32B32A32_FLOAT);
 
 		_gBufferViews[i].ReleaseAndGetAddressOf();
 
-		_gBufferViews[i] = _gBuffers[i]->GetRenderTargetView();
+		_gBufferViews[i] = gBuffers[i]->GetRenderTargetView();
 	}
 
-	_gBuffers[DEFERRED_COUNT - 1]->RenderTargetTextureInit(g_device, width, height, DXGI_FORMAT_R32_UINT);
+	gBuffers[DEFERRED_COUNT - 1]->RenderTargetTextureInit(g_device, width, height, DXGI_FORMAT_R32_UINT);
 
 	_gBufferViews[DEFERRED_COUNT - 1].ReleaseAndGetAddressOf();
-	_gBufferViews[DEFERRED_COUNT - 1] = _gBuffers[DEFERRED_COUNT - 1]->GetRenderTargetView();
+	_gBufferViews[DEFERRED_COUNT - 1] = gBuffers[DEFERRED_COUNT - 1]->GetRenderTargetView();
+
+	_deferredDSV->OnResize(g_device, width, height);
 
 	_screenViewPort->OnResize(width, height);
 }
@@ -72,15 +83,17 @@ void DeferredPass::RenderStart()
 {
 	for (int i = 0; i < DEFERRED_COUNT; i++)
 	{
-		_gBuffers[i]->ClearRenderTarget(g_deviceContext, Vector4(0.0f, 0.0f, 0.0f, 1.0f));
+		gBuffers[i]->ClearRenderTarget(g_deviceContext, Vector4(0.0f, 0.0f, 0.0f, 1.0f));
 	}
+
+	_deferredDSV->ClearDepthStencilView(g_deviceContext);
 
 	// G-Buffer들이 혹시 쉐이더 리소스로 박혀있을 수 있으니 Unbind
 	ID3D11ShaderResourceView* nullSRV[DEFERRED_COUNT] = { nullptr };
 
 	g_deviceContext->PSSetShaderResources(0, DEFERRED_COUNT, nullSRV);
 
-	g_deviceContext->OMSetRenderTargets(DEFERRED_COUNT, _gBufferViews[0].GetAddressOf(), _gBuffers[0]->GetDepthStencilView().Get());
+	g_deviceContext->OMSetRenderTargets(DEFERRED_COUNT, _gBufferViews[0].GetAddressOf(), _deferredDSV->GetDepthStencilView().Get());
 
 	_screenViewPort->SetViewPort(g_deviceContext);
 }
@@ -128,6 +141,7 @@ void DeferredPass::Render(std::vector<ObjectInfo*> meshs)
 				cbMaterialBuffer.isDiffuseTexture = mat->isDiffuse;
 				cbMaterialBuffer.isNormalTexture = mat->isNormal;
 				cbMaterialBuffer.isSpecularTexture = mat->isSpecular;
+				cbMaterialBuffer.isLight = mat->isLight;
 
 				if (mat->isDiffuse)
 					_model_PS->SetResourceViewBuffer(mat->diffuseTexture, "gDiffuseMap");
@@ -148,10 +162,16 @@ void DeferredPass::Render(std::vector<ObjectInfo*> meshs)
 				unsigned int stride = ResourceManager::Get()->GetMesh(mesh->meshID)->stride;
 				unsigned int offset = 0;
 
+				// 토폴로지 설정
 				g_deviceContext->IASetPrimitiveTopology(ResourceManager::Get()->GetMesh(mesh->meshID)->GetPrimitiveTopology());
 
+				// 버텍스 버퍼 설정
+				g_deviceContext->IASetVertexBuffers(0, 1, ResourceManager::Get()->GetMesh(mesh->meshID)->GetVertexBuffer().GetAddressOf(), &stride, &offset);
+
+				// 인덱스 버퍼 설정
 				g_deviceContext->IASetIndexBuffer(ResourceManager::Get()->GetMesh(mesh->meshID)->GetIndexBuffer().Get(), DXGI_FORMAT_R32_UINT, 0);
 
+				// 그린다
 				g_deviceContext->DrawIndexed(ResourceManager::Get()->GetMesh(mesh->meshID)->GetIdxBufferSize(), 0, 0);
 			}
 			case OBJECT_TYPE::SKY_BOX:

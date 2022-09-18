@@ -3,6 +3,8 @@
 #include "Graphics_RenderingData.h"
 
 class DeferredPass;
+class LightPass;
+class FinalPass;
 
 class RenderManager
 {
@@ -20,6 +22,10 @@ public:
 
 private:
 	DeferredPass* _deferredPass;
+
+	LightPass* _lightPass;
+
+	FinalPass* _finalPass;
 
 	std::vector<ObjectInfo*> _renderData;
 

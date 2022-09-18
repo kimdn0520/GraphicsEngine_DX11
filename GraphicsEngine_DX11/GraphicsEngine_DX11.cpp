@@ -5,6 +5,7 @@
 #include "DepthStencilState.h"
 #include "RasterizerState.h"
 #include "RenderTargetView.h"
+#include "DepthStencilView.h"
 #include "BlendState.h"
 #include "ViewPort.h"
 
@@ -23,6 +24,7 @@ void GraphicsEngine_DX11::Initialize(HWND hwnd, int screenWidth, int screenHeigh
 	_device = new Device();
 	_swapChain = new SwapChain();
 	_mainRenderTargetView = new RenderTargetView();
+	_depthStencilView = new DepthStencilView();
 	_depthStencilState = new DepthStencilState();			// Z on
 	_disableDepthStencilState = new DepthStencilState();	// Z off
 	_skyBoxDepthStencilState = new DepthStencilState();		// skybox
@@ -38,6 +40,7 @@ void GraphicsEngine_DX11::Initialize(HWND hwnd, int screenWidth, int screenHeigh
 	_wireRasterizerState->Initialize(_device, D3D11_CULL_BACK, D3D11_FILL_WIREFRAME);
 	_solidNoneCullRasterizerState->Initialize(_device, D3D11_CULL_NONE, D3D11_FILL_SOLID);
 	_mainViewPort->Initialize(Vector2::Zero, screenWidth, screenHeight);
+	_depthStencilView->Initialize(_device->GetDevice(), screenWidth, screenHeight, true);
 
 	OnResize(screenWidth, screenHeight);
 
@@ -46,6 +49,7 @@ void GraphicsEngine_DX11::Initialize(HWND hwnd, int screenWidth, int screenHeigh
 	ResourceManager::Get()->Initialize();
 	ShaderManager::Get()->SetFilePath(L"Data/Shader/");
 	ShaderManager::Get()->CreateAllShaders();
+	RenderManager::Get()->Initialize();
 }
 
 void GraphicsEngine_DX11::Release()
@@ -91,12 +95,16 @@ void GraphicsEngine_DX11::OnResize(const int& screenWidth, const int& screenHeig
 		_skyBoxDepthStencilState->Initialize(_device, false, D3D11_COMPARISON_LESS_EQUAL);
 		_alphaBlendState->Initialize(_device);
 		_mainViewPort->OnResize(screenWidth, screenHeight);
+		_depthStencilView->OnResize(_device->GetDevice(), screenWidth, screenHeight);
 
 		// RSSetViewports
 		_mainViewPort->SetViewPort(_device->GetDeviceContext());
 
 		// OnResize ½Ã ÁÖÀÇ 
 		_device->GetDeviceContext()->OMSetDepthStencilState(_depthStencilState->GetDepthStencilState().Get(), 1);
+
+		if(RenderManager::Get()->isInit)
+			RenderManager::Get()->OnResize(screenWidth, screenHeight);
 	}
 }
 
@@ -114,7 +122,7 @@ void GraphicsEngine_DX11::MainBackBufferRender()
 	_device->GetDeviceContext()->ClearRenderTargetView(_mainRenderTargetView->GetRenderTargetView().Get(), color);
 		
 	// Clear the depth buffer. 
-	_device->GetDeviceContext()->ClearDepthStencilView(_mainRenderTargetView->GetDepthStencilView().Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	_device->GetDeviceContext()->ClearDepthStencilView(_depthStencilView->GetDepthStencilView().Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 }
 
 void GraphicsEngine_DX11::RenderingDataRender()
@@ -142,7 +150,9 @@ int GraphicsEngine_DX11::GetScreenHeight()
 
 void GraphicsEngine_DX11::RenderToBackBuffer()
 {
-	_device->GetDeviceContext()->OMSetRenderTargets(1, _mainRenderTargetView->GetRenderTargetView().GetAddressOf(), _mainRenderTargetView->GetDepthStencilView().Get());
+	MainBackBufferRender();
+
+	_device->GetDeviceContext()->OMSetRenderTargets(1, _mainRenderTargetView->GetRenderTargetView().GetAddressOf(), _depthStencilView->GetDepthStencilView().Get());
 
 	_mainViewPort->SetViewPort(_device->GetDeviceContext());
 }

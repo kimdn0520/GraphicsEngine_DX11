@@ -5,6 +5,7 @@
 class VertexShader;
 class PixelShader;
 class RenderTargetView;
+class DepthStencilView;
 class ViewPort;
 
 // [0 : DEPTH], [1 : Normal], [2 : Position], [3 : Albedo], [4 : ObjectID] 
@@ -20,10 +21,12 @@ public:
 	~DeferredPass() = default;
 
 public:
-	RenderTargetView* _gBuffers[DEFERRED_COUNT];
+	std::vector<RenderTargetView*> gBuffers;
 
 private:
 	ComPtr<ID3D11RenderTargetView> _gBufferViews[DEFERRED_COUNT];
+
+	DepthStencilView* _deferredDSV;
 
 	ViewPort* _screenViewPort;
 

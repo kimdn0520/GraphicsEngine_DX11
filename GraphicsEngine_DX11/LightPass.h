@@ -17,17 +17,14 @@ public:
 	LightPass() = default;
 	~LightPass() = default;
 
-private:
-	RenderTargetView* _depth_RT;
-	RenderTargetView* _normal_RT;
-	RenderTargetView* _position_RT;
-	RenderTargetView* _albedo_RT;
-	RenderTargetView* _objectID_RT;
+public:
+	RenderTargetView* lightingRTV;
 
+private:
 	ViewPort* _screenViewPort;
 
 private:
-	VertexShader* _light_VS;
+	VertexShader* _quad_VS;
 	PixelShader* _light_PS;
 
 public:

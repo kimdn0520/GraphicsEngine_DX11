@@ -18,7 +18,7 @@ void Mesh::CreateIndexBuffer(const std::vector<unsigned int>& indices)
 	D3D11_SUBRESOURCE_DATA indexInitData;
 	indexInitData.pSysMem = indices.data();
 
-	indexBufferSize = indices.size();
+	_indexBufferSize = indices.size();
 
 	Graphics_Interface::Get()->GetDeviceClass()->GetDevice()->
 		CreateBuffer(&indexBufferDesc, &indexInitData, indexBuffer.GetAddressOf());

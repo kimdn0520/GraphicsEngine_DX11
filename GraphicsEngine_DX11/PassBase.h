@@ -3,6 +3,8 @@
 
 class Graphics_Interface;
 
+constexpr size_t SCREEN_MESH = 4;
+
 class PassBase
 {
 public:

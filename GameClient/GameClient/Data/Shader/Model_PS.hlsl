@@ -20,7 +20,7 @@ cbuffer cbMaterial : register(b1)
 	bool isDiffuseTexture;			// hlsl에서 bool타입은 4byte 이므로 일로 구조체 넘겨줄때 BOOL로 넘겨줘야한대
 	bool isNormalTexture;
 	bool isSpecularTexture;
-	bool isUtil;
+	bool isLight;
 }
 
 struct ModelPixelIn
@@ -74,15 +74,16 @@ PS_OUT Model_PS(ModelPixelIn input) : SV_Target
 
 	input.color.a = 1.0f;
 
-	PS_OUT pout;
-
 	input.normal = normalize(input.normal);
+
+	PS_OUT pout = (PS_OUT) 0;
 
 	pout.depth = float4(input.pos.zzz, 1.0f);
 
 	pout.normal = float4(input.normal, 1.0f);
 
-	pout.pos = float4(input.posW, 1.0f);
+	// w에 isLight 끼워넣기 ㅎ
+	pout.pos = float4(input.posW, isLight);
 
 	pout.albedo = input.color;
 

@@ -71,6 +71,9 @@
     <Filter Include="Shader\Pass\Light">
       <UniqueIdentifier>{4016d365-60d7-4dcc-9ae6-af9a0b4d00db}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader\Pass\Final">
+      <UniqueIdentifier>{7cfc4bfe-41d9-4741-bad3-826127eecf48}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -166,6 +169,12 @@
     <ClInclude Include="LightPass.h">
       <Filter>Shader\Pass\Light</Filter>
     </ClInclude>
+    <ClInclude Include="DepthStencilView.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="FinalPass.h">
+      <Filter>Shader\Pass\Final</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EnginePch.cpp">
@@ -243,12 +252,24 @@
     <ClCompile Include="LightPass.cpp">
       <Filter>Shader\Pass\Light</Filter>
     </ClCompile>
+    <ClCompile Include="DepthStencilView.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="FinalPass.cpp">
+      <Filter>Shader\Pass\Final</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\GameClient\GameClient\Data\Shader\Model_VS.hlsl">
       <Filter>Shader\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="..\GameClient\GameClient\Data\Shader\Model_PS.hlsl">
+      <Filter>Shader\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="..\GameClient\GameClient\Data\Shader\Quad_VS.hlsl">
+      <Filter>Shader\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="..\GameClient\GameClient\Data\Shader\Light_PS.hlsl">
       <Filter>Shader\HLSL</Filter>
     </FxCompile>
   </ItemGroup>

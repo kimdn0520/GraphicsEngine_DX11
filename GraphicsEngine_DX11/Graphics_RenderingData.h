@@ -15,6 +15,7 @@ struct Material
 	bool isNormal = false;
 	bool isSpecular = false;
 	bool isReflection = false;
+	bool isLight = true;
 
 	std::wstring diffuseTexture;
 	std::wstring normalTexture;

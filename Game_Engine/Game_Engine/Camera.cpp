@@ -7,7 +7,7 @@
 Camera::Camera(GameObject* gameObject)
 	: Component(gameObject, COMPONENT_TYPE::CAMERA),
 	_cameraTransform(gameObject->GetComponent<Transform>()),
-	_nearZ(1.0f), _farZ(500.0f), _fov(XM_PI / 4.f),
+	_nearZ(0.1f), _farZ(500.0f), _fov(XM_PI / 4.f),
 	_width(static_cast<float>(GraphicsManager::Get()->GetScreenWidth())),
 	_height(static_cast<float>(GraphicsManager::Get()->GetScreenHeight())),
 	_cameraInfo(new CameraInfo())
