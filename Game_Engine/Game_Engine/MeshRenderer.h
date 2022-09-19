@@ -34,6 +34,8 @@ public:
 	// 스킨메시인지
 	void IsSkinnedMesh(bool value) { _objectInfo->isSkinned = value; }
 
+	void IsShadow(bool value) { _objectInfo->isShadow = value; }
+
 	// 본인지 아닌지
 	void SetIsBone(bool val) { _isBone = val; }
 

@@ -43,6 +43,8 @@ struct ObjectInfo
 	std::vector<Material*> materials;
 
 	bool isSkinned = false;
+
+	bool isShadow = true;
 };
 
 struct TextInfo

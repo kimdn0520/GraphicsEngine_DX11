@@ -32,7 +32,7 @@ public:
 
 	void RenderStart();
 
-	void Render(const std::vector<RenderTargetView*> gBuffers);
+	void Render(std::vector<ObjectInfo*> meshs);
 
 	void RenderEnd();
 };

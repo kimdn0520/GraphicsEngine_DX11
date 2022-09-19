@@ -56,6 +56,10 @@ void DeferredPass::Release()
 	_deferredDSV->Release();
 
 	_screenViewPort->Release();
+
+	delete _model_VS;
+	delete _model_Skinned_VS;
+	delete _model_PS;
 }
 
 void DeferredPass::OnResize(int width, int height)

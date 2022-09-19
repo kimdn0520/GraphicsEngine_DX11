@@ -32,6 +32,9 @@ void LightPass::Release()
 	lightingRTV->Release();
 
 	_screenViewPort->Release();
+
+	delete _quad_VS;
+	delete _light_PS;
 }
 
 void LightPass::OnResize(int width, int height)

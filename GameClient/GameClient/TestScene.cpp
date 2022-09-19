@@ -66,6 +66,7 @@ void TestScene::Initialize()
 	Material* axisMaterial = new Material();
 	axisMaterial->isLight = false;
 	axis->GetComponent<MeshRenderer>()->SetMaterial(axisMaterial);
+	axis->GetComponent<MeshRenderer>()->IsShadow(false);			// ÀÌ³à¼®Àº ¼¨µµ¿ì ¾ÈÇÒ°Çµ­~
 	AddGameObject(axis);
 
 	GameObject* box = new GameObject();
