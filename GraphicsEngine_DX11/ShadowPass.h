@@ -23,6 +23,8 @@ private:
 	VertexShader* _shadow_VS;
 	VertexShader* _shadow_Skinned_VS;
 
+	cbLightViewProj cbLightViewProjBuffer;
+
 public:
 	void Start() override;
 

@@ -53,6 +53,12 @@ void ShadowPass::RenderStart()
 	// 그래픽 카드는 깊이만 그리는 작업에 최적화 되었다. 그래서 깊이 전용 렌더링 패스는
 	// 색상과 깊이를 모두 그리는 패스에 비해 훨씬 빠르다.
 	g_deviceContext->OMSetRenderTargets(0, nullptr, _shadowDSV->GetDepthStencilView().Get());
+
+	//for(auto dirLight : LightManager::Get()->dirLights)
+	//{
+	//	// Light View Projection Matrix 을 만들어야한다.
+	//	cbLightViewProjBuffer.lightViewProj = XMMatrixLookAtLH()
+	//}
 }
 
 void ShadowPass::Render(std::vector<ObjectInfo*> meshs)
