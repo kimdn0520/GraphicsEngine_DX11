@@ -81,6 +81,7 @@ void TestScene::Initialize()
 	boxMaterial->diffuse = Vector4(0.6f, 0.6f, 0.6f, 1.0f);
 	boxMaterial->specular = Vector4(0.5f, 0.5f, 0.5f, 1.0f);
 	box->GetComponent<MeshRenderer>()->SetMaterial(boxMaterial);
+	box->GetComponent<MeshRenderer>()->IsShadow(false);			// ÀÌ³à¼®Àº ¼¨µµ¿ì ¾ÈÇÒ°Çµ­~
 	AddGameObject(box);
 
 	GenjiPrefab* genji = new GenjiPrefab(Vector3(0.f, 0.5f, 0.f));

@@ -227,25 +227,30 @@ float3 NormalSampleToWorldSpace(float3 normalMapSample, float3 unitNormalW, floa
 
 float CalcShadowFactor(SamplerComparisonState samShadow,
 	Texture2D shadowMap,
-	float3 shadowPosH)
+	float3 shadowPosNDC, float4 textureInfo)
 {
 	// Depth in NDC space.
-	float depth = shadowPosH.z;
+	float depth = shadowPosNDC.z;
+
+	// Ω¶µµøÏ ∏ ¿« ≈ÿºø ≈©±‚
+	const float dx = textureInfo.z;
+
+	const float dy = textureInfo.w;
 
 	float percentLit = 0.0f;
 
-	const int2 offset[9] =
+	const float2 offset[9] =
 	{
-		int2(-1, -1), int2(0, -1), int2(1, -1),
-		int2(-1, 0), int2(0, 0), int2(1, 0),
-		int2(-1, +1), int2(0, +1), int2(1, +1)
+		float2(-dx, -dy), float2(0.0f, -dy), float2(dx, -dy),
+		float2(-dx, 0.0f), float2(0.0f, 0.0f), float2(dx, 0.0f),
+		float2(-dx, +dy), float2(0.0f, +dy), float2(dx, +dy)
 	};
 
 	[unroll]
 	for (int i = 0; i < 9; ++i)
 	{
 		percentLit += shadowMap.SampleCmpLevelZero(samShadow,
-			shadowPosH.xy, depth, offset[i]).r;
+			shadowPosNDC.xy + offset[i], depth).r;
 	}
 
 	return percentLit /= 9.0f;

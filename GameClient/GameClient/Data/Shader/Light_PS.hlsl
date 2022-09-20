@@ -65,7 +65,7 @@ float4 Light_PS(LightPixelIN input) : SV_Target
 	float shadowVal = 1.0f;
 
 	shadow.xyz /= shadow.w;
-	shadowVal = CalcShadowFactor(samLinearPointBoarder, Shadow, float3(shadow.xyz));
+	shadowVal = CalcShadowFactor(samLinearPointBoarder, Shadow, float3(shadow.xyz), textureInfo);
 
 	// √ ±‚»≠..
 	float4 ambient = float4(depth.z - depth.z, objectID - objectID, 0.0f, 0.0f);

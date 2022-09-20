@@ -68,6 +68,8 @@ void Light::Update()
 		SetLightViewProj();
 	}
 
+	_preDirection = _curDirection;
+
 	GraphicsManager::Get()->UpdateLightData(_lightInfo);
 }
 
