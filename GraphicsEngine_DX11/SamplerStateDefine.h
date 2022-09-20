@@ -6,6 +6,7 @@ enum class SAMSTATE
 	AnisotropicClamp,
 	LinearWrap,
 	LinearClamp,
+	LinearPointBoarder,
 	PointWrap,
 	PointClamp,
 };

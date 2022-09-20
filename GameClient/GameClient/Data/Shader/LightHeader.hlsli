@@ -10,6 +10,8 @@ struct DirectionalLight
 	float4 Specular;
 	float3 Direction;
 	float Pad; // Pad the last float so we can set an array of lights if we wanted.
+
+	float4x4 LightViewProj;
 };
 
 struct PointLight
@@ -25,6 +27,8 @@ struct PointLight
 	// Packed into 4D vector: (A0, A1, A2, Pad)
 	float3 Att;
 	float Pad; // Pad the last float so we can set an array of lights if we wanted.
+
+	float4x4 LightViewProj;
 };
 
 struct SpotLight
@@ -44,6 +48,8 @@ struct SpotLight
 	// Packed into 4D vector: (Att, Pad)
 	float3 Att;
 	float Pad; // Pad the last float so we can set an array of lights if we wanted.
+
+	float4x4 LightViewProj;
 };
 
 //---------------------------------------------------------------------------------------
@@ -217,4 +223,30 @@ float3 NormalSampleToWorldSpace(float3 normalMapSample, float3 unitNormalW, floa
 	float3 bumpedNormalW = mul(normalT, TBN);
 
 	return bumpedNormalW;
+}
+
+float CalcShadowFactor(SamplerComparisonState samShadow,
+	Texture2D shadowMap,
+	float3 shadowPosH)
+{
+	// Depth in NDC space.
+	float depth = shadowPosH.z;
+
+	float percentLit = 0.0f;
+
+	const int2 offset[9] =
+	{
+		int2(-1, -1), int2(0, -1), int2(1, -1),
+		int2(-1, 0), int2(0, 0), int2(1, 0),
+		int2(-1, +1), int2(0, +1), int2(1, +1)
+	};
+
+	[unroll]
+	for (int i = 0; i < 9; ++i)
+	{
+		percentLit += shadowMap.SampleCmpLevelZero(samShadow,
+			shadowPosH.xy, depth, offset[i]).r;
+	}
+
+	return percentLit /= 9.0f;
 }

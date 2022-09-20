@@ -19,6 +19,8 @@ struct DirectionalLight
 	Vector4 Specular;
 	Vector3 Direction;
 	float Pad; // Pad the last float so we can set an array of lights if we wanted.
+
+	Matrix LightViewProj = Matrix();
 };
 
 struct PointLight
@@ -37,6 +39,8 @@ struct PointLight
 	// Packed into 4D vector: (A0, A1, A2, Pad)
 	Vector3 Att;
 	float Pad; // Pad the last float so we can set an array of lights if we wanted.
+
+	Matrix LightViewProj = Matrix();
 };
 
 struct SpotLight
@@ -59,6 +63,8 @@ struct SpotLight
 	Vector3 Att;
 	float Pad; // Pad the last float so we can set an array of lights if we wanted.
 	// Vector3∏È ∫Û pad∏¶ ≥÷æÓ¡‹
+
+	Matrix LightViewProj = Matrix();
 };
 
 //---------------------------------------------------------------------------------------------------------
@@ -113,4 +119,11 @@ __declspec(align(16)) struct cbTexture
 __declspec(align(16)) struct cbLightViewProj
 {
 	Matrix lightViewProj;
+};
+
+__declspec(align(16)) struct cbToneMapping
+{
+	float exposure;
+
+	Vector3 pad;
 };

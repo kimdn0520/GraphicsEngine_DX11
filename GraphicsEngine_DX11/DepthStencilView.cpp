@@ -49,7 +49,7 @@ void DepthStencilView::Initialize(ComPtr<ID3D11Device> device, int width, int he
 		depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 
 	// 뎁스/스텐실뷰 생성
-	device->CreateDepthStencilView(_depthStencilBuffer.Get(), 0, _depthStencilView.GetAddressOf());
+	device->CreateDepthStencilView(_depthStencilBuffer.Get(), &depthStencilViewDesc, _depthStencilView.GetAddressOf());
 }
 
 void DepthStencilView::InitializeShadowMap(ComPtr<ID3D11Device> device, int width, int height, bool enable4xMsaa)
@@ -62,8 +62,6 @@ void DepthStencilView::InitializeShadowMap(ComPtr<ID3D11Device> device, int widt
 	depthBufferDesc.MipLevels = 1;								// 밉맵 수준의 갯수. 깊이 스텐실 버퍼를 위한 텍스쳐는 하나만 있으면 돼
 	depthBufferDesc.ArraySize = 1;								// 텍스처 배열의 텍스처 갯수. 얘도 하나만 필요
 	depthBufferDesc.Format = DXGI_FORMAT_R24G8_TYPELESS;		// 다른점
-	depthBufferDesc.SampleDesc.Count = 1;
-	depthBufferDesc.SampleDesc.Quality = 0;
 
 	_enable4xMsaa = enable4xMsaa;
 
@@ -102,7 +100,7 @@ void DepthStencilView::InitializeShadowMap(ComPtr<ID3D11Device> device, int widt
 		depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 
 	// 뎁스/스텐실뷰 생성
-	device->CreateDepthStencilView(_depthStencilBuffer.Get(), 0, _depthStencilView.GetAddressOf());
+	device->CreateDepthStencilView(_depthStencilBuffer.Get(), &depthStencilViewDesc, _depthStencilView.GetAddressOf());
 
 	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
 	srvDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;

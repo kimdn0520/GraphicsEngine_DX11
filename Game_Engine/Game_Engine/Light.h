@@ -39,7 +39,13 @@ private:
 
 	shared_ptr<Transform> _transform;
 
-	Vector3 _direction;
+	Vector3 _preDirection;
+
+	Vector3 _curDirection;
+
+	Vector3 _centerPos;
+
+	float _shadowRadius;
 
 public:
 	GameEngine_DLL void SetLightType(LIGHT_TYPE type);
@@ -52,6 +58,8 @@ public:
 	GameEngine_DLL void SetATT(const Vector3& att) { _lightInfo->att = att; }
 	GameEngine_DLL void SetRange(float range) { _lightInfo->range = range; }
 	GameEngine_DLL void SetSpot(float spot) { _lightInfo->spot = spot; }
+
+	void SetLightViewProj();
 
 	GameEngine_DLL void SendLightInfo();
 

@@ -54,7 +54,7 @@ void LightPass::RenderStart()
 	_screenViewPort->SetViewPort(g_deviceContext);
 }
 
-void LightPass::Render(const std::vector<RenderTargetView*> gBuffers)
+void LightPass::Render(const std::vector<RenderTargetView*> gBuffers, DepthStencilView* shadowDSV)
 {
 	RenderStart();
 
@@ -66,7 +66,8 @@ void LightPass::Render(const std::vector<RenderTargetView*> gBuffers)
 	_light_PS->SetResourceViewBuffer(gBuffers[1]->GetSRV().Get(), "Normal");
 	_light_PS->SetResourceViewBuffer(gBuffers[2]->GetSRV().Get(), "Position");
 	_light_PS->SetResourceViewBuffer(gBuffers[3]->GetSRV().Get(), "Albedo");
-	_light_PS->SetResourceViewBuffer(gBuffers[4]->GetSRV().Get(), "ObjectID");		
+	_light_PS->SetResourceViewBuffer(gBuffers[4]->GetSRV().Get(), "ObjectID");
+	_light_PS->SetResourceViewBuffer(shadowDSV->GetShaderResourceView().Get(), "Shadow");
 
 	_light_PS->ConstantBufferUpdate(&LightManager::cbLightBuffer, "cbLight");
 
@@ -102,5 +103,7 @@ void LightPass::Render(const std::vector<RenderTargetView*> gBuffers)
 
 void LightPass::RenderEnd()
 {
-	
+	ID3D11ShaderResourceView* nullSRV[6] = { nullptr };
+
+	g_deviceContext->PSSetShaderResources(0, 6, nullSRV);
 }

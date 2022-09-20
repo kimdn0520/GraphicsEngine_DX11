@@ -38,10 +38,13 @@ Texture2D Albedo : register(t3);
 
 Texture2D<uint> ObjectID : register(t4);
 
+Texture2D Shadow : register(t5);
+
 SamplerState samAnisotropicClamp : register(s0);
 SamplerState samAnisotropicWrap : register(s1);
 SamplerState samLinearClamp : register(s2);
 SamplerState samLinearWrap : register(s3);
+SamplerComparisonState samLinearPointBoarder : register(s4);
 
 float4 Light_PS(LightPixelIN input) : SV_Target
 {
@@ -55,7 +58,14 @@ float4 Light_PS(LightPixelIN input) : SV_Target
 
 	uint objectID = (uint)ObjectID.Load(int3(input.uv.x * textureInfo.x, input.uv.y * textureInfo.y, 0));
 
+	float4 shadow = mul(gDirLight[0].LightViewProj, float4(position.xyz, 1.0f));
+
 	float3 NormalW = normalize(input.normal);
+
+	float shadowVal = 1.0f;
+
+	shadow.xyz /= shadow.w;
+	shadowVal = CalcShadowFactor(samLinearPointBoarder, Shadow, float3(shadow.xyz));
 
 	// √ ±‚»≠..
 	float4 ambient = float4(depth.z - depth.z, objectID - objectID, 0.0f, 0.0f);
@@ -81,8 +91,8 @@ float4 Light_PS(LightPixelIN input) : SV_Target
 
 
 			ambient += A;
-			diffuse += D;
-			spec += S;
+			diffuse += shadowVal * D;
+			spec += shadowVal * S;
 		}
 
 		for (int i = 0; i < gPointLightCnt; i++)

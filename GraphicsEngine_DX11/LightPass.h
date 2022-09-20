@@ -5,6 +5,7 @@
 class VertexShader;
 class PixelShader;
 class RenderTargetView;
+class DepthStencilView;
 class ViewPort;
 
 /// <summary>
@@ -36,7 +37,7 @@ public:
 
 	void RenderStart();
 
-	void Render(const std::vector<RenderTargetView*> gBuffers);
+	void Render(const std::vector<RenderTargetView*> gBuffers, DepthStencilView* shadowDSV);
 
 	void RenderEnd();
 };

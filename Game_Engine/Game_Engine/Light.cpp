@@ -9,6 +9,9 @@ Light::Light(GameObject* gameObject)
 	_transform(gameObject->GetTransform())
 {
 	_lightInfo = new LightInfo();
+
+	_centerPos = Vector3(0, 0, 0);
+	_shadowRadius = sqrtf(10.0f * 10.0f + 15.0f * 15.0f) * 4 + 15.0f;
 }
 
 Light::~Light()
@@ -17,7 +20,7 @@ Light::~Light()
 void Light::SetLightDirection(const Vector3& direction)
 {
 	_lightInfo->direction = direction;
-	_direction = direction;
+	_curDirection = direction;
 }
 
 void Light::SetLightType(LIGHT_TYPE type)
@@ -43,7 +46,7 @@ void Light::Update()
 	{
 	case LIGHT_TYPE::DIRECTIONAL_LIGHT:
 	{
-		_lightInfo->direction = _direction;
+		_lightInfo->direction = _curDirection;
 	}
 	break;
 	case LIGHT_TYPE::POINT_LIGHT:
@@ -59,5 +62,72 @@ void Light::Update()
 	break;
 	}
 
+	// LightViewProj 재설정
+	if (_curDirection != _preDirection)
+	{
+		SetLightViewProj();
+	}
+
 	GraphicsManager::Get()->UpdateLightData(_lightInfo);
+}
+
+void Light::SetLightViewProj()
+{
+	Vector3 dir;
+
+	switch (_type)
+	{
+	case LIGHT_TYPE::DIRECTIONAL_LIGHT:
+		dir = _curDirection;
+		break;
+	case LIGHT_TYPE::POINT_LIGHT:
+		dir = Vector3(1.0f, 1.0f, 1.0f);
+		break;
+	case LIGHT_TYPE::SPOT_LIGHT:
+		dir = _curDirection;
+		break;
+	default:
+		return;
+	}
+
+	Matrix lightView;
+	Matrix lightProj;
+
+	Vector3 lightPos = -2.0f * _shadowRadius * dir;
+
+	lightView = XMMatrixLookAtLH(lightPos, _centerPos, Vector4(0.f, 1.0f, 0.0f, 0.0f));
+
+	// 광원 공간으로 변환
+	Vector3 lightSpace = XMVector3TransformCoord(_centerPos, lightView);
+
+	// 장면을 감싸는 광원 공간 직교 투영 상자
+	float l = lightSpace.x - _shadowRadius;
+	float b = lightSpace.y - _shadowRadius;
+	float n = lightSpace.z - _shadowRadius;
+	float r = lightSpace.x + _shadowRadius;
+	float t = lightSpace.y + _shadowRadius;
+	float f = lightSpace.z + _shadowRadius;
+
+	// Light Proj
+	lightProj = XMMatrixOrthographicOffCenterLH(l, r, b, t, n, f);
+
+	switch (_type)
+	{
+	case LIGHT_TYPE::DIRECTIONAL_LIGHT:
+	{
+		_lightInfo->lightViewProj = lightView * lightProj;
+	}
+	break;
+	case LIGHT_TYPE::POINT_LIGHT:
+	{
+		_lightInfo->lightViewProj = lightView * lightProj;
+	}
+	break;
+	case LIGHT_TYPE::SPOT_LIGHT:
+	{
+		SetLightDirection(_transform->GetLook());
+		_lightInfo->lightViewProj = lightView * lightProj;
+	}
+	break;
+	}
 }

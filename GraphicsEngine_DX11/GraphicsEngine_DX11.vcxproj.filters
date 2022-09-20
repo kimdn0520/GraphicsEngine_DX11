@@ -281,6 +281,9 @@
     <FxCompile Include="..\GameClient\GameClient\Data\Shader\Shadow_VS.hlsl">
       <Filter>Shader\HLSL</Filter>
     </FxCompile>
+    <FxCompile Include="..\GameClient\GameClient\Data\Shader\ToneMapping_PS.hlsl">
+      <Filter>Shader\HLSL</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\GameClient\GameClient\Data\Shader\LightHeader.hlsli">

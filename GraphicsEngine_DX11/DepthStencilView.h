@@ -17,6 +17,8 @@ private:
 public:
 	ComPtr<ID3D11DepthStencilView> GetDepthStencilView() { return _depthStencilView; }
 
+	ComPtr<ID3D11ShaderResourceView> GetShaderResourceView() { return _shaderResourceView; }
+
 	void Initialize(ComPtr<ID3D11Device> device, int width, int height, bool enable4xMsaa = false);
 
 	void InitializeShadowMap(ComPtr<ID3D11Device> device, int width, int height, bool enable4xMsaa = false);

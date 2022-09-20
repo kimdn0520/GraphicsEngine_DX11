@@ -37,7 +37,7 @@ void TestScene::Initialize()
 	dirLight->GetComponent<Light>()->SetLightType(LIGHT_TYPE::DIRECTIONAL_LIGHT);
 	dirLight->GetComponent<Light>()->SetLightDirection(Vector3(0.57735f, -0.57735f, 0.57735f));
 	dirLight->GetComponent<Light>()->SetDiffuse(Vector4(0.6f, 0.6f, 0.6f, 1.0f));	// 기본0.5 
-	dirLight->GetComponent<Light>()->SetAmbient(Vector4(0.7f, 0.7f, 0.7f, 1.0f));	// 기본0.2
+	dirLight->GetComponent<Light>()->SetAmbient(Vector4(0.4f, 0.4f, 0.4f, 1.0f));	// 기본0.2
 	dirLight->GetComponent<Light>()->SetSpecular(Vector4(0.2f, 0.2f, 0.2f, 1.0f));  // 기본0.5
 	dirLight->GetComponent<Light>()->SendLightInfo();
 	AddGameObject(dirLight);

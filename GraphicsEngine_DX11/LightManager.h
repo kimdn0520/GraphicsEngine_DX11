@@ -21,6 +21,13 @@ private:
 public:
 	static LightManager* Get();
 
+private:
+	Matrix _texSpace = Matrix(
+		0.5f, 0.0f, 0.0f, 0.0f,
+		0.0f, -0.5f, 0.0f, 0.0f,
+		0.0f, 0.0f, 1.0f, 0.0f,
+		0.5f, 0.5f, 0.0f, 1.0f);
+
 public:
 	// 이름, 정보가 들어간댜
 	static std::map<std::string, LightInfo*> dirLights;

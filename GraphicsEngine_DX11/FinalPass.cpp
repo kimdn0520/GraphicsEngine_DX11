@@ -14,11 +14,14 @@
 void FinalPass::Start()
 {
 	_quad_VS = dynamic_cast<VertexShader*>(ShaderManager::Get()->GetShader(L"Quad_VS"));
+	
+	_tone_PS = dynamic_cast<PixelShader*>(ShaderManager::Get()->GetShader(L"ToneMapping_PS"));
 }
 
 void FinalPass::Release()
 {
-
+	delete _quad_VS;
+	delete _tone_PS;
 }
 
 void FinalPass::OnResize(int width, int height)
@@ -35,11 +38,20 @@ void FinalPass::RenderStart()
 	Graphics_Interface::Get()->TurnZBufferOff();
 }
 
-void FinalPass::Render()
+void FinalPass::Render(RenderTargetView* rtv)
 {
 	RenderStart();
 
 	_quad_VS->Update();
+
+	cbToneMapping cbToneMappingBuffer;
+	cbToneMappingBuffer.exposure = 1.5f;
+
+	_tone_PS->ConstantBufferUpdate(&cbToneMappingBuffer, "cbToneMapping");
+
+	_tone_PS->SetResourceViewBuffer(rtv->GetSRV().Get(), "Final_Texture");
+
+	_tone_PS->Update();
 
 	g_deviceContext->RSSetState(ResourceManager::Get()->GetMesh(SCREEN_MESH)->GetRasterState().Get());
 

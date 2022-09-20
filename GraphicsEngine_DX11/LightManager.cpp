@@ -98,6 +98,7 @@ void LightManager::Update()
 		cbLightBuffer.gDirLight[i].Diffuse = it->second->diffuse;
 		cbLightBuffer.gDirLight[i].Specular = it->second->specular;
 		cbLightBuffer.gDirLight[i].Direction = it->second->direction;
+		cbLightBuffer.gDirLight[i].LightViewProj = it->second->lightViewProj * _texSpace;
 	}
 	i = 0;
 	for (auto it = pointLights.begin(); it != pointLights.end(); ++it, i++)
@@ -108,6 +109,7 @@ void LightManager::Update()
 		cbLightBuffer.gPointLight[i].Position = it->second->position;
 		cbLightBuffer.gPointLight[i].Att = it->second->att;
 		cbLightBuffer.gPointLight[i].Range = it->second->range;
+		cbLightBuffer.gPointLight[i].LightViewProj = it->second->lightViewProj;
 	}
 	i = 0;
 	for (auto it = spotLights.begin(); it != spotLights.end(); ++it, i++)
@@ -120,6 +122,7 @@ void LightManager::Update()
 		cbLightBuffer.gSpotLight[i].Att = it->second->att;
 		cbLightBuffer.gSpotLight[i].Range = it->second->range;
 		cbLightBuffer.gSpotLight[i].Spot = it->second->spot;
+		cbLightBuffer.gSpotLight[i].LightViewProj = it->second->lightViewProj;
 	}
 }
 

@@ -18,6 +18,7 @@ private:
 
 private:
 	VertexShader* _quad_VS;
+	PixelShader* _tone_PS;
 
 public:
 	void Start() override;
@@ -28,7 +29,7 @@ public:
 
 	void RenderStart();
 
-	void Render();
+	void Render(RenderTargetView* rtv);
 
 	void RenderEnd();
 };

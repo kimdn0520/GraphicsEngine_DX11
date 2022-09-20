@@ -32,6 +32,8 @@ void ShaderManager::CreateAllShaders()
 
 	CreateShader(SHADER_TYPE::PIXEL, L"Light_PS.hlsl", _filepath, "Light_PS", L"Light_PS", nullptr);
 
+	CreateShader(SHADER_TYPE::PIXEL, L"ToneMapping_PS.hlsl", _filepath, "ToneMapping_PS", L"ToneMapping_PS", nullptr);
+
 	SetInfo();
 	AddConstantBuffer();
 	AddSamplerBuffer();
@@ -58,11 +60,13 @@ void ShaderManager::SetInfo()
 	_cbufferUsageList.insert(std::make_pair("cbLight", D3D11_USAGE_DEFAULT));
 	_cbufferUsageList.insert(std::make_pair("cbTexture", D3D11_USAGE_DEFAULT));
 	_cbufferUsageList.insert(std::make_pair("cbLightViewProj", D3D11_USAGE_DEFAULT));
+	_cbufferUsageList.insert(std::make_pair("cbToneMapping", D3D11_USAGE_DEFAULT)); 
 
 	_samplerList.insert(std::make_pair("samAnisotropicWrap", (int)SAMSTATE::AnisotropicWrap));
 	_samplerList.insert(std::make_pair("samAnisotropicClamp", (int)SAMSTATE::AnisotropicClamp));
 	_samplerList.insert(std::make_pair("samLinearWrap", (int)SAMSTATE::LinearWrap));
 	_samplerList.insert(std::make_pair("samLinearClamp", (int)SAMSTATE::LinearClamp));
+	_samplerList.insert(std::make_pair("samLinearPointBoarder", (int)SAMSTATE::LinearPointBoarder));
 }
 
 void ShaderManager::AddConstantBuffer()

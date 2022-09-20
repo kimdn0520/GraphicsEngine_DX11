@@ -18,6 +18,8 @@ struct LightInfo
 	DirectX::SimpleMath::Vector3 att;
 	float		range;
 	float		spot;
+
+	DirectX::SimpleMath::Matrix lightViewProj;
 };
 
 struct CameraInfo

@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "RenderManager.h"
 #include "PassBase.h"
+#include "ShadowPass.h"
 #include "DeferredPass.h"
 #include "LightPass.h"
 #include "FinalPass.h"
@@ -22,6 +23,9 @@ void RenderManager::Initialize()
 
 	PassBase::Initialize();
 
+	_shadowPass = new ShadowPass();
+	_shadowPass->Start();
+
 	_deferredPass = new DeferredPass();
 	_deferredPass->Start();
 
@@ -34,6 +38,8 @@ void RenderManager::Initialize()
 
 void RenderManager::OnResize(int width, int height)
 {
+	_shadowPass->OnResize(width, height);
+
 	_deferredPass->OnResize(width, height);
 
 	_lightPass->OnResize(width, height);
@@ -48,6 +54,8 @@ void RenderManager::Release()
 	
 	PassBase::Reset();
 
+	_shadowPass->Release();
+
 	_deferredPass->Release();
 
 	_lightPass->Release();
@@ -61,6 +69,7 @@ void RenderManager::PushRenderData(ObjectInfo* objectInfo)
 void RenderManager::Render()
 {
 	// 섀도우
+	_shadowPass->Render(_renderData);
 	
 	// 디퍼드 렌더
 	_deferredPass->Render(_renderData);
@@ -68,7 +77,7 @@ void RenderManager::Render()
 	// SSAO
 	
 	// 라이트 렌더 (디퍼드에서 모아놓은 텍스쳐에 빛 지연 연산)
-	_lightPass->Render(_deferredPass->gBuffers);
+	_lightPass->Render(_deferredPass->gBuffers, _shadowPass->shadowDSV);
 
 	// 포스트 프로세싱
 	
@@ -77,7 +86,7 @@ void RenderManager::Render()
 	// Debug
 
 	// Final
-	_finalPass->Render();
+	_finalPass->Render(_lightPass->lightingRTV);
 
 	_renderData.clear();
 }

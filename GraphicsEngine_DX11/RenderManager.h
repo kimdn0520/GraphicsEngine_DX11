@@ -2,6 +2,7 @@
 #include "Graphics_PerFrameData.h"
 #include "Graphics_RenderingData.h"
 
+class ShadowPass;
 class DeferredPass;
 class LightPass;
 class FinalPass;
@@ -21,6 +22,8 @@ public:
 	static CameraInfo* s_cameraInfo;
 
 private:
+	ShadowPass* _shadowPass;
+
 	DeferredPass* _deferredPass;
 
 	LightPass* _lightPass;
