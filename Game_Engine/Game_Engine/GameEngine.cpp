@@ -22,11 +22,9 @@ void GameEngine::Update()
 	{
 		SceneManager::Get()->ReservedSceneLoad();
 	}
-	else
-	{
-		SceneManager::Get()->Update();
-		SceneManager::Get()->Render();
-	}
+
+	SceneManager::Get()->Update();
+	SceneManager::Get()->Render();
 }
 
 void GameEngine::Release()

@@ -1,1 +1,5 @@
-﻿  GraphicsEngine_DX11.vcxproj -> D:\GraphicsEngine_DX11\Output\GraphicsEngine_DX11.dll
+﻿C:\Users\��????\Desktop\GraphicsEngine_DX11\GameClient\GameClient\Data\Shader\Light_PS.hlsl(98,12): warning X3078: 'i': loop control variable conflicts with a previous declaration in the outer scope; most recent declaration will be used
+C:\Users\��????\Desktop\GraphicsEngine_DX11\GameClient\GameClient\Data\Shader\Light_PS.hlsl(110,12): warning X3078: 'i': loop control variable conflicts with a previous declaration in the outer scope; most recent declaration will be used
+  
+  compilation object save succeeded; see C:\Users\김동민\Desktop\GraphicsEngine_DX11\Output\Light_PS.cso
+  GraphicsEngine_DX11.vcxproj -> C:\Users\김동민\Desktop\GraphicsEngine_DX11\Output\GraphicsEngine_DX11.dll

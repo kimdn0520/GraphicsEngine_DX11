@@ -31,7 +31,7 @@ public:
 	bool isReservedLoadScene = false;
 
 	bool isPause = false;
-
+	//
 public:
 	// 현재 씬을 업데이트 하쟈~
 	void Update();

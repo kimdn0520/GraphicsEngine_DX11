@@ -63,10 +63,10 @@ void Light::Update()
 	}
 
 	// LightViewProj 재설정
-	if (_curDirection != _preDirection)
+	/*if (_curDirection != _preDirection)
 	{
 		SetLightViewProj();
-	}
+	}*/
 
 	_preDirection = _curDirection;
 
@@ -113,9 +113,11 @@ void Light::SetLightViewProj()
 	// Light Proj
 	//lightProj = XMMatrixOrthographicOffCenterLH(l, r, b, t, n, f);
 
-	// 카메라보다 위에 위치하게 해서 해보자!
-	//lightView = XMMatrixLookAtLH()
+	// 카메라 위치를 directional light로 해서 해보자!
+	//lightView = XMMatrixLookAtLH( , ,Vector4(0.f, 1.0f, 0.0f, 0.0f));
 	//lightProj = XMMatrixOrthographicLH(100 , 100, 0, 20);
+
+	
 
 	switch (_type)
 	{

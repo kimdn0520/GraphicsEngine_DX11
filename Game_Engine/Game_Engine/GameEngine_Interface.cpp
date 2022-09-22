@@ -23,7 +23,7 @@ void EngineUpdate()
 
 void EngineRender()
 {
-	GraphicsManager::Get()->MainBackBufferRender();
+	//GraphicsManager::Get()->MainBackBufferRender();
 
 	GraphicsManager::Get()->RenderingDataRender();
 

@@ -60,8 +60,11 @@ void ShadowPass::Render(std::vector<ObjectInfo*> meshs)
 {
 	RenderStart();
 
+	Matrix lightView = XMMatrixLookAtLH(RenderManager::s_cameraInfo->worldPos, LightManager::Get()->cbLightBuffer.gDirLight[0].Direction, Vector3(0.0f, 1.0f, 0.0f));
+	Matrix lightProj = XMMatrixOrthographicLH(100, 100, 0, 500);
+
 	cbLightViewProj cbLightViewProjBuffer;
-	cbLightViewProjBuffer.lightViewProj = LightManager::Get()->cbLightBuffer.gDirLight[0].LightViewProj;
+	cbLightViewProjBuffer.lightViewProj = lightView * lightProj;
 
 	for (auto& mesh : meshs)
 	{
