@@ -6,6 +6,7 @@
 #include "ViewPort.h"
 #include "VertexShader.h"
 #include "PixelShader.h"
+#include "RasterizerState.h"
 
 #include "RenderManager.h"
 #include "ShaderManager.h"
@@ -65,7 +66,7 @@ void ShadowPass::Render(std::vector<ObjectInfo*> meshs)
 	for (auto& mesh : meshs)
 	{
 		// 그림자 영향을 받지않는 녀석이면 넘어감
-		if(!mesh->isShadow)
+		if (!mesh->isShadow)
 			continue;
 
 		switch (mesh->type)
@@ -96,7 +97,10 @@ void ShadowPass::Render(std::vector<ObjectInfo*> meshs)
 
 			g_deviceContext->PSSetShader(nullptr, NULL, NULL);
 
-			g_deviceContext->RSSetState(ResourceManager::Get()->GetMesh(mesh->meshID)->GetRasterState().Get());
+			if(ResourceManager::Get()->GetMesh(mesh->meshID)->rasterNum == 0)
+				g_deviceContext->RSSetState(Graphics_Interface::Get()->GetShadowSolid()->GetrasterizerState().Get());
+			else if(ResourceManager::Get()->GetMesh(mesh->meshID)->rasterNum == 1)
+				g_deviceContext->RSSetState(Graphics_Interface::Get()->GetShadowWire()->GetrasterizerState().Get());
 
 			unsigned int stride = ResourceManager::Get()->GetMesh(mesh->meshID)->stride;
 			unsigned int offset = 0;

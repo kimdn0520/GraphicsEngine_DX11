@@ -13,6 +13,8 @@ public:
 
 	unsigned int stride = 0;
 
+	int rasterNum = 0;
+
 private:
 	unsigned int _indexBufferSize;
 

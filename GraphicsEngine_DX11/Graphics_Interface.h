@@ -56,6 +56,10 @@ public:
 							   
 	virtual GraphicsEngine_DLL RasterizerState* GetSolidNoneCull() abstract;
 
+	virtual GraphicsEngine_DLL RasterizerState* GetShadowSolid() abstract;
+
+	virtual GraphicsEngine_DLL RasterizerState* GetShadowWire() abstract;
+
 	virtual GraphicsEngine_DLL void SendObjectRenderingData(ObjectInfo* objectInfo) abstract;
 
 	virtual GraphicsEngine_DLL void SendCameraData(CameraInfo* cameraInfo) abstract;

@@ -50,6 +50,8 @@ inline size_t ResourceManager::CreateMesh(std::vector<T> vertices, std::vector<u
 	else if (topology == 1)
 		mesh->SetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
 
+	mesh->rasterNum = rasterizerState;
+
 	if (rasterizerState == 0)
 		mesh->SetRenderState(Graphics_Interface::Get()->GetWire()->GetrasterizerState());
 	else if (rasterizerState == 1)

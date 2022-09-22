@@ -30,6 +30,8 @@ private:
 	RasterizerState* _wireRasterizerState;
 	RasterizerState* _solidRasterizerState;
 	RasterizerState* _solidNoneCullRasterizerState;
+	RasterizerState* _shadowSolidRasterizerState;
+	RasterizerState* _shadowWireRasterizerState;
 
 	RenderTargetView* _mainRenderTargetView;
 
@@ -71,6 +73,10 @@ public:
 	virtual RasterizerState* GetSolid() override;
 
 	virtual RasterizerState* GetSolidNoneCull() override;
+
+	virtual RasterizerState* GetShadowSolid() override;
+
+	virtual RasterizerState* GetShadowWire() override;
 
 	virtual void SendObjectRenderingData(ObjectInfo* objectInfo) override;
 

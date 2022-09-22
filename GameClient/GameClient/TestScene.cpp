@@ -33,6 +33,7 @@ void TestScene::Initialize()
 	GameObject* dirLight = new GameObject();
 	dirLight->SetName("dirLight");
 	dirLight->AddComponent<Transform>();
+	dirLight->GetComponent<Transform>()->SetLocalPosition(Vector3(0.f, 100.f, 0.f));
 	dirLight->AddComponent<Light>();
 	dirLight->GetComponent<Light>()->SetLightType(LIGHT_TYPE::DIRECTIONAL_LIGHT);
 	dirLight->GetComponent<Light>()->SetLightDirection(Vector3(0.57735f, -0.57735f, 0.57735f));

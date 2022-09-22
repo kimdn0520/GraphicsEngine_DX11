@@ -10,7 +10,7 @@ Light::Light(GameObject* gameObject)
 {
 	_lightInfo = new LightInfo();
 
-	_centerPos = Vector3(0, 0, 0);
+	_centerPos = Vector3(10, -10, -5);
 	_shadowRadius = sqrtf(10.0f * 10.0f + 15.0f * 15.0f) * 4 + 15.0f;
 }
 
@@ -95,23 +95,27 @@ void Light::SetLightViewProj()
 	Matrix lightView;
 	Matrix lightProj;
 
-	Vector3 lightPos = -2.0f * _shadowRadius * dir;
+	//Vector3 lightPos = -2.0f * _shadowRadius * dir;
 
-	lightView = XMMatrixLookAtLH(lightPos, _centerPos, Vector4(0.f, 1.0f, 0.0f, 0.0f));
+	//lightView = XMMatrixLookAtLH(lightPos, _centerPos, Vector4(0.f, 1.0f, 0.0f, 0.0f));
 
-	// 광원 공간으로 변환
-	Vector3 lightSpace = XMVector3TransformCoord(_centerPos, lightView);
+	//// 광원 공간으로 변환
+	//Vector3 lightSpace = XMVector3TransformCoord(_centerPos, lightView);
 
-	// 장면을 감싸는 광원 공간 직교 투영 상자
-	float l = lightSpace.x - _shadowRadius;
-	float b = lightSpace.y - _shadowRadius;
-	float n = lightSpace.z - _shadowRadius;
-	float r = lightSpace.x + _shadowRadius;
-	float t = lightSpace.y + _shadowRadius;
-	float f = lightSpace.z + _shadowRadius;
+	//// 장면을 감싸는 광원 공간 직교 투영 상자
+	//float l = lightSpace.x - _shadowRadius;
+	//float b = lightSpace.y - _shadowRadius;
+	//float n = lightSpace.z - _shadowRadius;
+	//float r = lightSpace.x + _shadowRadius;
+	//float t = lightSpace.y + _shadowRadius;
+	//float f = lightSpace.z + _shadowRadius;
 
 	// Light Proj
-	lightProj = XMMatrixOrthographicOffCenterLH(l, r, b, t, n, f);
+	//lightProj = XMMatrixOrthographicOffCenterLH(l, r, b, t, n, f);
+
+	// 카메라보다 위에 위치하게 해서 해보자!
+	//lightView = XMMatrixLookAtLH()
+	//lightProj = XMMatrixOrthographicLH(100 , 100, 0, 20);
 
 	switch (_type)
 	{

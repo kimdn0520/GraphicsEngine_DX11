@@ -31,6 +31,8 @@ void GraphicsEngine_DX11::Initialize(HWND hwnd, int screenWidth, int screenHeigh
 	_wireRasterizerState = new RasterizerState();			// wire
 	_solidRasterizerState = new RasterizerState();			// solid
 	_solidNoneCullRasterizerState = new RasterizerState();	// solidNoneCull
+	_shadowSolidRasterizerState = new RasterizerState();	// shadowSolid
+	_shadowWireRasterizerState = new RasterizerState();		// shadowWire
 	_alphaBlendState = new BlendState();
 	_mainViewPort = new ViewPort();
 
@@ -39,6 +41,8 @@ void GraphicsEngine_DX11::Initialize(HWND hwnd, int screenWidth, int screenHeigh
 	_solidRasterizerState->Initialize(_device, D3D11_CULL_BACK, D3D11_FILL_SOLID);
 	_wireRasterizerState->Initialize(_device, D3D11_CULL_BACK, D3D11_FILL_WIREFRAME);
 	_solidNoneCullRasterizerState->Initialize(_device, D3D11_CULL_NONE, D3D11_FILL_SOLID);
+	_shadowSolidRasterizerState->Initialize(_device, D3D11_CULL_BACK, D3D11_FILL_SOLID, 100000, 1.0f);
+	_shadowWireRasterizerState->Initialize(_device, D3D11_CULL_BACK, D3D11_FILL_SOLID, 100000, 1.0f);
 	_mainViewPort->Initialize(Vector2::Zero, screenWidth, screenHeight);
 	_depthStencilView->Initialize(_device->GetDevice(), screenWidth, screenHeight, false);
 
@@ -65,6 +69,8 @@ void GraphicsEngine_DX11::Release()
 	_wireRasterizerState->Release();
 	_solidRasterizerState->Release();
 	_solidNoneCullRasterizerState->Release();
+	_shadowSolidRasterizerState->Release();
+	_shadowWireRasterizerState->Release();
 	_alphaBlendState->Release();
 	_device->Release();
 	_mainViewPort->Release();
@@ -190,6 +196,16 @@ RasterizerState* GraphicsEngine_DX11::GetSolid()
 RasterizerState* GraphicsEngine_DX11::GetSolidNoneCull()
 {
 	return _solidNoneCullRasterizerState;
+}
+
+RasterizerState* GraphicsEngine_DX11::GetShadowSolid()
+{
+	return _shadowSolidRasterizerState;
+}
+
+RasterizerState* GraphicsEngine_DX11::GetShadowWire()
+{
+	return _shadowWireRasterizerState;
 }
 
 void GraphicsEngine_DX11::SendObjectRenderingData(ObjectInfo* objectInfo)
