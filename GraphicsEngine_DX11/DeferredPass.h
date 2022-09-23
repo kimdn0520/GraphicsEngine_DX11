@@ -7,6 +7,7 @@ class PixelShader;
 class RenderTargetView;
 class DepthStencilView;
 class ViewPort;
+class DebugWindow;
 
 // [0 : DEPTH], [1 : Normal], [2 : Position], [3 : Albedo], [4 : ObjectID] 
 constexpr int DEFERRED_COUNT = 5;
@@ -30,10 +31,16 @@ private:
 
 	ViewPort* _screenViewPort;
 
+	// gbuffer + shadow
+	DebugWindow*	 _debugWindow[DEFERRED_COUNT + 1];
+
 private:
 	VertexShader* _model_VS;
 	VertexShader* _model_Skinned_VS;
 	PixelShader* _model_PS;
+
+	VertexShader* _quad_VS;
+	PixelShader* _quad_PS;
 
 public:
 	void Start() override;
@@ -44,8 +51,8 @@ public:
 
 	void RenderStart();
 
-	void Render(std::vector<ObjectInfo*> meshs);
+	void Render(std::vector<ObjectInfo*> meshs, DepthStencilView* shadowDSV);
 
-	void RenderEnd();
+	void RenderEnd(DepthStencilView* shadowDSV);
 };
 

@@ -72,7 +72,7 @@ void RenderManager::Render()
 	_shadowPass->Render(_renderData);
 	
 	// µðÆÛµå ·»´õ
-	_deferredPass->Render(_renderData);
+	_deferredPass->Render(_renderData, _shadowPass->shadowDSV);
 
 	// SSAO
 	

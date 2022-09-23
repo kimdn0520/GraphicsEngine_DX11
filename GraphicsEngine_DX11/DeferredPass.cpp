@@ -4,6 +4,8 @@
 #include "RenderTargetView.h"
 #include "DepthStencilView.h"
 #include "ViewPort.h"
+#include "RasterizerState.h"
+#include "DebugWindow.h"
 #include "VertexShader.h"
 #include "PixelShader.h"
 
@@ -16,6 +18,9 @@ void DeferredPass::Start()
 	_model_VS = dynamic_cast<VertexShader*>(ShaderManager::Get()->GetShader(L"Model_VS"));
 	_model_Skinned_VS = dynamic_cast<VertexShader*>(ShaderManager::Get()->GetShader(L"Model_Skinned_VS"));
 	_model_PS = dynamic_cast<PixelShader*>(ShaderManager::Get()->GetShader(L"Model_PS"));
+
+	_quad_VS = dynamic_cast<VertexShader*>(ShaderManager::Get()->GetShader(L"Quad_VS"));
+	_quad_PS = dynamic_cast<PixelShader*>(ShaderManager::Get()->GetShader(L"Quad_PS"));
 
 	gBuffers.resize(DEFERRED_COUNT);
 
@@ -42,6 +47,13 @@ void DeferredPass::Start()
 	_screenViewPort = new ViewPort();
 
 	_screenViewPort->Initialize(Vector2::Zero, Graphics_Interface::Get()->GetScreenWidth(), Graphics_Interface::Get()->GetScreenHeight());
+
+	// DebugWindow gbuffer+shadow
+	for (int i = 0; i < DEFERRED_COUNT + 1; i++)
+	{
+		_debugWindow[i] = new DebugWindow();
+		_debugWindow[i]->Initialize(g_device);			
+	}
 }
 
 void DeferredPass::Release()
@@ -51,7 +63,12 @@ void DeferredPass::Release()
 		gBuffers[i]->Release();
 
 		_gBufferViews[i].ReleaseAndGetAddressOf();	// 오류 나려나?
+
+		_debugWindow[i]->Release();
 	}
+
+	// shadow
+	_debugWindow[DEFERRED_COUNT]->Release();
 	
 	_deferredDSV->Release();
 
@@ -102,7 +119,7 @@ void DeferredPass::RenderStart()
 	_screenViewPort->SetViewPort(g_deviceContext);
 }
 
-void DeferredPass::Render(std::vector<ObjectInfo*> meshs)
+void DeferredPass::Render(std::vector<ObjectInfo*> meshs, DepthStencilView* shadowDSV)
 {
 	RenderStart();
 
@@ -188,10 +205,42 @@ void DeferredPass::Render(std::vector<ObjectInfo*> meshs)
 		}
 	}
 
-	RenderEnd();
+	RenderEnd(shadowDSV);
 }
 
-void DeferredPass::RenderEnd()
+void DeferredPass::RenderEnd(DepthStencilView* shadowDSV)
 {
-	
+	// 무엇이 무엇이 문제일까...?
+	ID3D11ShaderResourceView* nullSRV[1] = { nullptr };
+
+	g_deviceContext->PSSetShaderResources(0, 1, nullSRV);
+
+	g_deviceContext->RSSetState(Graphics_Interface::Get()->GetSolid()->GetrasterizerState().Get());
+
+	Graphics_Interface::Get()->TurnZBufferOff();
+
+	for (int i = 0; i < DEFERRED_COUNT; i++)
+	{
+		_debugWindow[i]->Render(g_deviceContext, Vector4(0.6f, 1.0f, 1.0f - i * 0.5f, 0.5f - i * 0.5f));	// 크기 얘로 조절
+
+		_quad_VS->Update();
+
+		_quad_PS->SetResourceViewBuffer(gBuffers[i]->GetSRV().Get(), "gDiffuseMap");
+
+		_quad_PS->Update();
+
+		g_deviceContext->DrawIndexed(_debugWindow[i]->GetIndexCount(), 0, 0);
+	}
+
+	_debugWindow[DEFERRED_COUNT]->Render(g_deviceContext, Vector4(0.6f, 1.0f, 1.0f - 0.5f, 0.5f * 0.5f));
+
+	_quad_VS->Update();
+
+	_quad_PS->SetResourceViewBuffer(shadowDSV->GetShaderResourceView().Get(), "gDiffuseMap");
+
+	_quad_PS->Update();
+
+	g_deviceContext->DrawIndexed(_debugWindow[DEFERRED_COUNT]->GetIndexCount(), 0, 0);
+
+	Graphics_Interface::Get()->TurnZBufferOn();
 }

@@ -178,6 +178,9 @@
     <ClInclude Include="ShadowPass.h">
       <Filter>Shader\Pass\Shadow</Filter>
     </ClInclude>
+    <ClInclude Include="DebugWindow.h">
+      <Filter>Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EnginePch.cpp">
@@ -264,6 +267,9 @@
     <ClCompile Include="ShadowPass.cpp">
       <Filter>Shader\Pass\Shadow</Filter>
     </ClCompile>
+    <ClCompile Include="DebugWindow.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\GameClient\GameClient\Data\Shader\Model_VS.hlsl">
@@ -282,6 +288,9 @@
       <Filter>Shader\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="..\GameClient\GameClient\Data\Shader\ToneMapping_PS.hlsl">
+      <Filter>Shader\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="..\GameClient\GameClient\Data\Shader\Quad_PS.hlsl">
       <Filter>Shader\HLSL</Filter>
     </FxCompile>
   </ItemGroup>
