@@ -2,7 +2,7 @@
 #include "RasterizerState.h"
 #include "Device.h"
 
-void RasterizerState::Initialize(Device* device, D3D11_CULL_MODE cullMode, D3D11_FILL_MODE fillMode, int depthBias , float slopeScaledDepthBias)
+void RasterizerState::Initialize(std::shared_ptr<Device> device, D3D11_CULL_MODE cullMode, D3D11_FILL_MODE fillMode, int depthBias , float slopeScaledDepthBias)
 {
 	D3D11_RASTERIZER_DESC rasterDesc;
 	ZeroMemory(&rasterDesc, sizeof(D3D11_RASTERIZER_DESC));
@@ -25,6 +25,5 @@ void RasterizerState::Initialize(Device* device, D3D11_CULL_MODE cullMode, D3D11
 void RasterizerState::Release()
 {
 	_rasterizerState.ReleaseAndGetAddressOf();
-	delete this;
 }
 

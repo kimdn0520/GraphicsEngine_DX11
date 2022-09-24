@@ -10,7 +10,7 @@ Camera::Camera(GameObject* gameObject)
 	_nearZ(0.1f), _farZ(500.0f), _fov(XM_PI / 4.f),
 	_width(static_cast<float>(GraphicsManager::Get()->GetScreenWidth())),
 	_height(static_cast<float>(GraphicsManager::Get()->GetScreenHeight())),
-	_cameraInfo(new CameraInfo())
+	_cameraInfo(std::make_shared<CameraInfo>())
 {}
 
 Camera::~Camera()

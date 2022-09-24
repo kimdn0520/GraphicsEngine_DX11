@@ -8,7 +8,7 @@ Light::Light(GameObject* gameObject)
 	: Component(gameObject, COMPONENT_TYPE::LIGHT),
 	_transform(gameObject->GetTransform())
 {
-	_lightInfo = new LightInfo();
+	_lightInfo = std::make_shared<LightInfo>();
 
 	_centerPos = Vector3(10, -10, -5);
 	_shadowRadius = sqrtf(10.0f * 10.0f + 15.0f * 15.0f) * 4 + 15.0f;
@@ -116,8 +116,6 @@ void Light::SetLightViewProj()
 	// 카메라 위치를 directional light로 해서 해보자!
 	//lightView = XMMatrixLookAtLH( , ,Vector4(0.f, 1.0f, 0.0f, 0.0f));
 	//lightProj = XMMatrixOrthographicLH(100 , 100, 0, 20);
-
-	
 
 	switch (_type)
 	{

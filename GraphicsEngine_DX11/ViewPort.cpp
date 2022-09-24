@@ -35,5 +35,5 @@ void ViewPort::SetViewPort(ComPtr<ID3D11DeviceContext> deviceContext)
 
 void ViewPort::Release()
 {
-	delete this;
+
 }

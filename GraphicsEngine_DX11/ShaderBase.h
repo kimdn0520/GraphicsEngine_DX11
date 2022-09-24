@@ -21,17 +21,17 @@ private:
 	std::wstring _shaderName;
 
 protected:
-	std::unordered_map<std::string, ConstantBuffer*> _constantBufferData;
-	std::unordered_map<std::string, SamplerBuffer*> _samplerStateData;
-	std::unordered_map<std::string, ShaderResourceBuffer*> _shaderResourceViewData;
+	std::unordered_map<std::string, std::shared_ptr<ConstantBuffer>> _constantBufferData;
+	std::unordered_map<std::string, std::shared_ptr<SamplerBuffer>> _samplerStateData;
+	std::unordered_map<std::string, std::shared_ptr<ShaderResourceBuffer>> _shaderResourceViewData;
 
 	std::vector<ComPtr<ID3D11Buffer>> _constantBuffers;
 	std::vector<ComPtr<ID3D11SamplerState>> _samplerStates;
 	std::vector<ComPtr<ID3D11ShaderResourceView>> _shaderResourceViews;
 
 public:
-	std::unordered_map<std::string, ConstantBuffer*>& GetConstantBufferData() { return _constantBufferData; }
-	std::unordered_map<std::string, SamplerBuffer*>& GetSamplerStateData() { return _samplerStateData; }
+	std::unordered_map<std::string, std::shared_ptr<ConstantBuffer>>& GetConstantBufferData() { return _constantBufferData; }
+	std::unordered_map<std::string, std::shared_ptr<SamplerBuffer>>& GetSamplerStateData() { return _samplerStateData; }
 
 	void ReleaseData();
 

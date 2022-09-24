@@ -21,6 +21,7 @@
 #include <map>
 #include <unordered_map>
 #include <queue>
+#include <memory>
 
 // C++ 20 이어야함
 #include <filesystem>

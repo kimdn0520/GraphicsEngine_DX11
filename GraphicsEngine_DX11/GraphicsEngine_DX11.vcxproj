@@ -162,7 +162,6 @@
     <ClInclude Include="BlendState.h" />
     <ClInclude Include="ConstantBufferDefine.h" />
     <ClInclude Include="DebugPass.h" />
-    <ClInclude Include="DebugWindow.h" />
     <ClInclude Include="DeferredPass.h" />
     <ClInclude Include="DepthStencilState.h" />
     <ClInclude Include="DepthStencilView.h" />
@@ -199,7 +198,6 @@
   <ItemGroup>
     <ClCompile Include="BlendState.cpp" />
     <ClCompile Include="DebugPass.cpp" />
-    <ClCompile Include="DebugWindow.cpp" />
     <ClCompile Include="DeferredPass.cpp" />
     <ClCompile Include="DepthStencilState.cpp" />
     <ClCompile Include="DepthStencilView.cpp" />

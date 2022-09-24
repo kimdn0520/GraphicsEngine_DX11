@@ -114,21 +114,21 @@ void VertexShader::CreateShader(const std::wstring& path, std::string entryPoint
 
 			cbufferRegisterSlot = resource_desc.BindPoint;
 
-			_constantBufferData[resource_desc.Name] = new ConstantBuffer(resource_desc.Name, cbufferRegisterSlot, cbDesc.Size);
+			_constantBufferData[resource_desc.Name] = std::make_shared<ConstantBuffer>(resource_desc.Name, cbufferRegisterSlot, cbDesc.Size);
 		}
 		break;
 		case D3D_SIT_TEXTURE:
 		{
 			srvRegisterSlot = resource_desc.BindPoint;
 
-			_shaderResourceViewData[resource_desc.Name] = new ShaderResourceBuffer(resource_desc.Name, srvRegisterSlot);
+			_shaderResourceViewData[resource_desc.Name] = std::make_shared<ShaderResourceBuffer>(resource_desc.Name, srvRegisterSlot);
 		}
 		break;
 		case D3D_SIT_SAMPLER:
 		{
 			samplerRegisterSlot = resource_desc.BindPoint;
 
-			_samplerStateData[resource_desc.Name] = new SamplerBuffer(resource_desc.Name, samplerRegisterSlot);
+			_samplerStateData[resource_desc.Name] = std::make_shared<SamplerBuffer>(resource_desc.Name, samplerRegisterSlot);
 		}
 		break;
 		default:

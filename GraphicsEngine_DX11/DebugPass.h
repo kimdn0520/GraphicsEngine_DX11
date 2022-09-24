@@ -20,15 +20,15 @@ public:
 	~DebugPass() = default;
 
 private:
-	ViewPort* _screenViewPort;
+	std::shared_ptr<ViewPort> _screenViewPort;
 
 private:
-	VertexShader* _quad_VS;
-	PixelShader* _debug_PS;
+	std::shared_ptr<VertexShader> _quad_VS;
+	std::shared_ptr<PixelShader> _debug_PS;
 
-	DeferredPass* _deferredPass;
+	std::shared_ptr<DeferredPass> _deferredPass;
 
-	ShadowPass* _shadowPass;
+	std::shared_ptr<ShadowPass> _shadowPass;
 
 public:
 	void Start() override;

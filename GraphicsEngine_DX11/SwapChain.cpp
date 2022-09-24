@@ -2,7 +2,7 @@
 #include "SwapChain.h"
 #include "Device.h"
 
-void SwapChain::Initialize(WindowInfo& windowInfo, Device* _device)
+void SwapChain::Initialize(WindowInfo& windowInfo, std::shared_ptr<Device> _device)
 {
 	// Fill out a DXGI_SWAP_CHAIN_DESC to describe our swap chain.
 	DXGI_SWAP_CHAIN_DESC swapChainDesc;
@@ -67,6 +67,5 @@ void SwapChain::Initialize(WindowInfo& windowInfo, Device* _device)
 void SwapChain::Release()
 {
 	_swapChain.ReleaseAndGetAddressOf();
-	delete this;
 }
 

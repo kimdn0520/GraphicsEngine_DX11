@@ -81,6 +81,4 @@ void Texture::Release()
 	_texResource.ReleaseAndGetAddressOf();
 
 	_mapSRV.ReleaseAndGetAddressOf();
-
-	delete this;
 }

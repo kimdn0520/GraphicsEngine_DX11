@@ -2,7 +2,7 @@
 #include "DepthStencilState.h"
 #include "Device.h"
 
-void DepthStencilState::Initialize(Device* device, bool depthEnable, D3D11_COMPARISON_FUNC depthFuc)
+void DepthStencilState::Initialize(std::shared_ptr<Device> device, bool depthEnable, D3D11_COMPARISON_FUNC depthFuc)
 {
 	D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
 	ZeroMemory(&depthStencilDesc, sizeof(D3D11_DEPTH_STENCIL_DESC));
@@ -30,7 +30,6 @@ void DepthStencilState::Initialize(Device* device, bool depthEnable, D3D11_COMPA
 void DepthStencilState::Release()
 {
 	_depthStencilState.ReleaseAndGetAddressOf();
-	delete this;
 }
 
 

@@ -1,12 +1,12 @@
 #include "pch.h"
 #include "GraphicsManager.h"
 
-GraphicsManager* GraphicsManager::graphicsManager = nullptr;
+std::shared_ptr<GraphicsManager> GraphicsManager::graphicsManager = nullptr;
 
-GraphicsManager* GraphicsManager::Get()
+std::shared_ptr<GraphicsManager> GraphicsManager::Get()
 {
 	if (graphicsManager == nullptr)
-		graphicsManager = new GraphicsManager();
+		graphicsManager = std::make_shared<GraphicsManager>();
 
 	return graphicsManager;
 }
@@ -55,22 +55,22 @@ int GraphicsManager::GetScreenHeight()
 	return graphicsEngine->GetScreenHeight();
 }
 
-void GraphicsManager::SendObjectRenderingData(ObjectInfo* objectInfo)
+void GraphicsManager::SendObjectRenderingData(std::shared_ptr<ObjectInfo> objectInfo)
 {
 	graphicsEngine->SendObjectRenderingData(objectInfo);
 }
 
-void GraphicsManager::SendCameraData(CameraInfo* cameraInfo)
+void GraphicsManager::SendCameraData(std::shared_ptr<CameraInfo> cameraInfo)
 {
 	graphicsEngine->SendCameraData(cameraInfo);
 }
 
-void GraphicsManager::SendLightData(LightInfo* lightInfo)
+void GraphicsManager::SendLightData(std::shared_ptr<LightInfo> lightInfo)
 {
 	graphicsEngine->SendLightData(lightInfo);
 }
 
-void GraphicsManager::UpdateLightData(LightInfo* lightInfo)
+void GraphicsManager::UpdateLightData(std::shared_ptr<LightInfo> lightInfo)
 {
 	graphicsEngine->UpdateLightData(lightInfo);
 }

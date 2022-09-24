@@ -15,14 +15,14 @@
 
 void ShadowPass::Start()
 {
-	_shadow_VS = dynamic_cast<VertexShader*>(ShaderManager::Get()->GetShader(L"Shadow_VS"));
-	_shadow_Skinned_VS = dynamic_cast<VertexShader*>(ShaderManager::Get()->GetShader(L"Shadow_Skinned_VS"));
+	_shadow_VS = dynamic_pointer_cast<VertexShader>(ShaderManager::Get()->GetShader(L"Shadow_VS"));
+	_shadow_Skinned_VS = dynamic_pointer_cast<VertexShader>(ShaderManager::Get()->GetShader(L"Shadow_Skinned_VS"));
 
-	shadowDSV = new DepthStencilView();
+	shadowDSV = std::make_shared<DepthStencilView>();
 
 	shadowDSV->InitializeShadowMap(g_device, Graphics_Interface::Get()->GetScreenWidth(), Graphics_Interface::Get()->GetScreenHeight(), false);
 
-	_screenViewPort = new ViewPort();
+	_screenViewPort = std::make_shared<ViewPort>();
 
 	_screenViewPort->Initialize(Vector2::Zero, Graphics_Interface::Get()->GetScreenWidth(), Graphics_Interface::Get()->GetScreenHeight());
 }
@@ -32,9 +32,6 @@ void ShadowPass::Release()
 	shadowDSV->Release();
 
 	_screenViewPort->Release();
-
-	delete _shadow_VS;
-	delete _shadow_Skinned_VS;
 }
 
 void ShadowPass::OnResize(int width, int height)
@@ -60,15 +57,19 @@ void ShadowPass::RenderStart()
 	g_deviceContext->OMSetRenderTargets(0, nullptr, shadowDSV->GetDepthStencilView().Get());
 }
 
-void ShadowPass::Render(std::vector<ObjectInfo*> meshs)
+void ShadowPass::Render(std::vector<std::shared_ptr<ObjectInfo>> meshs)
 {
 	RenderStart();
 
 	Matrix lightView = XMMatrixLookAtLH(RenderManager::s_cameraInfo->worldPos, LightManager::Get()->cbLightBuffer.gDirLight[0].Direction, Vector3(0.0f, 1.0f, 0.0f));
 	Matrix lightProj = XMMatrixOrthographicLH(10, 10, 0, 500);
 
+	// 여기서 쓸거..
 	cbLightViewProj cbLightViewProjBuffer;
 	cbLightViewProjBuffer.lightViewProj = lightView * lightProj;
+
+	// directional light에 lightviewproj 넣어준당
+	LightManager::Get()->cbLightBuffer.gDirLight[0].LightViewProj = cbLightViewProjBuffer.lightViewProj;
 
 	for (auto& mesh : meshs)
 	{

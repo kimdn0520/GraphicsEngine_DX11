@@ -14,14 +14,14 @@
 
 void LightPass::Start()
 {
-	_quad_VS = dynamic_cast<VertexShader*>(ShaderManager::Get()->GetShader(L"Quad_VS"));
-	_light_PS = dynamic_cast<PixelShader*>(ShaderManager::Get()->GetShader(L"Light_PS"));
+	_quad_VS = dynamic_pointer_cast<VertexShader>(ShaderManager::Get()->GetShader(L"Quad_VS"));
+	_light_PS = dynamic_pointer_cast<PixelShader>(ShaderManager::Get()->GetShader(L"Light_PS"));
 	
-	lightingRTV = new RenderTargetView();
+	lightingRTV = std::make_shared<RenderTargetView>();
 
 	lightingRTV->RenderTargetTextureInit(g_device, Graphics_Interface::Get()->GetScreenWidth(), Graphics_Interface::Get()->GetScreenHeight(), DXGI_FORMAT_R32G32B32A32_FLOAT);
 
-	_screenViewPort = new ViewPort();
+	_screenViewPort = std::make_shared<ViewPort>();
 
 	_screenViewPort->Initialize(Vector2::Zero, Graphics_Interface::Get()->GetScreenWidth(), Graphics_Interface::Get()->GetScreenHeight());
 }
@@ -33,8 +33,8 @@ void LightPass::Release()
 
 	_screenViewPort->Release();
 
-	delete _quad_VS;
-	delete _light_PS;
+	_quad_VS.reset();
+	_light_PS.reset();
 }
 
 void LightPass::OnResize(int width, int height)
@@ -54,7 +54,7 @@ void LightPass::RenderStart()
 	_screenViewPort->SetViewPort(g_deviceContext);
 }
 
-void LightPass::Render(const std::vector<RenderTargetView*> gBuffers, DepthStencilView* shadowDSV)
+void LightPass::Render(const std::vector<std::shared_ptr<RenderTargetView>> gBuffers, std::shared_ptr<DepthStencilView> shadowDSV)
 {
 	RenderStart();
 

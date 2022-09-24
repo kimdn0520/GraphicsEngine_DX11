@@ -5,7 +5,6 @@
 #include "DepthStencilView.h"
 #include "ViewPort.h"
 #include "RasterizerState.h"
-#include "DebugWindow.h"
 #include "VertexShader.h"
 #include "PixelShader.h"
 
@@ -15,44 +14,37 @@
 
 void DeferredPass::Start()
 {
-	_model_VS = dynamic_cast<VertexShader*>(ShaderManager::Get()->GetShader(L"Model_VS"));
-	_model_Skinned_VS = dynamic_cast<VertexShader*>(ShaderManager::Get()->GetShader(L"Model_Skinned_VS"));
-	_model_PS = dynamic_cast<PixelShader*>(ShaderManager::Get()->GetShader(L"Model_PS"));
+	_model_VS = dynamic_pointer_cast<VertexShader>(ShaderManager::Get()->GetShader(L"Model_VS"));
+	_model_Skinned_VS = dynamic_pointer_cast<VertexShader>(ShaderManager::Get()->GetShader(L"Model_Skinned_VS"));
+	_model_PS = dynamic_pointer_cast<PixelShader>(ShaderManager::Get()->GetShader(L"Model_PS"));
 
-	_quad_VS = dynamic_cast<VertexShader*>(ShaderManager::Get()->GetShader(L"Quad_VS"));
+	_quad_VS = dynamic_pointer_cast<VertexShader>(ShaderManager::Get()->GetShader(L"Quad_VS"));
 
 	gBuffers.resize(DEFERRED_COUNT);
 
 	for (int i = 0; i < DEFERRED_COUNT - 1; i++)
 	{
-		gBuffers[i] = new RenderTargetView();
+		gBuffers[i] = std::make_shared<RenderTargetView>();
 
 		gBuffers[i]->RenderTargetTextureInit(g_device, Graphics_Interface::Get()->GetScreenWidth(), Graphics_Interface::Get()->GetScreenHeight(), DXGI_FORMAT_R32G32B32A32_FLOAT);
 
 		_gBufferViews[i] = gBuffers[i]->GetRenderTargetView();	// rtv 가져온다.
 	}
 
-	gBuffers[DEFERRED_COUNT - 1] = new RenderTargetView();
+	gBuffers[DEFERRED_COUNT - 1] = std::make_shared<RenderTargetView>();
 
 	// !!! 얘는 DXGI_FORMAT_R32_UINT로 해줘야해 SV_Target을 uint로 뽑을거기때문에
 	gBuffers[DEFERRED_COUNT - 1]->RenderTargetTextureInit(g_device, Graphics_Interface::Get()->GetScreenWidth(), Graphics_Interface::Get()->GetScreenHeight(), DXGI_FORMAT_R32_UINT);
 
 	_gBufferViews[DEFERRED_COUNT - 1] = gBuffers[DEFERRED_COUNT - 1]->GetRenderTargetView();
 
-	_deferredDSV = new DepthStencilView();
+	_deferredDSV = std::make_shared<DepthStencilView>();
 
 	_deferredDSV->Initialize(g_device, Graphics_Interface::Get()->GetScreenWidth(), Graphics_Interface::Get()->GetScreenHeight());
 
-	_screenViewPort = new ViewPort();
+	_screenViewPort = std::make_shared<ViewPort>();
 
 	_screenViewPort->Initialize(Vector2::Zero, Graphics_Interface::Get()->GetScreenWidth(), Graphics_Interface::Get()->GetScreenHeight());
-
-	// DebugWindow gbuffer+shadow
-	for (int i = 0; i < DEFERRED_COUNT + 1; i++)
-	{
-		_debugWindow[i] = new DebugWindow();
-		_debugWindow[i]->Initialize(g_device);			
-	}
 }
 
 void DeferredPass::Release()
@@ -62,21 +54,16 @@ void DeferredPass::Release()
 		gBuffers[i]->Release();
 
 		_gBufferViews[i].ReleaseAndGetAddressOf();	// 오류 나려나?
-
-		_debugWindow[i]->Release();
 	}
 
-	// shadow
-	_debugWindow[DEFERRED_COUNT]->Release();
-	
 	_deferredDSV->Release();
 
 	_screenViewPort->Release();
 	
-	delete _quad_VS;
-	delete _model_VS;
-	delete _model_Skinned_VS;
-	delete _model_PS;
+	_quad_VS.reset();
+	_model_VS.reset();
+	_model_Skinned_VS.reset();
+	_model_PS.reset();
 }
 
 void DeferredPass::OnResize(int width, int height)
@@ -119,7 +106,7 @@ void DeferredPass::RenderStart()
 	_screenViewPort->SetViewPort(g_deviceContext);
 }
 
-void DeferredPass::Render(std::vector<ObjectInfo*> meshs, DepthStencilView* shadowDSV)
+void DeferredPass::Render(std::vector<std::shared_ptr<ObjectInfo>> meshs, std::shared_ptr<DepthStencilView> shadowDSV)
 {
 	RenderStart();
 
@@ -204,11 +191,5 @@ void DeferredPass::Render(std::vector<ObjectInfo*> meshs, DepthStencilView* shad
 			}
 		}
 	}
-
-	RenderEnd(shadowDSV);
 }
 
-void DeferredPass::RenderEnd(DepthStencilView* shadowDSV)
-{
-	
-}

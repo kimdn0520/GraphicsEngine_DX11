@@ -20,26 +20,26 @@ public:
 private:
 	WindowInfo _windowInfo;
 
-	Device* _device;
-	SwapChain* _swapChain;
+	std::shared_ptr<Device> _device;
+	std::shared_ptr<SwapChain> _swapChain;
 
-	DepthStencilState* _depthStencilState;
-	DepthStencilState* _disableDepthStencilState;
-	DepthStencilState* _skyBoxDepthStencilState;
+	std::shared_ptr<DepthStencilState> _depthStencilState;
+	std::shared_ptr<DepthStencilState> _disableDepthStencilState;
+	std::shared_ptr<DepthStencilState> _skyBoxDepthStencilState;
 
-	RasterizerState* _wireRasterizerState;
-	RasterizerState* _solidRasterizerState;
-	RasterizerState* _solidNoneCullRasterizerState;
-	RasterizerState* _shadowSolidRasterizerState;
-	RasterizerState* _shadowWireRasterizerState;
+	std::shared_ptr<RasterizerState> _wireRasterizerState;
+	std::shared_ptr<RasterizerState> _solidRasterizerState;
+	std::shared_ptr<RasterizerState> _solidNoneCullRasterizerState;
+	std::shared_ptr<RasterizerState> _shadowSolidRasterizerState;
+	std::shared_ptr<RasterizerState> _shadowWireRasterizerState;
 
-	RenderTargetView* _mainRenderTargetView;
+	std::shared_ptr<RenderTargetView> _mainRenderTargetView;
 
-	DepthStencilView* _depthStencilView;
+	std::shared_ptr<DepthStencilView> _depthStencilView;
 
-	BlendState* _alphaBlendState;
+	std::shared_ptr<BlendState> _alphaBlendState;
 
-	ViewPort* _mainViewPort;
+	std::shared_ptr<ViewPort> _mainViewPort;
 		
 public:
 	virtual void Initialize(HWND hwnd, int screenWidth, int screenHeight) override;
@@ -66,25 +66,25 @@ public:
 
 	virtual void TurnSkyboxOn() override;
 
-	virtual Device* GetDeviceClass() override;
+	virtual std::shared_ptr<Device> GetDeviceClass() override;
 
-	virtual RasterizerState* GetWire() override;
+	virtual std::shared_ptr<RasterizerState> GetWire() override;
 
-	virtual RasterizerState* GetSolid() override;
+	virtual std::shared_ptr<RasterizerState> GetSolid() override;
 
-	virtual RasterizerState* GetSolidNoneCull() override;
+	virtual std::shared_ptr<RasterizerState> GetSolidNoneCull() override;
 
-	virtual RasterizerState* GetShadowSolid() override;
+	virtual std::shared_ptr<RasterizerState> GetShadowSolid() override;
 
-	virtual RasterizerState* GetShadowWire() override;
+	virtual std::shared_ptr<RasterizerState> GetShadowWire() override;
 
-	virtual void SendObjectRenderingData(ObjectInfo* objectInfo) override;
+	virtual void SendObjectRenderingData(std::shared_ptr<ObjectInfo> objectInfo) override;
 
-	virtual void SendCameraData(CameraInfo* cameraInfo) override;
+	virtual void SendCameraData(std::shared_ptr<CameraInfo> cameraInfo) override;
 
-	virtual void SendLightData(LightInfo* lightInfo) override;
+	virtual void SendLightData(std::shared_ptr<LightInfo> lightInfo) override;
 
-	virtual void UpdateLightData(LightInfo* lightInfo) override;
+	virtual void UpdateLightData(std::shared_ptr<LightInfo> lightInfo) override;
 
 	virtual size_t CreateMesh(std::vector<StaticMeshVertex> vertices, std::vector<unsigned int> indicies, int topology, int rasterState) override;
 	

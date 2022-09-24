@@ -6,12 +6,12 @@
 #include "VertexShader.h"
 #include "PixelShader.h"
 
-ShaderManager* ShaderManager::shaderManager = nullptr;
+std::shared_ptr<ShaderManager> ShaderManager::shaderManager = nullptr;
 
-ShaderManager* ShaderManager::Get()
+std::shared_ptr<ShaderManager> ShaderManager::Get()
 {
 	if (shaderManager == nullptr)
-		shaderManager = new ShaderManager();
+		shaderManager = std::make_shared<ShaderManager>();
 
 	return shaderManager;
 }
@@ -46,7 +46,7 @@ void ShaderManager::Release()
 	for (auto& shader : _shaderList)
 	{
 		shader.second->ReleaseData();
-		shader.second->Release();
+		//shader.second->Release();
 	}
 
 	_shaderList.clear();
@@ -103,17 +103,17 @@ void ShaderManager::AddSamplerBuffer()
 	}
 }
 
-ShaderBase* ShaderManager::CreateShader(SHADER_TYPE shaderType, const std::wstring& shaderName, const std::wstring& path, std::string entryPoint, const std::wstring& saveName, const D3D_SHADER_MACRO* macro)
+std::shared_ptr<ShaderBase> ShaderManager::CreateShader(SHADER_TYPE shaderType, const std::wstring& shaderName, const std::wstring& path, std::string entryPoint, const std::wstring& saveName, const D3D_SHADER_MACRO* macro)
 {
-	ShaderBase* newShader = nullptr;
+	std::shared_ptr<ShaderBase> newShader = nullptr;
 
 	switch (shaderType)
 	{
 	case SHADER_TYPE::VERTEX:
-		newShader = new VertexShader(shaderName, path, entryPoint, macro);
+		newShader = std::make_shared<VertexShader>(shaderName, path, entryPoint, macro);
 		break;
 	case SHADER_TYPE::PIXEL:
-		newShader = new PixelShader(shaderName, path, entryPoint, macro);
+		newShader = std::make_shared<PixelShader>(shaderName, path, entryPoint, macro);
 		break;
 	case SHADER_TYPE::COMPUTE:
 		// newShader = new ComputeShader(shaderName, path);
@@ -131,7 +131,7 @@ ShaderBase* ShaderManager::CreateShader(SHADER_TYPE shaderType, const std::wstri
 	return newShader;
 }
 
-ShaderBase* ShaderManager::GetShader(std::wstring name)
+std::shared_ptr<ShaderBase> ShaderManager::GetShader(std::wstring name)
 {
 	return _shaderList[name];
 }

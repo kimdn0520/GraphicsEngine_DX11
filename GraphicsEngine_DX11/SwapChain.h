@@ -11,7 +11,7 @@ private:
 public:
 	ComPtr<IDXGISwapChain> GetSwapChain() { return _swapChain; }
 
-	void Initialize(WindowInfo& windowInfo, Device* _device);
+	void Initialize(WindowInfo& windowInfo, std::shared_ptr<Device> _device);
 
 	void Release();
 };

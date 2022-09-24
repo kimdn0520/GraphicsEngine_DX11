@@ -7,7 +7,6 @@ class PixelShader;
 class RenderTargetView;
 class DepthStencilView;
 class ViewPort;
-class DebugWindow;
 
 // [0 : DEPTH], [1 : Normal], [2 : Position], [3 : Albedo], [4 : ObjectID] 
 constexpr int DEFERRED_COUNT = 5;
@@ -22,24 +21,21 @@ public:
 	~DeferredPass() = default;
 
 public:
-	std::vector<RenderTargetView*> gBuffers;
+	std::vector<std::shared_ptr<RenderTargetView>> gBuffers;
 
 private:
 	ComPtr<ID3D11RenderTargetView> _gBufferViews[DEFERRED_COUNT];
 
-	DepthStencilView* _deferredDSV;
+	std::shared_ptr<DepthStencilView> _deferredDSV;
 
-	ViewPort* _screenViewPort;
-
-	// gbuffer + shadow
-	DebugWindow*	 _debugWindow[DEFERRED_COUNT + 1];
+	std::shared_ptr<ViewPort> _screenViewPort;
 
 private:
-	VertexShader* _model_VS;
-	VertexShader* _model_Skinned_VS;
-	PixelShader* _model_PS;
+	std::shared_ptr<VertexShader> _model_VS;
+	std::shared_ptr<VertexShader> _model_Skinned_VS;
+	std::shared_ptr<PixelShader> _model_PS;
 
-	VertexShader* _quad_VS;
+	std::shared_ptr<VertexShader> _quad_VS;
 
 public:
 	void Start() override;
@@ -50,8 +46,6 @@ public:
 
 	void RenderStart();
 
-	void Render(std::vector<ObjectInfo*> meshs, DepthStencilView* shadowDSV);
-
-	void RenderEnd(DepthStencilView* shadowDSV);
+	void Render(std::vector<std::shared_ptr<ObjectInfo>> meshs, std::shared_ptr<DepthStencilView> shadowDSV);
 };
 

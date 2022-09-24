@@ -2,7 +2,7 @@
 #include "BlendState.h"
 #include "Device.h"
 
-void BlendState::Initialize(Device* device)
+void BlendState::Initialize(std::shared_ptr<Device> device)
 {
 	D3D11_BLEND_DESC blendStateDes = {};
 
@@ -26,5 +26,4 @@ void BlendState::Initialize(Device* device)
 void BlendState::Release()
 {
 	_blendState.ReleaseAndGetAddressOf();
-	delete this;
 }

@@ -18,10 +18,10 @@ public:
 	virtual ~Graphics_Interface() {};
 
 private:
-	static Graphics_Interface* graphicsEngine;
+	static std::shared_ptr<Graphics_Interface> graphicsEngine;
 
 public:
-	static GraphicsEngine_DLL Graphics_Interface* Get();
+	static GraphicsEngine_DLL std::shared_ptr<Graphics_Interface> Get();
 
 public:
 	virtual GraphicsEngine_DLL void Initialize(HWND hwnd, int screenWidth, int screenHeight) abstract;
@@ -48,25 +48,25 @@ public:
 
 	virtual void TurnSkyboxOn() abstract;
 
-	virtual GraphicsEngine_DLL Device* GetDeviceClass() abstract;
-							   
-	virtual GraphicsEngine_DLL RasterizerState* GetWire() abstract;
-							   
-	virtual GraphicsEngine_DLL RasterizerState* GetSolid() abstract;
-							   
-	virtual GraphicsEngine_DLL RasterizerState* GetSolidNoneCull() abstract;
+	virtual GraphicsEngine_DLL std::shared_ptr<Device> GetDeviceClass() abstract;
 
-	virtual GraphicsEngine_DLL RasterizerState* GetShadowSolid() abstract;
+	virtual GraphicsEngine_DLL std::shared_ptr<RasterizerState> GetWire() abstract;
 
-	virtual GraphicsEngine_DLL RasterizerState* GetShadowWire() abstract;
+	virtual GraphicsEngine_DLL std::shared_ptr<RasterizerState> GetSolid() abstract;
 
-	virtual GraphicsEngine_DLL void SendObjectRenderingData(ObjectInfo* objectInfo) abstract;
+	virtual GraphicsEngine_DLL std::shared_ptr<RasterizerState> GetSolidNoneCull() abstract;
 
-	virtual GraphicsEngine_DLL void SendCameraData(CameraInfo* cameraInfo) abstract;
+	virtual GraphicsEngine_DLL std::shared_ptr<RasterizerState> GetShadowSolid() abstract;
 
-	virtual GraphicsEngine_DLL void SendLightData(LightInfo* lightInfo) abstract;
+	virtual GraphicsEngine_DLL std::shared_ptr<RasterizerState> GetShadowWire() abstract;
 
-	virtual GraphicsEngine_DLL void UpdateLightData(LightInfo* lightInfo) abstract;
+	virtual GraphicsEngine_DLL void SendObjectRenderingData(std::shared_ptr<ObjectInfo> objectInfo) abstract;
+
+	virtual GraphicsEngine_DLL void SendCameraData(std::shared_ptr<CameraInfo> cameraInfo) abstract;
+
+	virtual GraphicsEngine_DLL void SendLightData(std::shared_ptr<LightInfo> lightInfo) abstract;
+
+	virtual GraphicsEngine_DLL void UpdateLightData(std::shared_ptr<LightInfo> lightInfo) abstract;
 
 	virtual GraphicsEngine_DLL size_t CreateMesh(std::vector<StaticMeshVertex> vertices, std::vector<unsigned int> indicies, int topology, int rasterState) abstract;
 	

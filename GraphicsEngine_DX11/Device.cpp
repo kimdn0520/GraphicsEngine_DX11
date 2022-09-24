@@ -37,8 +37,8 @@ void Device::Initialize(WindowInfo& info)
 void Device::Release()
 {
 	_device.ReleaseAndGetAddressOf();
+
 	_deviceContext.ReleaseAndGetAddressOf();
-	delete this;
 }
 
 

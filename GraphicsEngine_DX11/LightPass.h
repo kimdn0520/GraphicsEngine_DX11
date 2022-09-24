@@ -19,14 +19,14 @@ public:
 	~LightPass() = default;
 
 public:
-	RenderTargetView* lightingRTV;
+	std::shared_ptr<RenderTargetView> lightingRTV;
 
 private:
-	ViewPort* _screenViewPort;
+	std::shared_ptr<ViewPort> _screenViewPort;
 
 private:
-	VertexShader* _quad_VS;
-	PixelShader* _light_PS;
+	std::shared_ptr<VertexShader> _quad_VS;
+	std::shared_ptr<PixelShader> _light_PS;
 
 public:
 	void Start() override;
@@ -37,7 +37,7 @@ public:
 
 	void RenderStart();
 
-	void Render(const std::vector<RenderTargetView*> gBuffers, DepthStencilView* shadowDSV);
+	void Render(const std::vector<std::shared_ptr<RenderTargetView>> gBuffers, std::shared_ptr<DepthStencilView> shadowDSV);
 
 	void RenderEnd();
 };

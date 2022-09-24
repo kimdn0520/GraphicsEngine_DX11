@@ -14,23 +14,23 @@ public:
 	~RenderManager() {};
 
 private:
-	static RenderManager* renderManager;
+	static std::shared_ptr<RenderManager> renderManager;
 
 public:
-	static RenderManager* Get();
+	static std::shared_ptr<RenderManager> Get();
 
-	static CameraInfo* s_cameraInfo;
+	static std::shared_ptr<CameraInfo> s_cameraInfo;
 
 private:
-	ShadowPass* _shadowPass;
+	std::shared_ptr<ShadowPass> _shadowPass;
 
-	DeferredPass* _deferredPass;
+	std::shared_ptr<DeferredPass> _deferredPass;
 
-	LightPass* _lightPass;
+	std::shared_ptr<LightPass> _lightPass;
 
-	FinalPass* _finalPass;
+	std::shared_ptr<FinalPass> _finalPass;
 
-	std::vector<ObjectInfo*> _renderData;
+	std::vector<std::shared_ptr<ObjectInfo>> _renderData;
 
 public:
 	bool isInit = false;
@@ -44,14 +44,14 @@ public:
 
 	void Release();
 
-	void PushRenderData(ObjectInfo* objectInfo);
+	void PushRenderData(std::shared_ptr<ObjectInfo> objectInfo);
 	
 	void Render();
 
 public:
-	DeferredPass* GetDeferredpass() { return _deferredPass; }
+	std::shared_ptr<DeferredPass> GetDeferredpass() { return _deferredPass; }
 
-	ShadowPass* GetShadowPass() { return _shadowPass; }
+	std::shared_ptr<ShadowPass> GetShadowPass() { return _shadowPass; }
 };
 
 

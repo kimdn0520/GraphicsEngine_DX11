@@ -35,7 +35,7 @@ public:
 private:
 	LIGHT_TYPE _type = LIGHT_TYPE::DIRECTIONAL_LIGHT;
 
-	LightInfo* _lightInfo;
+	shared_ptr<LightInfo> _lightInfo;
 
 	shared_ptr<Transform> _transform;
 

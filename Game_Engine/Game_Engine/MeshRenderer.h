@@ -15,7 +15,7 @@ public:
 private:
 	Transform* _transform;
 
-	ObjectInfo* _objectInfo;
+	shared_ptr<ObjectInfo> _objectInfo;
 
 	bool _isBone = false;				// 본인지 아닌지(본은 안 그릴거라서)
 
@@ -25,7 +25,7 @@ public:
 	std::vector<std::string> boneNameList;
 
 public:
-	ObjectInfo* GetObjectInfo() { return _objectInfo; }
+	shared_ptr<ObjectInfo> GetObjectInfo() { return _objectInfo; }
 
 	GameEngine_DLL void SetMeshID(std::size_t meshID) { _objectInfo->meshID = meshID; }
 

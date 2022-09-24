@@ -14,14 +14,15 @@ public:
 	ShadowPass() = default;
 	~ShadowPass() = default;
 
-	DepthStencilView* shadowDSV;
-private:
-
-	ViewPort* _screenViewPort;
+	std::shared_ptr<DepthStencilView> shadowDSV;
 
 private:
-	VertexShader* _shadow_VS;
-	VertexShader* _shadow_Skinned_VS;
+
+	std::shared_ptr<ViewPort> _screenViewPort;
+
+private:
+	std::shared_ptr<VertexShader> _shadow_VS;
+	std::shared_ptr<VertexShader> _shadow_Skinned_VS;
 
 public:
 	void Start() override;
@@ -32,7 +33,7 @@ public:
 
 	void RenderStart();
 
-	void Render(std::vector<ObjectInfo*> meshs);
+	void Render(std::vector<std::shared_ptr<ObjectInfo>> meshs);
 
 	void RenderEnd();
 };

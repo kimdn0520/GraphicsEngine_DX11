@@ -181,9 +181,6 @@
     <ClInclude Include="ShadowPass.h">
       <Filter>Shader\Pass\Shadow</Filter>
     </ClInclude>
-    <ClInclude Include="DebugWindow.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="DebugPass.h">
       <Filter>Shader\Pass\Debug</Filter>
     </ClInclude>
@@ -272,9 +269,6 @@
     </ClCompile>
     <ClCompile Include="ShadowPass.cpp">
       <Filter>Shader\Pass\Shadow</Filter>
-    </ClCompile>
-    <ClCompile Include="DebugWindow.cpp">
-      <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="DebugPass.cpp">
       <Filter>Shader\Pass\Debug</Filter>

@@ -14,19 +14,19 @@
 
 void FinalPass::Start()
 {
-	_quad_VS = dynamic_cast<VertexShader*>(ShaderManager::Get()->GetShader(L"Quad_VS"));
+	_quad_VS = dynamic_pointer_cast<VertexShader>(ShaderManager::Get()->GetShader(L"Quad_VS"));
 	
-	_tone_PS = dynamic_cast<PixelShader*>(ShaderManager::Get()->GetShader(L"ToneMapping_PS"));
+	_tone_PS = dynamic_pointer_cast<PixelShader>(ShaderManager::Get()->GetShader(L"ToneMapping_PS"));
 
-	_debugPass = new DebugPass();
+	_debugPass = std::make_shared<DebugPass>();
 
 	_debugPass->Start();
 }
 
 void FinalPass::Release()
 {
-	delete _quad_VS;
-	delete _tone_PS;
+	_quad_VS.reset();
+	_tone_PS.reset();
 
 	_debugPass->Release();
 }
@@ -45,7 +45,7 @@ void FinalPass::RenderStart()
 	Graphics_Interface::Get()->TurnZBufferOff();
 }
 
-void FinalPass::Render(RenderTargetView* rtv)
+void FinalPass::Render(std::shared_ptr<RenderTargetView> rtv)
 {
 	RenderStart();
 

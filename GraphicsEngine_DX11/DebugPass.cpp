@@ -16,8 +16,8 @@
 
 void DebugPass::Start()
 {
-	_quad_VS = dynamic_cast<VertexShader*>(ShaderManager::Get()->GetShader(L"Quad_VS"));
-	_debug_PS = dynamic_cast<PixelShader*>(ShaderManager::Get()->GetShader(L"Debug_PS"));
+	_quad_VS = dynamic_pointer_cast<VertexShader>(ShaderManager::Get()->GetShader(L"Quad_VS"));
+	_debug_PS = dynamic_pointer_cast<PixelShader>(ShaderManager::Get()->GetShader(L"Debug_PS"));
 
 	_deferredPass = RenderManager::Get()->GetDeferredpass();
 	_shadowPass = RenderManager::Get()->GetShadowPass();
@@ -25,8 +25,8 @@ void DebugPass::Start()
 
 void DebugPass::Release()
 {
-	delete _quad_VS;
-	delete _debug_PS;
+	_quad_VS.reset();
+	_debug_PS.reset();
 }
 
 void DebugPass::OnResize(int width, int height)

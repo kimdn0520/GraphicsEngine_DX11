@@ -21,20 +21,20 @@ void GraphicsEngine_DX11::Initialize(HWND hwnd, int screenWidth, int screenHeigh
 	_windowInfo.hwnd = hwnd;
 	_windowInfo.enable4xMSAA = false;
 			
-	_device = new Device();
-	_swapChain = new SwapChain();
-	_mainRenderTargetView = new RenderTargetView();
-	_depthStencilView = new DepthStencilView();
-	_depthStencilState = new DepthStencilState();			// Z on
-	_disableDepthStencilState = new DepthStencilState();	// Z off
-	_skyBoxDepthStencilState = new DepthStencilState();		// skybox
-	_wireRasterizerState = new RasterizerState();			// wire
-	_solidRasterizerState = new RasterizerState();			// solid
-	_solidNoneCullRasterizerState = new RasterizerState();	// solidNoneCull
-	_shadowSolidRasterizerState = new RasterizerState();	// shadowSolid
-	_shadowWireRasterizerState = new RasterizerState();		// shadowWire
-	_alphaBlendState = new BlendState();
-	_mainViewPort = new ViewPort();
+	_device = std::make_shared<Device>();
+	_swapChain = std::make_shared<SwapChain>();
+	_mainRenderTargetView = std::make_shared<RenderTargetView>();
+	_depthStencilView = std::make_shared<DepthStencilView>();
+	_depthStencilState = std::make_shared<DepthStencilState>();				// Z on
+	_disableDepthStencilState = std::make_shared<DepthStencilState>();		// Z off
+	_skyBoxDepthStencilState = std::make_shared<DepthStencilState>();		// skybox
+	_wireRasterizerState = std::make_shared<RasterizerState>();				// wire
+	_solidRasterizerState = std::make_shared<RasterizerState>();			// solid
+	_solidNoneCullRasterizerState = std::make_shared<RasterizerState>();	// solidNoneCull
+	_shadowSolidRasterizerState = std::make_shared<RasterizerState>();		// shadowSolid
+	_shadowWireRasterizerState = std::make_shared<RasterizerState>();		// shadowWire
+	_alphaBlendState = std::make_shared<BlendState>();
+	_mainViewPort = std::make_shared<ViewPort>();
 
 	_device->Initialize(_windowInfo);
 	_swapChain->Initialize(_windowInfo, _device);
@@ -178,52 +178,52 @@ void GraphicsEngine_DX11::TurnSkyboxOn()
 	_device->GetDeviceContext()->OMSetDepthStencilState(_skyBoxDepthStencilState->GetDepthStencilState().Get(), 1);
 }
 
-Device* GraphicsEngine_DX11::GetDeviceClass()
+std::shared_ptr<Device> GraphicsEngine_DX11::GetDeviceClass()
 {
 	return _device;
 }
 
-RasterizerState* GraphicsEngine_DX11::GetWire()
+std::shared_ptr<RasterizerState> GraphicsEngine_DX11::GetWire()
 {
 	return _wireRasterizerState;
 }
 
-RasterizerState* GraphicsEngine_DX11::GetSolid()
+std::shared_ptr<RasterizerState> GraphicsEngine_DX11::GetSolid()
 {
 	return _solidRasterizerState;
 }
 
-RasterizerState* GraphicsEngine_DX11::GetSolidNoneCull()
+std::shared_ptr<RasterizerState> GraphicsEngine_DX11::GetSolidNoneCull()
 {
 	return _solidNoneCullRasterizerState;
 }
 
-RasterizerState* GraphicsEngine_DX11::GetShadowSolid()
+std::shared_ptr<RasterizerState> GraphicsEngine_DX11::GetShadowSolid()
 {
 	return _shadowSolidRasterizerState;
 }
 
-RasterizerState* GraphicsEngine_DX11::GetShadowWire()
+std::shared_ptr<RasterizerState> GraphicsEngine_DX11::GetShadowWire()
 {
 	return _shadowWireRasterizerState;
 }
 
-void GraphicsEngine_DX11::SendObjectRenderingData(ObjectInfo* objectInfo)
+void GraphicsEngine_DX11::SendObjectRenderingData(std::shared_ptr<ObjectInfo> objectInfo)
 {
 	RenderManager::Get()->PushRenderData(objectInfo);
 }
 
-void GraphicsEngine_DX11::SendCameraData(CameraInfo* cameraInfo)
+void GraphicsEngine_DX11::SendCameraData(std::shared_ptr<CameraInfo> cameraInfo)
 {
 	RenderManager::s_cameraInfo = cameraInfo;
 }
 
-void GraphicsEngine_DX11::SendLightData(LightInfo* lightInfo)
+void GraphicsEngine_DX11::SendLightData(std::shared_ptr<LightInfo> lightInfo)
 {
 	LightManager::Get()->SetLightInfo(lightInfo);
 }
 
-void GraphicsEngine_DX11::UpdateLightData(LightInfo* lightInfo)
+void GraphicsEngine_DX11::UpdateLightData(std::shared_ptr<LightInfo> lightInfo)
 {
 	LightManager::Get()->UpdateLightInfo(lightInfo);
 }

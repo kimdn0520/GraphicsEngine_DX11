@@ -3,14 +3,14 @@
 #include "Texture.h"
 #include "Mesh.h"
 
-ResourceManager* ResourceManager::resourceManager = nullptr;
+std::shared_ptr<ResourceManager> ResourceManager::resourceManager = nullptr;
 
 size_t ResourceManager::meshID = 0;
 
-ResourceManager* ResourceManager::Get()
+std::shared_ptr<ResourceManager> ResourceManager::Get()
 {
 	if (resourceManager == nullptr)
-		resourceManager = new ResourceManager();
+		resourceManager = std::make_shared<ResourceManager>();
 
 	return resourceManager;
 }
@@ -25,15 +25,12 @@ void ResourceManager::Release()
 	for (auto texture : _textures)
 		texture.second->Release();
 
-	for (auto mesh : _meshs)
-		delete mesh.second;
-
 	_textures.clear();
 
 	_meshs.clear();
 }
 
-Texture* ResourceManager::GetTexture(const std::wstring& name)
+std::shared_ptr<Texture> ResourceManager::GetTexture(const std::wstring& name)
 {
 	auto findIt = _textures.find(name);
 
@@ -49,13 +46,14 @@ Texture* ResourceManager::GetTexture(const std::wstring& name)
 
 void ResourceManager::CreateTexture(const std::wstring& name, const std::wstring& path)
 {
-	Texture* texture = new Texture();
+	std::shared_ptr<Texture> texture = std::make_shared<Texture>();
+
 	texture->Initialize(path);									// 텍스쳐 srv 생성
 
 	_textures.insert(make_pair(name, texture));
 }
 
-Mesh* ResourceManager::GetMesh(size_t id)
+std::shared_ptr<Mesh> ResourceManager::GetMesh(size_t id)
 {
 	return _meshs[id];
 }

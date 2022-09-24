@@ -4,13 +4,13 @@
 #include "Device.h"
 
 
-Graphics_Interface* Graphics_Interface::graphicsEngine = nullptr;
+std::shared_ptr<Graphics_Interface> Graphics_Interface::graphicsEngine = nullptr;
 
 // GraphicsEngineInterface를 상속받고있는 GraphicsEngine_DX11의 객체 생성
-Graphics_Interface* Graphics_Interface::Get()
+std::shared_ptr<Graphics_Interface> Graphics_Interface::Get()
 {
 	if (graphicsEngine == nullptr)
-		graphicsEngine = new GraphicsEngine_DX11();
+		graphicsEngine = std::make_shared<GraphicsEngine_DX11>();
 
 	return graphicsEngine;
 }

@@ -9,13 +9,13 @@ public:
 	~GraphicsManager() {};
 
 private:
-	static GraphicsManager* graphicsManager;
+	static std::shared_ptr<GraphicsManager> graphicsManager;
 
 private:
-	Graphics_Interface* graphicsEngine;
+	std::shared_ptr<Graphics_Interface> graphicsEngine;
 	
 public:
-	static GraphicsManager* Get();
+	static std::shared_ptr<GraphicsManager> Get();
 
 public:
 	void Initialize(HWND hWnd, int screenWidth, int screenHeight);
@@ -34,13 +34,13 @@ public:
 
 	int GetScreenHeight();
 
-	void SendObjectRenderingData(ObjectInfo* objectInfo);
+	void SendObjectRenderingData(std::shared_ptr<ObjectInfo> objectInfo);
 
-	void SendCameraData(CameraInfo* cameraInfo);
+	void SendCameraData(std::shared_ptr<CameraInfo> cameraInfo);
 
-	void SendLightData(LightInfo* lightInfo);
+	void SendLightData(std::shared_ptr<LightInfo> lightInfo);
 
-	void UpdateLightData(LightInfo* lightInfo);
+	void UpdateLightData(std::shared_ptr<LightInfo> lightInfo);
 
 	size_t CreateMesh(std::vector<StaticMeshVertex> vertices, std::vector<unsigned int> indicies, int topology, int rasterState);
 

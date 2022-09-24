@@ -15,13 +15,13 @@ public:
 	~FinalPass() = default;
 
 private:
-	ViewPort* _screenViewPort;
+	std::shared_ptr<ViewPort> _screenViewPort;
 
 private:
-	VertexShader* _quad_VS;
-	PixelShader* _tone_PS;
+	std::shared_ptr<VertexShader> _quad_VS;
+	std::shared_ptr<PixelShader> _tone_PS;
 
-	DebugPass* _debugPass;
+	std::shared_ptr<DebugPass> _debugPass;
 
 public:
 	void Start() override;
@@ -32,7 +32,7 @@ public:
 
 	void RenderStart();
 
-	void Render(RenderTargetView* rtv);
+	void Render(std::shared_ptr<RenderTargetView> rtv);
 
 	void RenderEnd();
 };

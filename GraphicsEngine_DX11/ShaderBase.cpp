@@ -14,13 +14,13 @@ ShaderBase::~ShaderBase()
 void ShaderBase::ReleaseData()
 {
 	for (auto it : _constantBufferData)
-		delete it.second;
+		it.second.reset();
 
 	for (auto it : _samplerStateData)
-		delete it.second;
+		it.second.reset();
 
 	for (auto it : _shaderResourceViewData)
-		delete it.second;
+		it.second.reset();
 
 	_constantBufferData.clear();
 	_samplerStateData.clear();

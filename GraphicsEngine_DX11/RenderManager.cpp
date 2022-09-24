@@ -6,13 +6,13 @@
 #include "LightPass.h"
 #include "FinalPass.h"
 
-RenderManager* RenderManager::renderManager = nullptr;
-CameraInfo* RenderManager::s_cameraInfo;
+std::shared_ptr<RenderManager> RenderManager::renderManager = nullptr;
+std::shared_ptr<CameraInfo> RenderManager::s_cameraInfo;
 
-RenderManager* RenderManager::Get()
+std::shared_ptr<RenderManager> RenderManager::Get()
 {
 	if (renderManager == nullptr)
-		renderManager = new RenderManager();
+		renderManager = std::make_shared<RenderManager>();
 
 	return renderManager;
 }
@@ -23,16 +23,16 @@ void RenderManager::Initialize()
 
 	PassBase::Initialize();
 
-	_shadowPass = new ShadowPass();
+	_shadowPass = std::make_shared<ShadowPass>();
 	_shadowPass->Start();
 
-	_deferredPass = new DeferredPass();
+	_deferredPass = std::make_shared<DeferredPass>();
 	_deferredPass->Start();
 
-	_lightPass = new LightPass();
+	_lightPass = std::make_shared<LightPass>();
 	_lightPass->Start();
 
-	_finalPass = new FinalPass();
+	_finalPass = std::make_shared<FinalPass>();
 	_finalPass->Start();
 }
 
@@ -47,9 +47,6 @@ void RenderManager::OnResize(int width, int height)
 
 void RenderManager::Release()
 {
-	for (auto it : _renderData)
-		delete it;
-
 	_renderData.clear();
 	
 	PassBase::Reset();
@@ -61,7 +58,7 @@ void RenderManager::Release()
 	_lightPass->Release();
 }
 
-void RenderManager::PushRenderData(ObjectInfo* objectInfo)
+void RenderManager::PushRenderData(std::shared_ptr<ObjectInfo> objectInfo)
 {
 	_renderData.push_back(objectInfo);
 }
