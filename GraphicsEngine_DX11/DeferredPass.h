@@ -40,7 +40,6 @@ private:
 	PixelShader* _model_PS;
 
 	VertexShader* _quad_VS;
-	PixelShader* _quad_PS;
 
 public:
 	void Start() override;

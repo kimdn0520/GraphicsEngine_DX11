@@ -181,14 +181,14 @@ bool DebugWindow::UpdateBuffers(ComPtr<ID3D11DeviceContext> deviceContext, Vecto
 	vertices[1].position = Vector3(right, bottom, 0.0f);			// Bottom Right
 	vertices[1].uv = Vector2(1.0f, 1.0f);
 	vertices[1].color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-	vertices[2].position = Vector3(left, bottom, 0.0f);			// Bottom Left
-	vertices[2].uv = Vector2(0.0f, 1.0f);
-	vertices[2].color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+	vertices[2].position = Vector3(left, bottom, 0.0f);				// Bottom Left
+	vertices[2].uv = Vector2(0.0f, 1.0f);	
+	vertices[2].color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);							
 	// second triangle
 	vertices[3].position = Vector3(left, top, 0.0f);				// Top Left
 	vertices[3].uv = Vector2(0.0f, 0.0f);
 	vertices[3].color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-	vertices[4].position = Vector3(right, top, 0.0f);			// Top Right
+	vertices[4].position = Vector3(right, top, 0.0f);				// Top Right
 	vertices[4].uv = Vector2(1.0f, 0.0f);
 	vertices[4].color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 	vertices[5].position = Vector3(right, bottom, 0.0f);			// Bottom Right

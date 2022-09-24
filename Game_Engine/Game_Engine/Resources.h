@@ -41,6 +41,8 @@ public:
 
 	void LoadScreenMesh(int topology, int rasterState);			// 4
 
+	void LoadDebugScreenMesh(int topology, int rasterState);	// 5
+
 	GameEngine_DLL std::vector<GameObject*> LoadASE(std::string path, int topology, int rasterizerState);
 
 	// GameEngine_DLL MeshData* LoadFBX(const wstring& path, int topology, int rasterizerState, int pass);

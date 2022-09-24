@@ -31,6 +31,8 @@ void Resources::Initialize()
 	LoadGridMesh(TOPOLOGY_LINELIST, RasterState_WIRE);
 
 	LoadScreenMesh(TOPOLOGY_TRIANGLELIST, RasterState_SOLID);
+
+	LoadDebugScreenMesh(TOPOLOGY_TRIANGLELIST, RasterState_SOLID);
 }
 
 void Resources::Release()
@@ -279,6 +281,46 @@ void Resources::LoadScreenMesh(int topology, int rasterState)
 
 	// 우 하단
 	vertices[5].position = Vector3(1.f, -1.f, 0.f);
+	vertices[5].uv = Vector2(1.f, 1.f);
+
+	std::vector<unsigned int> indices(6);
+
+	for (int i = 0; i < 6; i++)
+		indices[i] = i;
+
+	GraphicsManager::Get()->CreateMesh(
+		vertices,
+		indices,
+		topology,
+		rasterState);
+}
+
+void Resources::LoadDebugScreenMesh(int topology, int rasterState)
+{
+	std::vector<StaticMeshVertex> vertices(6);
+
+	// 좌 하단
+	vertices[0].position = Vector3(-1.f, 0.6f, 0.f);
+	vertices[0].uv = Vector2(0.f, 1.f);
+
+	// 좌 상단
+	vertices[1].position = Vector3(-1.f, 1.f, 0.f);
+	vertices[1].uv = Vector2(0.f, 0.f);
+
+	// 우 상단
+	vertices[2].position = Vector3(1.f, 1.f, 0.f);
+	vertices[2].uv = Vector2(1.f, 0.f);
+
+	// 좌 하단
+	vertices[3].position = Vector3(-1.f, 0.6f, 0.f);
+	vertices[3].uv = Vector2(0.f, 1.f);
+
+	// 우 상단
+	vertices[4].position = Vector3(1.f, 1.f, 0.f);
+	vertices[4].uv = Vector2(1.f, 0.f);
+
+	// 우 하단
+	vertices[5].position = Vector3(1.f, 0.6f, 0.f);
 	vertices[5].uv = Vector2(1.f, 1.f);
 
 	std::vector<unsigned int> indices(6);

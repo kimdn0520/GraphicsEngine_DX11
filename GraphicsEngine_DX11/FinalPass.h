@@ -6,6 +6,7 @@ class VertexShader;
 class PixelShader;
 class RenderTargetView;
 class ViewPort;
+class DebugPass;
 
 class FinalPass : public PassBase
 {
@@ -19,6 +20,8 @@ private:
 private:
 	VertexShader* _quad_VS;
 	PixelShader* _tone_PS;
+
+	DebugPass* _debugPass;
 
 public:
 	void Start() override;

@@ -4,6 +4,7 @@
 class Graphics_Interface;
 
 constexpr size_t SCREEN_MESH = 4;
+constexpr size_t DEBUG_SCREEN_MESH = 5;
 
 class PassBase
 {

@@ -47,6 +47,11 @@ public:
 	void PushRenderData(ObjectInfo* objectInfo);
 	
 	void Render();
+
+public:
+	DeferredPass* GetDeferredpass() { return _deferredPass; }
+
+	ShadowPass* GetShadowPass() { return _shadowPass; }
 };
 
 

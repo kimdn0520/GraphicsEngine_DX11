@@ -46,6 +46,10 @@ void ShadowPass::OnResize(int width, int height)
 
 void ShadowPass::RenderStart()
 {
+	ID3D11ShaderResourceView* nullSRV[5] = { nullptr };
+
+	g_deviceContext->PSSetShaderResources(0, 5, nullSRV);
+
 	shadowDSV->ClearDepthStencilView(g_deviceContext);
 
 	_screenViewPort->SetViewPort(g_deviceContext);
@@ -61,7 +65,7 @@ void ShadowPass::Render(std::vector<ObjectInfo*> meshs)
 	RenderStart();
 
 	Matrix lightView = XMMatrixLookAtLH(RenderManager::s_cameraInfo->worldPos, LightManager::Get()->cbLightBuffer.gDirLight[0].Direction, Vector3(0.0f, 1.0f, 0.0f));
-	Matrix lightProj = XMMatrixOrthographicLH(100, 100, 0, 500);
+	Matrix lightProj = XMMatrixOrthographicLH(10, 10, 0, 500);
 
 	cbLightViewProj cbLightViewProjBuffer;
 	cbLightViewProjBuffer.lightViewProj = lightView * lightProj;

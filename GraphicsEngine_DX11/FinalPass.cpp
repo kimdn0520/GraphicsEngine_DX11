@@ -6,6 +6,7 @@
 #include "ViewPort.h"
 #include "VertexShader.h"
 #include "PixelShader.h"
+#include "DebugPass.h"
 
 #include "RenderManager.h"
 #include "ShaderManager.h"
@@ -16,12 +17,18 @@ void FinalPass::Start()
 	_quad_VS = dynamic_cast<VertexShader*>(ShaderManager::Get()->GetShader(L"Quad_VS"));
 	
 	_tone_PS = dynamic_cast<PixelShader*>(ShaderManager::Get()->GetShader(L"ToneMapping_PS"));
+
+	_debugPass = new DebugPass();
+
+	_debugPass->Start();
 }
 
 void FinalPass::Release()
 {
 	delete _quad_VS;
 	delete _tone_PS;
+
+	_debugPass->Release();
 }
 
 void FinalPass::OnResize(int width, int height)
@@ -65,6 +72,9 @@ void FinalPass::Render(RenderTargetView* rtv)
 	g_deviceContext->IASetIndexBuffer(ResourceManager::Get()->GetMesh(SCREEN_MESH)->GetIndexBuffer().Get(), DXGI_FORMAT_R32_UINT, 0);
 
 	g_deviceContext->DrawIndexed(ResourceManager::Get()->GetMesh(SCREEN_MESH)->GetIdxBufferSize(), 0, 0);
+
+	// 디버그패스
+	_debugPass->Render();
 
 	RenderEnd();
 }

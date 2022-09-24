@@ -74,6 +74,9 @@
     <Filter Include="Shader\Pass\Final">
       <UniqueIdentifier>{7cfc4bfe-41d9-4741-bad3-826127eecf48}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader\Pass\Debug">
+      <UniqueIdentifier>{9354fc02-02ae-47de-9095-1d32d6a7e07f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -181,6 +184,9 @@
     <ClInclude Include="DebugWindow.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="DebugPass.h">
+      <Filter>Shader\Pass\Debug</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EnginePch.cpp">
@@ -270,6 +276,9 @@
     <ClCompile Include="DebugWindow.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="DebugPass.cpp">
+      <Filter>Shader\Pass\Debug</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\GameClient\GameClient\Data\Shader\Model_VS.hlsl">
@@ -290,7 +299,7 @@
     <FxCompile Include="..\GameClient\GameClient\Data\Shader\ToneMapping_PS.hlsl">
       <Filter>Shader\HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="..\GameClient\GameClient\Data\Shader\Quad_PS.hlsl">
+    <FxCompile Include="..\GameClient\GameClient\Data\Shader\Debug_PS.hlsl">
       <Filter>Shader\HLSL</Filter>
     </FxCompile>
   </ItemGroup>

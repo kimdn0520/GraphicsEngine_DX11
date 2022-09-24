@@ -20,7 +20,6 @@ void DeferredPass::Start()
 	_model_PS = dynamic_cast<PixelShader*>(ShaderManager::Get()->GetShader(L"Model_PS"));
 
 	_quad_VS = dynamic_cast<VertexShader*>(ShaderManager::Get()->GetShader(L"Quad_VS"));
-	_quad_PS = dynamic_cast<PixelShader*>(ShaderManager::Get()->GetShader(L"Quad_PS"));
 
 	gBuffers.resize(DEFERRED_COUNT);
 
@@ -73,7 +72,8 @@ void DeferredPass::Release()
 	_deferredDSV->Release();
 
 	_screenViewPort->Release();
-
+	
+	delete _quad_VS;
 	delete _model_VS;
 	delete _model_Skinned_VS;
 	delete _model_PS;
@@ -110,9 +110,9 @@ void DeferredPass::RenderStart()
 	_deferredDSV->ClearDepthStencilView(g_deviceContext);
 
 	// G-Buffer들이 혹시 쉐이더 리소스로 박혀있을 수 있으니 Unbind
-	ID3D11ShaderResourceView* nullSRV[DEFERRED_COUNT] = { nullptr };
+	ID3D11ShaderResourceView* nullSRV[DEFERRED_COUNT + 1] = { nullptr };
 
-	g_deviceContext->PSSetShaderResources(0, DEFERRED_COUNT, nullSRV);
+	g_deviceContext->PSSetShaderResources(0, DEFERRED_COUNT + 1, nullSRV);
 
 	g_deviceContext->OMSetRenderTargets(DEFERRED_COUNT, _gBufferViews[0].GetAddressOf(), _deferredDSV->GetDepthStencilView().Get());
 
@@ -210,37 +210,5 @@ void DeferredPass::Render(std::vector<ObjectInfo*> meshs, DepthStencilView* shad
 
 void DeferredPass::RenderEnd(DepthStencilView* shadowDSV)
 {
-	// 무엇이 무엇이 문제일까...?
-	ID3D11ShaderResourceView* nullSRV[1] = { nullptr };
-
-	g_deviceContext->PSSetShaderResources(0, 1, nullSRV);
-
-	g_deviceContext->RSSetState(Graphics_Interface::Get()->GetSolid()->GetrasterizerState().Get());
-
-	Graphics_Interface::Get()->TurnZBufferOff();
-
-	for (int i = 0; i < DEFERRED_COUNT; i++)
-	{
-		_debugWindow[i]->Render(g_deviceContext, Vector4(0.6f, 1.0f, 1.0f - i * 0.5f, 0.5f - i * 0.5f));	// 크기 얘로 조절
-
-		_quad_VS->Update();
-
-		_quad_PS->SetResourceViewBuffer(gBuffers[i]->GetSRV().Get(), "gDiffuseMap");
-
-		_quad_PS->Update();
-
-		g_deviceContext->DrawIndexed(_debugWindow[i]->GetIndexCount(), 0, 0);
-	}
-
-	_debugWindow[DEFERRED_COUNT]->Render(g_deviceContext, Vector4(0.6f, 1.0f, 1.0f - 0.5f, 0.5f * 0.5f));
-
-	_quad_VS->Update();
-
-	_quad_PS->SetResourceViewBuffer(shadowDSV->GetShaderResourceView().Get(), "gDiffuseMap");
-
-	_quad_PS->Update();
-
-	g_deviceContext->DrawIndexed(_debugWindow[DEFERRED_COUNT]->GetIndexCount(), 0, 0);
-
-	Graphics_Interface::Get()->TurnZBufferOn();
+	
 }
