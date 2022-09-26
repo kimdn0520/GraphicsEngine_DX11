@@ -15,7 +15,7 @@ enum class PROJECTION_TYPE
 class Camera : public Component, public AlignedAllocationPolicy<16>
 {
 public:
-	GameEngine_DLL Camera(GameObject* gameObject);
+	GameEngine_DLL Camera(std::shared_ptr<GameObject> gameObject);
 	GameEngine_DLL virtual ~Camera();
 
 private:
@@ -23,7 +23,7 @@ private:
 
 	Vector3 _targetPos;
 
-	Transform* _cameraTransform;
+	std::shared_ptr<Transform> _cameraTransform;
 
 	// z를 시야로부터의 거리로 삼아 정점의 x, y좌표를 거리에 비례하여 수정한다.
 	// near와 far 를 1 ~ 1000 으로 범위를 써주면 파이프라인 과정을 거치면서 0 ~ 1 로 변환이된다.

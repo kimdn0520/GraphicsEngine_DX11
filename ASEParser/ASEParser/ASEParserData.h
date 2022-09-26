@@ -99,9 +99,9 @@ namespace ASEData
 	public:
 		std::string		nodename;		// 그냥 오브젝트 이름
 		std::string		animName;		// 애니메이션 이름
-		std::vector<Animation_pos*>		position;
-		std::vector<Animation_rot*>		rotation;
-		std::vector<Animation_scl*>		scale;
+		std::vector<std::shared_ptr<Animation_pos>>		position;
+		std::vector<std::shared_ptr<Animation_rot>>		rotation;
+		std::vector<std::shared_ptr<Animation_scl>>		scale;
 
 		//// 애니메이션 firstframe
 		//int firstFrame;
@@ -131,9 +131,9 @@ namespace ASEData
 
 		DirectX::SimpleMath::Matrix nodeTM;
 
-		std::vector<ASEAnimation*> animationClips;
+		std::vector<std::shared_ptr<ASEAnimation>> animationClips;
 
-		std::vector<ASEBoneInfo*> boneInfos;
+		std::vector<std::shared_ptr<ASEBoneInfo>> boneInfos;
 	};
 
 }
@@ -143,11 +143,11 @@ namespace ASEData
 	class ASEModel
 	{
 	public:
-		ASEFrameData* frameData;
+		std::shared_ptr<ASEFrameData> frameData;
 
-		std::vector<ASEMeshInfo*> meshInfos;
+		std::vector<std::shared_ptr<ASEMeshInfo>> meshInfos;
 
-		std::vector<ASEMaterialInfo*> materials;
+		std::vector<std::shared_ptr<ASEMaterialInfo>> materials;
 	
 		bool isAnimation;	// 애니메이션 보유 여부
 	};

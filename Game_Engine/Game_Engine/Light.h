@@ -29,7 +29,7 @@ enum class LIGHT_TYPE
 class Light : public Component, public AlignedAllocationPolicy<16>
 {
 public:
-	GameEngine_DLL Light(GameObject* gameObject);
+	GameEngine_DLL Light(std::shared_ptr<GameObject> gameObject);
 	virtual ~Light();
 
 private:

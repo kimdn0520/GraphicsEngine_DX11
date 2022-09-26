@@ -4,7 +4,7 @@
 #include "Camera.h"
 #include "Transform.h"
 
-Camera* Scene::GetMainCamera()
+std::shared_ptr<Camera> Scene::GetMainCamera()
 {
 	if (_cameras.empty())
 		return nullptr;
@@ -12,7 +12,7 @@ Camera* Scene::GetMainCamera()
 	return _cameras[0];
 }
 
-void Scene::AddGameObject(GameObject* gameObject)
+void Scene::AddGameObject(std::shared_ptr<GameObject> gameObject)
 {
 	// Camera 오브젝트는 따로 _cameras 에도 모아준다.(Camera 형태로 넣어준다.)
 	if (gameObject->GetCamera() != nullptr)
@@ -44,7 +44,7 @@ void Scene::AddGameObject(GameObject* gameObject)
 	}
 }
 
-void Scene::RemoveGameObject(GameObject* gameObject)
+void Scene::RemoveGameObject(std::shared_ptr<GameObject> gameObject)
 {
 	if (gameObject->GetCamera())
 	{
@@ -52,7 +52,7 @@ void Scene::RemoveGameObject(GameObject* gameObject)
 		if (findIt != _cameras.end())
 		{
 			_cameras.erase(findIt);
-			delete& findIt;
+			findIt->reset();
 		}
 	}
 
@@ -62,7 +62,7 @@ void Scene::RemoveGameObject(GameObject* gameObject)
 		if (findIt != _ui.end())
 		{
 			_ui.erase(findIt);
-			delete& findIt;
+			findIt->reset();
 		}
 	}
 
@@ -70,7 +70,7 @@ void Scene::RemoveGameObject(GameObject* gameObject)
 	if (findIt != _gameObjects.end())
 	{
 		_gameObjects.erase(findIt);
-		delete& findIt;
+		findIt->reset();
 	}
 
 	if (gameObject->GetChilds().size() != 0)
@@ -85,16 +85,7 @@ void Scene::RemoveGameObject(GameObject* gameObject)
 void Scene::AllClearGameObject()
 {
 	for (auto& gameObject : _gameObjects)
-		delete gameObject;
-
-	for (auto& camera : _cameras)
-		delete camera;
-
-	for (auto& ui : _ui)
-		delete ui;
-
-	for (auto& text : _text)
-		delete text;
+		gameObject.reset();
 
 	_gameObjects.clear();
 	_cameras.clear();
@@ -105,16 +96,7 @@ void Scene::AllClearGameObject()
 void Scene::Release()
 {
 	for (auto& gameObject : _gameObjects)
-		delete gameObject;
-
-	for (auto& camera : _cameras)
-		delete camera;
-
-	for (auto& ui : _ui)
-		delete ui;
-
-	for (auto& text : _text)
-		delete text;
+		gameObject.reset();
 
 	_gameObjects.clear();
 	_cameras.clear();
@@ -124,7 +106,7 @@ void Scene::Release()
 
 void Scene::Awake()
 {
-	for (GameObject* gameObject : _gameObjects)
+	for (auto& gameObject : _gameObjects)
 	{
 		gameObject->Awake();
 	}
@@ -132,7 +114,7 @@ void Scene::Awake()
 
 void Scene::Start()
 {
-	for (GameObject* gameObject : _gameObjects)
+	for (auto& gameObject : _gameObjects)
 	{
 		gameObject->Start();
 	}
@@ -140,7 +122,7 @@ void Scene::Start()
 
 void Scene::FixedUpdate()
 {
-	for (GameObject* gameObject : _gameObjects)
+	for (auto& gameObject : _gameObjects)
 	{
 		gameObject->FixedUpdate();
 	}
@@ -148,7 +130,7 @@ void Scene::FixedUpdate()
 
 void Scene::Update()
 {
-	for (GameObject* gameObject : _gameObjects)
+	for (auto& gameObject : _gameObjects)
 	{
 		gameObject->Update();
 	}
@@ -156,7 +138,7 @@ void Scene::Update()
 
 void Scene::LateUpdate()
 {
-	for (GameObject* gameObject : _gameObjects)
+	for (auto& gameObject : _gameObjects)
 	{
 		gameObject->LateUpdate();
 	}
@@ -164,7 +146,7 @@ void Scene::LateUpdate()
 
 void Scene::Render()
 {
-	for (GameObject* gameObject : _gameObjects)
+	for (auto& gameObject : _gameObjects)
 	{
 		// 게임오브젝트 activeslef true 인것만 렌더쪽에 넘겨줄거야
 		if (gameObject->activeSelf)

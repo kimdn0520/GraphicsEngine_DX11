@@ -9,14 +9,14 @@
 class TimeManager
 {
 public:
-	TimeManager() {};
-	~TimeManager() {};
+	TimeManager() = default;
+	~TimeManager() = default;
 
 private:
-	static TimeManager* timeManager;
+	static std::shared_ptr<TimeManager> timeManager;
 
 public:
-	static GameEngine_DLL TimeManager* Get();
+	static GameEngine_DLL std::shared_ptr<TimeManager> Get();
 
 public:
 	void Initialize();

@@ -58,13 +58,17 @@ float4 Light_PS(LightPixelIN input) : SV_Target
 
 	uint objectID = (uint)ObjectID.Load(int3(input.uv.x * textureInfo.x, input.uv.y * textureInfo.y, 0));
 
-	float4 shadow = mul(gDirLight[0].LightViewProj, float4(position.xyz, 1.0f));
+	float4 shadow = mul(float4(position.xyz, 1.0f), gDirLight[0].LightViewProj);
 
 	float3 NormalW = normalize(input.normal);
 
 	float shadowVal = 1.0f;
 
 	shadow.xyz /= shadow.w;
+
+	shadow.x = shadow.x * 0.5f + 0.5f;
+	shadow.y = shadow.y * -0.5f + 0.5f;
+
 	shadowVal = CalcShadowFactor(samLinearPointBoarder, Shadow, float3(shadow.xyz), textureInfo);
 
 	// √ ±‚»≠..

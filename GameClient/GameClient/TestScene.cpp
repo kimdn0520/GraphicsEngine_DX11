@@ -18,7 +18,7 @@ void TestScene::Initialize()
 	//---------------------------------------------------------------------------------------------------------
 	// Main Camera
 	//---------------------------------------------------------------------------------------------------------
-	GameObject* camera = new GameObject();
+	shared_ptr<GameObject> camera = make_shared<GameObject>();
 	camera->SetName("MainCamera");
 	camera->AddComponent<Transform>();
 	camera->AddComponent<Camera>();
@@ -30,13 +30,13 @@ void TestScene::Initialize()
 	//---------------------------------------------------------------------------------------------------------
 	// Directional Light
 	//---------------------------------------------------------------------------------------------------------
-	GameObject* dirLight = new GameObject();
+	shared_ptr<GameObject> dirLight = make_shared<GameObject>();
 	dirLight->SetName("dirLight");
 	dirLight->AddComponent<Transform>();
-	dirLight->GetComponent<Transform>()->SetLocalPosition(Vector3(0.f, 100.f, 0.f));
+	dirLight->GetComponent<Transform>()->SetLocalPosition(Vector3(0.f, 0.f, 0.f));
 	dirLight->AddComponent<Light>();
 	dirLight->GetComponent<Light>()->SetLightType(LIGHT_TYPE::DIRECTIONAL_LIGHT);
-	dirLight->GetComponent<Light>()->SetLightDirection(Vector3(0.57735f, -0.57735f, 0.57735f));
+	dirLight->GetComponent<Light>()->SetLightDirection(Vector3(0.5f, -0.5f, 0.5f));
 	dirLight->GetComponent<Light>()->SetDiffuse(Vector4(0.6f, 0.6f, 0.6f, 1.0f));	// ±âº»0.5 
 	dirLight->GetComponent<Light>()->SetAmbient(Vector4(0.4f, 0.4f, 0.4f, 1.0f));	// ±âº»0.2
 	dirLight->GetComponent<Light>()->SetSpecular(Vector4(0.2f, 0.2f, 0.2f, 1.0f));  // ±âº»0.5
@@ -59,32 +59,32 @@ void TestScene::Initialize()
 	//---------------------------------------------------------------------------------------------------------
 	// Axis
 	//---------------------------------------------------------------------------------------------------------
-	GameObject* axis = new GameObject();
+	shared_ptr<GameObject> axis = make_shared<GameObject>();
 	axis->SetName("axis");
 	axis->AddComponent<Transform>();
 	axis->AddComponent<MeshRenderer>();
 	axis->GetComponent<MeshRenderer>()->SetMeshID(2);				// axis´Â 2					
-	Material* axisMaterial = new Material();
+	shared_ptr<Material> axisMaterial = make_shared<Material>();
 	axisMaterial->isLight = false;
 	axis->GetComponent<MeshRenderer>()->SetMaterial(axisMaterial);
 	axis->GetComponent<MeshRenderer>()->IsShadow(false);			// ÀÌ³à¼®Àº ¼¨µµ¿ì ¾ÈÇÒ°Çµ­~
 	AddGameObject(axis);
 
-	GameObject* box = new GameObject();
+	shared_ptr<GameObject> box = make_shared<GameObject>();
 	box->SetName("box");
 	box->AddComponent<Transform>();
 	box->GetComponent<Transform>()->SetLocalPosition(DirectX::SimpleMath::Vector3(0.f, 0.f, 0.f));
-	box->GetComponent<Transform>()->SetLocalScale(DirectX::SimpleMath::Vector3(20.f, 1.0f, 20.f));
+	box->GetComponent<Transform>()->SetLocalScale(DirectX::SimpleMath::Vector3(5.f, 1.0f, 5.f));
 	box->AddComponent<MeshRenderer>();
 	box->GetComponent<MeshRenderer>()->SetMeshID(0);				// cube´Â 0
-	Material* boxMaterial = new Material();
+	shared_ptr<Material> boxMaterial = make_shared<Material>();
 	boxMaterial->ambient = Vector4(0.6f, 0.6f, 0.6f, 1.0f);
 	boxMaterial->diffuse = Vector4(0.6f, 0.6f, 0.6f, 1.0f);
 	boxMaterial->specular = Vector4(0.5f, 0.5f, 0.5f, 1.0f);
 	box->GetComponent<MeshRenderer>()->SetMaterial(boxMaterial);
-	box->GetComponent<MeshRenderer>()->IsShadow(false);			// ÀÌ³à¼®Àº ¼¨µµ¿ì ¾ÈÇÒ°Çµ­~
+	//box->GetComponent<MeshRenderer>()->IsShadow(false);			// ÀÌ³à¼®Àº ¼¨µµ¿ì ¾ÈÇÒ°Çµ­~
 	AddGameObject(box);
 
-	GenjiPrefab* genji = new GenjiPrefab(Vector3(0.f, 0.5f, 0.f));
-	AddGameObject(genji);
+	shared_ptr<GenjiPrefab> genji = make_shared<GenjiPrefab>(Vector3(0.f, 1.f, 0.f));
+	AddGameObject(genji->gameObject);
 }

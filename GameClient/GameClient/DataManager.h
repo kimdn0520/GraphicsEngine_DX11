@@ -9,13 +9,13 @@ public:
 	~DataManager() {};
 
 private:
-	static DataManager* dataManager;
+	static std::shared_ptr<DataManager> dataManager;
 
 public:
-	static DataManager* Get();
+	static std::shared_ptr<DataManager> Get();
 
 private:
-	std::unordered_map<std::string, std::vector<GameObject*>> _dataResources;
+	std::unordered_map<std::string, std::vector<std::shared_ptr<GameObject>>> _dataResources;
 
 public:
 	bool isDataLoad = false;
@@ -25,6 +25,6 @@ public:
 
 	void Release();
 	
-	std::vector<GameObject*> GetDataResources(std::string data);
+	std::vector<std::shared_ptr<GameObject>> GetDataResources(std::string data);
 };
 

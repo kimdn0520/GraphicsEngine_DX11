@@ -4,20 +4,20 @@
 #include "ASEParser.h"
 
 ASEParser::ASEParser()
-	: _lexer(new Lexer())
+	: _lexer(std::make_shared<Lexer>())
 {}
 
 ASEParser::~ASEParser()
 {}
 
-ASEData::ASEModel* ASEParser::Load(string filePath)
+std::shared_ptr<ASEData::ASEModel> ASEParser::Load(string filePath)
 {
 	FILE* file;
 	fopen_s(&file, filePath.c_str(), "r");
 
 	int nowToken = 0;
 
-	_ASEModel = new ASEData::ASEModel();
+	_ASEModel = std::make_shared<ASEData::ASEModel>();
 
 	// feof(FILE* stream) // 파일의 끝에 도달하게되면 0이 아닌 값을 반환
 	while (!feof(file))
@@ -54,7 +54,7 @@ ASEData::ASEModel* ASEParser::Load(string filePath)
 			break;
 		case TOKENR_SCENE_FILENAME:
 		{
-			ASEData::ASEFrameData* frameData = new ASEData::ASEFrameData();
+			std::shared_ptr<ASEData::ASEFrameData> frameData = std::make_shared<ASEData::ASEFrameData>();
 			_ASEModel->frameData = frameData;
 			_ASEModel->frameData->fileName = Parsing_String();
 		}
@@ -101,7 +101,7 @@ ASEData::ASEModel* ASEParser::Load(string filePath)
 			if (materialCnt == 0)
 			{
 				_ASEModel->materials.resize(1);
-				ASEData::ASEMaterialInfo* newMaterial = new ASEData::ASEMaterialInfo();
+				std::shared_ptr<ASEData::ASEMaterialInfo> newMaterial = std::make_shared<ASEData::ASEMaterialInfo>();
 				_ASEModel->materials[_materialIndex] = newMaterial;
 			}
 			else
@@ -114,7 +114,7 @@ ASEData::ASEModel* ASEParser::Load(string filePath)
 		{
 			_materialIndex = Parsing_Int();
 
-			ASEData::ASEMaterialInfo* newMaterial = new ASEData::ASEMaterialInfo();
+			std::shared_ptr<ASEData::ASEMaterialInfo> newMaterial = std::make_shared<ASEData::ASEMaterialInfo>();
 			_ASEModel->materials[_materialIndex] = newMaterial;
 		}
 		break;
@@ -195,7 +195,7 @@ ASEData::ASEModel* ASEParser::Load(string filePath)
 		{
 			PushMesh();
 
-			ASEData::ASEMeshInfo* aseMeshInfo = new ASEData::ASEMeshInfo();
+			std::shared_ptr<ASEData::ASEMeshInfo> aseMeshInfo = std::make_shared<ASEData::ASEMeshInfo>();
 			_ASEModel->meshInfos.push_back(aseMeshInfo);
 			_parsingMeshInfo = aseMeshInfo;
 		}
@@ -204,7 +204,7 @@ ASEData::ASEModel* ASEParser::Load(string filePath)
 		{
 			PushMesh();
 
-			ASEData::ASEMeshInfo* aseMeshInfo = new ASEData::ASEMeshInfo();
+			std::shared_ptr<ASEData::ASEMeshInfo> aseMeshInfo = std::make_shared<ASEData::ASEMeshInfo>();
 			_ASEModel->meshInfos.push_back(aseMeshInfo);
 			_parsingMeshInfo = aseMeshInfo;
 		}
@@ -320,7 +320,7 @@ ASEData::ASEModel* ASEParser::Load(string filePath)
 		{
 			_ASEModel->isAnimation = true;		// 애니메이션을 갖고있는 오브젝트다..
 
-			ASEData::ASEAnimation* animationClip = new ASEData::ASEAnimation();
+			std::shared_ptr<ASEData::ASEAnimation> animationClip = std::make_shared<ASEData::ASEAnimation>();
 			_parsingMeshInfo->animationClips.push_back(animationClip);
 			_parsingAnimation = animationClip;
 
@@ -335,7 +335,7 @@ ASEData::ASEModel* ASEParser::Load(string filePath)
 		case TOKENR_CONTROL_POS_SAMPLE:
 		{
 			// 로컬 좌표 랍니다.
-			ASEData::Animation_pos* aniPos = new ASEData::Animation_pos();
+			std::shared_ptr<ASEData::Animation_pos> aniPos = std::make_shared<ASEData::Animation_pos>();
 			aniPos->tick = Parsing_Int();
 			float x = Parsing_Float();
 			float y = Parsing_Float();
@@ -347,7 +347,7 @@ ASEData::ASEModel* ASEParser::Load(string filePath)
 		case TOKENR_CONTROL_ROT_SAMPLE:
 		{
 			// 로컬 이랍니다.
-			ASEData::Animation_rot* aniRot = new ASEData::Animation_rot();
+			std::shared_ptr<ASEData::Animation_rot> aniRot = std::make_shared<ASEData::Animation_rot>();
 			aniRot->tick = Parsing_Int();
 			float x = Parsing_Float();
 			float z = Parsing_Float();
@@ -449,7 +449,7 @@ ASEData::ASEModel* ASEParser::Load(string filePath)
 		break;
 		case TOKENR_BONE_NAME:
 		{
-			ASEData::ASEBoneInfo* aseBoneInfo = new ASEData::ASEBoneInfo();
+			std::shared_ptr<ASEData::ASEBoneInfo> aseBoneInfo = std::make_shared<ASEData::ASEBoneInfo>();
 			_parsingMeshInfo->boneInfos.push_back(aseBoneInfo);
 			_parsingMeshInfo->boneInfos[_parsingMeshInfo->boneInfos.size() - 1]->boneName = Parsing_String();
 		}

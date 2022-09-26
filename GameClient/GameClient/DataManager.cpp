@@ -2,12 +2,12 @@
 #include "DataManager.h"
 #include "Resources.h"
 
-DataManager* DataManager::dataManager = nullptr;
+std::shared_ptr<DataManager> DataManager::dataManager = nullptr;
 
-DataManager* DataManager::Get()
+std::shared_ptr<DataManager> DataManager::Get()
 {
 	if (dataManager == nullptr)
-		dataManager = new DataManager();
+		dataManager = make_shared<DataManager>();
 
 	return dataManager;
 }
@@ -32,7 +32,7 @@ void DataManager::Release()
 	_dataResources.clear();
 }
 
-std::vector<GameObject*> DataManager::GetDataResources(std::string data)
+std::vector<std::shared_ptr<GameObject>> DataManager::GetDataResources(std::string data)
 {
 	return _dataResources[data];
 }

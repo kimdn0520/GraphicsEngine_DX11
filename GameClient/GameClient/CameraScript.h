@@ -7,17 +7,17 @@ class Transform;
 class CameraScript : public MonoBehaviour
 {
 public:
-	CameraScript(GameObject* gameObject);
+	CameraScript(std::shared_ptr<GameObject> gameObject);
 	virtual ~CameraScript();
 
 private:
 	float _speed;
 
 public:
-	Camera* _camera;
-	Transform* _transform;
+	std::shared_ptr<Camera> _camera;
+	std::shared_ptr<Transform> _transform;
 
-	Transform* _targetTransfom;
+	std::shared_ptr<Transform> _targetTransfom;
 
 	int _mousePosX = 0;
 	int _mousePosY = 0;

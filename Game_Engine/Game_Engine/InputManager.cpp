@@ -1,12 +1,12 @@
 #include "pch.h"
 #include "InputManager.h"
 
-InputManager* InputManager::inputManager = nullptr;
+std::shared_ptr<InputManager> InputManager::inputManager = nullptr;
 
-InputManager* InputManager::Get()
+std::shared_ptr<InputManager> InputManager::Get()
 {
 	if (inputManager == nullptr)
-		inputManager = new InputManager();
+		inputManager = std::make_shared<InputManager>();
 
 	return inputManager;
 }

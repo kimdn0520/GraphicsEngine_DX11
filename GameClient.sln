@@ -16,6 +16,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Game_Engine", "Game_Engine\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ASEParser", "ASEParser\ASEParser\ASEParser.vcxproj", "{9BC42FCE-8E43-4EB1-AD26-8C005CE8EFB8}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FBXParser", "FBXParser\FBXParser\FBXParser.vcxproj", "{31428BB0-E131-4C43-BBB6-552F97BCD8CB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -56,6 +58,14 @@ Global
 		{9BC42FCE-8E43-4EB1-AD26-8C005CE8EFB8}.Release|x64.Build.0 = Release|x64
 		{9BC42FCE-8E43-4EB1-AD26-8C005CE8EFB8}.Release|x86.ActiveCfg = Release|Win32
 		{9BC42FCE-8E43-4EB1-AD26-8C005CE8EFB8}.Release|x86.Build.0 = Release|Win32
+		{31428BB0-E131-4C43-BBB6-552F97BCD8CB}.Debug|x64.ActiveCfg = Debug|x64
+		{31428BB0-E131-4C43-BBB6-552F97BCD8CB}.Debug|x64.Build.0 = Debug|x64
+		{31428BB0-E131-4C43-BBB6-552F97BCD8CB}.Debug|x86.ActiveCfg = Debug|Win32
+		{31428BB0-E131-4C43-BBB6-552F97BCD8CB}.Debug|x86.Build.0 = Debug|Win32
+		{31428BB0-E131-4C43-BBB6-552F97BCD8CB}.Release|x64.ActiveCfg = Release|x64
+		{31428BB0-E131-4C43-BBB6-552F97BCD8CB}.Release|x64.Build.0 = Release|x64
+		{31428BB0-E131-4C43-BBB6-552F97BCD8CB}.Release|x86.ActiveCfg = Release|Win32
+		{31428BB0-E131-4C43-BBB6-552F97BCD8CB}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

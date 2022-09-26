@@ -4,7 +4,7 @@
 #include "GameObject.h"
 #include "GraphicsManager.h"
 
-MeshRenderer::MeshRenderer(GameObject* gameObject)
+MeshRenderer::MeshRenderer(std::shared_ptr<GameObject> gameObject)
 	: Component(gameObject, COMPONENT_TYPE::MESHRENDERER),
 	_transform(gameObject->GetComponent<Transform>()),
 	_objectInfo(new ObjectInfo())
@@ -17,7 +17,7 @@ MeshRenderer::MeshRenderer(GameObject* gameObject)
 MeshRenderer::~MeshRenderer()
 {}
 
-void MeshRenderer::SetMaterial(Material* material)
+void MeshRenderer::SetMaterial(std::shared_ptr<Material> material)
 {
 	_objectInfo->materials.push_back(material);
 }
@@ -35,7 +35,7 @@ void MeshRenderer::Update()
 
 	for (int i = 0; i < boneObjList.size(); i++)
 	{
-		GameObject* tmpBone = boneObjList[i];
+		std::shared_ptr<GameObject> tmpBone = boneObjList[i];
 
 		boneWorldTM = tmpBone->GetTransform()->GetWorldMatrix();
 		boneNodeTM = tmpBone->GetTransform()->GetNodeMatrix();

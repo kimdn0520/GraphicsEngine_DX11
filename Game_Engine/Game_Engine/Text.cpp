@@ -2,9 +2,9 @@
 #include "Text.h"
 #include "GameObject.h"
 
-Text::Text(GameObject* gameObject)
+Text::Text(std::shared_ptr<GameObject> gameObject)
 	: Component(gameObject, COMPONENT_TYPE::TEXT),
-	_textInfo(new TextInfo())
+	_textInfo(std::make_shared<TextInfo>())
 {
 	_textInfo->scale = 1.0f;		// 일단 기본 크기 1.0f으로 해놓았습니다.
 }

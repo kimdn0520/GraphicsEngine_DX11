@@ -25,18 +25,18 @@ public:
 private:
 	int _asciiexport;									// 맨 처음에 나오는 export값
 
-	Lexer* _lexer;										// Lexer
+	std::shared_ptr<Lexer> _lexer;						// Lexer
 
 	char _lineArray[256] = { 0 };						// 한 줄
 
-	ASEData::ASEModel* _ASEModel;
+	std::shared_ptr<ASEData::ASEModel> _ASEModel;
 
 	int _materialIndex = 0;
 	int _materialNum = 0;								// MATERIAL_REF 에서 가져온다.
 	int curTexture = 0;									// 파싱중 현재 텍스쳐 상태
 
-	ASEData::ASEMeshInfo* _parsingMeshInfo;				// 현재 파싱중인 메시~
-	ASEData::ASEAnimation* _parsingAnimation;			// 현재 파싱중인 애니메이션~
+	std::shared_ptr<ASEData::ASEMeshInfo> _parsingMeshInfo;				// 현재 파싱중인 메시~
+	std::shared_ptr<ASEData::ASEAnimation> _parsingAnimation;			// 현재 파싱중인 애니메이션~
 	Vector3 _row0;
 	Vector3 _row1;
 	Vector3 _row2;
@@ -57,7 +57,7 @@ private:
 	int _weightCount = 0;
 
 public:
-	ASEParser_DLL ASEData::ASEModel* Load(string filePath);
+	ASEParser_DLL std::shared_ptr<ASEData::ASEModel> Load(string filePath);
 
 	void Optimize();
 

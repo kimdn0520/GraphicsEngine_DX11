@@ -14,32 +14,32 @@ GameObject::GameObject()
 GameObject::~GameObject()
 {}
 
-GameEngine_DLL Camera* GameObject::GetCamera()
+shared_ptr<Camera> GameObject::GetCamera()
 {
-	Component* component = _components[(int)COMPONENT_TYPE::CAMERA];
+	shared_ptr<Component> component = _components[(int)COMPONENT_TYPE::CAMERA];
 
-	return dynamic_cast<Camera*>(component);
+	return dynamic_pointer_cast<Camera>(component);
 }
 
-GameEngine_DLL Transform* GameObject::GetTransform()
+shared_ptr<Transform> GameObject::GetTransform()
 {
-	Component* component = _components[(int)COMPONENT_TYPE::TRANSFORM];
+	shared_ptr<Component> component = _components[(int)COMPONENT_TYPE::TRANSFORM];
 
-	return dynamic_cast<Transform*>(component);
+	return dynamic_pointer_cast<Transform>(component);
 }
 
-GameEngine_DLL UI* GameObject::GetUI()
+shared_ptr<UI> GameObject::GetUI()
 {
-	Component* component = _components[(int)COMPONENT_TYPE::UI];
+	shared_ptr<Component> component = _components[(int)COMPONENT_TYPE::UI];
 
-	return dynamic_cast<UI*>(component);
+	return dynamic_pointer_cast<UI>(component);
 }
 
-GameEngine_DLL Text* GameObject::GetText()
+shared_ptr<Text> GameObject::GetText()
 {
-	Component* component = _components[(int)COMPONENT_TYPE::TEXT];
+	shared_ptr<Component> component = _components[(int)COMPONENT_TYPE::TEXT];
 
-	return dynamic_cast<Text*>(component);
+	return dynamic_pointer_cast<Text>(component);
 }
 
 void GameObject::Awake()
@@ -51,7 +51,7 @@ void GameObject::Awake()
 	if (_script != nullptr)
 		_script->Awake();
 
-	for (Component* component : _components)
+	for (shared_ptr<Component>& component : _components)
 	{
 		if (component)
 			component->Awake();
@@ -63,7 +63,7 @@ void GameObject::Start()
 	if (_script != nullptr)
 		_script->Start();
 
-	for (Component* component : _components)
+	for (shared_ptr<Component>& component : _components)
 	{
 		if (component)
 			component->Start();
@@ -75,7 +75,7 @@ void GameObject::FixedUpdate()
 	if (_script != nullptr)
 		_script->FixedUpdate();
 
-	for (Component* component : _components)
+	for (shared_ptr<Component>& component : _components)
 	{
 		if (component)
 			component->FixedUpdate();
@@ -87,7 +87,7 @@ void GameObject::Update()
 	if (_script != nullptr)
 		_script->Update();
 
-	for (Component* component : _components)
+	for (shared_ptr<Component>& component : _components)
 	{
 		if (component)
 			component->Update();
@@ -99,7 +99,7 @@ void GameObject::LateUpdate()
 	if (_script != nullptr)
 		_script->LateUpdate();
 
-	for (Component* component : _components)
+	for (shared_ptr<Component>& component : _components)
 	{
 		if (component)
 			component->LateUpdate();
@@ -108,7 +108,7 @@ void GameObject::LateUpdate()
 
 void GameObject::Render()
 {
-	for (Component* component : _components)
+	for (shared_ptr<Component>& component : _components)
 	{
 		if (component)
 			component->Render();

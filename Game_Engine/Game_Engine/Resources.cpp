@@ -7,12 +7,12 @@
 #include "Transform.h"
 #include "MeshRenderer.h"
 
-Resources* Resources::resources = nullptr;
+std::shared_ptr<Resources> Resources::resources = nullptr;
 
-Resources* Resources::Get()
+std::shared_ptr<Resources> Resources::Get()
 {
 	if (resources == nullptr)
-		resources = new Resources();
+		resources = std::make_shared<Resources>();
 
 	return resources;
 }
@@ -20,7 +20,7 @@ Resources* Resources::Get()
 void Resources::Initialize()
 {
 	// ASEParser 객체 생성
-	_aseParser = new ASEParser();
+	_aseParser = std::make_shared<ASEParser>();
 
 	LoadCubeMesh(TOPOLOGY_TRIANGLELIST, RasterState_SOLID);
 
@@ -40,7 +40,7 @@ void Resources::Release()
 	// TODO : 음 좀더 봐야함.. Release를 만들어둘까
 	_aseParser->ResetData();
 
-	delete _aseParser;
+	_aseParser.reset();
 }
 
 void Resources::LoadCubeMesh(int topology, int rasterState)
@@ -335,13 +335,13 @@ void Resources::LoadDebugScreenMesh(int topology, int rasterState)
 		rasterState);
 }
 
-std::vector<GameObject*> Resources::LoadASE(std::string path, int topology, int rasterizerState)
+std::vector<std::shared_ptr<GameObject>> Resources::LoadASE(std::string path, int topology, int rasterizerState)
 {
 	// 모델을 로드한다.
-	ASEData::ASEModel* aseModel = _aseParser->Load(path);
+	std::shared_ptr<ASEData::ASEModel> aseModel = _aseParser->Load(path);
 
 	// 게임오브젝트들로 바꾸어서 반환할거임.
-	vector<GameObject*> gameObjects;
+	vector<std::shared_ptr<GameObject>> gameObjects;
 
 	// Animation이 있는 경우 대부분 SkinnedMesh
 	if(aseModel->isAnimation)
@@ -374,7 +374,7 @@ std::vector<GameObject*> Resources::LoadASE(std::string path, int topology, int 
 				topology,
 				rasterizerState);
 
-			GameObject* gameObject = new GameObject();
+			std::shared_ptr<GameObject> gameObject = std::make_shared<GameObject>();
 			gameObject->SetName(mesh->meshName);
 			gameObject->AddComponent<Transform>();
 			gameObject->GetComponent<Transform>()->SetNodeTM(mesh->nodeTM);
@@ -383,7 +383,7 @@ std::vector<GameObject*> Resources::LoadASE(std::string path, int topology, int 
 
 			for (auto& mat : aseModel->materials)
 			{
-				Material* material = new Material();
+				std::shared_ptr<Material> material = std::make_shared<Material>();
 				material->ambient = mat->ambient;
 				material->diffuse = mat->diffuse;
 				material->specular = mat->specular;

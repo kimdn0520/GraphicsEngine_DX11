@@ -4,7 +4,7 @@
 #include "GameObject.h"
 #include "Transform.h"
 
-Camera::Camera(GameObject* gameObject)
+Camera::Camera(std::shared_ptr<GameObject> gameObject)
 	: Component(gameObject, COMPONENT_TYPE::CAMERA),
 	_cameraTransform(gameObject->GetComponent<Transform>()),
 	_nearZ(0.1f), _farZ(500.0f), _fov(XM_PI / 4.f),

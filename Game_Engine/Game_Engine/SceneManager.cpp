@@ -3,12 +3,12 @@
 #include "Scene.h"
 #include "GameObject.h"
 
-SceneManager* SceneManager::sceneManager = nullptr;
+std::shared_ptr<SceneManager> SceneManager::sceneManager = nullptr;
 
-SceneManager* SceneManager::Get()
+std::shared_ptr<SceneManager> SceneManager::Get()
 {
 	if (sceneManager == nullptr)
-		sceneManager = new SceneManager();
+		sceneManager = std::make_shared<SceneManager>();
 
 	return sceneManager;
 }
@@ -54,7 +54,7 @@ void SceneManager::ReservedSceneLoad()
 	isReservedLoadScene = false;
 }
 
-void SceneManager::SetRemoveGameObject(GameObject* gameObj)
+void SceneManager::SetRemoveGameObject(std::shared_ptr<GameObject> gameObj)
 {
 	_destroyObjList.push(gameObj);
 }
@@ -65,19 +65,19 @@ void SceneManager::ReservedRemoveGameObject()
 	{
 		while (!_destroyObjList.empty())
 		{
-			GameObject* destroyGameObj = _destroyObjList.front();
+			std::shared_ptr<GameObject> destroyGameObj = _destroyObjList.front();
 
 			// 현재 씬에 있는 해당 게임오브젝트를 삭제한다
 			_activeScene->RemoveGameObject(destroyGameObj);
 
 			_destroyObjList.pop();
 
-			delete destroyGameObj;
+			destroyGameObj.reset();
 		}
 	}
 }
 
-void SceneManager::SetInstantiateGameObject(GameObject* gameObj)
+void SceneManager::SetInstantiateGameObject(std::shared_ptr<GameObject> gameObj)
 {
 	_instantiateGameObjectList.push(gameObj);
 }

@@ -6,7 +6,7 @@
 class Transform : public Component, public AlignedAllocationPolicy<16>
 {
 public:
-	GameEngine_DLL Transform(GameObject* gameObject);
+	GameEngine_DLL Transform(std::shared_ptr<GameObject> gameObject);
 	virtual ~Transform();
 
 private:
@@ -21,7 +21,7 @@ private:
 	Matrix _localMatrix;
 	Matrix _worldMatrix;
 
-	Transform* _parent;
+	std::shared_ptr<Transform> _parent;
 
 	Vector3 _targetPos;
 	Vector3 _right = { 1.f, 0.f, 0.f };
@@ -42,8 +42,8 @@ public:
 	GameEngine_DLL Vector3 GetLook() { return _look; }
 	GameEngine_DLL void LookAt(Vector3 target);
 
-	GameEngine_DLL Transform* GetParent() { return _parent; }
-	GameEngine_DLL void SetParent(Transform* parent) { _parent = parent; }
+	GameEngine_DLL std::shared_ptr<Transform> GetParent() { return _parent; }
+	GameEngine_DLL void SetParent(std::shared_ptr<Transform> parent) { _parent = parent; }
 
 	GameEngine_DLL const Matrix& GetWorldMatrix() { return _worldMatrix; }
 	const Matrix& GetNodeMatrix() { return _nodeMatrix; }

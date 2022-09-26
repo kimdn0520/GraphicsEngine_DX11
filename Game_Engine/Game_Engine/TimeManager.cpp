@@ -1,12 +1,12 @@
 #include "pch.h"
 #include "TimeManager.h"
 
-TimeManager* TimeManager::timeManager = nullptr;
+std::shared_ptr<TimeManager> TimeManager::timeManager = nullptr;
 
-TimeManager* TimeManager::Get()
+std::shared_ptr<TimeManager> TimeManager::Get()
 {
 	if (timeManager == nullptr)
-		timeManager = new TimeManager();
+		timeManager = std::make_shared<TimeManager>();
 
 	return timeManager;
 }

@@ -5,7 +5,7 @@
 #include "InputManager.h"
 #include "TimeManager.h"
 
-CameraScript::CameraScript(GameObject* gameObject)
+CameraScript::CameraScript(std::shared_ptr<GameObject> gameObject)
 	: MonoBehaviour(gameObject),
 	_transform(gameObject->GetTransform()),
 	_speed(20.f)

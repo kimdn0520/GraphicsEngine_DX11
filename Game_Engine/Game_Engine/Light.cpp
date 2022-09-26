@@ -4,7 +4,7 @@
 #include "Transform.h"
 #include "GraphicsManager.h"
 
-Light::Light(GameObject* gameObject)
+Light::Light(std::shared_ptr<GameObject> gameObject)
 	: Component(gameObject, COMPONENT_TYPE::LIGHT),
 	_transform(gameObject->GetTransform())
 {

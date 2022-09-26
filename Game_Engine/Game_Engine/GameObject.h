@@ -15,7 +15,7 @@ enum class Tag
 	Enemy,
 };
 
-class GameObject
+class GameObject : public std::enable_shared_from_this<GameObject>
 {
 public:
 	GameEngine_DLL GameObject();
@@ -26,9 +26,9 @@ private:
 	
 	std::string _name;
 
-	std::array<Component*, COMPONENT_COUNT> _components;	// 게임오브젝트가 갖고있는 컴포넌트들
+	std::array<std::shared_ptr<Component>, COMPONENT_COUNT> _components;	// 게임오브젝트가 갖고있는 컴포넌트들
 	
-	MonoBehaviour* _script;									// 게임오브젝트당 스크립트는 하나만 들어간다.
+	std::shared_ptr<MonoBehaviour> _script;									// 게임오브젝트당 스크립트는 하나만 들어간다.
 
 	int _objectID = 0;
 
@@ -40,23 +40,23 @@ public:
 public:
 	// 게임오브젝트에 달린 컴포넌트를 얻어올수있어욤
 	template <typename TComponent>
-	TComponent* GetComponent();
+	std::shared_ptr<TComponent> GetComponent();
 
 	// 게임오브젝트에 달린 스크립트를 얻어올거에여~
 	template <typename TComponent>
-	TComponent* GetScript();
+	std::shared_ptr<TComponent> GetScript();
 
 	// 컴포넌트를 추가할수있어요!
 	template <typename TComponent>
 	void AddComponent();
 
-	GameEngine_DLL Camera* GetCamera();
+	GameEngine_DLL std::shared_ptr<Camera> GetCamera();
 
-	GameEngine_DLL Transform* GetTransform();
+	GameEngine_DLL std::shared_ptr<Transform> GetTransform();
 
-	GameEngine_DLL UI* GetUI();
+	GameEngine_DLL std::shared_ptr<UI> GetUI();
 
-	GameEngine_DLL Text* GetText();
+	GameEngine_DLL std::shared_ptr<Text> GetText();
 
 	std::string GetName() { return _name; }
 
@@ -71,13 +71,13 @@ public:
 
 	int GetObjectID() { return _objectID; }
 
-	std::vector<GameObject*> _childs;
+	std::vector<std::shared_ptr<GameObject>> _childs;
 
-	std::vector<GameObject*>& GetChilds() { return _childs; }
+	std::vector<std::shared_ptr<GameObject>>& GetChilds() { return _childs; }
 
-	GameEngine_DLL void PlayAnim(GameObject* gameObject, std::string name, bool isLoop);
+	GameEngine_DLL void PlayAnim(std::shared_ptr<GameObject> gameObject, std::string name, bool isLoop);
 
-	GameEngine_DLL void SetChild(GameObject* child)
+	GameEngine_DLL void SetChild(std::shared_ptr<GameObject> child)
 	{
 		_childs.push_back(child);
 	};
@@ -102,11 +102,11 @@ public:
 };
 
 template<typename TComponent>
-inline TComponent* GameObject::GetComponent()
+inline std::shared_ptr<TComponent> GameObject::GetComponent()
 {
 	for (int i = 0; i < COMPONENT_COUNT; i++)
 	{
-		TComponent* castedComponent = dynamic_cast<TComponent*>(_components[i]);
+		std::shared_ptr<TComponent> castedComponent = dynamic_pointer_cast<TComponent>(_components[i]);
 
 		if (castedComponent != nullptr)
 			return castedComponent;
@@ -116,9 +116,9 @@ inline TComponent* GameObject::GetComponent()
 }
 
 template<typename TComponent>
-inline TComponent* GameObject::GetScript()
+inline std::shared_ptr<TComponent> GameObject::GetScript()
 {
-	TComponent* castedComponent = dynamic_cast<TComponent*>(_script);
+	std::shared_ptr<TComponent> castedComponent = dynamic_pointer_cast<TComponent>(_script);
 
 	if (castedComponent != nullptr)
 		return castedComponent;
@@ -129,7 +129,7 @@ inline TComponent* GameObject::GetScript()
 template<typename TComponent>
 inline void GameObject::AddComponent()
 {
-	TComponent* newComponent = new TComponent(this);	// this로 게임오브젝트도 컴포넌트에 넘겨준다.
+	shared_ptr<TComponent> newComponent = make_shared<TComponent>(this->shared_from_this());	// this로 게임오브젝트도 컴포넌트에 넘겨준다.
 
 	int typeIndex = (int)newComponent->GetType();
 
@@ -139,6 +139,6 @@ inline void GameObject::AddComponent()
 	}
 	else
 	{
-		_script = dynamic_cast<MonoBehaviour*>(newComponent);
+		_script = dynamic_pointer_cast<MonoBehaviour>(newComponent);
 	}
 }

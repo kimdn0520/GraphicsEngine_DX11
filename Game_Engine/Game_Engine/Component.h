@@ -31,25 +31,25 @@ enum
 class Component
 {
 public:
-	Component(GameObject* gameObject, COMPONENT_TYPE type);
+	Component(std::shared_ptr<GameObject> gameObject, COMPONENT_TYPE type);
 	virtual ~Component();
 
 private:
 	friend class GameObject;
 
-	void SetGameObject(GameObject* gameObject) { _gameObject = gameObject; }
+	void SetGameObject(std::shared_ptr<GameObject> gameObject) { _gameObject = gameObject; }
 
 protected:
 	COMPONENT_TYPE _type;
 	
-	GameObject* _gameObject;
+	std::shared_ptr<GameObject> _gameObject;
 
 public:
 	// 어떤 타입인지 알아오깅.. 
 	COMPONENT_TYPE GetType() { return _type; }
 
 	// 이 컴포넌트가 달린 게임오브젝트를 얻어올수 있다.
-	GameObject* GetGameObject() { return _gameObject; }
+	std::shared_ptr<GameObject> GetGameObject() { return _gameObject; }
 
 	virtual void Awake() { }
 	virtual void Start() { }

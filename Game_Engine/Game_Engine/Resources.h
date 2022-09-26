@@ -12,17 +12,17 @@ constexpr int TOPOLOGY_LINELIST = 1;
 class Resources
 {	
 public:
-	GameEngine_DLL Resources() {};
-	~Resources() {};
+	GameEngine_DLL Resources() = default;
+	~Resources() = default;
 
 private:
-	static Resources* resources;
+	static std::shared_ptr<Resources> resources;
 
 public:
-	static GameEngine_DLL Resources* Get();
+	static GameEngine_DLL std::shared_ptr<Resources> Get();
 
 private:
-	ASEParser* _aseParser;
+	std::shared_ptr<ASEParser> _aseParser;
 
 	// unordered_map<string, shared_ptr<MeshData>> aseMeshData;
 
@@ -43,7 +43,7 @@ public:
 
 	void LoadDebugScreenMesh(int topology, int rasterState);	// 5
 
-	GameEngine_DLL std::vector<GameObject*> LoadASE(std::string path, int topology, int rasterizerState);
+	GameEngine_DLL std::vector<std::shared_ptr<GameObject>> LoadASE(std::string path, int topology, int rasterizerState);
 
 	// GameEngine_DLL MeshData* LoadFBX(const wstring& path, int topology, int rasterizerState, int pass);
 };

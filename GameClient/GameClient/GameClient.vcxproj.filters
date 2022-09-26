@@ -57,6 +57,9 @@
     <ClInclude Include="GenjiPrefab.h">
       <Filter>Prefab</Filter>
     </ClInclude>
+    <ClInclude Include="IPrefab.h">
+      <Filter>Prefab</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="GameClient.ico">
@@ -91,6 +94,9 @@
       <Filter>Scripts</Filter>
     </ClCompile>
     <ClCompile Include="GenjiPrefab.cpp">
+      <Filter>Prefab</Filter>
+    </ClCompile>
+    <ClCompile Include="IPrefab.cpp">
       <Filter>Prefab</Filter>
     </ClCompile>
   </ItemGroup>

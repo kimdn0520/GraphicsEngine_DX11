@@ -7,7 +7,7 @@ class Transform;
 class UI : public Component
 {
 public:
-	GameEngine_DLL UI(GameObject* gameObject);
+	GameEngine_DLL UI(std::shared_ptr<GameObject> gameObject);
 	GameEngine_DLL virtual ~UI();
 
 protected:

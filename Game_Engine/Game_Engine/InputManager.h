@@ -52,17 +52,17 @@ enum
 class InputManager
 {
 public:
-	InputManager() {};
-	~InputManager() {};
+	InputManager() = default;
+	~InputManager() = default;
 
 private:
-	static InputManager* inputManager;
+	static std::shared_ptr<InputManager> inputManager;
 
 private:
 	bool _isAnykey = false;
 
 public:
-	static GameEngine_DLL InputManager* Get();
+	static GameEngine_DLL std::shared_ptr<InputManager> Get();
 
 public:
 	void Initialize(HWND hwnd);

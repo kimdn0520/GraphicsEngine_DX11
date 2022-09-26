@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Transform.h"
 
-Transform::Transform(GameObject* gameObject)
+Transform::Transform(std::shared_ptr<GameObject> gameObject)
 	: Component(gameObject, COMPONENT_TYPE::TRANSFORM),
 	_mousePosX(0.f), _mousePosY(0.f), _up(Vector3(0.f, 1.f, 0.f))
 {}
