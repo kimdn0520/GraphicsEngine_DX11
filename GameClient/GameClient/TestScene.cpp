@@ -36,7 +36,7 @@ void TestScene::Initialize()
 	dirLight->GetComponent<Transform>()->SetLocalPosition(Vector3(0.f, 0.f, 0.f));
 	dirLight->AddComponent<Light>();
 	dirLight->GetComponent<Light>()->SetLightType(LIGHT_TYPE::DIRECTIONAL_LIGHT);
-	dirLight->GetComponent<Light>()->SetLightDirection(Vector3(0.5f, -0.5f, 0.5f));
+	dirLight->GetComponent<Light>()->SetLightDirection(Vector3(0.f, -1.f, 0.f));
 	dirLight->GetComponent<Light>()->SetDiffuse(Vector4(0.6f, 0.6f, 0.6f, 1.0f));	// 기본0.5 
 	dirLight->GetComponent<Light>()->SetAmbient(Vector4(0.4f, 0.4f, 0.4f, 1.0f));	// 기본0.2
 	dirLight->GetComponent<Light>()->SetSpecular(Vector4(0.2f, 0.2f, 0.2f, 1.0f));  // 기본0.5

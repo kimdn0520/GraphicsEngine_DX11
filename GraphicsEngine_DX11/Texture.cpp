@@ -33,7 +33,7 @@ void Texture::Initialize(const std::wstring& path)
 	bool isCubeMap = _image.GetMetadata().IsCubemap();
 
 	/*if (path.find(L"cube") != std::wstring::npos)
-	{
+	{ 
 		isCubeMap = true;
 	}*/
 

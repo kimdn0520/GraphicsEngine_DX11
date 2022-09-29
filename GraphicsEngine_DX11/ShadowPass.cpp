@@ -61,8 +61,37 @@ void ShadowPass::Render(std::vector<std::shared_ptr<ObjectInfo>> meshs)
 {
 	RenderStart();
 
-	Matrix lightView = XMMatrixLookAtLH(Vector3(0, 10, 0), LightManager::Get()->cbLightBuffer.gDirLight[0].Direction, Vector3(0.0f, 1.0f, 0.0f));
-	Matrix lightProj = XMMatrixOrthographicLH(10, 10, 0, 20);
+	//Matrix lightView = XMMatrixLookAtLH(Vector3(0, 10, 0), LightManager::Get()->cbLightBuffer.gDirLight[0].Direction, Vector3(0.0f, 1.0f, 0.0f));
+	Vector3 right;
+	Vector3 up;
+	Vector3 look = LightManager::Get()->cbLightBuffer.gDirLight[0].Direction;		
+	Vector3 lightPos = Vector3(0, 10, 0);
+
+	look.Normalize();
+	up = Vector3(0.f, 1.f, 0.f);
+	right = up.Cross(look);
+	right.Normalize();
+
+	if (right.Length() <= 0.009f)
+	{
+		right = Vector3(0.f, 1.f, 2.f).Cross(look);
+	}
+
+	up = look.Cross(right);
+
+	float x = -lightPos.Dot(right);
+	float y = -lightPos.Dot(up);
+	float z = -lightPos.Dot(look);
+
+	Matrix lightView
+	{
+		right.x, up.x, look.x, 0.f,
+		right.y, up.y, look.y, 0.f,
+		right.z, up.z, look.z, 0.f,
+		x, y, z, 1.0f
+	};
+	
+	Matrix lightProj = XMMatrixOrthographicLH(20, 20, 0, 20);
 
 	// 여기서 쓸거..
 	cbLightViewProj cbLightViewProjBuffer;

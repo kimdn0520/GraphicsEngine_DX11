@@ -88,6 +88,10 @@ void ShaderBase::SetSamplerBuffer(int sampler, int register_slot)
 	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
 	samplerDesc.MaxAnisotropy = 1;
 	samplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+	samplerDesc.BorderColor[0] = 0;
+	samplerDesc.BorderColor[1] = 0;
+	samplerDesc.BorderColor[2] = 0;
+	samplerDesc.BorderColor[3] = 0;
 
 	switch (sampler)
 	{
@@ -126,15 +130,15 @@ void ShaderBase::SetSamplerBuffer(int sampler, int register_slot)
 		samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_BORDER;
 		samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_BORDER;
 		samplerDesc.ComparisonFunc = D3D11_COMPARISON_LESS_EQUAL;
+		samplerDesc.BorderColor[0] = 1;
+		samplerDesc.BorderColor[1] = 1;
+		samplerDesc.BorderColor[2] = 1;
+		samplerDesc.BorderColor[3] = 1;
 	}
 	break;
 	}
 
 	samplerDesc.MipLODBias = 0.0f;
-	samplerDesc.BorderColor[0] = 0;
-	samplerDesc.BorderColor[1] = 0;
-	samplerDesc.BorderColor[2] = 0;
-	samplerDesc.BorderColor[3] = 0;
 	samplerDesc.MinLOD = 0;
 	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
