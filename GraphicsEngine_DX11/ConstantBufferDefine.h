@@ -20,7 +20,7 @@ struct DirectionalLight
 	Vector3 Direction;
 	float Pad; // Pad the last float so we can set an array of lights if we wanted.
 
-	Matrix LightViewProj = Matrix();
+	Matrix LightViewProj;
 };
 
 struct PointLight
@@ -40,7 +40,7 @@ struct PointLight
 	Vector3 Att;
 	float Pad; // Pad the last float so we can set an array of lights if we wanted.
 
-	Matrix LightViewProj = Matrix();
+	Matrix LightViewProj;
 };
 
 struct SpotLight
@@ -64,7 +64,7 @@ struct SpotLight
 	float Pad; // Pad the last float so we can set an array of lights if we wanted.
 	// Vector3∏È ∫Û pad∏¶ ≥÷æÓ¡‹
 
-	Matrix LightViewProj = Matrix();
+	Matrix LightViewProj;
 };
 
 //---------------------------------------------------------------------------------------------------------

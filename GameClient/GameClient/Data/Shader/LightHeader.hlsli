@@ -237,7 +237,7 @@ float CalcShadowFactor(SamplerComparisonState samShadow,
 
 	const float dy = textureInfo.w;
 
-	float percentLit = 0.0f;
+	float shadowFactor = 0.0f;
 
 	const float2 offset[9] =
 	{
@@ -249,9 +249,9 @@ float CalcShadowFactor(SamplerComparisonState samShadow,
 	[unroll]
 	for (int i = 0; i < 9; ++i)
 	{
-		percentLit += shadowMap.SampleCmpLevelZero(samShadow,
+		shadowFactor += shadowMap.SampleCmpLevelZero(samShadow,
 			shadowPosNDC.xy + offset[i], depth).r;
 	}
 
-	return percentLit /= 9.0f;
+	return shadowFactor /= 9.0f;
 }
