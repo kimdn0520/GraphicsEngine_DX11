@@ -1,21 +1,12 @@
-﻿  ShadowPass.cpp
-C:\Users\김동민\Desktop\GraphicsEngine_DX11\GraphicsEngine_DX11\WindowInfo.h(4,1): warning C4099: 'WindowInfo': 처음에는 'class'을(를) 사용하여 형식 이름을 표시했는데 이제는 'struct'을(를) 사용하여 표시합니다.
-C:\Users\김동민\Desktop\GraphicsEngine_DX11\GraphicsEngine_DX11\WindowInfo.h(3): message : 'WindowInfo' 선언을 참조하십시오.
-     C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\GraphicsEngine_DX11.lib 라이브러리 및 C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\GraphicsEngine_DX11.exp 개체를 생성하고 있습니다.
-DirectXTex_x64_Debug.lib(BC.obj) : warning LNK4099: 'DirectXTex.pdb' PDB를 'DirectXTex_x64_Debug.lib(BC.obj)' 또는 'C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\DirectXTex.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-DirectXTex_x64_Debug.lib(BC4BC5.obj) : warning LNK4099: 'DirectXTex.pdb' PDB를 'DirectXTex_x64_Debug.lib(BC4BC5.obj)' 또는 'C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\DirectXTex.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-DirectXTex_x64_Debug.lib(BC6HBC7.obj) : warning LNK4099: 'DirectXTex.pdb' PDB를 'DirectXTex_x64_Debug.lib(BC6HBC7.obj)' 또는 'C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\DirectXTex.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-DirectXTex_x64_Debug.lib(DirectXTexCompress.obj) : warning LNK4099: 'DirectXTex.pdb' PDB를 'DirectXTex_x64_Debug.lib(DirectXTexCompress.obj)' 또는 'C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\DirectXTex.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-DirectXTex_x64_Debug.lib(DirectXTexConvert.obj) : warning LNK4099: 'DirectXTex.pdb' PDB를 'DirectXTex_x64_Debug.lib(DirectXTexConvert.obj)' 또는 'C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\DirectXTex.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-DirectXTex_x64_Debug.lib(DirectXTexD3D11.obj) : warning LNK4099: 'DirectXTex.pdb' PDB를 'DirectXTex_x64_Debug.lib(DirectXTexD3D11.obj)' 또는 'C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\DirectXTex.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-DirectXTex_x64_Debug.lib(DirectXTexDDS.obj) : warning LNK4099: 'DirectXTex.pdb' PDB를 'DirectXTex_x64_Debug.lib(DirectXTexDDS.obj)' 또는 'C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\DirectXTex.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-DirectXTex_x64_Debug.lib(DirectXTexHDR.obj) : warning LNK4099: 'DirectXTex.pdb' PDB를 'DirectXTex_x64_Debug.lib(DirectXTexHDR.obj)' 또는 'C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\DirectXTex.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-DirectXTex_x64_Debug.lib(DirectXTexImage.obj) : warning LNK4099: 'DirectXTex.pdb' PDB를 'DirectXTex_x64_Debug.lib(DirectXTexImage.obj)' 또는 'C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\DirectXTex.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-DirectXTex_x64_Debug.lib(DirectXTexMipMaps.obj) : warning LNK4099: 'DirectXTex.pdb' PDB를 'DirectXTex_x64_Debug.lib(DirectXTexMipMaps.obj)' 또는 'C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\DirectXTex.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-DirectXTex_x64_Debug.lib(DirectXTexTGA.obj) : warning LNK4099: 'DirectXTex.pdb' PDB를 'DirectXTex_x64_Debug.lib(DirectXTexTGA.obj)' 또는 'C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\DirectXTex.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-DirectXTex_x64_Debug.lib(DirectXTexUtil.obj) : warning LNK4099: 'DirectXTex.pdb' PDB를 'DirectXTex_x64_Debug.lib(DirectXTexUtil.obj)' 또는 'C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\DirectXTex.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-DirectXTex_x64_Debug.lib(DirectXTexWIC.obj) : warning LNK4099: 'DirectXTex.pdb' PDB를 'DirectXTex_x64_Debug.lib(DirectXTexWIC.obj)' 또는 'C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\DirectXTex.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-DirectXTK_x64_Debug.lib(pch.obj) : warning LNK4099: 'DirectXTK.pdb' PDB를 'DirectXTK_x64_Debug.lib(pch.obj)' 또는 'C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\DirectXTK.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-DirectXTK_x64_Debug.lib(SimpleMath.obj) : warning LNK4099: 'DirectXTK.pdb' PDB를 'DirectXTK_x64_Debug.lib(SimpleMath.obj)' 또는 'C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\DirectXTK.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-  GraphicsEngine_DX11.vcxproj -> C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\GraphicsEngine_DX11.dll
+﻿D:\GraphicsEngine_DX11\GameClient\GameClient\Data\Shader\Light_PS.hlsl(85,12): warning X3078: 'i': loop control variable conflicts with a previous declaration in the outer scope; most recent declaration will be used
+D:\GraphicsEngine_DX11\GameClient\GameClient\Data\Shader\Light_PS.hlsl(97,12): warning X3078: 'i': loop control variable conflicts with a previous declaration in the outer scope; most recent declaration will be used
+  
+  compilation object save succeeded; see D:\GraphicsEngine_DX11\Library\lib\Light_PS.cso
+D:\GraphicsEngine_DX11\GameClient\GameClient\Data\Shader\Model_PS.hlsl(32,15-47): warning X3576: semantics in type overridden by variable/function or enclosing type
+  
+  compilation object save succeeded; see D:\GraphicsEngine_DX11\Library\lib\Model_PS.cso
+  compilation object save succeeded; see D:\GraphicsEngine_DX11\Library\lib\Model_VS.cso
+  compilation object save succeeded; see D:\GraphicsEngine_DX11\Library\lib\Shadow_VS.cso
+  compilation object save succeeded; see D:\GraphicsEngine_DX11\Library\lib\ToneMapping_PS.cso
+  GraphicsEngine_DX11.vcxproj -> D:\GraphicsEngine_DX11\Library\lib\GraphicsEngine_DX11.dll
           1개 파일이 복사되었습니다.

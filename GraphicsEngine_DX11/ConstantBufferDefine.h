@@ -70,12 +70,12 @@ struct SpotLight
 //---------------------------------------------------------------------------------------------------------
 // 쉐이더에 필요한 ConstantBuffer들 이름이랑 내용을 맞춰주아야한다.
 //---------------------------------------------------------------------------------------------------------
-__declspec(align(16)) struct cbMesh
+__declspec(align(16)) struct cbPerObject
 {
 	Matrix gWorld;
-	Matrix gProj;
 	Matrix gWorldViewProj;
 	Matrix gWorldInvTranspose;
+	Matrix gBoneTransforms[96];
 
 	unsigned int objectID;
 };

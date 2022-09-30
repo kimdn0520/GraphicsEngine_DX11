@@ -1,27 +1,5 @@
 #include "LightHeader.hlsli"
-
-cbuffer cbMesh : register(b0)
-{
-	float4x4 gWorld;
-	float4x4 gProj;
-	float4x4 gWorldViewProj;
-	float4x4 gWorldInvTranspose;
-
-	uint objectID;
-};
-
-cbuffer cbMaterial : register(b1)
-{
-	float4 gMaterialAmbient;
-	float4 gMaterialDiffuse;
-	float4 gMaterialSpecular;
-	float4 gMaterialReflection;
-
-	bool isDiffuseTexture;			// hlsl에서 bool타입은 4byte 이므로 일로 구조체 넘겨줄때 BOOL로 넘겨줘야한대
-	bool isNormalTexture;
-	bool isSpecularTexture;
-	bool isLight;
-}
+#include "ConstantBufferHeader.hlsli"
 
 struct ModelPixelIn
 {

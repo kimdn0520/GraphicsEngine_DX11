@@ -112,16 +112,16 @@ void ShadowPass::Render(std::vector<std::shared_ptr<ObjectInfo>> meshs)
 		{
 		case OBJECT_TYPE::DEFAULT:
 		{
-			cbMesh cbMeshBuffer;
-			cbMeshBuffer.gWorld = mesh->worldTM;
-			cbMeshBuffer.objectID = mesh->objectID;
+			cbPerObject cbPerObejctBuffer;
+			cbPerObejctBuffer.gWorld = mesh->worldTM;
+			cbPerObejctBuffer.objectID = mesh->objectID;
 
 			// Skinned Mesh
 			if (mesh->isSkinned)
 			{
 				cbSkinned cbSkinnedBuffer;
 				memcpy(&cbSkinnedBuffer.gBoneTransforms, mesh->finalBoneListMatrix, sizeof(Matrix) * 96);
-				_shadow_Skinned_VS->ConstantBufferUpdate(&cbMeshBuffer, "cbMesh");
+				_shadow_Skinned_VS->ConstantBufferUpdate(&cbPerObejctBuffer, "cbPerObject");
 				_shadow_Skinned_VS->ConstantBufferUpdate(&cbSkinnedBuffer, "cbSkinned");
 				_shadow_Skinned_VS->ConstantBufferUpdate(&cbLightViewProjBuffer, "cbLightViewProj");
 				_shadow_Skinned_VS->Update();
@@ -129,7 +129,7 @@ void ShadowPass::Render(std::vector<std::shared_ptr<ObjectInfo>> meshs)
 			// Static Mesh
 			else
 			{
-				_shadow_VS->ConstantBufferUpdate(&cbMeshBuffer, "cbMesh");
+				_shadow_VS->ConstantBufferUpdate(&cbPerObejctBuffer, "cbPerObject");
 				_shadow_VS->ConstantBufferUpdate(&cbLightViewProjBuffer, "cbLightViewProj");
 				_shadow_VS->Update();
 			}

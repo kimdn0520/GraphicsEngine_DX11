@@ -310,6 +310,7 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\GameClient\GameClient\Data\Shader\ConstantBufferHeader.hlsli" />
     <None Include="..\GameClient\GameClient\Data\Shader\LightHeader.hlsli" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

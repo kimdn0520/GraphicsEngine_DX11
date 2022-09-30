@@ -118,26 +118,26 @@ void DeferredPass::Render(std::vector<std::shared_ptr<ObjectInfo>> meshs, std::s
 			{
 			case OBJECT_TYPE::DEFAULT:
 			{
-				cbMesh cbMeshBuffer;
-				cbMeshBuffer.gWorld = mesh->worldTM;
-				cbMeshBuffer.gWorldViewProj = mesh->worldTM * RenderManager::s_cameraInfo->viewTM * RenderManager::s_cameraInfo->projTM;
-				cbMeshBuffer.objectID = mesh->objectID;
+				cbPerObject cbPerObejctBuffer;
+				cbPerObejctBuffer.gWorld = mesh->worldTM;
+				cbPerObejctBuffer.gWorldViewProj = mesh->worldTM * RenderManager::s_cameraInfo->viewTM * RenderManager::s_cameraInfo->projTM;
+				cbPerObejctBuffer.objectID = mesh->objectID;
 				XMVECTOR det = XMMatrixDeterminant(mesh->worldTM);
-				cbMeshBuffer.gWorldInvTranspose = XMMatrixTranspose(XMMatrixInverse(&det, mesh->worldTM));
+				cbPerObejctBuffer.gWorldInvTranspose = XMMatrixTranspose(XMMatrixInverse(&det, mesh->worldTM));
 
 				// Skinned Mesh
 				if (mesh->isSkinned)
 				{
 					cbSkinned cbSkinnedBuffer;
 					memcpy(&cbSkinnedBuffer.gBoneTransforms, mesh->finalBoneListMatrix, sizeof(Matrix) * 96);
-					_model_Skinned_VS->ConstantBufferUpdate(&cbMeshBuffer, "cbMesh");
+					_model_Skinned_VS->ConstantBufferUpdate(&cbPerObejctBuffer, "cbPerObject");
 					_model_Skinned_VS->ConstantBufferUpdate(&cbSkinnedBuffer, "cbSkinned");
 					_model_Skinned_VS->Update();
 				}
 				// Static Mesh
 				else
 				{
-					_model_VS->ConstantBufferUpdate(&cbMeshBuffer, "cbMesh");
+					_model_VS->ConstantBufferUpdate(&cbPerObejctBuffer, "cbPerObject");
 					_model_VS->Update();
 				}
 
@@ -160,7 +160,7 @@ void DeferredPass::Render(std::vector<std::shared_ptr<ObjectInfo>> meshs, std::s
 				if (mat->isSpecular)
 					_model_PS->SetResourceViewBuffer(mat->specularTexture, "gSpecularMap");
 				
-				_model_PS->ConstantBufferUpdate(&cbMeshBuffer, "cbMesh");
+				_model_PS->ConstantBufferUpdate(&cbPerObejctBuffer, "cbPerObject");
 				_model_PS->ConstantBufferUpdate(&cbMaterialBuffer, "cbMaterial");
 
 				_model_PS->Update();

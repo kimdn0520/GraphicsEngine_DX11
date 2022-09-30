@@ -1,14 +1,8 @@
 #include "LightHeader.hlsli"
+#include "ConstantBufferHeader.hlsli"
 
 static const float gamma = 2.2f;
 static const float pureWhite = 1.f;
-
-cbuffer cbToneMapping : register(b0)
-{
-	float _exposure;
-
-	float3 _pad4;
-}
 
 struct TonePixelIn
 {
@@ -28,7 +22,7 @@ float4 ToneMapping_PS(TonePixelIn input) : SV_Target
 {
 	float4 color = (float)0.f;
 
-	color = Final_Texture.Sample(samLinearClamp, input.uv) * _exposure;
+	color = Final_Texture.Sample(samLinearClamp, input.uv) * exposure;
 
 	float luminance = dot(color.xyz, float3(0.2126f, 0.7152f, 0.0722f));
 
