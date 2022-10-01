@@ -304,5 +304,8 @@
     <None Include="..\GameClient\GameClient\Data\Shader\ConstantBufferHeader.hlsli">
       <Filter>Shader\HLSL</Filter>
     </None>
+    <None Include="..\GameClient\GameClient\Data\Shader\LightPBRHeader.hlsli">
+      <Filter>Shader\HLSL</Filter>
+    </None>
   </ItemGroup>
 </Project>
