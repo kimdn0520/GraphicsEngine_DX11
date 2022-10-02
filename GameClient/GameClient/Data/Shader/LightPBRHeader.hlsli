@@ -1,5 +1,9 @@
 // 레퍼런스 : https://github.com/Nadrin/PBR/blob/master/data/shaders/hlsl/pbr.hlsl
 
+#define DIRECTION_LIGHT_COUNT	1
+#define POINT_LIGHT_COUNT		30
+#define SPOT_LIGHT_COUNT		30
+
 // Light Informations For PBR
 struct DirectionalLight
 {
@@ -31,124 +35,242 @@ struct SpotLight
     float range;           // 반지름 범위
 };
 
-// Physically Based shading model: Lambetrtian diffuse BRDF + Cook-Torrance microfacet specular BRDF + IBL for ambient.
-
-// This implementation is based on "Real Shading in Unreal Engine 4" SIGGRAPH 2013 course notes by Epic Games.
-// See: http://blog.selfshadow.com/publications/s2013-shading-course/karis/s2013_pbs_epic_notes_v2.pdf
-
-static const float PI = 3.141592f;
-static const float Epsilon = 0.00001f;
-
-// Constant normal incidence Fresnel factor for all dielectrics.
-static const float3 Fdielectric = 0.04f;
-
-// 미세면 분포함수 인것같은데 GGX의 뜻은 찾을 수 없었다..
-// GGX/Towbridge-Reitz normal distribution function.
-// Uses Disney's reparametrization of alpha = roughness^2.
-float ndfGGX(float cosLh, float roughness)
+// 요거는 Diffuse BRDF
+// Burley B. "Physically Based Shading at Disney"
+// SIGGRAPH 2012 Course: Practical Physically Based Shading in Film and Game Production, 2012.
+float3 Disney_Diffuse(in float roughnessPercent, in float3 diffuseColor, in float NdotL, in float NdotV, in float LdotH)
 {
-    float alpha = roughness * roughness;
-    float alphaSq = alpha * alpha;
+    float energyBias = lerp(0.0f, 0.5f, roughnessPercent);
+    float energyFactor = lerp(1.0f, 1.0f / 1.51f, roughnessPercent);
 
-    float denom = (cosLh * cosLh) * (alphaSq - 1.0) + 1.0;
-    return alphaSq / (PI * denom * denom);
+    float fd90 = energyBias + 2.0f * roughnessPercent * LdotH * LdotH;
+
+    float lightScatter = 1.0f + (fd90 - 1.0f) * pow(1.0f - NdotL, 5.0f);
+    float viewScatter = 1.0f + (fd90 - 1.0f) * pow(1.0f - NdotV, 5.0f);
+
+    return diffuseColor * lightScatter * viewScatter * energyFactor;
 }
 
-// Single term for separable Schlick-GGX below.
-float gaSchlickG1(float cosTheta, float k)
+float D_GGX(float roughness, float NoH, const float3 NxH)
 {
-    return cosTheta / (cosTheta * (1.0 - k) + k);
+    float a = NoH * roughness;
+    float k = roughness / (dot(NxH, NxH) + a * a);
+    float d = k * k * (1.0 / PI);
+    return min(d, 65504.0);
 }
 
-//Smith의 방법을 사용한 기하학적 감쇠 함수의 Schlick-GGX 근사
-// Schlick-GGX approximation of geometric attenuation function using Smith's method.
-float gaSchlickGGX(float cosLi, float cosLo, float roughness)
+// GGX Specular D (normal distribution)
+// https://www.cs.cornell.edu/~srm/publications/EGSR07-btdf.pdf
+float D_GGX(in float roughness2, in float NdotH)
 {
-    float r = roughness + 1.0;
-    float k = (r * r) / 8.0; // Epic suggests using this roughness remapping for analytic lights.
-    return gaSchlickG1(cosLi, k) * gaSchlickG1(cosLo, k);
+    const float alpha = roughness2 * roughness2;
+    const float NdotH2 = NdotH * NdotH; // NdotH2 = NdotH^2
+
+    //const float lower = (NdotH2 * (alpha - 1.0f)) + 1.0f;
+    const float lower = NdotH2 * alpha + (1.0f - NdotH2);
+    return alpha / (PI * lower * lower);
 }
 
-// 프레넬 인자의 Shlick 근사.
-// Shlick's approximation of the Fresnel factor.
-float3 fresnelSchlick(float3 F0, float cosTheta)
+// Shlick's approximation of Fresnel By Unity Engine - Specular_F_Fresnel_Shlick
+float3 F_Shlick(in float3 specularColor, in float HdotV)
 {
-    return F0 + (1.0 - F0) * pow(1.0 - cosTheta, 5.0);
+    float FC = pow(1.0f - HdotV, 5.0f);
+    return specularColor + (float3(1.0f, 1.0f, 1.0f) - specularColor) * FC;
 }
 
-// Returns number of mipmap levels for specular IBL environment map.
-uint querySpecularTextureLevels(TextureCube specularTexture)
+// Schlick-Smith specular G (visibility) By Unity Version
+float G_Smith(float roughness2, float NdotV, float NdotL)
 {
-    uint width, height, levels;
+    float SmithV = NdotL * sqrt(NdotV * (NdotV - NdotV * roughness2) + roughness2);
+    float SmithL = NdotV * sqrt(NdotL * (NdotL - NdotL * roughness2) + roughness2);
 
-    specularTexture.GetDimensions(0, width, height, levels);
-
-    return levels;
+    return 0.5f / max(SmithV + SmithL, 1e-5f);
 }
 
-// 평행광에게는 범위따위 없다.
-float CalcAttenuation(float distance, float range)
+float GGX_Geometry(float cosThetaN, float roughness4)
 {
-    float distance2 = pow(distance, 2.f);
+    float cosTheta_sqr = saturate(cosThetaN * cosThetaN);
+    float tan2 = (1.0f - cosTheta_sqr) / cosTheta_sqr;
 
-    float range2 = pow(range, 2.f);
-
-    float distanceAttenuation = 1.f / (distance2 + 1);
-
-    float lightRadiusMask = pow(saturate(1 - pow(distance2 / range2, 2.f)), 2.f);
-
-    return distanceAttenuation * lightRadiusMask;
+    return 2.0f / (1.0f + sqrt(1.0f + roughness4 * tan2));
 }
 
-float3 CalcDirectionalLight(in DirectionalLight light, float3 albedo, float3 F0, float3 Lo, float cosLo,
-    float3 N, float metallic, float roughness)
+float G_GGX(in float roughness2, in float NdotV, in float NdotL)
 {
-    float3 Li = -normalize(light._direction);
+    float alpha = roughness2 * roughness2;
 
-    float3 Lradiance = light.color * light.lumen;
-
-    // Half-Vector Li and Lo
-    float3 Lh = normalize(Li + Lo);
-
-    float cosLi = max(0.f, dot(N, Li));
-    float cosLh = max(0.f, dot(N, Lh));
-
-    float3 F = fresnelSchlick(F0, max(0.f, dot(Lh, Lo)));
-
-    float D = ndfGGX(cosLh, roughness);
-
-    float G = gaSchlickGGX(cosLi, cosLo, roughness);
-
-    float3 kd = lerp(float3(1.f, 1.f, 1.f) - F, float3(0.f, 0.f, 0.f), metallic);
-
-    float3 diffuseBRDF = kd * albedo;
-
-    float3 specularBRDF = (F * D * G) / max(Epsilon, 4.f * cosLi * cosLo);      // 원주율 어디갔어
-
-    return (diffuseBRDF + specularBRDF) * Lradiance * cosLi;
+    return GGX_Geometry(NdotV, alpha) * GGX_Geometry(NdotL, alpha);
 }
 
-//float3 CalcSpotLight(in SpotLightInfo lightInfo, float3 pixelPosition, float3 albedo, float F0, float3 Lo, float cosLo,
-//    float3 N, float metallic, float roughness)
-//{
-//    float3 Li = -normalize(lightInfo._direction);
+float G_SmithShlick(in float roughness2, in float NdotV, in float NdotL)
+{
+    float r = sqrt(roughness2) + 1.0f;
+    float k = (r * r) / 8.0f;
 
-//    // 1. Spot Light의 Half Angle 안에 들어오는가
-//    float3 PixelToLight = normalize(lightInfo._position - pixelPosition);
+    float SmithV = NdotV / (NdotV * (1.0 - k) + k);
+    float SmithL = NdotL / (NdotL * (1.0 - k) + k);
 
+    return SmithV * SmithL;
+}
 
-//    // 2. PBR 계산
-//    float3 Li = -lightInfo._direction
+float3 BRDF(in float roughness2, in float metallic, in float3 diffuseColor, in float3 specularColor, in float NdotH, in float NdotV, in float NdotL, in float HdotV)
+{
+    // Distribution & Geometry & Fresnel
+    float D = D_GGX(roughness2, NdotH);             // 미세면 분포 함수
+    float G = G_GGX(roughness2, NdotV, NdotL);      // 미세면 감쇠 함수
+    float3 F = F_Shlick(specularColor, HdotV);      // 프레넬 함수
 
-//    // 3. 감쇠
-//    float distance = length(lightInfo._position - pixelPosition);
+    float3 kS = F;
+    float3 kD = float3(1.0, 1.0, 1.0) - kS;
+    kD *= 1.0 - metallic;
 
-//    float attenuation = CalcAttenuation(distance, lightInfo._range);
+    // Diffuse & Specular factors
+    float denom = max(4.0f * NdotV * NdotL, 0.001f); // 0.001f just in case product is 0
+    float3 specular_factor = saturate((D * F * G) / denom);
+    float3 diffuse_factor = kD * diffuseColor / PI;
 
-//}
+    return (diffuse_factor + specular_factor) * NdotL;
+}
 
-//float3 CalcPointLight()
-//{
+float3 PBR_DirectionalLight(
+    in float3 V, in float3 N, in DirectionalLight light,
+    in float3 albedo, in float ambientOcclusion, in float roughness, in float metallic, in float shadow)
+{
+    // Output color
+    float3 acc_color = float3(0.0f, 0.0f, 0.0f);
 
-//    // Attenuation
-//}
+    // Burley roughness bias
+    const float roughness2 = max(roughness * roughness, 0.01f);
+
+    // Blend base colors
+    const float3 c_diff = lerp(albedo, float3(0, 0, 0), metallic) * ambientOcclusion;
+    const float3 c_spec = lerp(F_ZERO, albedo, metallic) * ambientOcclusion;
+
+    // Calculate Directional Light
+    const float3 L = normalize(-light.Direction);
+    const float3 H = normalize(V + L);
+
+    // products
+    const float NdotL = max(dot(N, L), EPSILON);
+    const float NdotV = abs(dot(N, V)) + EPSILON;
+    const float NdotH = max(dot(N, H), EPSILON);
+    const float HdotV = max(dot(H, V), EPSILON);
+
+    // BRDF
+    float3 brdf_factor = BRDF(roughness2, metallic, c_diff, c_spec, NdotH, NdotV, NdotL, HdotV);
+
+    // Directional light
+    acc_color += light.Diffuse.rgb * light.Power * shadow * brdf_factor;
+
+    return acc_color;
+}
+
+float3 PBR_PointLight(
+    in float3 V, in float3 N, in PointLight lights[POINT_LIGHT_COUNT], in uint lightCount, in float3 position,
+    in float3 albedo, in float ambientOcclusion, in float roughness, in float metallic, in float shadow)
+{
+    // Output color
+    float3 acc_color = float3(0.0f, 0.0f, 0.0f);
+
+    PointLight light;
+
+    [unroll]
+    for (uint i = 0; i < lightCount; i++)
+    {
+        light = lights[i];
+
+        // Light vector (to light)
+        float3 lightVec = light.Position - position;
+        float distance = length(lightVec);
+
+        if (distance > light.Range)
+            continue;
+
+        const float3 L = normalize(lightVec);
+        const float3 H = normalize(V + L);
+
+        // products
+        const float NdotL = max(dot(N, L), EPSILON);
+        const float NdotV = max(dot(N, V), EPSILON);
+        const float NdotH = max(dot(N, H), EPSILON);
+        const float HdotV = max(dot(H, V), EPSILON);
+
+        // Attenuation
+        float DistToLightNorm = 1.0 - saturate(distance * (1.0f / light.Range));
+        float Attn = DistToLightNorm * DistToLightNorm;
+
+        float3 radiance = Attn * light.Power;
+
+        // Burley roughness bias
+        const float roughness2 = max(roughness * roughness, 0.01f);
+
+        // Blend base colors
+        const float3 c_diff = lerp(albedo, float3(0, 0, 0), metallic) * ambientOcclusion;
+        const float3 c_spec = lerp(F_ZERO, albedo, metallic) * ambientOcclusion;
+
+        // BRDF
+        float3 brdf_factor = BRDF(roughness2, metallic, c_diff, c_spec, NdotH, NdotV, NdotL, HdotV);
+
+        // Point light
+        acc_color += light.Diffuse * radiance * brdf_factor;
+    }
+
+    return acc_color;
+}
+
+float3 PBR_SpotLight(
+    in float3 V, in float3 N, in SpotLight lights[SPOT_LIGHT_COUNT], in uint lightCount, in float3 position,
+    in float3 albedo, in float ambientOcclusion, in float roughness, in float metallic, in float shadow)
+{
+    // Output color
+    float3 acc_color = float3(0.0f, 0.0f, 0.0f);
+
+    SpotLight light;
+
+    [unroll]
+    for (uint i = 0; i < lightCount; i++)
+    {
+        light = lights[i];
+
+        float3 lightVec = light.Position - position;
+        float distance = length(lightVec);
+
+        if (distance > light.Range)
+            continue;
+
+        const float3 L = normalize(lightVec);
+        const float3 H = normalize(L + V);
+
+        // products
+        const float NdotL = max(dot(N, L), EPSILON);
+        const float NdotV = max(dot(N, V), EPSILON);
+        const float NdotH = max(dot(N, H), EPSILON);
+        const float HdotV = max(dot(H, V), EPSILON);
+
+        // Cone attenuation
+        float cosAng = dot(-light.Direction, L);
+        float conAtt = saturate((cosAng - light.AttStart) / light.AttRange);
+        conAtt *= conAtt;
+
+        // Attenuation
+        float DistToLightNorm = 1.0 - saturate(distance * (1.0f / light.Range));
+        float Attn = DistToLightNorm * DistToLightNorm;
+
+        float3 radiance = Attn * conAtt * light.Power;
+
+        // Burley roughness bias
+        const float roughness2 = max(roughness * roughness, 0.01f);
+
+        // Blend base colors
+        const float3 c_diff = lerp(albedo, float3(0, 0, 0), metallic) * ambientOcclusion;
+        const float3 c_spec = lerp(F_ZERO, albedo, metallic) * ambientOcclusion;
+
+        // BRDF
+        float3 brdf_factor = BRDF(roughness2, metallic, c_diff, c_spec, NdotH, NdotV, NdotL, HdotV);
+
+        // Spot light
+        acc_color += light.Diffuse * radiance * brdf_factor;
+    }
+
+    return acc_color;
+}
