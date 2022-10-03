@@ -9,6 +9,7 @@ class DepthStencilView;
 class ViewPort;
 
 // [0 : DEPTH], [1 : Normal], [2 : Position], [3 : Albedo], [4 : ObjectID] 
+// [0 : DMRAO], [1 : Normal], [2 : Position], [3 : Albedo], [4 : Emissive] 
 constexpr int DEFERRED_COUNT = 5;
 
 /// <summary>

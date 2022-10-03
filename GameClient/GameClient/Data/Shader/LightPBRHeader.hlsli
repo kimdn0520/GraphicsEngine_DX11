@@ -1,5 +1,10 @@
 // 레퍼런스 : https://github.com/Nadrin/PBR/blob/master/data/shaders/hlsl/pbr.hlsl
 
+// Specular coefficiant - fixed reflectance value for non-metals
+#define F_ZERO float3(0.04f, 0.04f, 0.04f)
+#define PI          3.14159265359f
+#define EPSILON 0.000001f
+
 #define DIRECTION_LIGHT_COUNT	1
 #define POINT_LIGHT_COUNT		30
 #define SPOT_LIGHT_COUNT		30
@@ -8,31 +13,37 @@
 struct DirectionalLight
 {
     float3 color;          // 빛의 색
-    float lumen;           // 빛의 세기
+    float power;           // 빛의 세기
 
     float3 direction;      // 방향
     float pad;
+
+    float4x4 lightViewProj;
 };
 
 struct PointLight
 {
     float3 color;
-    float lumen;
+    float power;
 
     float3 position;       // 위치
     float range;           // 범위
+
+    float4x4 lightViewProj;
 };
 
 struct SpotLight
 {
     float3 color;
-    float lumen;
+    float power;
 
     float3 direction;      // 범위
     float halfAngle;       // Spot Half Angle (== FOV) => 스포트 라이트가 퍼지는 범위
 
     float3 position;       // 위치
     float range;           // 반지름 범위
+
+    float4x4 lightViewProj;
 };
 
 // 요거는 Diffuse BRDF
@@ -147,7 +158,7 @@ float3 PBR_DirectionalLight(
     const float3 c_spec = lerp(F_ZERO, albedo, metallic) * ambientOcclusion;
 
     // Calculate Directional Light
-    const float3 L = normalize(-light.Direction);
+    const float3 L = normalize(-light.direction);
     const float3 H = normalize(V + L);
 
     // products
@@ -160,14 +171,14 @@ float3 PBR_DirectionalLight(
     float3 brdf_factor = BRDF(roughness2, metallic, c_diff, c_spec, NdotH, NdotV, NdotL, HdotV);
 
     // Directional light
-    acc_color += light.Diffuse.rgb * light.Power * shadow * brdf_factor;
+    acc_color += light.color.rgb * light.power * shadow * brdf_factor;
 
     return acc_color;
 }
 
 float3 PBR_PointLight(
     in float3 V, in float3 N, in PointLight lights[POINT_LIGHT_COUNT], in uint lightCount, in float3 position,
-    in float3 albedo, in float ambientOcclusion, in float roughness, in float metallic, in float shadow)
+    in float3 albedo, in float ambientOcclusion, in float roughness, in float metallic)
 {
     // Output color
     float3 acc_color = float3(0.0f, 0.0f, 0.0f);
@@ -180,10 +191,10 @@ float3 PBR_PointLight(
         light = lights[i];
 
         // Light vector (to light)
-        float3 lightVec = light.Position - position;
+        float3 lightVec = light.position - position;
         float distance = length(lightVec);
 
-        if (distance > light.Range)
+        if (distance > light.range)
             continue;
 
         const float3 L = normalize(lightVec);
@@ -196,10 +207,10 @@ float3 PBR_PointLight(
         const float HdotV = max(dot(H, V), EPSILON);
 
         // Attenuation
-        float DistToLightNorm = 1.0 - saturate(distance * (1.0f / light.Range));
+        float DistToLightNorm = 1.0 - saturate(distance * (1.0f / light.range));
         float Attn = DistToLightNorm * DistToLightNorm;
 
-        float3 radiance = Attn * light.Power;
+        float3 radiance = Attn * light.power;
 
         // Burley roughness bias
         const float roughness2 = max(roughness * roughness, 0.01f);
@@ -212,7 +223,7 @@ float3 PBR_PointLight(
         float3 brdf_factor = BRDF(roughness2, metallic, c_diff, c_spec, NdotH, NdotV, NdotL, HdotV);
 
         // Point light
-        acc_color += light.Diffuse * radiance * brdf_factor;
+        acc_color += light.color * radiance * brdf_factor;
     }
 
     return acc_color;
@@ -220,7 +231,7 @@ float3 PBR_PointLight(
 
 float3 PBR_SpotLight(
     in float3 V, in float3 N, in SpotLight lights[SPOT_LIGHT_COUNT], in uint lightCount, in float3 position,
-    in float3 albedo, in float ambientOcclusion, in float roughness, in float metallic, in float shadow)
+    in float3 albedo, in float ambientOcclusion, in float roughness, in float metallic)
 {
     // Output color
     float3 acc_color = float3(0.0f, 0.0f, 0.0f);
@@ -232,10 +243,10 @@ float3 PBR_SpotLight(
     {
         light = lights[i];
 
-        float3 lightVec = light.Position - position;
+        float3 lightVec = light.position - position;
         float distance = length(lightVec);
 
-        if (distance > light.Range)
+        if (distance > light.range)
             continue;
 
         const float3 L = normalize(lightVec);
@@ -248,15 +259,18 @@ float3 PBR_SpotLight(
         const float HdotV = max(dot(H, V), EPSILON);
 
         // Cone attenuation
-        float cosAng = dot(-light.Direction, L);
-        float conAtt = saturate((cosAng - light.AttStart) / light.AttRange);
+        float attStart = light.range;
+        float attRange = cos(light.halfAngle * attStart) - cos(light.halfAngle);
+        attStart = cos(light.halfAngle);
+        float cosAng = dot(-light.direction, L);
+        float conAtt = saturate((cosAng - attStart) / attRange);
         conAtt *= conAtt;
 
         // Attenuation
-        float DistToLightNorm = 1.0 - saturate(distance * (1.0f / light.Range));
+        float DistToLightNorm = 1.0 - saturate(distance * (1.0f / light.range));
         float Attn = DistToLightNorm * DistToLightNorm;
 
-        float3 radiance = Attn * conAtt * light.Power;
+        float3 radiance = Attn * conAtt * light.power;
 
         // Burley roughness bias
         const float roughness2 = max(roughness * roughness, 0.01f);
@@ -269,8 +283,30 @@ float3 PBR_SpotLight(
         float3 brdf_factor = BRDF(roughness2, metallic, c_diff, c_spec, NdotH, NdotV, NdotL, HdotV);
 
         // Spot light
-        acc_color += light.Diffuse * radiance * brdf_factor;
+        acc_color += light.color * radiance * brdf_factor;
     }
 
     return acc_color;
+}
+
+//---------------------------------------------------------------------------------------
+// Transforms a normal map sample to world space.
+//---------------------------------------------------------------------------------------
+float3 NormalSampleToWorldSpace(float3 normalMapSample, float3 unitNormalW, float3 tangentW)
+{
+    // Uncompress each component from [0,1] to [-1,1].
+    float3 normalT = 2.0f * normalMapSample - 1.0f;
+
+    // Build orthonormal basis.
+    float3 N = unitNormalW;
+    float3 T = normalize(tangentW - dot(tangentW, N) * N);
+    //float3 T = tangentW;
+    float3 B = cross(N, T);
+
+    float3x3 TBN = float3x3(T, B, N);
+
+    // Transform from tangent space to world space.
+    float3 bumpedNormalW = mul(normalT, TBN);
+
+    return bumpedNormalW;
 }

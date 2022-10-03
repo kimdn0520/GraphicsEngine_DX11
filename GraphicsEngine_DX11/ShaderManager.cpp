@@ -27,12 +27,14 @@ void ShaderManager::CreateAllShaders()
 	CreateShader(SHADER_TYPE::VERTEX, L"Model_VS.hlsl", _filepath, "Model_VS", L"Model_VS", nullptr);
 	CreateShader(SHADER_TYPE::VERTEX, L"Model_VS.hlsl", _filepath, "Model_VS", L"Model_Skinned_VS", model_MacroVS_1);
 	CreateShader(SHADER_TYPE::PIXEL, L"Model_PS.hlsl", _filepath, "Model_PS", L"Model_PS", nullptr);
+	CreateShader(SHADER_TYPE::PIXEL, L"Model_PBR_PS.hlsl", _filepath, "Model_PBR_PS", L"Model_PBR_PS", nullptr);
 
 	D3D_SHADER_MACRO shadow_MacroVS_1[] = { {"Skinned"}, {NULL, NULL} };										
 	CreateShader(SHADER_TYPE::VERTEX, L"Shadow_VS.hlsl", _filepath, "Shadow_VS", L"Shadow_VS", nullptr);
 	CreateShader(SHADER_TYPE::VERTEX, L"Shadow_VS.hlsl", _filepath, "Shadow_VS", L"Shadow_Skinned_VS", shadow_MacroVS_1);
 
 	CreateShader(SHADER_TYPE::PIXEL, L"Light_PS.hlsl", _filepath, "Light_PS", L"Light_PS", nullptr);
+	CreateShader(SHADER_TYPE::PIXEL, L"Light_PBR_PS.hlsl", _filepath, "Light_PBR_PS", L"Light_PBR_PS", nullptr);
 
 	CreateShader(SHADER_TYPE::PIXEL, L"ToneMapping_PS.hlsl", _filepath, "ToneMapping_PS", L"ToneMapping_PS", nullptr);
 

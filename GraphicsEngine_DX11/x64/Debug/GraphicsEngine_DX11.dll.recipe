@@ -10,7 +10,13 @@
       <FullPath>C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\Debug_PS.cso</FullPath>
     </ContentFile>
     <ContentFile>
+      <FullPath>C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\Light_PBR_PS.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
       <FullPath>C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\Light_PS.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\Model_PBR_PS.cso</FullPath>
     </ContentFile>
     <ContentFile>
       <FullPath>C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\Model_PS.cso</FullPath>

@@ -20,6 +20,13 @@ cbuffer cbMaterial : register(b1)
 	bool isNormalTexture;
 	bool isSpecularTexture;
 	bool isLight;
+
+	bool isAlbedo;
+	bool isNormal;
+	bool isMetallic;
+	bool isRoughness;
+	bool isAO;
+	bool isEmissive;
 }
 
 cbuffer cbLight : register(b2)
