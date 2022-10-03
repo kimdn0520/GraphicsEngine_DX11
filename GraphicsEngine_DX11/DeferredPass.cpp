@@ -14,15 +14,19 @@
 
 void DeferredPass::Start()
 {
-	_model_VS = dynamic_pointer_cast<VertexShader>(ShaderManager::Get()->GetShader(L"Model_VS"));
-	_model_Skinned_VS = dynamic_pointer_cast<VertexShader>(ShaderManager::Get()->GetShader(L"Model_Skinned_VS"));
-	_model_PS = dynamic_pointer_cast<PixelShader>(ShaderManager::Get()->GetShader(L"Model_PS"));
+	//_model_VS = dynamic_pointer_cast<VertexShader>(ShaderManager::Get()->GetShader(L"Model_VS"));
+	//_model_Skinned_VS = dynamic_pointer_cast<VertexShader>(ShaderManager::Get()->GetShader(L"Model_Skinned_VS"));
+	//_model_PS = dynamic_pointer_cast<PixelShader>(ShaderManager::Get()->GetShader(L"Model_PS"));
+
+	_model_PBR_VS = dynamic_pointer_cast<VertexShader>(ShaderManager::Get()->GetShader(L"Model_PBR_VS"));
+	_model_PBR_Skinned_VS = dynamic_pointer_cast<VertexShader>(ShaderManager::Get()->GetShader(L"Model_PBR_Skinned_VS"));
+	_model_PBR_PS = dynamic_pointer_cast<PixelShader>(ShaderManager::Get()->GetShader(L"Model_PBR_PS"));
 
 	_quad_VS = dynamic_pointer_cast<VertexShader>(ShaderManager::Get()->GetShader(L"Quad_VS"));
 
 	gBuffers.resize(DEFERRED_COUNT);
 
-	for (int i = 0; i < DEFERRED_COUNT - 1; i++)
+	for (int i = 0; i < DEFERRED_COUNT; i++)
 	{
 		gBuffers[i] = std::make_shared<RenderTargetView>();
 
@@ -31,12 +35,21 @@ void DeferredPass::Start()
 		_gBufferViews[i] = gBuffers[i]->GetRenderTargetView();	// rtv 가져온다.
 	}
 
-	gBuffers[DEFERRED_COUNT - 1] = std::make_shared<RenderTargetView>();
+	//for (int i = 0; i < DEFERRED_COUNT - 1; i++)
+	//{
+	//	gBuffers[i] = std::make_shared<RenderTargetView>();
 
-	// !!! 얘는 DXGI_FORMAT_R32_UINT로 해줘야해 SV_Target을 uint로 뽑을거기때문에
-	gBuffers[DEFERRED_COUNT - 1]->RenderTargetTextureInit(g_device, Graphics_Interface::Get()->GetScreenWidth(), Graphics_Interface::Get()->GetScreenHeight(), DXGI_FORMAT_R32_UINT);
+	//	gBuffers[i]->RenderTargetTextureInit(g_device, Graphics_Interface::Get()->GetScreenWidth(), Graphics_Interface::Get()->GetScreenHeight(), DXGI_FORMAT_R32G32B32A32_FLOAT);
 
-	_gBufferViews[DEFERRED_COUNT - 1] = gBuffers[DEFERRED_COUNT - 1]->GetRenderTargetView();
+	//	_gBufferViews[i] = gBuffers[i]->GetRenderTargetView();	// rtv 가져온다.
+	//}
+
+	//gBuffers[DEFERRED_COUNT - 1] = std::make_shared<RenderTargetView>();
+
+	//// !!! 얘는 DXGI_FORMAT_R32_UINT로 해줘야해 SV_Target을 uint로 뽑을거기때문에
+	//gBuffers[DEFERRED_COUNT - 1]->RenderTargetTextureInit(g_device, Graphics_Interface::Get()->GetScreenWidth(), Graphics_Interface::Get()->GetScreenHeight(), DXGI_FORMAT_R32_UINT);
+
+	//_gBufferViews[DEFERRED_COUNT - 1] = gBuffers[DEFERRED_COUNT - 1]->GetRenderTargetView();
 
 	_deferredDSV = std::make_shared<DepthStencilView>();
 
@@ -61,14 +74,14 @@ void DeferredPass::Release()
 	_screenViewPort->Release();
 	
 	_quad_VS.reset();
-	_model_VS.reset();
-	_model_Skinned_VS.reset();
-	_model_PS.reset();
+	_model_PBR_VS.reset();
+	_model_PBR_Skinned_VS.reset();
+	_model_PBR_PS.reset();
 }
 
 void DeferredPass::OnResize(int width, int height)
 {
-	for (int i = 0; i < DEFERRED_COUNT - 1; i++)
+	for (int i = 0; i < DEFERRED_COUNT; i++)
 	{
 		gBuffers[i]->RenderTargetTextureInit(g_device, width, height, DXGI_FORMAT_R32G32B32A32_FLOAT);
 
@@ -77,10 +90,10 @@ void DeferredPass::OnResize(int width, int height)
 		_gBufferViews[i] = gBuffers[i]->GetRenderTargetView();
 	}
 
-	gBuffers[DEFERRED_COUNT - 1]->RenderTargetTextureInit(g_device, width, height, DXGI_FORMAT_R32_UINT);
+	//gBuffers[DEFERRED_COUNT - 1]->RenderTargetTextureInit(g_device, width, height, DXGI_FORMAT_R32_UINT);
 
-	_gBufferViews[DEFERRED_COUNT - 1].ReleaseAndGetAddressOf();
-	_gBufferViews[DEFERRED_COUNT - 1] = gBuffers[DEFERRED_COUNT - 1]->GetRenderTargetView();
+	//_gBufferViews[DEFERRED_COUNT - 1].ReleaseAndGetAddressOf();
+	//_gBufferViews[DEFERRED_COUNT - 1] = gBuffers[DEFERRED_COUNT - 1]->GetRenderTargetView();
 
 	_deferredDSV->OnResize(g_device, width, height);
 
@@ -121,49 +134,60 @@ void DeferredPass::Render(std::vector<std::shared_ptr<ObjectInfo>> meshs, std::s
 				cbPerObject cbPerObejctBuffer;
 				cbPerObejctBuffer.gWorld = mesh->worldTM;
 				cbPerObejctBuffer.gWorldViewProj = mesh->worldTM * RenderManager::s_cameraInfo->viewTM * RenderManager::s_cameraInfo->projTM;
-				cbPerObejctBuffer.objectID = mesh->objectID;
+				//cbPerObejctBuffer.objectID = mesh->objectID;
 				XMVECTOR det = XMMatrixDeterminant(mesh->worldTM);
 				cbPerObejctBuffer.gWorldInvTranspose = XMMatrixTranspose(XMMatrixInverse(&det, mesh->worldTM));
 
+				cbMaterial cbMaterialBuffer;
+				cbMaterialBuffer.metallic = mat->metallic;
+				cbMaterialBuffer.roughness = mat->roughness;
+
+				_model_PBR_VS->ConstantBufferUpdate(&cbMaterialBuffer, "cbMaterial");
+				
 				// Skinned Mesh
 				if (mesh->isSkinned)
 				{
-					cbSkinned cbSkinnedBuffer;
-					memcpy(&cbSkinnedBuffer.gBoneTransforms, mesh->finalBoneListMatrix, sizeof(Matrix) * 96);
-					_model_Skinned_VS->ConstantBufferUpdate(&cbPerObejctBuffer, "cbPerObject");
-					_model_Skinned_VS->ConstantBufferUpdate(&cbSkinnedBuffer, "cbSkinned");
-					_model_Skinned_VS->Update();
+					memcpy(&cbPerObejctBuffer.gBoneTransforms, mesh->finalBoneListMatrix, sizeof(Matrix) * 96);
+					_model_PBR_Skinned_VS->ConstantBufferUpdate(&cbPerObejctBuffer, "cbPerObject");
+					_model_PBR_Skinned_VS->Update();
 				}
 				// Static Mesh
 				else
 				{
-					_model_VS->ConstantBufferUpdate(&cbPerObejctBuffer, "cbPerObject");
-					_model_VS->Update();
+					_model_PBR_VS->ConstantBufferUpdate(&cbPerObejctBuffer, "cbPerObject");
+					_model_PBR_VS->Update();
 				}
 
-				cbMaterial cbMaterialBuffer;
-				cbMaterialBuffer.gMaterialAmbient = mat->ambient;
-				cbMaterialBuffer.gMaterialDiffuse = mat->diffuse;
-				cbMaterialBuffer.gMaterialSpecular = mat->specular;
-				cbMaterialBuffer.gMaterialReflection = mat->reflection;
-				cbMaterialBuffer.isDiffuseTexture = mat->isDiffuse;
-				cbMaterialBuffer.isNormalTexture = mat->isNormal;
-				cbMaterialBuffer.isSpecularTexture = mat->isSpecular;
+				cbMaterialBuffer.isAlbedo = mat->isAlbedo;
+				cbMaterialBuffer.isNormal = mat->isNormal;
+				cbMaterialBuffer.isMetallic = mat->isMetallic;
+				cbMaterialBuffer.isRoughness = mat->isRoughness;
+				cbMaterialBuffer.isAO = mat->isAO;
+				cbMaterialBuffer.isEmissive = mat->isEmissive;
 				cbMaterialBuffer.isLight = mat->isLight;
 
-				if (mat->isDiffuse)
-					_model_PS->SetResourceViewBuffer(mat->diffuseTexture, "gDiffuseMap");
+				if (mat->isAlbedo)
+					_model_PBR_PS->SetResourceViewBuffer(mat->albedoMap, "AlbedoMap");
 
 				if (mat->isNormal)
-					_model_PS->SetResourceViewBuffer(mat->normalTexture, "gNormalMap");
+					_model_PBR_PS->SetResourceViewBuffer(mat->normalMap, "NormalMap");
 
-				if (mat->isSpecular)
-					_model_PS->SetResourceViewBuffer(mat->specularTexture, "gSpecularMap");
+				if (mat->isMetallic)
+					_model_PBR_PS->SetResourceViewBuffer(mat->metallicMap, "MetallicMap");
+
+				if (mat->isRoughness)
+					_model_PBR_PS->SetResourceViewBuffer(mat->roughnessMap, "RoughnessMap");
+
+				if (mat->isAO)
+					_model_PBR_PS->SetResourceViewBuffer(mat->AOMap, "AmbientOcclusionMap");
+
+				if (mat->isEmissive)
+					_model_PBR_PS->SetResourceViewBuffer(mat->emissiveMap, "EmissiveMap");
 				
-				_model_PS->ConstantBufferUpdate(&cbPerObejctBuffer, "cbPerObject");
-				_model_PS->ConstantBufferUpdate(&cbMaterialBuffer, "cbMaterial");
+				//_model_PBR_PS->ConstantBufferUpdate(&cbPerObejctBuffer, "cbPerObject");
+				_model_PBR_PS->ConstantBufferUpdate(&cbMaterialBuffer, "cbMaterial");
 
-				_model_PS->Update();
+				_model_PBR_PS->Update();
 
 				g_deviceContext->RSSetState(ResourceManager::Get()->GetMesh(mesh->meshID)->GetRasterState().Get());
 

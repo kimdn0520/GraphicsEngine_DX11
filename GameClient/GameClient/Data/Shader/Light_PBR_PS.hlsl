@@ -25,15 +25,12 @@ Texture2D Shadow : register(t5);
 
 Texture2D SSAO : register(t6);
 
-SamplerState samAnisotropicClamp : register(s0);
-SamplerState samAnisotropicWrap : register(s1);
-SamplerState samLinearClamp : register(s2);
-SamplerState samLinearWrap : register(s3);
-SamplerComparisonState samLinearPointBoarder : register(s4);
+SamplerState samLinearClamp : register(s0);
+SamplerComparisonState samLinearPointBoarder : register(s1);
 
 float4 Light_PBR_PS(LightPixelIN input) : SV_Target
 {
-	float4 depth = DMRAO.Sample(samLinearClamp, input.uv).x;
+	float depth = DMRAO.Sample(samLinearClamp, input.uv).x;
 
 	float3 normal = Normal.Sample(samLinearClamp, input.uv).xyz;
 
@@ -45,11 +42,9 @@ float4 Light_PBR_PS(LightPixelIN input) : SV_Target
 
 	float4 shadow = mul(float4(position.xyz, 1.0f), gDirLight[0].lightViewProj);
 
-	float3 NormalW = normalize(input.normal);
-
 	float shadowVal = 1.0f;
 
-#ifdef SHADOW
+#ifdef SHADOW_MACRO
 	shadow.xyz /= shadow.w;
 
 	shadow.x = shadow.x * 0.5f + 0.5f;
@@ -58,7 +53,7 @@ float4 Light_PBR_PS(LightPixelIN input) : SV_Target
 	shadowVal = CalcShadowFactor(samLinearPointBoarder, Shadow, float3(shadow.xyz), textureInfo);
 #endif
 
-#ifdef SSAO
+#ifdef SSAO_MACRO
 	float ambientAccess = SSAO.Sample(samLinearClamp, input.uv).x;
 #else
 	float ambientAccess = 1.f;
@@ -92,6 +87,10 @@ float4 Light_PBR_PS(LightPixelIN input) : SV_Target
 
 		litColor += emissive;
 	}
+
+	litColor += float3(depth - depth + emissive.x - emissive.x,
+					   normal.z - normal.z,
+					   albedo.x - albedo.x);
 
 	return float4(litColor, 1.0f);
 }

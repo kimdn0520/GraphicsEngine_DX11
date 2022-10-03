@@ -78,9 +78,8 @@ void TestScene::Initialize()
 	box->AddComponent<MeshRenderer>();
 	box->GetComponent<MeshRenderer>()->SetMeshID(0);				// cube´Â 0
 	shared_ptr<Material> boxMaterial = make_shared<Material>();
-	boxMaterial->ambient = Vector4(0.6f, 0.6f, 0.6f, 1.0f);
-	boxMaterial->diffuse = Vector4(0.6f, 0.6f, 0.6f, 1.0f);
-	boxMaterial->specular = Vector4(0.5f, 0.5f, 0.5f, 1.0f);
+	boxMaterial->metallic = 0.1f;
+	boxMaterial->roughness = 0.8f;
 	box->GetComponent<MeshRenderer>()->SetMaterial(boxMaterial);
 	//box->GetComponent<MeshRenderer>()->IsShadow(false);			// ÀÌ³à¼®Àº ¼¨µµ¿ì ¾ÈÇÒ°Çµ­~
 	AddGameObject(box);

@@ -11,21 +11,23 @@ enum class OBJECT_TYPE
 
 struct Material
 {
-	bool isDiffuse = false;
+	bool isAlbedo = false;
 	bool isNormal = false;
-	bool isSpecular = false;
-	bool isReflection = false;
+	bool isMetallic = false;
+	bool isRoughness = false;
+	bool isAO = false;
+	bool isEmissive = false;
 	bool isLight = true;
 
-	std::wstring diffuseTexture;
-	std::wstring normalTexture;
-	std::wstring specularTexture;
-	std::wstring cubeMapTexture;
+	std::wstring albedoMap;
+	std::wstring normalMap;
+	std::wstring metallicMap;
+	std::wstring roughnessMap;
+	std::wstring AOMap;
+	std::wstring emissiveMap;
 
-	DirectX::SimpleMath::Vector4 ambient;
-	DirectX::SimpleMath::Vector4 diffuse;
-	DirectX::SimpleMath::Vector4 specular;
-	DirectX::SimpleMath::Vector4 reflection;
+	float metallic;
+	float roughness;
 };
 
 struct ObjectInfo

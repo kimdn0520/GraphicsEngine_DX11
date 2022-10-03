@@ -15,7 +15,13 @@
 void LightPass::Start()
 {
 	_quad_VS = dynamic_pointer_cast<VertexShader>(ShaderManager::Get()->GetShader(L"Quad_VS"));
+
 	_light_PS = dynamic_pointer_cast<PixelShader>(ShaderManager::Get()->GetShader(L"Light_PS"));
+
+	_light_PBR_PS = dynamic_pointer_cast<PixelShader>(ShaderManager::Get()->GetShader(L"Light_PBR_PS"));
+	_light_PBR_PS1 = dynamic_pointer_cast<PixelShader>(ShaderManager::Get()->GetShader(L"Light_PBR_PS1"));
+	_light_PBR_PS2 = dynamic_pointer_cast<PixelShader>(ShaderManager::Get()->GetShader(L"Light_PBR_PS2"));
+	_light_PBR_PS3 = dynamic_pointer_cast<PixelShader>(ShaderManager::Get()->GetShader(L"Light_PBR_PS3"));
 	
 	lightingRTV = std::make_shared<RenderTargetView>();
 
@@ -34,7 +40,7 @@ void LightPass::Release()
 	_screenViewPort->Release();
 
 	_quad_VS.reset();
-	_light_PS.reset();
+	_light_PBR_PS.reset();
 }
 
 void LightPass::OnResize(int width, int height)
@@ -54,36 +60,77 @@ void LightPass::RenderStart()
 	_screenViewPort->SetViewPort(g_deviceContext);
 }
 
-void LightPass::Render(const std::vector<std::shared_ptr<RenderTargetView>> gBuffers, std::shared_ptr<DepthStencilView> shadowDSV)
+void LightPass::Render(const std::vector<std::shared_ptr<RenderTargetView>> gBuffers, std::shared_ptr<DepthStencilView> shadowDSV, std::shared_ptr<RenderTargetView> ssaoMap)
 {
 	RenderStart();
 
 	// 버텍스 쉐이더 업데이트
 	_quad_VS->Update();
-
-	// 픽셀 쉐이더에 SRV 셋팅 
-	_light_PS->SetResourceViewBuffer(gBuffers[0]->GetSRV().Get(), "Depth");
-	_light_PS->SetResourceViewBuffer(gBuffers[1]->GetSRV().Get(), "Normal");
-	_light_PS->SetResourceViewBuffer(gBuffers[2]->GetSRV().Get(), "Position");
-	_light_PS->SetResourceViewBuffer(gBuffers[3]->GetSRV().Get(), "Albedo");
-	_light_PS->SetResourceViewBuffer(gBuffers[4]->GetSRV().Get(), "ObjectID");
-	_light_PS->SetResourceViewBuffer(shadowDSV->GetShaderResourceView().Get(), "Shadow");
-
-	_light_PS->ConstantBufferUpdate(&LightManager::cbLightBuffer, "cbLight");
-
-	// TODO : PBR 에서 제대로 하자 Legacy에서는 일단 대충 안쪽에서 재질 넘기자
-	//_light_PS->ConstantBufferUpdate(&ResourceManager::cbMaterialBuffer, "cbMaterial");
-
+	
 	cbTexture cbTextureBuf;
-	cbTextureBuf.textureInfo = Vector4(												// 이녀석으로 텍스쳐의 uint를 뽑으려고 텍스쳐 사이즈 건네줌
+	cbTextureBuf.textureInfo = Vector4(												
 		Graphics_Interface::Get()->GetScreenWidth(),
 		Graphics_Interface::Get()->GetScreenHeight(),
 		1.f / Graphics_Interface::Get()->GetScreenWidth(),
 		1.f / Graphics_Interface::Get()->GetScreenHeight());
 
-	_light_PS->ConstantBufferUpdate(&cbTextureBuf, "cbTexture");
+	// 픽셀 쉐이더에 SRV 셋팅 
+	if (ssaoMap != nullptr && isShadow)
+	{
+		_light_PBR_PS3->SetResourceViewBuffer(gBuffers[0]->GetSRV().Get(), "DMRAO");
+		_light_PBR_PS3->SetResourceViewBuffer(gBuffers[1]->GetSRV().Get(), "Normal");
+		_light_PBR_PS3->SetResourceViewBuffer(gBuffers[2]->GetSRV().Get(), "Position");
+		_light_PBR_PS3->SetResourceViewBuffer(gBuffers[3]->GetSRV().Get(), "Albedo");
+		_light_PBR_PS3->SetResourceViewBuffer(gBuffers[4]->GetSRV().Get(), "Emissive");
+		_light_PBR_PS3->AddShaderResourceViewData("Shadow", 5);
+		_light_PBR_PS3->AddShaderResourceViewData("SSAO", 6);
+		_light_PBR_PS3->SetResourceViewBuffer(shadowDSV->GetShaderResourceView().Get(), "Shadow");
+		_light_PBR_PS3->SetResourceViewBuffer(ssaoMap->GetSRV().Get(), "SSAO");
+		_light_PBR_PS3->ConstantBufferUpdate(&LightManager::cbLightBuffer, "cbLight");
+		_light_PBR_PS3->ConstantBufferUpdate(&cbTextureBuf, "cbTexture");
 
-	_light_PS->Update();
+		_light_PBR_PS3->Update();
+	}
+	else if (ssaoMap != nullptr && !isShadow)
+	{
+		_light_PBR_PS2->SetResourceViewBuffer(gBuffers[0]->GetSRV().Get(), "DMRAO");
+		_light_PBR_PS2->SetResourceViewBuffer(gBuffers[1]->GetSRV().Get(), "Normal");
+		_light_PBR_PS2->SetResourceViewBuffer(gBuffers[2]->GetSRV().Get(), "Position");
+		_light_PBR_PS2->SetResourceViewBuffer(gBuffers[3]->GetSRV().Get(), "Albedo");
+		_light_PBR_PS2->SetResourceViewBuffer(gBuffers[4]->GetSRV().Get(), "Emissive");
+		_light_PBR_PS2->AddShaderResourceViewData("SSAO", 6);
+		_light_PBR_PS2->SetResourceViewBuffer(ssaoMap->GetSRV().Get(), "SSAO");
+		_light_PBR_PS2->ConstantBufferUpdate(&LightManager::cbLightBuffer, "cbLight");
+		//_light_PBR_PS2->ConstantBufferUpdate(&cbTextureBuf, "cbTexture");
+
+		_light_PBR_PS2->Update();
+	}
+	else if(ssaoMap == nullptr && isShadow)
+	{
+		_light_PBR_PS1->SetResourceViewBuffer(gBuffers[0]->GetSRV().Get(), "DMRAO");
+		_light_PBR_PS1->SetResourceViewBuffer(gBuffers[1]->GetSRV().Get(), "Normal");
+		_light_PBR_PS1->SetResourceViewBuffer(gBuffers[2]->GetSRV().Get(), "Position");
+		_light_PBR_PS1->SetResourceViewBuffer(gBuffers[3]->GetSRV().Get(), "Albedo");
+		_light_PBR_PS1->SetResourceViewBuffer(gBuffers[4]->GetSRV().Get(), "Emissive");
+		_light_PBR_PS1->AddShaderResourceViewData("Shadow", 5);
+		_light_PBR_PS1->SetResourceViewBuffer(shadowDSV->GetShaderResourceView().Get(), "Shadow");
+		_light_PBR_PS1->ConstantBufferUpdate(&LightManager::cbLightBuffer, "cbLight");
+		_light_PBR_PS1->ConstantBufferUpdate(&cbTextureBuf, "cbTexture");
+		
+		_light_PBR_PS1->Update();
+	}
+	else if (ssaoMap == nullptr && !isShadow)
+	{
+		_light_PBR_PS->SetResourceViewBuffer(gBuffers[0]->GetSRV().Get(), "DMRAO");
+		_light_PBR_PS->SetResourceViewBuffer(gBuffers[1]->GetSRV().Get(), "Normal");
+		_light_PBR_PS->SetResourceViewBuffer(gBuffers[2]->GetSRV().Get(), "Position");
+		_light_PBR_PS->SetResourceViewBuffer(gBuffers[3]->GetSRV().Get(), "Albedo");
+		_light_PBR_PS->SetResourceViewBuffer(gBuffers[4]->GetSRV().Get(), "Emissive");
+		_light_PBR_PS->ConstantBufferUpdate(&LightManager::cbLightBuffer, "cbLight");
+		//_light_PBR_PS->ConstantBufferUpdate(&cbTextureBuf, "cbTexture");
+
+		_light_PBR_PS->Update();
+	}
 
 	g_deviceContext->RSSetState(ResourceManager::Get()->GetMesh(SCREEN_MESH)->GetRasterState().Get());
 

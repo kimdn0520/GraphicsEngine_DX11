@@ -25,10 +25,10 @@ struct PS_OUT
 
 Texture2D AlbedoMap : register(t0);
 Texture2D NormalMap : register(t1);
-Texture2D EmissiveMap : register(t2);
-Texture2D MetallicMap : register(t3);
-Texture2D RoughnessMap : register(t4);
-Texture2D AmbientOcclusionMap : register(t5);
+Texture2D MetallicMap : register(t2);
+Texture2D RoughnessMap : register(t3);
+Texture2D AmbientOcclusionMap : register(t4);
+Texture2D EmissiveMap : register(t5);
 
 SamplerState samLinearClamp : register(s0);
 

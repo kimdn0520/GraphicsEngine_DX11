@@ -26,7 +26,16 @@ private:
 
 private:
 	std::shared_ptr<VertexShader> _quad_VS;
+
 	std::shared_ptr<PixelShader> _light_PS;
+
+	std::shared_ptr<PixelShader> _light_PBR_PS;
+	std::shared_ptr<PixelShader> _light_PBR_PS1;
+	std::shared_ptr<PixelShader> _light_PBR_PS2;
+	std::shared_ptr<PixelShader> _light_PBR_PS3;
+
+public:
+	bool isShadow = false;
 
 public:
 	void Start() override;
@@ -37,7 +46,7 @@ public:
 
 	void RenderStart();
 
-	void Render(const std::vector<std::shared_ptr<RenderTargetView>> gBuffers, std::shared_ptr<DepthStencilView> shadowDSV);
+	void Render(const std::vector<std::shared_ptr<RenderTargetView>> gBuffers, std::shared_ptr<DepthStencilView> shadowDSV, std::shared_ptr<RenderTargetView> ssaoMap);
 
 	void RenderEnd();
 };

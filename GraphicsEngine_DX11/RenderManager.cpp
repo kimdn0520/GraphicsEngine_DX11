@@ -74,7 +74,7 @@ void RenderManager::Render()
 	// SSAO
 	
 	// 라이트 렌더 (디퍼드에서 모아놓은 텍스쳐에 빛 지연 연산)
-	_lightPass->Render(_deferredPass->gBuffers, _shadowPass->shadowDSV);
+	_lightPass->Render(_deferredPass->gBuffers, _shadowPass->shadowDSV, nullptr);
 
 	// 포스트 프로세싱
 	

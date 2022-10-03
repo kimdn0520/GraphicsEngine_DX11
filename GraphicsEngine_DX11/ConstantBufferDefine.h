@@ -75,13 +75,7 @@ __declspec(align(16)) struct cbPerObject
 	Matrix gWorld;
 	Matrix gWorldViewProj;
 	Matrix gWorldInvTranspose;
-	Matrix gBoneTransforms[96];
 
-	unsigned int objectID;
-};
-
-__declspec(align(16)) struct cbSkinned
-{
 	Matrix gBoneTransforms[96];
 };
 
@@ -100,14 +94,17 @@ __declspec(align(16)) struct cbLight
 
 __declspec(align(16)) struct cbMaterial
 {
-	Vector4 gMaterialAmbient;
-	Vector4 gMaterialDiffuse;
-	Vector4 gMaterialSpecular;
-	Vector4 gMaterialReflection;
+	float metallic;
+	float roughness;
+	Vector2 pad;
 
-	BOOL isDiffuseTexture;			// hlsl에서 bool타입은 4byte 이므로 일로 구조체 넘겨줄때 BOOL로 넘겨줘야한대
-	BOOL isNormalTexture;
-	BOOL isSpecularTexture;
+	BOOL isAlbedo;			// hlsl에서 bool타입은 4byte 이므로 일로 구조체 넘겨줄때 BOOL로 넘겨줘야한대
+	BOOL isNormal;
+	BOOL isMetallic;
+	BOOL isRoughness;
+	BOOL isAO;
+	BOOL isEmissive;
+
 	BOOL isLight = true;
 };
 

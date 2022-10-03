@@ -11,6 +11,13 @@ ShaderBase::ShaderBase(SHADER_TYPE shaderType, std::wstring shaderName)
 ShaderBase::~ShaderBase()
 {}
 
+void ShaderBase::AddShaderResourceViewData(std::string name, int registerSlot)
+{
+	_shaderResourceViewData[name] = std::make_shared<ShaderResourceBuffer>(name, registerSlot);
+	
+	_shaderResourceViews.resize(_shaderResourceViews.size() + 1);
+}
+
 void ShaderBase::ReleaseData()
 {
 	for (auto it : _constantBufferData)

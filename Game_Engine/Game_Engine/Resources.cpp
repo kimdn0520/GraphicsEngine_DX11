@@ -384,15 +384,12 @@ std::vector<std::shared_ptr<GameObject>> Resources::LoadASE(std::string path, in
 			for (auto& mat : aseModel->materials)
 			{
 				std::shared_ptr<Material> material = std::make_shared<Material>();
-				material->ambient = mat->ambient;
-				material->diffuse = mat->diffuse;
-				material->specular = mat->specular;
-				material->diffuseTexture = mat->diffuseTexName;
-				material->normalTexture = mat->normalTexName;
-				material->specularTexture = mat->specularTexName;
-				material->isDiffuse = mat->isDiffuse;
+				material->metallic = 0.1f;
+				material->roughness = 0.8f;
+				material->albedoMap = mat->diffuseTexName;
+				material->normalMap = mat->normalTexName;
+				material->isAlbedo = mat->isDiffuse;
 				material->isNormal = mat->isNormal;
-				material->isSpecular = mat->isSpecular;
 				
 				gameObject->GetComponent<MeshRenderer>()->SetMaterial(material); 
 			}

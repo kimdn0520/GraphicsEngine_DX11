@@ -114,15 +114,12 @@ void ShadowPass::Render(std::vector<std::shared_ptr<ObjectInfo>> meshs)
 		{
 			cbPerObject cbPerObejctBuffer;
 			cbPerObejctBuffer.gWorld = mesh->worldTM;
-			cbPerObejctBuffer.objectID = mesh->objectID;
 
 			// Skinned Mesh
 			if (mesh->isSkinned)
 			{
-				cbSkinned cbSkinnedBuffer;
-				memcpy(&cbSkinnedBuffer.gBoneTransforms, mesh->finalBoneListMatrix, sizeof(Matrix) * 96);
+				memcpy(&cbPerObejctBuffer.gBoneTransforms, mesh->finalBoneListMatrix, sizeof(Matrix) * 96);
 				_shadow_Skinned_VS->ConstantBufferUpdate(&cbPerObejctBuffer, "cbPerObject");
-				_shadow_Skinned_VS->ConstantBufferUpdate(&cbSkinnedBuffer, "cbSkinned");
 				_shadow_Skinned_VS->ConstantBufferUpdate(&cbLightViewProjBuffer, "cbLightViewProj");
 				_shadow_Skinned_VS->Update();
 			}

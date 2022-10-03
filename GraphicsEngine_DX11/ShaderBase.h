@@ -2,6 +2,7 @@
 #include "Graphics_Interface.h"
 #include "ShaderResource.h"
 #include "Device.h"
+#include <string>
 
 enum class SHADER_TYPE
 {
@@ -32,6 +33,9 @@ protected:
 public:
 	std::unordered_map<std::string, std::shared_ptr<ConstantBuffer>>& GetConstantBufferData() { return _constantBufferData; }
 	std::unordered_map<std::string, std::shared_ptr<SamplerBuffer>>& GetSamplerStateData() { return _samplerStateData; }
+	std::unordered_map<std::string, std::shared_ptr<ShaderResourceBuffer>>& GetShaderResourceViewData() { return _shaderResourceViewData; }
+
+	void AddShaderResourceViewData(std::string name, int registerSlot);
 
 	void ReleaseData();
 

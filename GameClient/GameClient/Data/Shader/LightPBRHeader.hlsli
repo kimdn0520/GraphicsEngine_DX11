@@ -310,3 +310,34 @@ float3 NormalSampleToWorldSpace(float3 normalMapSample, float3 unitNormalW, floa
 
     return bumpedNormalW;
 }
+
+float CalcShadowFactor(SamplerComparisonState samShadow,
+    Texture2D shadowMap,
+    float3 shadowPosNDC, float4 textureInfo)
+{
+    // Depth in NDC space.
+    float depth = shadowPosNDC.z;
+
+    // Ω¶µµøÏ ∏ ¿« ≈ÿºø ≈©±‚
+    const float dx = textureInfo.z;
+
+    const float dy = textureInfo.w;
+
+    float shadowFactor = 0.0f;
+
+    const float2 offset[9] =
+    {
+        float2(-dx, -dy), float2(0.0f, -dy), float2(dx, -dy),
+        float2(-dx, 0.0f), float2(0.0f, 0.0f), float2(dx, 0.0f),
+        float2(-dx, +dy), float2(0.0f, +dy), float2(dx, +dy)
+    };
+
+    [unroll]
+    for (int i = 0; i < 9; ++i)
+    {
+        shadowFactor += shadowMap.SampleCmpLevelZero(samShadow,
+            shadowPosNDC.xy + offset[i], depth).r;
+    }
+
+    return shadowFactor /= 9.0f;
+}
