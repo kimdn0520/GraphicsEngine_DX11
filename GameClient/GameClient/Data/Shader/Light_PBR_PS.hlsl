@@ -30,7 +30,7 @@ SamplerComparisonState samLinearPointBoarder : register(s1);
 
 float4 Light_PBR_PS(LightPixelIN input) : SV_Target
 {
-	float depth = DMRAO.Sample(samLinearClamp, input.uv).x;
+	float4 depth = DMRAO.Sample(samLinearClamp, input.uv).xyzw;
 
 	float3 normal = Normal.Sample(samLinearClamp, input.uv).xyz;
 
@@ -76,19 +76,19 @@ float4 Light_PBR_PS(LightPixelIN input) : SV_Target
 
 	if (isLight)
 	{
-		float3 litColor = PBR_DirectionalLight(toEye, normal, gDirLight[0],
-			albedo, ambientOcclusion, roughness, metallic, shadowVal);
+		litColor = PBR_DirectionalLight(toEye, normal, gDirLight[0],
+			albedo.xyz, ambientOcclusion, roughness, metallic, shadowVal);
 
 		litColor += PBR_PointLight(toEye, normal, gPointLight, gPointLightCnt, position.xyz,
-			albedo, ambientOcclusion, roughness, metallic);
+			albedo.xyz, ambientOcclusion, roughness, metallic);
 
 		litColor += PBR_SpotLight(toEye, normal, gSpotLight, gSpotLightCnt, position.xyz,
-			albedo, ambientOcclusion, roughness, metallic);
+			albedo.xyz, ambientOcclusion, roughness, metallic);
 
 		litColor += emissive;
 	}
 
-	litColor += float3(depth - depth + emissive.x - emissive.x,
+	litColor += float3(depth.z - depth.z + emissive.x - emissive.x,
 					   normal.z - normal.z,
 					   albedo.x - albedo.x);
 

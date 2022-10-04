@@ -385,7 +385,7 @@ std::vector<std::shared_ptr<GameObject>> Resources::LoadASE(std::string path, in
 			{
 				std::shared_ptr<Material> material = std::make_shared<Material>();
 				material->metallic = 0.1f;
-				material->roughness = 0.8f;
+				material->roughness = 0.1f;
 				material->albedoMap = mat->diffuseTexName;
 				material->normalMap = mat->normalTexName;
 				material->isAlbedo = mat->isDiffuse;

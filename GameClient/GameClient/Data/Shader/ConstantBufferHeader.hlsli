@@ -1,3 +1,6 @@
+#define DIRECTION_LIGHT_COUNT 1
+#define POINT_LIGHT_COUNT 30
+#define SPOT_LIGHT_COUNT 30
 
 cbuffer cbPerObject : register(b0)
 {

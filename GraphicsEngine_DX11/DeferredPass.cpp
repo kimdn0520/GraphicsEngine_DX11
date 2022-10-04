@@ -184,7 +184,6 @@ void DeferredPass::Render(std::vector<std::shared_ptr<ObjectInfo>> meshs, std::s
 				if (mat->isEmissive)
 					_model_PBR_PS->SetResourceViewBuffer(mat->emissiveMap, "EmissiveMap");
 				
-				//_model_PBR_PS->ConstantBufferUpdate(&cbPerObejctBuffer, "cbPerObject");
 				_model_PBR_PS->ConstantBufferUpdate(&cbMaterialBuffer, "cbMaterial");
 
 				_model_PBR_PS->Update();

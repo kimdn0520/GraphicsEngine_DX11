@@ -15,7 +15,7 @@ void ShaderBase::AddShaderResourceViewData(std::string name, int registerSlot)
 {
 	_shaderResourceViewData[name] = std::make_shared<ShaderResourceBuffer>(name, registerSlot);
 	
-	_shaderResourceViews.resize(_shaderResourceViews.size() + 1);
+	_shaderResourceViews.resize(_shaderResourceViewData.size());
 }
 
 void ShaderBase::ReleaseData()

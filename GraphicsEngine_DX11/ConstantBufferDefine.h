@@ -14,11 +14,11 @@ struct DirectionalLight
 {
 	DirectionalLight() { ZeroMemory(this, sizeof(this)); }
 
-	Vector4 Ambient;
-	Vector4 Diffuse;
-	Vector4 Specular;
-	Vector3 Direction;
-	float Pad; // Pad the last float so we can set an array of lights if we wanted.
+	Vector3 color;
+	float power;
+
+	Vector3 direction;
+	float pad;
 
 	Matrix LightViewProj;
 };
@@ -27,18 +27,11 @@ struct PointLight
 {
 	PointLight() { ZeroMemory(this, sizeof(this)); }
 
-	Vector4 Ambient;
-	Vector4 Diffuse;
-	Vector4 Specular;
+	Vector3 color;
+	float power;
 
-	// Packed into 4D vector: (Position, Range)
-	// 셰이더에 들어갈때 4차원 벡터에 하나씩 박히나봐욤 331쪽 참고
-	Vector3 Position;
-	float Range;
-
-	// Packed into 4D vector: (A0, A1, A2, Pad)
-	Vector3 Att;
-	float Pad; // Pad the last float so we can set an array of lights if we wanted.
+	Vector3 position;
+	float range;
 
 	Matrix LightViewProj;
 };
@@ -47,22 +40,14 @@ struct SpotLight
 {
 	SpotLight() { ZeroMemory(this, sizeof(this)); }
 
-	Vector4 Ambient;
-	Vector4 Diffuse;
-	Vector4 Specular;
+	Vector3 color;
+	float power;
 
-	// Packed into 4D vector: (Position, Range)
-	Vector3 Position;
-	float Range;
+	Vector3 direction;
+	float halfAngle;
 
-	// Packed into 4D vector: (Direction, Spot)
-	Vector3 Direction;
-	float Spot;
-
-	// Packed into 4D vector: (Att, Pad)
-	Vector3 Att;
-	float Pad; // Pad the last float so we can set an array of lights if we wanted.
-	// Vector3면 빈 pad를 넣어줌
+	Vector3 position;
+	float range;
 
 	Matrix LightViewProj;
 };

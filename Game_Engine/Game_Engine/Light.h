@@ -52,12 +52,10 @@ public:
 
 	GameEngine_DLL void SetLightDirection(const Vector3& direction);
 
-	GameEngine_DLL void SetDiffuse(const Vector4& diffuse) { _lightInfo->diffuse = diffuse; }
-	GameEngine_DLL void SetAmbient(const Vector4& ambient) { _lightInfo->ambient = ambient; }
-	GameEngine_DLL void SetSpecular(const Vector4& specular) { _lightInfo->specular = specular; }
-	GameEngine_DLL void SetATT(const Vector3& att) { _lightInfo->att = att; }
+	GameEngine_DLL void SetColor(const Vector3& color) { _lightInfo->color = color; }
+	GameEngine_DLL void SetPower(float power) { _lightInfo->power = power; }
 	GameEngine_DLL void SetRange(float range) { _lightInfo->range = range; }
-	GameEngine_DLL void SetSpot(float spot) { _lightInfo->spot = spot; }
+	GameEngine_DLL void SetHalfAngle(float halfAngle) { _lightInfo->halfAngle = halfAngle; }
 
 	void SetLightViewProj();
 

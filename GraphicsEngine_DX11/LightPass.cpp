@@ -41,6 +41,9 @@ void LightPass::Release()
 
 	_quad_VS.reset();
 	_light_PBR_PS.reset();
+	_light_PBR_PS1.reset();
+	_light_PBR_PS2.reset();
+	_light_PBR_PS3.reset();
 }
 
 void LightPass::OnResize(int width, int height)
@@ -121,12 +124,17 @@ void LightPass::Render(const std::vector<std::shared_ptr<RenderTargetView>> gBuf
 	}
 	else if (ssaoMap == nullptr && !isShadow)
 	{
+		/*_light_PBR_PS->AddShaderResourceViewData("DMRAO", 0);
+		_light_PBR_PS->AddShaderResourceViewData("Normal", 1);
+		_light_PBR_PS->AddShaderResourceViewData("Position", 2);
+		_light_PBR_PS->AddShaderResourceViewData("Albedo", 3);
+		_light_PBR_PS->AddShaderResourceViewData("Emissive", 4);*/
+		_light_PBR_PS->ConstantBufferUpdate(&LightManager::cbLightBuffer, "cbLight");
 		_light_PBR_PS->SetResourceViewBuffer(gBuffers[0]->GetSRV().Get(), "DMRAO");
 		_light_PBR_PS->SetResourceViewBuffer(gBuffers[1]->GetSRV().Get(), "Normal");
 		_light_PBR_PS->SetResourceViewBuffer(gBuffers[2]->GetSRV().Get(), "Position");
 		_light_PBR_PS->SetResourceViewBuffer(gBuffers[3]->GetSRV().Get(), "Albedo");
 		_light_PBR_PS->SetResourceViewBuffer(gBuffers[4]->GetSRV().Get(), "Emissive");
-		_light_PBR_PS->ConstantBufferUpdate(&LightManager::cbLightBuffer, "cbLight");
 		//_light_PBR_PS->ConstantBufferUpdate(&cbTextureBuf, "cbTexture");
 
 		_light_PBR_PS->Update();

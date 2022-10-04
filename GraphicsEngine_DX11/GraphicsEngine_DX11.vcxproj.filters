@@ -296,13 +296,13 @@
     <FxCompile Include="..\GameClient\GameClient\Data\Shader\Debug_PS.hlsl">
       <Filter>Shader\HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="..\GameClient\GameClient\Data\Shader\Light_PBR_PS.hlsl">
-      <Filter>Shader\HLSL</Filter>
-    </FxCompile>
     <FxCompile Include="..\GameClient\GameClient\Data\Shader\Model_PBR_PS.hlsl">
       <Filter>Shader\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="..\GameClient\GameClient\Data\Shader\Model_PBR_VS.hlsl">
+      <Filter>Shader\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="..\GameClient\GameClient\Data\Shader\Light_PBR_PS.hlsl">
       <Filter>Shader\HLSL</Filter>
     </FxCompile>
   </ItemGroup>

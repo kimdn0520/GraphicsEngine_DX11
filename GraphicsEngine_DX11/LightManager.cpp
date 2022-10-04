@@ -85,32 +85,27 @@ void LightManager::Update()
 
 	for (auto it = dirLights.begin(); it != dirLights.end(); ++it)
 	{
-		cbLightBuffer.gDirLight[i].Ambient = it->second->ambient;
-		cbLightBuffer.gDirLight[i].Diffuse = it->second->diffuse;
-		cbLightBuffer.gDirLight[i].Specular = it->second->specular;
-		cbLightBuffer.gDirLight[i].Direction = it->second->direction;
+		cbLightBuffer.gDirLight[i].color = it->second->color;
+		cbLightBuffer.gDirLight[i].power = it->second->power;
+		cbLightBuffer.gDirLight[i].direction = it->second->direction;
 	}
 	i = 0;
 	for (auto it = pointLights.begin(); it != pointLights.end(); ++it, i++)
 	{
-		cbLightBuffer.gPointLight[i].Ambient = it->second->ambient;
-		cbLightBuffer.gPointLight[i].Diffuse = it->second->diffuse;
-		cbLightBuffer.gPointLight[i].Specular = it->second->specular;
-		cbLightBuffer.gPointLight[i].Position = it->second->position;
-		cbLightBuffer.gPointLight[i].Att = it->second->att;
-		cbLightBuffer.gPointLight[i].Range = it->second->range;
+		cbLightBuffer.gPointLight[i].color = it->second->color;
+		cbLightBuffer.gPointLight[i].power = it->second->power;
+		cbLightBuffer.gPointLight[i].position = it->second->position;
+		cbLightBuffer.gPointLight[i].range = it->second->range;
 	}
 	i = 0;
 	for (auto it = spotLights.begin(); it != spotLights.end(); ++it, i++)
 	{
-		cbLightBuffer.gSpotLight[i].Ambient = it->second->ambient;
-		cbLightBuffer.gSpotLight[i].Diffuse = it->second->diffuse;
-		cbLightBuffer.gSpotLight[i].Specular = it->second->specular;
-		cbLightBuffer.gSpotLight[i].Position = it->second->position;
-		cbLightBuffer.gSpotLight[i].Direction = it->second->direction;
-		cbLightBuffer.gSpotLight[i].Att = it->second->att;
-		cbLightBuffer.gSpotLight[i].Range = it->second->range;
-		cbLightBuffer.gSpotLight[i].Spot = it->second->spot;
+		cbLightBuffer.gSpotLight[i].color = it->second->color;
+		cbLightBuffer.gSpotLight[i].power = it->second->power;
+		cbLightBuffer.gSpotLight[i].halfAngle = it->second->halfAngle;
+		cbLightBuffer.gSpotLight[i].position = it->second->position;
+		cbLightBuffer.gSpotLight[i].direction = it->second->direction;
+		cbLightBuffer.gSpotLight[i].range = it->second->range;
 	}
 }
 
