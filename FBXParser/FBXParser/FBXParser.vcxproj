@@ -130,7 +130,8 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)Library\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Library\inc\FBX;$(SolutionDir)Library\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -151,7 +152,8 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)Library\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Library\inc\FBX;$(SolutionDir)Library\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -165,12 +167,15 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="inc\ParserData\ParserData.h" />
     <ClInclude Include="inc\Serializer\BinarySerializer.h" />
     <ClInclude Include="inc\FBXParser\FBXParserDLL.h" />
     <ClInclude Include="inc\FBXParser\FBXParser.h" />
     <ClInclude Include="inc\pch.h" />
+    <ClInclude Include="inc\ParserBase\ParserBase.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\ParserBase\ParserBase.cpp" />
     <ClCompile Include="src\Serializer\BinarySerializer.cpp" />
     <ClCompile Include="src\DLLMain\dllmain.cpp" />
     <ClCompile Include="src\FBXParser\FBXParser.cpp" />

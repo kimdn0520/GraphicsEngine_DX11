@@ -10,5 +10,23 @@
 #define WIN32_LEAN_AND_MEAN             // 거의 사용되지 않는 내용을 Windows 헤더에서 제외합니다.
 // Windows 헤더 파일
 #include <windows.h>
+#include "fbxsdk.h"
+#include <algorithm>
+#include <filesystem>
+#include <string>
+#include <vector>
+#include <memory>
+
+namespace fs = std::filesystem;
+
+#ifdef _DEBUG
+#pragma comment(lib, "..\\..\\Library\\lib\\FBX\\debug\\libfbxsdk-md.lib")
+#pragma comment(lib, "..\\..\\Library\\lib\\FBX\\debug\\libxml2-md.lib")
+#pragma comment(lib, "..\\..\\Library\\lib\\FBX\\debug\\zlib-md.lib")
+#else
+#pragma comment(lib, "..\\..\\Library\\lib\\FBX\\release\libfbxsdk-md.lib")
+#pragma comment(lib, "..\\..\\Library\\lib\\FBX\\release\libxml2-md.lib")
+#pragma comment(lib, "..\\..\\Library\\lib\\FBX\\release\\zlib-md.lib")
+#endif
 
 #endif //PCH_H

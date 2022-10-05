@@ -45,6 +45,6 @@ public:
 
 	GameEngine_DLL std::vector<std::shared_ptr<GameObject>> LoadASE(std::string path, int topology, int rasterizerState);
 
-	// GameEngine_DLL MeshData* LoadFBX(const wstring& path, int topology, int rasterizerState, int pass);
+	std::vector<std::shared_ptr<GameObject>> LoadFBX(std::string path, int topology, int rasterizerState);
 };
 

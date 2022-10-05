@@ -27,6 +27,12 @@
     <ClInclude Include="inc\Serializer\BinarySerializer.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="inc\ParserData\ParserData.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\ParserBase\ParserBase.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\DLLMain\dllmain.cpp">
@@ -39,6 +45,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="src\Serializer\BinarySerializer.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ParserBase\ParserBase.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

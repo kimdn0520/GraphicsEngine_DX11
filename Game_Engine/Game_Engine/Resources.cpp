@@ -435,3 +435,17 @@ std::vector<std::shared_ptr<GameObject>> Resources::LoadASE(std::string path, in
 	return gameObjects;
 }
 
+std::vector<std::shared_ptr<GameObject>> Resources::LoadFBX(std::string path, int topology, int rasterizerState)
+{
+	// fbx 모델 준비..
+	//shared_ptr<ParserBase> fbxLoader = ParserBase::Create();
+	
+	// fbx 모델 로드
+	//shared_ptr<NoobLoader::FbxModel> fbxModel = fbxLoader->LoadFbx(path);
+
+	// 게임오브젝트들로 바꾸어서 반환할거임.
+	vector<std::shared_ptr<GameObject>> gameObjects;
+
+	return gameObjects;
+}
+
