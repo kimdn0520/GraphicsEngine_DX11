@@ -12,13 +12,13 @@ struct DebugPixelIN
 	float3 tangent : TANGENT;
 };
 
-Texture2D Depth : register(t0);
+Texture2D Albedo : register(t0);
 
-Texture2D Normal : register(t1);
+Texture2D Depth : register(t1);
 
-Texture2D Position : register(t2);
+Texture2D Normal : register(t2);
 
-Texture2D Albedo : register(t3);
+Texture2D Position : register(t3);
 
 Texture2D Shadow : register(t4);
 

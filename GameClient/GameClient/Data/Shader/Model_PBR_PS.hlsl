@@ -16,10 +16,10 @@ struct ModelPixelIn
 
 struct PS_OUT
 {
-	float4 DMRAO    : SV_Target0;			// Depth, Metallic, Roughness, Ambient Occlusion
-	float4 normal   : SV_Target1;
-	float4 pos	    : SV_Target2;
-	float4 albedo   : SV_Target3;
+	float4 albedo   : SV_Target0;
+	float4 DMRAO    : SV_Target1;			// Depth, Metallic, Roughness, Ambient Occlusion
+	float4 normal   : SV_Target2;
+	float4 pos	    : SV_Target3;
 	float4 emissive : SV_Target4;
 };
 

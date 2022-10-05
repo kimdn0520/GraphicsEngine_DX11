@@ -305,6 +305,12 @@
     <FxCompile Include="..\GameClient\GameClient\Data\Shader\Light_PBR_PS.hlsl">
       <Filter>Shader\HLSL</Filter>
     </FxCompile>
+    <FxCompile Include="..\GameClient\GameClient\Data\Shader\Skybox_VS.hlsl">
+      <Filter>Shader\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="..\GameClient\GameClient\Data\Shader\Skybox_PS.hlsl">
+      <Filter>Shader\HLSL</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\GameClient\GameClient\Data\Shader\LightHeader.hlsli">

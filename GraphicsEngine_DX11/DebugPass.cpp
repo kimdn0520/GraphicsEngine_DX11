@@ -38,11 +38,10 @@ void DebugPass::Render()
 {
 	_quad_VS->Update();
 
-	_debug_PS->SetResourceViewBuffer(_deferredPass->gBuffers[0]->GetSRV().Get(), "Depth");
-	_debug_PS->SetResourceViewBuffer(_deferredPass->gBuffers[1]->GetSRV().Get(), "Normal");
-	_debug_PS->SetResourceViewBuffer(_deferredPass->gBuffers[2]->GetSRV().Get(), "Position");
-	_debug_PS->SetResourceViewBuffer(_deferredPass->gBuffers[3]->GetSRV().Get(), "Albedo");
-	//_debug_PS->SetResourceViewBuffer(_deferredPass->gBuffers[4]->GetSRV().Get(), "ObjectID");
+	_debug_PS->SetResourceViewBuffer(_deferredPass->gBuffers[0]->GetSRV().Get(), "Albedo");
+	_debug_PS->SetResourceViewBuffer(_deferredPass->gBuffers[1]->GetSRV().Get(), "Depth");
+	_debug_PS->SetResourceViewBuffer(_deferredPass->gBuffers[2]->GetSRV().Get(), "Normal");
+	_debug_PS->SetResourceViewBuffer(_deferredPass->gBuffers[3]->GetSRV().Get(), "Position");
 	_debug_PS->SetResourceViewBuffer(_shadowPass->shadowDSV->GetShaderResourceView().Get(), "Shadow");
 
 	_debug_PS->Update();

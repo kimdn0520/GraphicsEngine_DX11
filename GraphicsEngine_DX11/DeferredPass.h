@@ -32,15 +32,12 @@ private:
 	std::shared_ptr<ViewPort> _screenViewPort;
 
 private:
-	//std::shared_ptr<VertexShader> _model_VS;
-	//std::shared_ptr<VertexShader> _model_Skinned_VS;
-	//std::shared_ptr<PixelShader> _model_PS;
-
 	std::shared_ptr<VertexShader> _model_PBR_VS;
 	std::shared_ptr<VertexShader> _model_PBR_Skinned_VS;
 	std::shared_ptr<PixelShader> _model_PBR_PS;
 
-	std::shared_ptr<VertexShader> _quad_VS;
+	std::shared_ptr<VertexShader> _skybox_VS;
+	std::shared_ptr<PixelShader> _skybox_PS;
 
 public:
 	void Start() override;

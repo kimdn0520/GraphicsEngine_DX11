@@ -31,6 +31,12 @@
       <FullPath>D:\GraphicsEngine_DX11\Library\lib\Shadow_VS.cso</FullPath>
     </ContentFile>
     <ContentFile>
+      <FullPath>D:\GraphicsEngine_DX11\Library\lib\Skybox_PS.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>D:\GraphicsEngine_DX11\Library\lib\Skybox_VS.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
       <FullPath>D:\GraphicsEngine_DX11\Library\lib\ToneMapping_PS.cso</FullPath>
     </ContentFile>
   </ContentFiles>

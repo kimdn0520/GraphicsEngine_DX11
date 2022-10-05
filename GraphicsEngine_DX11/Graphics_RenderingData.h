@@ -26,6 +26,8 @@ struct Material
 	std::wstring AOMap;
 	std::wstring emissiveMap;
 
+	std::wstring cubeMap;
+
 	float metallic;
 	float roughness;
 };

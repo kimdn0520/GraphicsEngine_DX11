@@ -48,6 +48,9 @@ void ShaderManager::CreateAllShaders()
 
 	CreateShader(SHADER_TYPE::PIXEL, L"ToneMapping_PS.hlsl", _filepath, "ToneMapping_PS", L"ToneMapping_PS", nullptr);
 
+	CreateShader(SHADER_TYPE::VERTEX, L"Skybox_VS.hlsl", _filepath, "Skybox_VS", L"Skybox_VS", nullptr);
+	CreateShader(SHADER_TYPE::PIXEL, L"Skybox_PS.hlsl", _filepath, "Skybox_PS", L"Skybox_PS", nullptr);
+
 	SetInfo();
 	AddConstantBuffer();
 	AddSamplerBuffer();

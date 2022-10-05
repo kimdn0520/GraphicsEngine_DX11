@@ -28,6 +28,22 @@ void TestScene::Initialize()
 	AddGameObject(camera);
 
 	//---------------------------------------------------------------------------------------------------------
+	// SkyBox
+	//---------------------------------------------------------------------------------------------------------
+	shared_ptr<GameObject> skyBox = make_shared<GameObject>();
+	skyBox->SetName("SkyBox");
+	skyBox->AddComponent<Transform>();
+	skyBox->AddComponent<MeshRenderer>();
+	skyBox->GetComponent<MeshRenderer>()->SetMeshID(1);
+	skyBox->GetComponent<MeshRenderer>()->GetObjectInfo()->type = OBJECT_TYPE::SKY_BOX;
+	skyBox->GetComponent<MeshRenderer>()->GetObjectInfo()->isShadow = false;
+	shared_ptr<Material> skyBoxMaterial = make_shared<Material>();
+	skyBoxMaterial->isLight = false;
+	skyBoxMaterial->cubeMap = TEXT("daylight.dds");
+	skyBox->GetComponent<MeshRenderer>()->SetMaterial(skyBoxMaterial);
+	AddGameObject(skyBox);
+
+	//---------------------------------------------------------------------------------------------------------
 	// Directional Light
 	//---------------------------------------------------------------------------------------------------------
 	shared_ptr<GameObject> dirLight = make_shared<GameObject>();
@@ -38,22 +54,9 @@ void TestScene::Initialize()
 	dirLight->GetComponent<Light>()->SetLightType(LIGHT_TYPE::DIRECTIONAL_LIGHT);
 	dirLight->GetComponent<Light>()->SetLightDirection(Vector3(0.5f, -0.5f, 0.5f));
 	dirLight->GetComponent<Light>()->SetColor(Vector3(0.7f, 0.7f, 0.7f));
-	dirLight->GetComponent<Light>()->SetPower(1.f);
+	dirLight->GetComponent<Light>()->SetPower(5.f);
 	dirLight->GetComponent<Light>()->SendLightInfo();
 	AddGameObject(dirLight);
-
-	//---------------------------------------------------------------------------------------------------------
-	// SkyBox
-	//---------------------------------------------------------------------------------------------------------
-	/*shared_ptr<GameObject> skyBox = make_shared<GameObject>();
-	skyBox->SetName("SkyBox");
-	skyBox->AddComponent<Transform>();
-	skyBox->AddComponent<MeshRenderer>();
-	skyBox->GetComponent<MeshRenderer>()->SetMesh((int)MeshName::SphereMesh);
-	skyBox->GetComponent<MeshRenderer>()->GetMeshInfo()->materialID = DataManager::GetInstance()->GetSkyBoxId();
-	skyBox->GetComponent<MeshRenderer>()->GetMeshInfo()->type = OBJECT_TYPE::SKY_BOX;
-	Resources::GetInstance()->SetCubeMapTexture(skyBox->GetComponent<MeshRenderer>()->GetMeshInfo()->materialID, L"daylight.dds");
-	AddGameObject(skyBox);*/
 
 	//---------------------------------------------------------------------------------------------------------
 	// Axis
@@ -73,12 +76,12 @@ void TestScene::Initialize()
 	box->SetName("box");
 	box->AddComponent<Transform>();
 	box->GetComponent<Transform>()->SetLocalPosition(DirectX::SimpleMath::Vector3(0.f, 0.f, 0.f));
-	box->GetComponent<Transform>()->SetLocalScale(DirectX::SimpleMath::Vector3(5.f, 1.0f, 5.f));
+	box->GetComponent<Transform>()->SetLocalScale(DirectX::SimpleMath::Vector3(20.f, 1.0f, 20.f));
 	box->AddComponent<MeshRenderer>();
 	box->GetComponent<MeshRenderer>()->SetMeshID(0);				// cube´Â 0
 	shared_ptr<Material> boxMaterial = make_shared<Material>();
-	boxMaterial->metallic = 0.1f;
-	boxMaterial->roughness = 0.8f;
+	boxMaterial->metallic = 0.0f;
+	boxMaterial->roughness = 0.0f;
 	box->GetComponent<MeshRenderer>()->SetMaterial(boxMaterial);
 	//box->GetComponent<MeshRenderer>()->IsShadow(false);			// ÀÌ³à¼®Àº ¼¨µµ¿ì ¾ÈÇÒ°Çµ­~
 	AddGameObject(box);

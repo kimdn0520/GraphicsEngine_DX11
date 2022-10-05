@@ -11,13 +11,13 @@ struct LightPixelIN
 	float3 tangent	   : TANGENT;
 };
 
-Texture2D DMRAO : register(t0);			// depth, metallic, roughness, ambient occlusion
+Texture2D Albedo : register(t0);
 
-Texture2D Normal : register(t1);
+Texture2D DMRAO : register(t1);			// depth, metallic, roughness, ambient occlusion
 
-Texture2D Position : register(t2);
+Texture2D Normal : register(t2);
 
-Texture2D Albedo : register(t3);
+Texture2D Position : register(t3);
 
 Texture2D Emissive : register(t4);
 
@@ -30,7 +30,7 @@ SamplerComparisonState samLinearPointBoarder : register(s1);
 
 float4 Light_PBR_PS(LightPixelIN input) : SV_Target
 {
-	float4 depth = DMRAO.Sample(samLinearClamp, input.uv).xyzw;
+	float depth = DMRAO.Sample(samLinearClamp, input.uv).x;
 
 	float3 normal = Normal.Sample(samLinearClamp, input.uv).xyz;
 
@@ -87,10 +87,10 @@ float4 Light_PBR_PS(LightPixelIN input) : SV_Target
 
 		litColor += emissive;
 	}
-
-	litColor += float3(depth.z - depth.z + emissive.x - emissive.x,
-					   normal.z - normal.z,
-					   albedo.x - albedo.x);
+	else
+	{
+		litColor += albedo.xyz;
+	}
 
 	return float4(litColor, 1.0f);
 }

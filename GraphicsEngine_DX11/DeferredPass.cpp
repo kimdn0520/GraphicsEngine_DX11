@@ -14,15 +14,12 @@
 
 void DeferredPass::Start()
 {
-	//_model_VS = dynamic_pointer_cast<VertexShader>(ShaderManager::Get()->GetShader(L"Model_VS"));
-	//_model_Skinned_VS = dynamic_pointer_cast<VertexShader>(ShaderManager::Get()->GetShader(L"Model_Skinned_VS"));
-	//_model_PS = dynamic_pointer_cast<PixelShader>(ShaderManager::Get()->GetShader(L"Model_PS"));
-
 	_model_PBR_VS = dynamic_pointer_cast<VertexShader>(ShaderManager::Get()->GetShader(L"Model_PBR_VS"));
 	_model_PBR_Skinned_VS = dynamic_pointer_cast<VertexShader>(ShaderManager::Get()->GetShader(L"Model_PBR_Skinned_VS"));
 	_model_PBR_PS = dynamic_pointer_cast<PixelShader>(ShaderManager::Get()->GetShader(L"Model_PBR_PS"));
 
-	_quad_VS = dynamic_pointer_cast<VertexShader>(ShaderManager::Get()->GetShader(L"Quad_VS"));
+	_skybox_VS = dynamic_pointer_cast<VertexShader>(ShaderManager::Get()->GetShader(L"Skybox_VS"));
+	_skybox_PS = dynamic_pointer_cast<PixelShader>(ShaderManager::Get()->GetShader(L"Skybox_PS"));
 
 	gBuffers.resize(DEFERRED_COUNT);
 
@@ -73,10 +70,11 @@ void DeferredPass::Release()
 
 	_screenViewPort->Release();
 	
-	_quad_VS.reset();
 	_model_PBR_VS.reset();
 	_model_PBR_Skinned_VS.reset();
 	_model_PBR_PS.reset();
+	_skybox_VS.reset();
+	_skybox_PS.reset();
 }
 
 void DeferredPass::OnResize(int width, int height)
@@ -205,10 +203,46 @@ void DeferredPass::Render(std::vector<std::shared_ptr<ObjectInfo>> meshs, std::s
 				// 그린다
 				g_deviceContext->DrawIndexed(ResourceManager::Get()->GetMesh(mesh->meshID)->GetIdxBufferSize(), 0, 0);
 			}
+			break;
 			case OBJECT_TYPE::SKY_BOX:
 			{
+				Graphics_Interface::Get()->TurnSkyboxOn();	// 스카이박스용 뎁스
 
+				cbPerObject cbPerObejctBuffer;
+				Matrix camPos = XMMatrixTranslationFromVector(RenderManager::s_cameraInfo->worldPos);
+				cbPerObejctBuffer.gWorldViewProj = camPos * RenderManager::s_cameraInfo->viewTM * RenderManager::s_cameraInfo->projTM;
+				cbPerObejctBuffer.gWorld = mesh->worldTM;
+
+				_skybox_VS->ConstantBufferUpdate(&cbPerObejctBuffer, "cbPerObject");
+				_skybox_VS->Update();
+
+				cbMaterial cbMaterialBuffer;
+				cbMaterialBuffer.isLight = false;
+
+				_skybox_PS->ConstantBufferUpdate(&cbMaterialBuffer, "cbMaterial");
+				_skybox_PS->SetResourceViewBuffer(mat->cubeMap, "CubeMap");
+				_skybox_PS->Update();
+
+				g_deviceContext->RSSetState(Graphics_Interface::Get()->GetSolidNoneCull()->GetrasterizerState().Get());
+
+				unsigned int stride = ResourceManager::Get()->GetMesh(mesh->meshID)->stride;
+				unsigned int offset = 0;
+
+				// 토폴로지 설정
+				g_deviceContext->IASetPrimitiveTopology(ResourceManager::Get()->GetMesh(mesh->meshID)->GetPrimitiveTopology());
+
+				// 버텍스 버퍼 설정
+				g_deviceContext->IASetVertexBuffers(0, 1, ResourceManager::Get()->GetMesh(mesh->meshID)->GetVertexBuffer().GetAddressOf(), &stride, &offset);
+
+				// 인덱스 버퍼 설정
+				g_deviceContext->IASetIndexBuffer(ResourceManager::Get()->GetMesh(mesh->meshID)->GetIndexBuffer().Get(), DXGI_FORMAT_R32_UINT, 0);
+
+				// 그린다
+				g_deviceContext->DrawIndexed(ResourceManager::Get()->GetMesh(mesh->meshID)->GetIdxBufferSize(), 0, 0);
+
+				Graphics_Interface::Get()->TurnZBufferOn();	// 원래 뎁스로 돌려주기
 			}
+			break;
 			default:
 				break;
 			}
