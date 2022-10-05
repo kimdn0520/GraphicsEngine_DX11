@@ -77,7 +77,7 @@ void LightPass::Render(const std::vector<std::shared_ptr<RenderTargetView>> gBuf
 		1.f / Graphics_Interface::Get()->GetScreenWidth(),
 		1.f / Graphics_Interface::Get()->GetScreenHeight());
 
-	// 와 이걸 안해주고있었네 카메라posW 넘겨줘야함..
+	// 와 이걸 안해주고있었네 카메라posW 넘겨줘야함.. 
 	LightManager::cbLightBuffer.gEyePosW = RenderManager::s_cameraInfo->worldPos;
 
 	// 픽셀 쉐이더에 SRV 셋팅 

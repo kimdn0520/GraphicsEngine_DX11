@@ -78,9 +78,15 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)Library\lib\</OutDir>
+    <IncludePath>$(ProjectDir)inc;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <SourcePath>$(ProjectDir)\src;$(VC_SourcePath);</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)Library\lib\</OutDir>
+    <IncludePath>$(ProjectDir)inc;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <SourcePath>$(ProjectDir)\src;$(VC_SourcePath);</SourcePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -124,12 +130,16 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(SolutionDir)Library\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
     </Link>
+    <PostBuildEvent>
+      <Command>copy "$(TargetDir)FBXParser.dll" "$(SolutionDir)Output"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -141,6 +151,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(SolutionDir)Library\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -149,19 +160,21 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
     </Link>
+    <PostBuildEvent>
+      <Command>copy "$(TargetDir)FBXParser.dll" "$(SolutionDir)Output"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Serializer\BinarySerializer.h" />
-    <ClInclude Include="Export\FBXParserDLL.h" />
-    <ClInclude Include="FBXParser\FBXParser.h" />
-    <ClInclude Include="Util\framework.h" />
-    <ClInclude Include="Util\pch.h" />
+    <ClInclude Include="inc\Serializer\BinarySerializer.h" />
+    <ClInclude Include="inc\FBXParser\FBXParserDLL.h" />
+    <ClInclude Include="inc\FBXParser\FBXParser.h" />
+    <ClInclude Include="inc\pch.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Serializer\BinarySerializer.cpp" />
-    <ClCompile Include="DLLMain\dllmain.cpp" />
-    <ClCompile Include="FBXParser\FBXParser.cpp" />
-    <ClCompile Include="Util\pch.cpp">
+    <ClCompile Include="src\Serializer\BinarySerializer.cpp" />
+    <ClCompile Include="src\DLLMain\dllmain.cpp" />
+    <ClCompile Include="src\FBXParser\FBXParser.cpp" />
+    <ClCompile Include="src\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>

@@ -15,33 +15,30 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Util\framework.h">
+    <ClInclude Include="inc\pch.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Util\pch.h">
+    <ClInclude Include="inc\FBXParser\FBXParser.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="FBXParser\FBXParser.h">
+    <ClInclude Include="inc\FBXParser\FBXParserDLL.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Export\FBXParserDLL.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Serializer\BinarySerializer.h">
+    <ClInclude Include="inc\Serializer\BinarySerializer.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="DLLMain\dllmain.cpp">
+    <ClCompile Include="src\DLLMain\dllmain.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Util\pch.cpp">
+    <ClCompile Include="src\pch.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="FBXParser\FBXParser.cpp">
+    <ClCompile Include="src\FBXParser\FBXParser.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Serializer\BinarySerializer.cpp">
+    <ClCompile Include="src\Serializer\BinarySerializer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

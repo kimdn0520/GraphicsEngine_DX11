@@ -126,13 +126,13 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)ASEParser\ASEParser\;$(SolutionDir)GraphicsEngine_DX11\;$(SolutionDir)Library\inc\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)FBXParser\FBXParser\;$(SolutionDir)ASEParser\ASEParser\;$(SolutionDir)GraphicsEngine_DX11\;$(SolutionDir)Library\inc\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>$(SolutionDir)Library\lib\GraphicsEngine_DX11.lib;$(SolutionDir)Library\lib\ASEParser.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)Library\lib\GraphicsEngine_DX11.lib;$(SolutionDir)Library\lib\ASEParser.lib;$(SolutionDir)Library\lib\FBXParser.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy "$(TargetDir)Game_Engine.dll" "$(SolutionDir)Output"</Command>
@@ -148,7 +148,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)ASEParser\ASEParser\;$(SolutionDir)GraphicsEngine_DX11\;$(SolutionDir)Library\inc\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)FBXParser\FBXParser\;$(SolutionDir)ASEParser\ASEParser\;$(SolutionDir)GraphicsEngine_DX11\;$(SolutionDir)Library\inc\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -156,7 +156,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>$(SolutionDir)Library\lib\GraphicsEngine_DX11.lib;$(SolutionDir)Library\lib\ASEParser.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)Library\lib\GraphicsEngine_DX11.lib;$(SolutionDir)Library\lib\ASEParser.lib;$(SolutionDir)Library\lib\FBXParser.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy "$(TargetDir)Game_Engine.dll" "$(SolutionDir)Output"</Command>

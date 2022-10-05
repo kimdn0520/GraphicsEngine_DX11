@@ -1,2 +1,1 @@
-﻿  Game_Engine.vcxproj -> D:\GraphicsEngine_DX11\Library\lib\Game_Engine.dll
-          1개 파일이 복사되었습니다.
+﻿LINK : fatal error LNK1104: 'D:\GraphicsEngine_DX11\Library\lib\FBXParser.lib' 파일을 열 수 없습니다.
