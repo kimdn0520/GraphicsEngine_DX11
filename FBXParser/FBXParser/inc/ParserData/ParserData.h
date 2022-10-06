@@ -132,6 +132,13 @@ struct FBXBoneInfo
 struct FBXSkeletonInfo
 {
 	std::vector<std::shared_ptr<FBXBoneInfo>> fbxBoneInfoList;
+
+	//std::vector<DirectX::SimpleMath::Matrix> boneOffset;
+
+	void AddBone(std::shared_ptr<FBXBoneInfo> bone)
+	{
+		fbxBoneInfoList.push_back(bone);
+	}
 };
 
 
@@ -150,12 +157,14 @@ struct FBXAnimClipInfo
 class FBXModel
 {
 public:
-	std::vector<FBXMeshInfo> fbxMeshInfos;		
+	std::vector<std::shared_ptr<FBXMeshInfo>> fbxMeshInfoList;		
 
-	std::vector<FBXMaterialInfo>	materials;
+	std::vector<std::shared_ptr<FBXMaterialInfo>>	materialList;
 	
-	std::vector<std::shared_ptr<FBXBoneInfo>> fbxBoneInfo;
+	std::shared_ptr<FBXSkeletonInfo> fbxSkeletionInfo;
 	
 	std::vector<std::shared_ptr<FBXAnimClipInfo>> animationClipList;
+
+	bool isSkinnedAnimation;		// 스키닝 애니메이션 존재 여부
 };
 

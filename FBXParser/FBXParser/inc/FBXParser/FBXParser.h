@@ -14,7 +14,11 @@
 class FBXParser : public ParserBase
 {
 private:
-	const shared_ptr<aiScene> _scene;	
+	Assimp::Importer importer;
+
+	const aiScene* scene;
+
+	std::shared_ptr<FBXModel> fbxModel;		// ¸ðµ¨
 
 public:
 	FBXParser();
@@ -22,6 +26,8 @@ public:
 
 public:
 	std::shared_ptr<FBXModel> LoadFbx(const std::string& path) override;
+
+	void LoadMesh();
 
 	void Release() override;
 };
