@@ -2,7 +2,6 @@
 #include <algorithm>
 #include "SimpleMath.h"
 
-
 struct Vertex
 {
 	Vertex()
@@ -38,20 +37,28 @@ struct Vertex
 	unsigned __int32 boneIndices[8];
 };
 
-struct FbxMaterialInfo
+struct FBXFace
 {
-	bool isDiffuse = false;
-	bool isNormal = false;
-	bool isSpecular = false;
+	// Face를 이루는 3개의 Vertex 정보
+	int vertexIndex[3];								// 이 Face를 이루는 Vertex의 인덱스
+	DirectX::SimpleMath::Vector2 vertexUV[2];		// 이 Face를 이루는 Vertex의 uv
+	DirectX::SimpleMath::Vector3 vertexNormal[3];	// 이 Face를 이루는 Vertex의 Normal
+	DirectX::SimpleMath::Vector3 vertexTangent[3];	// 이 Face를 이루는 Vertex의 Tangent
+};
 
-	DirectX::SimpleMath::Vector4			diffuse;
-	DirectX::SimpleMath::Vector4			ambient;
-	DirectX::SimpleMath::Vector4			specular;
+struct FBXMaterialInfo
+{
+	std::wstring materialName;
 
-	std::string		name;
-	std::wstring	diffuseTexName;
-	std::wstring	normalTexName;
-	std::wstring	specularTexName;
+	std::wstring albedoMap;
+	std::wstring normalMap;
+	std::wstring metallicMap;
+	std::wstring roughnessMap;
+	std::wstring AOMap;
+	std::wstring emissiveMap;
+
+	float metallic;
+	float roughness;
 };
 
 struct BoneWeight
@@ -72,8 +79,8 @@ struct BoneWeight
 		else
 			boneWeights.push_back(Pair(index, weight));
 
-		// 가중치는 최대 4개
-		if (boneWeights.size() > 4)
+		// 가중치는 최대 8개
+		if (boneWeights.size() > 8)
 			boneWeights.pop_back();
 	}
 
@@ -85,54 +92,70 @@ struct BoneWeight
 	}
 };
 
-struct FbxMeshInfo
+struct FBXMeshInfo
 {
-	size_t							name;
-	std::vector<Vertex>			vertices;
+	std::string						meshName;			// mesh 이름!
+	std::string						materialName;		// 이 mesh에 해당하는 material 이름!
+	std::vector<Vertex>				meshVertexList;
+	std::vector<Vertex>				meshFaceList;
 
 	std::vector<unsigned int>		indices;
-	std::vector<FbxMaterialInfo>	materials;
 
-	// 애니메이션 관련 부분
-	std::vector<BoneWeight>			boneWeights; // 뼈 가중치
-
-	bool isAnimation;	// 애니메이션 보유 여부
+	bool isSkinned;			// 스키닝오브젝트 인지 아닌지..
 };
 
-struct FbxKeyFrameInfo
+struct FBXKeyFrameInfo
 {
-	DirectX::SimpleMath::Vector3 scale;
-	DirectX::SimpleMath::Vector3 rotation;
-	DirectX::SimpleMath::Vector3 translation;
+	DirectX::SimpleMath::Matrix matTransform;
+
 	double		time;
 };
 
-struct FbxBoneInfo
+struct FBXBoneInfo
 {
 	std::string				boneName;
+	int						boneIndex;
+
+	std::string				parentBoneName;
 	int						parentIndex;
-	//fbxsdk::FbxAMatrix				matOffset;
-	DirectX::SimpleMath::Matrix matOffset;
+
+	bool isParent;			// 본의 부모가 있는지 없는지..
+
+	std::vector<std::shared_ptr<FBXBoneInfo>> childBoneList;	// 자식 노드 리스트
+
+	DirectX::SimpleMath::Matrix nodeTM;		// Bone's Node Transform Matrix
+	DirectX::SimpleMath::Matrix worldTM;	// Bone's World Transform Matrix
+	DirectX::SimpleMath::Matrix localTM;	// Bone's Local Transform Matrix
 };
 
-
-struct FbxAnimClipInfo
+// 본들을 갖고있는 스키닝 오브젝트!
+struct FBXSkeletonInfo
 {
-	std::string					name;
-	float	ticksPerFrame;
-	int		totalFrame;
-	int		startFrame;
-	int		endFrame;
-
-	// keyFrames[boneIndex] = keyFrameInfo
-	std::vector<std::vector<std::shared_ptr<FbxKeyFrameInfo>>> keyFrames;
+	std::vector<std::shared_ptr<FBXBoneInfo>> fbxBoneInfoList;
 };
 
-class FbxModel
+
+struct FBXAnimClipInfo
+{
+	std::string			animationName;
+	
+	float	ticksPerFrame;
+	int		totalKeyFrame;
+	int		startKeyFrame;
+	int		endKeyFrame;
+
+	std::vector<std::vector<std::shared_ptr<FBXKeyFrameInfo>>> keyFrames;
+};
+
+class FBXModel
 {
 public:
-	std::vector<FbxMeshInfo> fbxMeshInfos;
-	std::vector<std::shared_ptr<FbxBoneInfo>> fbxBoneInfo;
-	std::vector<std::shared_ptr<FbxAnimClipInfo>> animationClipList;
+	std::vector<FBXMeshInfo> fbxMeshInfos;		
+
+	std::vector<FBXMaterialInfo>	materials;
+	
+	std::vector<std::shared_ptr<FBXBoneInfo>> fbxBoneInfo;
+	
+	std::vector<std::shared_ptr<FBXAnimClipInfo>> animationClipList;
 };
 

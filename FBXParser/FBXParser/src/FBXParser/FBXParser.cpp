@@ -7,11 +7,12 @@ FBXParser::FBXParser()
 
 FBXParser::~FBXParser()
 {
+	
 }
 
-std::shared_ptr<FbxModel> FBXParser::LoadFbx(const std::wstring& path)
+std::shared_ptr<FBXModel> FBXParser::LoadFbx(const std::string& path)
 {
-	return std::shared_ptr<FbxModel>();
+	return std::shared_ptr<FBXModel>();
 }
 
 void FBXParser::Release()

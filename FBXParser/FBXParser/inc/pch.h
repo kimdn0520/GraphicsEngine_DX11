@@ -8,7 +8,7 @@
 #define PCH_H
 
 #define WIN32_LEAN_AND_MEAN             // 거의 사용되지 않는 내용을 Windows 헤더에서 제외합니다.
-// Windows 헤더 파일
+#define NOMINMAX						// windows에서 이미 정의 되어 있는 max 매크로와 min 매크로가 존재하기 때문에 이름이 충돌나는데 이걸 추가하면 해결!
 #include <windows.h>
 #include "fbxsdk.h"
 #include <algorithm>
@@ -16,6 +16,10 @@
 #include <string>
 #include <vector>
 #include <memory>
+
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
 
 namespace fs = std::filesystem;
 
