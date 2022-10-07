@@ -24,12 +24,17 @@ std::shared_ptr<FBXModel> FBXParser::LoadFbx(const std::string& filePath)
         aiProcess_OptimizeMeshes                    // 메시를 최적화하여 메쉬 수를 줄인다.
         );
 
-    if (scene != nullptr)
+    // 실패시..
+    if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
     {
-        fbxModel->fbxMeshInfoList.resize(scene->mNumMeshes);    // 메시 크기만큼 resize
-
-        ParseNode(scene->mRootNode, scene);
+        MessageBox(0, TEXT("LoadFbx Failed."), 0, 0);
     }
+
+    fbxModel->fbxMeshInfoList.resize(scene->mNumMeshes);    // 메시 크기만큼 resize
+
+    ParseNode(scene->mRootNode, scene);
+
+    LoadMaterial(scene);
 
 	return fbxModel;
 }
@@ -45,11 +50,11 @@ void FBXParser::ParseNode(aiNode* node, const aiScene* scene)
         fbxModel->fbxMeshInfoList.push_back(LoadMeshInfo(mesh, scene));
     }
 
+    // child Node가 있다면 재귀로 들어가준다.
     for (size_t nodeChildMeshCnt = 0; nodeChildMeshCnt < node->mNumChildren; nodeChildMeshCnt++)
     {
         ParseNode(node->mChildren[nodeChildMeshCnt], scene);
     }
-
 }
 
 std::shared_ptr<FBXMeshInfo> FBXParser::LoadMeshInfo(aiMesh* mesh, const aiScene* scene)
@@ -60,8 +65,6 @@ std::shared_ptr<FBXMeshInfo> FBXParser::LoadMeshInfo(aiMesh* mesh, const aiScene
 
     for (int meshCnt = 0; meshCnt < meshNum; meshCnt++)
     {
-        const aiMesh* mesh = scene->mMeshes[meshCnt];                       // 메시 하나를 가져온다.
-
         size_t vertexNum = scene->mMeshes[meshCnt]->mNumVertices;           // 현재 메시의 버텍스 총 갯수
         
         fbxModel->fbxMeshInfoList[meshCnt]->meshName = mesh->mName.C_Str(); // 현재 메시에 이름을 넣는다.
@@ -70,6 +73,7 @@ std::shared_ptr<FBXMeshInfo> FBXParser::LoadMeshInfo(aiMesh* mesh, const aiScene
         for (int vertexCnt = 0; vertexCnt < vertexNum; vertexCnt++)
         {
 			Vertex vertex;
+
 			vertex.position = DirectX::SimpleMath::Vector3(mesh->mVertices[vertexCnt].x, mesh->mVertices[vertexCnt].y, mesh->mVertices[vertexCnt].z);
 			
             if(mesh->HasTextureCoords(0))
@@ -96,9 +100,39 @@ std::shared_ptr<FBXMeshInfo> FBXParser::LoadMeshInfo(aiMesh* mesh, const aiScene
 			fbxModel->fbxMeshInfoList[meshCnt]->indices.emplace_back(face.mIndices[1]);
 			fbxModel->fbxMeshInfoList[meshCnt]->indices.emplace_back(face.mIndices[2]);
         }
+
+        // 머터리얼 이름을 넣는다.
+        // assimp에서는 mesh 한개당 material 한개 이다.
+        // fbx에 mesh하나에 material 여러개 였던경우라면 mesh를 쪼개버린다고함.
+        if (mesh->mMaterialIndex >= 0)
+        {
+            aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
+
+            fbxModel->fbxMeshInfoList[meshCnt]->materialName = material->GetName().C_Str();
+        }
     }
 
     return fbxMeshInfo;
+}
+
+void FBXParser::LoadMaterial(const aiScene* scene)
+{
+    size_t materialNum = scene->mNumMaterials;           // 메터리얼의 총 갯수
+
+    for (int materialCnt = 0; materialCnt < materialNum; materialCnt++)
+    {
+        std::shared_ptr<FBXMaterialInfo> fbxMaterialInfo = std::make_shared<FBXMaterialInfo>();
+
+        aiMaterial* material = scene->mMaterials[materialCnt];
+
+        fbxMaterialInfo->materialName = material->GetName().C_Str();
+
+        // PBR Texture
+        if (material->GetTextureCount(aiTextureType_BASE_COLOR) > 0)
+        {
+            material->GetTexture(aiTextureType_BASE_COLOR, );
+        }
+    }
 }
 
 void FBXParser::Release()

@@ -48,7 +48,7 @@ struct FBXFace
 
 struct FBXMaterialInfo
 {
-	std::wstring materialName;
+	std::string materialName;
 
 	std::wstring albedoMap;
 	std::wstring normalMap;

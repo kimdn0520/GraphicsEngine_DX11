@@ -31,6 +31,8 @@ public:
 
 	std::shared_ptr<FBXMeshInfo> LoadMeshInfo(aiMesh* mesh, const aiScene* scene);
 
+	void LoadMaterial(const aiScene* scene);
+
 	void Release() override;
 };
 
