@@ -17,7 +17,7 @@ struct Vertex
 		DirectX::SimpleMath::Vector2 paUV = { 0.f, 0.f },
 		DirectX::SimpleMath::Vector3 paNormal = { 0.f, 0.f, 0.f },
 		DirectX::SimpleMath::Vector3 paTangent = { 0.f, 0.f, 0.f })
-		: pos(paPos), normal(paNormal), uv(paUV), tangent(paTangent), color(paColor)
+		: position(paPos), normal(paNormal), uv(paUV), tangent(paTangent), color(paColor)
 	{
 		for (int i = 0; i < 8; i++)
 		{
@@ -26,7 +26,7 @@ struct Vertex
 		}
 	}
 
-	DirectX::SimpleMath::Vector3 pos;
+	DirectX::SimpleMath::Vector3 position;
 	DirectX::SimpleMath::Vector4 color;
 	DirectX::SimpleMath::Vector2 uv;
 	DirectX::SimpleMath::Vector3 normal;
@@ -97,11 +97,17 @@ struct FBXMeshInfo
 	std::string						meshName;			// mesh 이름!
 	std::string						materialName;		// 이 mesh에 해당하는 material 이름!
 	std::vector<Vertex>				meshVertexList;
-	std::vector<Vertex>				meshFaceList;
-
+	//std::vector<FBXFace>			meshFaceList;
 	std::vector<unsigned int>		indices;
 
-	bool isSkinned;			// 스키닝오브젝트 인지 아닌지..
+	std::string parentName;		// 부모 이름
+	std::shared_ptr<FBXMeshInfo> parentMesh;	// 부모의 메시
+
+	std::vector<std::shared_ptr<FBXMeshInfo>> childMeshList;	// 자식 메시들
+
+	bool isParent;				// 부모가 존재하는지
+
+	bool isSkinned;				// 스키닝오브젝트 인지 아닌지..
 };
 
 struct FBXKeyFrameInfo

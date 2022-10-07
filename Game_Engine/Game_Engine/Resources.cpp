@@ -384,7 +384,7 @@ std::vector<std::shared_ptr<GameObject>> Resources::LoadASE(std::string path, in
 			for (auto& mat : aseModel->materials)
 			{
 				std::shared_ptr<Material> material = std::make_shared<Material>();
-				material->metallic = 0.0f;
+				material->metallic = 1.0f;
 				material->roughness = 0.0f;
 				material->albedoMap = mat->diffuseTexName;
 				material->normalMap = mat->normalTexName;

@@ -27,7 +27,9 @@ public:
 public:
 	std::shared_ptr<FBXModel> LoadFbx(const std::string& path) override;
 
-	void LoadMesh();
+	void ParseNode(aiNode* node, const aiScene* scene);
+
+	std::shared_ptr<FBXMeshInfo> LoadMeshInfo(aiMesh* mesh, const aiScene* scene);
 
 	void Release() override;
 };
