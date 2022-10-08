@@ -147,7 +147,6 @@ struct FBXSkeletonInfo
 	}
 };
 
-
 struct FBXAnimClipInfo
 {
 	std::string			animationName;

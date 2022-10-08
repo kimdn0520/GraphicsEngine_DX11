@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "ParserBase/ParserBase.h"
 #include "FBXParser/FBXParser.h"
+#include "ParserData/ParserData.h"
 
 ParserBase::ParserBase()
 {
@@ -10,7 +11,7 @@ ParserBase::~ParserBase()
 {
 }
 
-FBXParser_DLL std::shared_ptr<ParserBase> ParserBase::Create()
+std::shared_ptr<ParserBase> ParserBase::Create()
 {
     std::shared_ptr<ParserBase> newFbxLoader;
 

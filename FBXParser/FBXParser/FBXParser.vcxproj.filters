@@ -21,7 +21,7 @@
     <ClInclude Include="inc\FBXParser\FBXParser.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="inc\FBXParser\FBXParserDLL.h">
+    <ClInclude Include="inc\FBXParserDLL.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="inc\Serializer\BinarySerializer.h">

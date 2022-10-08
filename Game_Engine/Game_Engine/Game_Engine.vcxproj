@@ -126,7 +126,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)FBXParser\FBXParser\;$(SolutionDir)ASEParser\ASEParser\;$(SolutionDir)GraphicsEngine_DX11\;$(SolutionDir)Library\inc\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)FBXParser\FBXParser\inc\FBXParser\;$(SolutionDir)FBXParser\FBXParser\inc\ParserData\;$(SolutionDir)FBXParser\FBXParser\inc\ParserBase\;$(SolutionDir)FBXParser\FBXParser\inc\;$(SolutionDir)ASEParser\ASEParser\;$(SolutionDir)GraphicsEngine_DX11\;$(SolutionDir)Library\inc\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -148,7 +148,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)FBXParser\FBXParser\;$(SolutionDir)ASEParser\ASEParser\;$(SolutionDir)GraphicsEngine_DX11\;$(SolutionDir)Library\inc\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)FBXParser\FBXParser\inc\FBXParser\;$(SolutionDir)FBXParser\FBXParser\inc\ParserData\;$(SolutionDir)FBXParser\FBXParser\inc\ParserBase\;$(SolutionDir)FBXParser\FBXParser\inc\;$(SolutionDir)ASEParser\ASEParser\;$(SolutionDir)GraphicsEngine_DX11\;$(SolutionDir)Library\inc\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

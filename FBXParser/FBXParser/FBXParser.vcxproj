@@ -173,7 +173,7 @@
   <ItemGroup>
     <ClInclude Include="inc\ParserData\ParserData.h" />
     <ClInclude Include="inc\Serializer\BinarySerializer.h" />
-    <ClInclude Include="inc\FBXParser\FBXParserDLL.h" />
+    <ClInclude Include="inc\FBXParserDLL.h" />
     <ClInclude Include="inc\FBXParser\FBXParser.h" />
     <ClInclude Include="inc\pch.h" />
     <ClInclude Include="inc\ParserBase\ParserBase.h" />

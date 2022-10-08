@@ -1,12 +1,13 @@
 #pragma once
-#include "FBXParser/FBXParserDLL.h"
-#include "ParserData/ParserData.h"
+#include "FBXParserDLL.h"
+
+struct FBXModel;
 
 class ParserBase
 {
 public:
-	ParserBase();
-	virtual ~ParserBase();
+	FBXParser_DLL ParserBase();
+	FBXParser_DLL virtual ~ParserBase();
 
 public:
 	static FBXParser_DLL std::shared_ptr<ParserBase> Create();

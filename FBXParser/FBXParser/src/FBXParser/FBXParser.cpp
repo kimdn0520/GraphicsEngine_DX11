@@ -1,14 +1,12 @@
 #include "pch.h"
 #include "FBXParser/FBXParser.h"
+#include "ParserData/ParserData.h"
 
 FBXParser::FBXParser()
-{
-}
+{}
 
 FBXParser::~FBXParser()
-{
-	
-}
+{}
 
 std::shared_ptr<FBXModel> FBXParser::LoadFbx(const std::string& filePath)
 {
@@ -47,7 +45,7 @@ void FBXParser::ParseNode(aiNode* node, const aiScene* scene)
     {
         aiMesh* mesh = scene->mMeshes[node->mMeshes[nodeMeshCnt]];
         
-        fbxModel->fbxMeshInfoList.push_back(LoadMeshInfo(mesh, scene));
+        fbxModel->fbxMeshInfoList.emplace_back(LoadMeshInfo(mesh, scene));
     }
 
     // child Node가 있다면 재귀로 들어가준다.
@@ -61,56 +59,53 @@ std::shared_ptr<FBXMeshInfo> FBXParser::LoadMeshInfo(aiMesh* mesh, const aiScene
 {
     std::shared_ptr<FBXMeshInfo> fbxMeshInfo = std::make_shared<FBXMeshInfo>();
 
-    size_t meshNum = scene->mNumMeshes;
-
-    for (int meshCnt = 0; meshCnt < meshNum; meshCnt++)
+    size_t vertexNum = mesh->mNumVertices;           // 현재 메시의 버텍스 총 갯수
+        
+    fbxMeshInfo->meshName = mesh->mName.C_Str();     // 현재 메시에 이름을 넣는다.
+       
+    // 버텍스를 넣는다.
+    for (int vertexCnt = 0; vertexCnt < vertexNum; vertexCnt++)
     {
-        size_t vertexNum = scene->mMeshes[meshCnt]->mNumVertices;           // 현재 메시의 버텍스 총 갯수
-        
-        fbxModel->fbxMeshInfoList[meshCnt]->meshName = mesh->mName.C_Str(); // 현재 메시에 이름을 넣는다.
+		Vertex vertex;
 
-        // 버텍스를 넣는다.
-        for (int vertexCnt = 0; vertexCnt < vertexNum; vertexCnt++)
-        {
-			Vertex vertex;
-
-			vertex.position = DirectX::SimpleMath::Vector3(mesh->mVertices[vertexCnt].x, mesh->mVertices[vertexCnt].y, mesh->mVertices[vertexCnt].z);
+		vertex.position = DirectX::SimpleMath::Vector3(mesh->mVertices[vertexCnt].x, mesh->mVertices[vertexCnt].y, mesh->mVertices[vertexCnt].z);
 			
-            if(mesh->HasTextureCoords(0))
-                vertex.uv = DirectX::SimpleMath::Vector2(mesh->mTextureCoords[0][vertexCnt].x, mesh->mTextureCoords[0][vertexCnt].y);
-            else
-				vertex.uv = DirectX::SimpleMath::Vector2(0.0f, 0.0f);
+        if(mesh->HasTextureCoords(0))
+            vertex.uv = DirectX::SimpleMath::Vector2(mesh->mTextureCoords[0][vertexCnt].x, mesh->mTextureCoords[0][vertexCnt].y);
+        else
+			vertex.uv = DirectX::SimpleMath::Vector2(0.0f, 0.0f);
 
-			vertex.normal = DirectX::SimpleMath::Vector3(mesh->mNormals[vertexCnt].x, mesh->mNormals[vertexCnt].y, mesh->mNormals[vertexCnt].z);
+		vertex.normal = DirectX::SimpleMath::Vector3(mesh->mNormals[vertexCnt].x, mesh->mNormals[vertexCnt].y, mesh->mNormals[vertexCnt].z);
 			
-            vertex.tangent = DirectX::SimpleMath::Vector3(mesh->mTangents[vertexCnt].x, mesh->mTangents[vertexCnt].y, mesh->mTangents[vertexCnt].z);
+        vertex.tangent = DirectX::SimpleMath::Vector3(mesh->mTangents[vertexCnt].x, mesh->mTangents[vertexCnt].y, mesh->mTangents[vertexCnt].z);
             
-            // 현재 메시에 해당하는 vertex 하나를 넣는다.
-            fbxModel->fbxMeshInfoList[meshCnt]->meshVertexList.emplace_back(vertex);
-        }
-
-        size_t faceNum = scene->mMeshes[meshCnt]->mNumFaces;
-        
-        // 인덱스를 넣는다.
-        for (int faceCnt = 0; faceCnt < faceNum; faceCnt++)
-        {
-            const aiFace face = mesh->mFaces[faceCnt];
-
-			fbxModel->fbxMeshInfoList[meshCnt]->indices.emplace_back(face.mIndices[0]);
-			fbxModel->fbxMeshInfoList[meshCnt]->indices.emplace_back(face.mIndices[1]);
-			fbxModel->fbxMeshInfoList[meshCnt]->indices.emplace_back(face.mIndices[2]);
-        }
-
-        // 머터리얼 이름을 넣는다.
-        // assimp에서는 mesh 한개당 material 한개 이다.
-        // fbx에 mesh하나에 material 여러개 였던경우라면 mesh를 쪼개버린다고함.
-        if (mesh->mMaterialIndex >= 0)
-        {
-            aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-
-            fbxModel->fbxMeshInfoList[meshCnt]->materialName = material->GetName().C_Str();
-        }
+        // 현재 메시에 해당하는 vertex 하나를 넣는다.
+       fbxMeshInfo->meshVertexList.emplace_back(vertex);
     }
+
+    size_t faceNum = mesh->mNumFaces;                // 현재 메시의 face 정보
+        
+    // 인덱스를 넣는다.
+    for (int faceCnt = 0; faceCnt < faceNum; faceCnt++)
+    {
+        const aiFace face = mesh->mFaces[faceCnt];
+
+		fbxMeshInfo->indices.emplace_back(face.mIndices[0]);
+		fbxMeshInfo->indices.emplace_back(face.mIndices[1]);
+		fbxMeshInfo->indices.emplace_back(face.mIndices[2]);
+    }
+
+    // 머터리얼 이름을 넣는다.
+    // assimp에서는 mesh 한개당 material 한개 이다.
+    // fbx에 mesh하나에 material 여러개 였던경우라면 mesh를 쪼개버린다고함.
+    if (mesh->mMaterialIndex >= 0)
+    {
+        aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
+
+        fbxMeshInfo->materialName = material->GetName().C_Str();
+    }
+
+    ExtractBoneWeight(mesh, scene, fbxMeshInfo);
 
     return fbxMeshInfo;
 }
@@ -128,13 +123,85 @@ void FBXParser::LoadMaterial(const aiScene* scene)
         fbxMaterialInfo->materialName = material->GetName().C_Str();
 
         // PBR Texture
+
+        // Albedo Map
         if (material->GetTextureCount(aiTextureType_BASE_COLOR) > 0)
         {
-            material->GetTexture(aiTextureType_BASE_COLOR, );
+            aiString texturePath;
+
+            // 텍스쳐 파일의 위치(이름 포함)를 얻을 수 있다. 
+            material->GetTexture(aiTextureType_BASE_COLOR, 0, &texturePath);        
+        
+            // 근데 나는 텍스쳐 위치 까지는 필요없기에.. 이름만 가져올거야
+            std::string temp = texturePath.C_Str();
+
+            // 일단 파싱을 해보면서 확인하자 위치를 어디까지 해서 가져오는지..?
+            //std::string textureName = temp.substr()  find_last_of ...
+        }
+
+        // Normal Map
+        if (material->GetTextureCount(aiTextureType_NORMALS) > 0)
+        {
+
+        }
+
+        // Metallic Map
+        if (material->GetTextureCount(aiTextureType_METALNESS) > 0)
+        {
+
+        }
+
+        // Roughness Map
+        if (material->GetTextureCount(aiTextureType_DIFFUSE_ROUGHNESS) > 0)
+        {
+
+        }
+
+        // Ambient Occlusion Map
+        if (material->GetTextureCount(aiTextureType_AMBIENT_OCCLUSION) > 0)
+        {
+
+        }
+
+        // Emissive Map
+        if (material->GetTextureCount(aiTextureType_EMISSIVE) > 0)
+        {
+            
+        }
+
+        // 모델의 머터리얼 리스트에 푸쉬
+        fbxModel->fbxMeshInfoList.emplace_back(fbxMaterialInfo);
+    }
+}
+
+void FBXParser::ExtractBoneWeight(aiMesh* mesh, const aiScene* scene, std::shared_ptr<FBXMeshInfo>& fbxMeshInfo)
+{
+    size_t boneNum = mesh->mNumBones; 
+
+    for (int boneCnt = 0; boneCnt < boneNum; boneCnt++)
+    {
+        auto vertex = mesh->mBones[boneCnt]->mWeights;       // 이 bone에 의해 영향을 받는 vertex들?
+
+        int vertexNum = mesh->mBones[boneCnt]->mNumWeights;  // 이 bone의 영향을 받는 vertex 수
+
+        // 해당 bone에 영향을 받는 vertex들을 돌거야
+        for (int vertexCnt = 0; vertexCnt < vertexNum; vertexCnt++)
+        {
+            int vertexID = vertex[vertexCnt].mVertexId;     // 해당 버텍스의 id
+
+            float weight = vertex[vertexCnt].mWeight;       // 해당 버텍스의 가중치
+
+            // 흠 이 버텍스가 영향을 끼치는 boneID 가 여러개 일텐데... 음.. 어케구함?
         }
     }
 }
 
+void FBXParser::LoadAnimation(const aiScene* scene)
+{
+
+}
+
 void FBXParser::Release()
 {
+    
 }

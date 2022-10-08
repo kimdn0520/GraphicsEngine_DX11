@@ -1,6 +1,8 @@
 #pragma once
 #include "ParserBase/ParserBase.h"
 
+struct FBXMeshInfo;
+
 /// <summary>
 /// 나중에는 파싱만을 목적으로 하는 어플리케이션으로 하나 더 제작 할 것
 /// 일단 이것은 FBXLoad 테스트용 dll, binarySerializer후 테스트용 으로 쓰자
@@ -32,6 +34,10 @@ public:
 	std::shared_ptr<FBXMeshInfo> LoadMeshInfo(aiMesh* mesh, const aiScene* scene);
 
 	void LoadMaterial(const aiScene* scene);
+
+	void ExtractBoneWeight(aiMesh* mesh, const aiScene* scene, std::shared_ptr<FBXMeshInfo>& fbxMeshInfo);
+
+	void LoadAnimation(const aiScene* scene);
 
 	void Release() override;
 };
