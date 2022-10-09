@@ -1,5 +1,2 @@
-﻿  Resources.cpp
-C:\Users\김동민\Desktop\GraphicsEngine_DX11\FBXParser\FBXParser\inc\ParserData\ParserData.h(164,1): warning C4099: 'FBXModel': 처음에는 'struct'을(를) 사용하여 형식 이름을 표시했는데 이제는 'class'을(를) 사용하여 표시합니다.
-C:\Users\김동민\Desktop\GraphicsEngine_DX11\FBXParser\FBXParser\inc\ParserData\ParserData.h(163): message : 'FBXModel' 선언을 참조하십시오.
-  Game_Engine.vcxproj -> C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\Game_Engine.dll
+﻿  Game_Engine.vcxproj -> C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\Game_Engine.dll
           1개 파일이 복사되었습니다.

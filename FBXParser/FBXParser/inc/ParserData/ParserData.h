@@ -9,7 +9,7 @@ struct Vertex
 		for (int i = 0; i < 8; i++)
 		{
 			weights[i] = 0.f;
-			boneIndices[i] = 0;
+			boneIndices[i] = -1;
 		}
 	}
 	Vertex(DirectX::SimpleMath::Vector3 paPos,
@@ -22,7 +22,7 @@ struct Vertex
 		for (int i = 0; i < 8; i++)
 		{
 			weights[i] = 0.f;
-			boneIndices[i] = 0;
+			boneIndices[i] = -1;
 		}
 	}
 

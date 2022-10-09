@@ -60,15 +60,21 @@ ModelVertexOut Model_PBR_VS(ModelVertexIn input)
 	for (int i = 0; i < 4; i++)
 	{
 		// 논유니폼 스케일이 없다고 가정하므로, 노말값을 위한 역행렬의 전치행렬이 필요없다.
-		pos += (input.weight1[i] / totalWeight) * mul(float4(input.pos, 1.0f), gBoneTransforms[input.boneIndex1[i]]).xyz;
-		normal += (input.weight1[i] / totalWeight) * mul(input.normal, (float3x3)gBoneTransforms[input.boneIndex1[i]]);
+		if (input.boneIndex1[i] != -1)
+		{
+			pos += (input.weight1[i] / totalWeight) * mul(float4(input.pos, 1.0f), gBoneTransforms[input.boneIndex1[i]]).xyz;
+			normal += (input.weight1[i] / totalWeight) * mul(input.normal, (float3x3)gBoneTransforms[input.boneIndex1[i]]);
+		}
 	}
 
 	for (int j = 0; j < 4; j++)
 	{
 		// 논유니폼 스케일이 없다고 가정하므로, 노말값을 위한 역행렬의 전치행렬이 필요없다.
-		pos += (input.weight2[j] / totalWeight) * mul(float4(input.pos, 1.0f), gBoneTransforms[input.boneIndex2[j]]).xyz;
-		normal += (input.weight2[j] / totalWeight) * mul(input.normal, (float3x3)gBoneTransforms[input.boneIndex2[j]]);
+		if (input.boneIndex2[j] != -1)
+		{
+			pos += (input.weight2[j] / totalWeight) * mul(float4(input.pos, 1.0f), gBoneTransforms[input.boneIndex2[j]]).xyz;
+			normal += (input.weight2[j] / totalWeight) * mul(input.normal, (float3x3)gBoneTransforms[input.boneIndex2[j]]);
+		}
 	}
 
 	output.posW = mul(float4(pos, 1.0f), gWorld).xyz;

@@ -22,6 +22,8 @@ private:
 
 	std::shared_ptr<FBXModel> fbxModel;		// ¸ðµ¨
 
+	int boneID = 0;
+
 public:
 	FBXParser();
 	~FBXParser();
