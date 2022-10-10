@@ -12,6 +12,8 @@ std::shared_ptr<FBXModel> FBXParser::LoadFbx(const std::string& filePath)
 {
     fbxModel = std::make_shared<FBXModel>();
 
+    fbxModel->fbxSkeletionInfo = std::make_shared<FBXSkeletonInfo>();
+
     scene = importer.ReadFile(filePath,
         aiProcess_CalcTangentSpace |                // 가져온 메쉬의 tangent 및 bitangent를 계산한다. 메쉬에 법선이 없으면 작업을 수행하지 않는다.
         aiProcess_Triangulate |                     // 3개 이상의 모서리를 가진 다각형 면을 삼각형으로 만든다.
@@ -109,7 +111,8 @@ std::shared_ptr<FBXMeshInfo> FBXParser::LoadMeshInfo(aiMesh* mesh, const aiScene
         fbxMeshInfo->materialName = material->GetName().C_Str();
     }
 
-    ExtractBoneWeight(mesh, scene, fbxMeshInfo);
+    if(mesh->HasBones())
+        ExtractBoneWeight(mesh, scene, fbxMeshInfo);
 
     return fbxMeshInfo;
 }
@@ -181,20 +184,28 @@ void FBXParser::LoadMaterial(const aiScene* scene)
 /// <summary>
 /// 해당 Mesh의 Bone들과 Vertex를 연결해야한다.
 /// 그러면서 vertex에 해당하는 가중치를 넣어준다.
+/// aiMesh는 bone배열과 vertex배열을 가지고 있는데 
+/// bone배열이 있다면 이 mesh는 스키닝 메시인가?
 /// </summary>
 void FBXParser::ExtractBoneWeight(aiMesh* mesh, const aiScene* scene, std::shared_ptr<FBXMeshInfo>& fbxMeshInfo)
 {
+    fbxMeshInfo->isSkinned = true;
+
     size_t boneNum = mesh->mNumBones;                        // 이 메시에 포함된 bone의 수
 
     for (int boneCnt = 0; boneCnt < boneNum; boneCnt++)
     {
-        std::string boneName = mesh->mBones[boneCnt]->mName.C_Str();    // 해당 본의 이름
-
         auto vertex = mesh->mBones[boneCnt]->mWeights;       // 이 bone에 의해 영향을 받는 vertex들?
 
         int vertexNum = mesh->mBones[boneCnt]->mNumWeights;  // 이 bone의 영향을 받는 vertex 수
 
         std::shared_ptr<FBXBoneInfo> fbxBoneInfo = std::make_shared<FBXBoneInfo>();
+        
+        fbxBoneInfo->boneIndex = boneID;                                // 본 id
+
+        fbxBoneInfo->boneName = mesh->mBones[boneCnt]->mName.C_Str();   // 본의 이름
+
+        // fbxBoneInfo->nodeTM = mesh->mBones[boneCnt]->mOffsetMatrix;  // 변환해줘야함
 
         // 해당 bone에 영향을 받는 vertex들을 돌거야
         for (int vertexCnt = 0; vertexCnt < vertexNum; vertexCnt++)
@@ -219,6 +230,8 @@ void FBXParser::ExtractBoneWeight(aiMesh* mesh, const aiScene* scene, std::share
         }
 
         boneID++;
+
+        fbxModel->fbxSkeletionInfo->AddBone(fbxBoneInfo);   // 스키닝 메시에 본 Add
     }
 }
 
