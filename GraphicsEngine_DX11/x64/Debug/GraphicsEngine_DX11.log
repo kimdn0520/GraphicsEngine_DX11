@@ -1,5 +1,2 @@
-﻿D:\GraphicsEngine_DX11\GameClient\GameClient\Data\Shader\Light_PBR_PS.hlsl(99,9-60): warning X3206: implicit truncation of vector type
-  
-  compilation object save succeeded; see D:\GraphicsEngine_DX11\Library\lib\Light_PBR_PS.cso
-  GraphicsEngine_DX11.vcxproj -> D:\GraphicsEngine_DX11\Library\lib\GraphicsEngine_DX11.dll
+﻿  GraphicsEngine_DX11.vcxproj -> C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\GraphicsEngine_DX11.dll
           1개 파일이 복사되었습니다.

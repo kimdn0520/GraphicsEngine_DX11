@@ -132,6 +132,8 @@ void FBXParser::LoadMaterial(const aiScene* scene)
 
         fbxMaterialInfo->materialName = material->GetName().C_Str();
 
+        // Baser Color 텍스쳐라고 이름적혀있는 것들이 왜 이놈으로 불러와지는거임?
+        // 근데 뭐 둘다 써놓으면 되서 상관없긴함
         // Diffuse Texture
 		if (material->GetTextureCount(aiTextureType_DIFFUSE) > 0)
 		{
@@ -143,19 +145,17 @@ void FBXParser::LoadMaterial(const aiScene* scene)
 			// 근데 나는 텍스쳐 위치 까지는 필요없기에.. 이름만 가져올거야
 			std::string temp = texturePath.C_Str();
 
-            // TODO : REF는 나중에 스카이박스 reflection 시키는 텍스쳐 인것같아요
-			if (temp.find("REF") == std::string::npos)
-			{
-			    std::string textureName = temp.substr(temp.find_last_of("\\") + 1, temp.length() - temp.find_last_of("\\"));
+			//if (temp.find("REF") == std::string::npos)
+			
+			std::string textureName = temp.substr(temp.find_last_of("\\") + 1, temp.length() - temp.find_last_of("\\"));
 
-                fbxMaterialInfo->isAlbedo = true;
+            fbxMaterialInfo->isAlbedo = true;
 
-                std::wstring wstr = L"";
+            std::wstring wstr = L"";
 
-                wstr.assign(textureName.begin(), textureName.end());
+            wstr.assign(textureName.begin(), textureName.end());
 
-                fbxMaterialInfo->albedoMap = wstr;
-            }
+            fbxMaterialInfo->albedoMap = wstr;
 		}
 
         /////////////////////////////////////////////////////////////////////
@@ -205,25 +205,81 @@ void FBXParser::LoadMaterial(const aiScene* scene)
         // Metallic Map
         if (material->GetTextureCount(aiTextureType_METALNESS) > 0)
         {
+            aiString texturePath;
 
+            material->GetTexture(aiTextureType_METALNESS, 0, &texturePath);
+
+            std::string temp = texturePath.C_Str();
+
+            std::string textureName = temp.substr(temp.find_last_of("\\") + 1, temp.length() - temp.find_last_of("\\"));
+
+            fbxMaterialInfo->isMetallic = true;
+
+            std::wstring wstr = L"";
+
+            wstr.assign(textureName.begin(), textureName.end());
+
+            fbxMaterialInfo->metallicMap = wstr;
         }
 
         // Roughness Map
         if (material->GetTextureCount(aiTextureType_DIFFUSE_ROUGHNESS) > 0)
         {
+            aiString texturePath;
 
+            material->GetTexture(aiTextureType_DIFFUSE_ROUGHNESS, 0, &texturePath);
+
+            std::string temp = texturePath.C_Str();
+
+            std::string textureName = temp.substr(temp.find_last_of("\\") + 1, temp.length() - temp.find_last_of("\\"));
+
+            fbxMaterialInfo->isRoughness = true;
+
+            std::wstring wstr = L"";
+
+            wstr.assign(textureName.begin(), textureName.end());
+
+            fbxMaterialInfo->roughnessMap = wstr;
         }
 
         // Ambient Occlusion Map
         if (material->GetTextureCount(aiTextureType_AMBIENT_OCCLUSION) > 0)
         {
+            aiString texturePath;
 
+            material->GetTexture(aiTextureType_AMBIENT_OCCLUSION, 0, &texturePath);
+
+            std::string temp = texturePath.C_Str();
+
+            std::string textureName = temp.substr(temp.find_last_of("\\") + 1, temp.length() - temp.find_last_of("\\"));
+
+            fbxMaterialInfo->isAO = true;
+
+            std::wstring wstr = L"";
+
+            wstr.assign(textureName.begin(), textureName.end());
+
+            fbxMaterialInfo->AOMap = wstr;
         }
 
         // Emissive Map
         if (material->GetTextureCount(aiTextureType_EMISSIVE) > 0)
         {
-            
+            aiString texturePath;
+
+            material->GetTexture(aiTextureType_EMISSIVE, 0, &texturePath);
+
+            std::string temp = texturePath.C_Str();
+
+            std::string textureName = temp.substr(temp.find_last_of("\\") + 1, temp.length() - temp.find_last_of("\\"));
+
+            fbxMaterialInfo->isEmissive = true;
+
+            std::wstring wstr = L"";
+
+            wstr.assign(textureName.begin(), textureName.end());
+
+            fbxMaterialInfo->emissiveMap = wstr;
         }
 
         // 모델의 머터리얼 리스트에 푸쉬
