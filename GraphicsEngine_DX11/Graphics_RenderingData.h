@@ -11,6 +11,8 @@ enum class OBJECT_TYPE
 
 struct Material
 {
+	std::string name;
+
 	bool isAlbedo = false;
 	bool isNormal = false;
 	bool isMetallic = false;

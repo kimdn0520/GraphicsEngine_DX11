@@ -362,7 +362,7 @@ std::vector<std::shared_ptr<GameObject>> Resources::LoadASE(std::string path, in
 			{
 				StaticMeshVertex staticMeshVertex;
 				staticMeshVertex.position = vertex.pos;
-				staticMeshVertex.color = ::Color::White;
+				staticMeshVertex.color = vertex.color;
 				staticMeshVertex.uv = vertex.uv;
 				staticMeshVertex.normal = vertex.normal;
 				staticMeshVertex.tangent = vertex.tangent;
@@ -448,6 +448,83 @@ std::vector<std::shared_ptr<GameObject>> Resources::LoadFBX(std::string path, in
 
 	// 게임오브젝트들로 바꾸어서 반환할거임.
 	vector<std::shared_ptr<GameObject>> gameObjects;
+
+	// Animation이 있는 경우 대부분 SkinnedMesh
+	if (fbxModel->isSkinnedAnimation)
+	{
+
+	}
+	// Animation이 없는 경우 StaticMesh
+	else
+	{
+		for (auto& mesh : fbxModel->fbxMeshInfoList)
+		{
+			std::vector<StaticMeshVertex> staticMeshVertices;
+
+			for (auto& vertex : mesh->meshVertexList)
+			{
+				StaticMeshVertex staticMeshVertex;
+				staticMeshVertex.position = vertex.position;
+				staticMeshVertex.color = vertex.color;
+				staticMeshVertex.uv = vertex.uv;
+				staticMeshVertex.normal = vertex.normal;
+				staticMeshVertex.tangent = vertex.tangent;
+
+				staticMeshVertices.push_back(staticMeshVertex);
+			}
+
+			// 해당 메시의 vertices, indices 그래픽스 ResourceManager에등록과 해당 meshID를 가져온다.
+			size_t meshID = GraphicsManager::Get()->CreateMesh(
+				staticMeshVertices,
+				mesh->indices,
+				topology,
+				rasterizerState);
+
+			std::shared_ptr<GameObject> gameObject = std::make_shared<GameObject>();
+			gameObject->SetName(mesh->meshName);
+			gameObject->AddComponent<Transform>();
+			gameObject->AddComponent<MeshRenderer>();
+			gameObject->GetComponent<MeshRenderer>()->SetMeshID(meshID);		// meshID 등록
+
+			// TODO : fbxModel에 있는 머터리얼들을 전부 보관할 것
+			// 그리고 이름? 정도만 알게하고 나중에 리소스매니저에 머터리얼 모아놓은곳에서
+			// 머터리얼을 가져와서 cbMaterial에 정보를 넣고 shader에 보내는 코드를 작성하자
+
+			// 메시 하나당 머터리얼 하나
+			for (auto& mat : fbxModel->materialList)
+			{
+				if (mesh->materialName == mat->materialName)
+				{
+					std::shared_ptr<Material> material = std::make_shared<Material>();
+
+					material->name = mat->materialName;
+
+					material->metallic = 0.1f;
+					material->roughness = 0.0f;
+
+					material->albedoMap = mat->albedoMap;
+					material->normalMap = mat->normalMap;
+					material->metallicMap = mat->metallicMap;
+					material->roughnessMap = mat->roughnessMap;
+					material->AOMap = mat->AOMap;
+					material->emissiveMap = mat->emissiveMap;
+
+					material->isAlbedo = mat->isAlbedo;
+					material->isNormal = mat->isNormal;
+					material->isMetallic = mat->isMetallic;
+					material->isRoughness = mat->isRoughness;
+					material->isAO = mat->isAO;
+					material->isEmissive = mat->isEmissive;
+
+					gameObject->GetComponent<MeshRenderer>()->SetMaterial(material);
+
+					break;
+				}
+			}
+
+			gameObjects.push_back(gameObject);
+		}
+	}
 
 	return gameObjects;
 }

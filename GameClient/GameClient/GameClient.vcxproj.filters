@@ -60,6 +60,9 @@
     <ClInclude Include="IPrefab.h">
       <Filter>Prefab</Filter>
     </ClInclude>
+    <ClInclude Include="TestFBXPrefab.h">
+      <Filter>Prefab</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="GameClient.ico">
@@ -97,6 +100,9 @@
       <Filter>Prefab</Filter>
     </ClCompile>
     <ClCompile Include="IPrefab.cpp">
+      <Filter>Prefab</Filter>
+    </ClCompile>
+    <ClCompile Include="TestFBXPrefab.cpp">
       <Filter>Prefab</Filter>
     </ClCompile>
   </ItemGroup>

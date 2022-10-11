@@ -30,8 +30,6 @@ std::shared_ptr<FBXModel> FBXParser::LoadFbx(const std::string& filePath)
         MessageBox(0, TEXT("LoadFbx Failed."), 0, 0);
     }
 
-    fbxModel->fbxMeshInfoList.resize(scene->mNumMeshes);    // 메시 크기만큼 resize
-
     ParseNode(scene->mRootNode, scene);
 
     LoadMaterial(scene);
@@ -75,15 +73,20 @@ std::shared_ptr<FBXMeshInfo> FBXParser::LoadMeshInfo(aiMesh* mesh, const aiScene
 		Vertex vertex;
 
 		vertex.position = DirectX::SimpleMath::Vector3(mesh->mVertices[vertexCnt].x, mesh->mVertices[vertexCnt].y, mesh->mVertices[vertexCnt].z);
-			
+		
+        if (mesh->HasVertexColors(0))
+            vertex.color = DirectX::SimpleMath::Vector4(mesh->mColors[vertexCnt]->r, mesh->mColors[vertexCnt]->g, mesh->mColors[vertexCnt]->b, mesh->mColors[vertexCnt]->a);
+
         if(mesh->HasTextureCoords(0))
             vertex.uv = DirectX::SimpleMath::Vector2(mesh->mTextureCoords[0][vertexCnt].x, mesh->mTextureCoords[0][vertexCnt].y);
         else
 			vertex.uv = DirectX::SimpleMath::Vector2(0.0f, 0.0f);
 
-		vertex.normal = DirectX::SimpleMath::Vector3(mesh->mNormals[vertexCnt].x, mesh->mNormals[vertexCnt].y, mesh->mNormals[vertexCnt].z);
+        if(mesh->HasNormals())
+		    vertex.normal = DirectX::SimpleMath::Vector3(mesh->mNormals[vertexCnt].x, mesh->mNormals[vertexCnt].y, mesh->mNormals[vertexCnt].z);
 			
-        vertex.tangent = DirectX::SimpleMath::Vector3(mesh->mTangents[vertexCnt].x, mesh->mTangents[vertexCnt].y, mesh->mTangents[vertexCnt].z);
+        if(mesh->HasTangentsAndBitangents())
+            vertex.tangent = DirectX::SimpleMath::Vector3(mesh->mTangents[vertexCnt].x, mesh->mTangents[vertexCnt].y, mesh->mTangents[vertexCnt].z);
             
         // 현재 메시에 해당하는 vertex 하나를 넣는다.
        fbxMeshInfo->meshVertexList.emplace_back(vertex);
@@ -129,27 +132,74 @@ void FBXParser::LoadMaterial(const aiScene* scene)
 
         fbxMaterialInfo->materialName = material->GetName().C_Str();
 
-        // PBR Texture
+        // Diffuse Texture
+		if (material->GetTextureCount(aiTextureType_DIFFUSE) > 0)
+		{
+			aiString texturePath;
 
+			// 텍스쳐 파일의 위치(이름 포함)를 얻을 수 있다. 
+			material->GetTexture(aiTextureType_DIFFUSE, 0, &texturePath);
+
+			// 근데 나는 텍스쳐 위치 까지는 필요없기에.. 이름만 가져올거야
+			std::string temp = texturePath.C_Str();
+
+            // TODO : REF는 나중에 스카이박스 reflection 시키는 텍스쳐 인것같아요
+			if (temp.find("REF") == std::string::npos)
+			{
+			    std::string textureName = temp.substr(temp.find_last_of("\\") + 1, temp.length() - temp.find_last_of("\\"));
+
+                fbxMaterialInfo->isAlbedo = true;
+
+                std::wstring wstr = L"";
+
+                wstr.assign(textureName.begin(), textureName.end());
+
+                fbxMaterialInfo->albedoMap = wstr;
+            }
+		}
+
+        /////////////////////////////////////////////////////////////////////
+        //                         PBR Texture
+        /////////////////////////////////////////////////////////////////////
+        
         // Albedo Map
         if (material->GetTextureCount(aiTextureType_BASE_COLOR) > 0)
         {
-            aiString texturePath;
+			aiString texturePath;
 
-            // 텍스쳐 파일의 위치(이름 포함)를 얻을 수 있다. 
-            material->GetTexture(aiTextureType_BASE_COLOR, 0, &texturePath);        
-        
-            // 근데 나는 텍스쳐 위치 까지는 필요없기에.. 이름만 가져올거야
-            std::string temp = texturePath.C_Str();
+			material->GetTexture(aiTextureType_NORMALS, 0, &texturePath);
 
-            // 일단 파싱을 해보면서 확인하자 위치를 어디까지 해서 가져오는지..?
-            //std::string textureName = temp.substr()  find_last_of ...
-        }
+			std::string temp = texturePath.C_Str();
+
+			std::string textureName = temp.substr(temp.find_last_of("\\") + 1, temp.length() - temp.find_last_of("\\"));
+
+			fbxMaterialInfo->isAlbedo = true;
+
+			std::wstring wstr = L"";
+
+			wstr.assign(textureName.begin(), textureName.end());
+
+			fbxMaterialInfo->albedoMap = wstr;
+        } 
 
         // Normal Map
         if (material->GetTextureCount(aiTextureType_NORMALS) > 0)
         {
+			aiString texturePath;
 
+			material->GetTexture(aiTextureType_NORMALS, 0, &texturePath);
+
+			std::string temp = texturePath.C_Str();
+
+			std::string textureName = temp.substr(temp.find_last_of("\\") + 1, temp.length() - temp.find_last_of("\\"));
+
+			fbxMaterialInfo->isNormal = true;
+
+			std::wstring wstr = L"";
+
+			wstr.assign(textureName.begin(), textureName.end());
+
+			fbxMaterialInfo->normalMap = wstr;
         }
 
         // Metallic Map
@@ -191,21 +241,13 @@ void FBXParser::ExtractBoneWeight(aiMesh* mesh, const aiScene* scene, std::share
 {
     fbxMeshInfo->isSkinned = true;
 
-    size_t boneNum = mesh->mNumBones;                        // 이 메시에 포함된 bone의 수
-
+    int boneNum = mesh->mNumBones;                        // 이 메시에 포함된 bone의 수
+    
     for (int boneCnt = 0; boneCnt < boneNum; boneCnt++)
     {
         auto vertex = mesh->mBones[boneCnt]->mWeights;       // 이 bone에 의해 영향을 받는 vertex들?
 
         int vertexNum = mesh->mBones[boneCnt]->mNumWeights;  // 이 bone의 영향을 받는 vertex 수
-
-        std::shared_ptr<FBXBoneInfo> fbxBoneInfo = std::make_shared<FBXBoneInfo>();
-        
-        fbxBoneInfo->boneIndex = boneID;                                // 본 id
-
-        fbxBoneInfo->boneName = mesh->mBones[boneCnt]->mName.C_Str();   // 본의 이름
-
-        // fbxBoneInfo->nodeTM = mesh->mBones[boneCnt]->mOffsetMatrix;  // 변환해줘야함
 
         // 해당 bone에 영향을 받는 vertex들을 돌거야
         for (int vertexCnt = 0; vertexCnt < vertexNum; vertexCnt++)
@@ -229,9 +271,17 @@ void FBXParser::ExtractBoneWeight(aiMesh* mesh, const aiScene* scene, std::share
             }
         }
 
-        boneID++;
+        std::shared_ptr<FBXBoneInfo> fbxBoneInfo = std::make_shared<FBXBoneInfo>();
+        
+        fbxBoneInfo->boneIndex = boneID;                                // 본 id
+
+        fbxBoneInfo->boneName = mesh->mBones[boneCnt]->mName.C_Str();   // 본의 이름
+
+        fbxBoneInfo->nodeTM = ConvertMatrix(mesh->mBones[boneCnt]->mOffsetMatrix); 
 
         fbxModel->fbxSkeletionInfo->AddBone(fbxBoneInfo);   // 스키닝 메시에 본 Add
+    
+        boneID++;
     }
 }
 

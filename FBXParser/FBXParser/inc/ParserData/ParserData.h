@@ -50,6 +50,13 @@ struct FBXMaterialInfo
 {
 	std::string materialName;
 
+	bool isAlbedo = false;
+	bool isNormal = false;
+	bool isMetallic = false;
+	bool isRoughness = false;
+	bool isAO = false;
+	bool isEmissive = false;
+
 	std::wstring albedoMap;
 	std::wstring normalMap;
 	std::wstring metallicMap;

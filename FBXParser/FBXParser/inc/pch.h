@@ -16,6 +16,7 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include "SimpleMath.h"
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>

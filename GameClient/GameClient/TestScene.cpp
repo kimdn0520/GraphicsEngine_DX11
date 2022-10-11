@@ -9,6 +9,7 @@
 #include "GenjiPrefab.h"
 
 #include "CameraScript.h"
+#include "TestFBXPrefab.h"
 
 void TestScene::Initialize()
 {
@@ -54,7 +55,7 @@ void TestScene::Initialize()
 	dirLight->GetComponent<Light>()->SetLightType(LIGHT_TYPE::DIRECTIONAL_LIGHT);
 	dirLight->GetComponent<Light>()->SetLightDirection(Vector3(0.5f, -0.5f, 0.5f));
 	dirLight->GetComponent<Light>()->SetColor(Vector3(0.7f, 0.7f, 0.7f));
-	dirLight->GetComponent<Light>()->SetPower(5.f);
+	dirLight->GetComponent<Light>()->SetPower(3.f);
 	dirLight->GetComponent<Light>()->SendLightInfo();
 	AddGameObject(dirLight);
 
@@ -88,4 +89,7 @@ void TestScene::Initialize()
 
 	shared_ptr<GenjiPrefab> genji = make_shared<GenjiPrefab>(Vector3(0.f, 1.f, 0.f));
 	AddGameObject(genji->gameObject);
+
+	shared_ptr<TestFBXPrefab> eye = make_shared<TestFBXPrefab>(Vector3(5.f, 5.f, 0.f));
+	AddGameObject(eye->gameObject);
 }

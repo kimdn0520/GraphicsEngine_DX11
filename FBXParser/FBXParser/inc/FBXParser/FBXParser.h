@@ -41,6 +41,18 @@ public:
 
 	void LoadAnimation(const aiScene* scene);
 
+	DirectX::SimpleMath::Matrix ConvertMatrix(aiMatrix4x4 aimatrix);
+
 	void Release() override;
 };
 
+inline DirectX::SimpleMath::Matrix FBXParser::ConvertMatrix(aiMatrix4x4 aimatrix)
+{
+	return DirectX::SimpleMath::Matrix
+	(
+		aimatrix.a1, aimatrix.a2, aimatrix.a3, aimatrix.a4,
+		aimatrix.b1, aimatrix.b2, aimatrix.b3, aimatrix.b4,
+		aimatrix.c1, aimatrix.c2, aimatrix.c3, aimatrix.c4,
+		aimatrix.d1, aimatrix.d2, aimatrix.d3, aimatrix.d4
+	);
+}

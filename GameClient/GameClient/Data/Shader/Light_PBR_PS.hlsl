@@ -86,11 +86,17 @@ float4 Light_PBR_PS(LightPixelIN input) : SV_Target
 			albedo.xyz, ambientOcclusion, roughness, metallic);
 
 		litColor += emissive;
+
+		// 노말 벡터 방향에서의 Diffuse Irradiace를 가져온다.
+		//float3 irradiance = Irradiance.Sample(samLinearClamp, normal).rgb;
 	}
 	else
 	{
 		litColor += albedo.xyz;
 	}
 
-	return float4(litColor, 1.0f);
+	// 직접광 + 간접광
+	float3 ambientLighting = albedo * (1.1f - roughness) * 0.3f;
+
+	return float4(litColor + ambientLighting, 1.0f);
 }
