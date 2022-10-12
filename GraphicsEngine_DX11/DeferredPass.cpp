@@ -7,6 +7,7 @@
 #include "RasterizerState.h"
 #include "VertexShader.h"
 #include "PixelShader.h"
+#include "Mesh.h"
 
 #include "RenderManager.h"
 #include "ShaderManager.h"
@@ -75,6 +76,8 @@ void DeferredPass::Release()
 	_model_PBR_PS.reset();
 	_skybox_VS.reset();
 	_skybox_PS.reset();
+	_mesh.reset();
+	_mat.reset();
 }
 
 void DeferredPass::OnResize(int width, int height)
@@ -117,135 +120,135 @@ void DeferredPass::RenderStart()
 	_screenViewPort->SetViewPort(g_deviceContext);
 }
 
-void DeferredPass::Render(std::vector<std::shared_ptr<ObjectInfo>> meshs, std::shared_ptr<DepthStencilView> shadowDSV)
+void DeferredPass::Render(std::vector<std::shared_ptr<ObjectInfo>> objInfos, std::shared_ptr<DepthStencilView> shadowDSV)
 {
 	RenderStart();
 
-	for (auto& mesh : meshs)
+	for (auto& objInfo : objInfos)
 	{
-		for (auto& mat : mesh->materials)
+		_mat = ResourceManager::Get()->GetMaterial(objInfo->materialName);
+
+		_mesh = ResourceManager::Get()->GetMesh(objInfo->meshID);
+
+		switch (objInfo->type)
 		{
-			switch (mesh->type)
-			{
-			case OBJECT_TYPE::DEFAULT:
-			{
-				cbPerObject cbPerObejctBuffer;
-				cbPerObejctBuffer.gWorld = mesh->worldTM;
-				cbPerObejctBuffer.gWorldViewProj = mesh->worldTM * RenderManager::s_cameraInfo->viewTM * RenderManager::s_cameraInfo->projTM;
-				//cbPerObejctBuffer.objectID = mesh->objectID;
-				XMVECTOR det = XMMatrixDeterminant(mesh->worldTM);
-				cbPerObejctBuffer.gWorldInvTranspose = XMMatrixTranspose(XMMatrixInverse(&det, mesh->worldTM));
+		case OBJECT_TYPE::DEFAULT:
+		{
+			cbPerObject cbPerObejctBuffer;
+			cbPerObejctBuffer.gWorld = objInfo->worldTM;
+			cbPerObejctBuffer.gWorldViewProj = objInfo->worldTM * RenderManager::s_cameraInfo->viewTM * RenderManager::s_cameraInfo->projTM;
+			XMVECTOR det = XMMatrixDeterminant(objInfo->worldTM);
+			cbPerObejctBuffer.gWorldInvTranspose = XMMatrixTranspose(XMMatrixInverse(&det, objInfo->worldTM));
 
-				cbMaterial cbMaterialBuffer;
-				cbMaterialBuffer.metallic = mat->metallic;
-				cbMaterialBuffer.roughness = mat->roughness;
+			cbMaterial cbMaterialBuffer;
+			cbMaterialBuffer.metallic = _mat->metallic;
+			cbMaterialBuffer.roughness = _mat->roughness;
 
-				_model_PBR_VS->ConstantBufferUpdate(&cbMaterialBuffer, "cbMaterial");
+			_model_PBR_VS->ConstantBufferUpdate(&cbMaterialBuffer, "cbMaterial");
 				
-				// Skinned Mesh
-				if (mesh->isSkinned)
-				{
-					memcpy(&cbPerObejctBuffer.gBoneTransforms, mesh->finalBoneListMatrix, sizeof(Matrix) * 96);
-					_model_PBR_Skinned_VS->ConstantBufferUpdate(&cbPerObejctBuffer, "cbPerObject");
-					_model_PBR_Skinned_VS->Update();
-				}
-				// Static Mesh
-				else
-				{
-					_model_PBR_VS->ConstantBufferUpdate(&cbPerObejctBuffer, "cbPerObject");
-					_model_PBR_VS->Update();
-				}
-
-				cbMaterialBuffer.isAlbedo = mat->isAlbedo;
-				cbMaterialBuffer.isNormal = mat->isNormal;
-				cbMaterialBuffer.isMetallic = mat->isMetallic;
-				cbMaterialBuffer.isRoughness = mat->isRoughness;
-				cbMaterialBuffer.isAO = mat->isAO;
-				cbMaterialBuffer.isEmissive = mat->isEmissive;
-				cbMaterialBuffer.isLight = mat->isLight;
-
-				if (mat->isAlbedo)
-					_model_PBR_PS->SetResourceViewBuffer(mat->albedoMap, "AlbedoMap");
-
-				if (mat->isNormal)
-					_model_PBR_PS->SetResourceViewBuffer(mat->normalMap, "NormalMap");
-
-				if (mat->isMetallic)
-					_model_PBR_PS->SetResourceViewBuffer(mat->metallicMap, "MetallicMap");
-
-				if (mat->isRoughness)
-					_model_PBR_PS->SetResourceViewBuffer(mat->roughnessMap, "RoughnessMap");
-
-				if (mat->isAO)
-					_model_PBR_PS->SetResourceViewBuffer(mat->AOMap, "AmbientOcclusionMap");
-
-				if (mat->isEmissive)
-					_model_PBR_PS->SetResourceViewBuffer(mat->emissiveMap, "EmissiveMap");
-				
-				_model_PBR_PS->ConstantBufferUpdate(&cbMaterialBuffer, "cbMaterial");
-
-				_model_PBR_PS->Update();
-
-				g_deviceContext->RSSetState(ResourceManager::Get()->GetMesh(mesh->meshID)->GetRasterState().Get());
-
-				unsigned int stride = ResourceManager::Get()->GetMesh(mesh->meshID)->stride;
-				unsigned int offset = 0;
-
-				// 토폴로지 설정
-				g_deviceContext->IASetPrimitiveTopology(ResourceManager::Get()->GetMesh(mesh->meshID)->GetPrimitiveTopology());
-
-				// 버텍스 버퍼 설정
-				g_deviceContext->IASetVertexBuffers(0, 1, ResourceManager::Get()->GetMesh(mesh->meshID)->GetVertexBuffer().GetAddressOf(), &stride, &offset);
-
-				// 인덱스 버퍼 설정
-				g_deviceContext->IASetIndexBuffer(ResourceManager::Get()->GetMesh(mesh->meshID)->GetIndexBuffer().Get(), DXGI_FORMAT_R32_UINT, 0);
-
-				// 그린다
-				g_deviceContext->DrawIndexed(ResourceManager::Get()->GetMesh(mesh->meshID)->GetIdxBufferSize(), 0, 0);
-			}
-			break;
-			case OBJECT_TYPE::SKY_BOX:
+			// Skinned Mesh
+			if (objInfo->isSkinned)
 			{
-				Graphics_Interface::Get()->TurnSkyboxOn();	// 스카이박스용 뎁스
-
-				cbPerObject cbPerObejctBuffer;
-				Matrix camPos = XMMatrixTranslationFromVector(RenderManager::s_cameraInfo->worldPos);
-				cbPerObejctBuffer.gWorldViewProj = camPos * RenderManager::s_cameraInfo->viewTM * RenderManager::s_cameraInfo->projTM;
-				cbPerObejctBuffer.gWorld = mesh->worldTM;
-
-				_skybox_VS->ConstantBufferUpdate(&cbPerObejctBuffer, "cbPerObject");
-				_skybox_VS->Update();
-
-				cbMaterial cbMaterialBuffer;
-				cbMaterialBuffer.isLight = false;
-
-				_skybox_PS->ConstantBufferUpdate(&cbMaterialBuffer, "cbMaterial");
-				_skybox_PS->SetResourceViewBuffer(mat->cubeMap, "CubeMap");
-				_skybox_PS->Update();
-
-				g_deviceContext->RSSetState(Graphics_Interface::Get()->GetSolidNoneCull()->GetrasterizerState().Get());
-
-				unsigned int stride = ResourceManager::Get()->GetMesh(mesh->meshID)->stride;
-				unsigned int offset = 0;
-
-				// 토폴로지 설정
-				g_deviceContext->IASetPrimitiveTopology(ResourceManager::Get()->GetMesh(mesh->meshID)->GetPrimitiveTopology());
-
-				// 버텍스 버퍼 설정
-				g_deviceContext->IASetVertexBuffers(0, 1, ResourceManager::Get()->GetMesh(mesh->meshID)->GetVertexBuffer().GetAddressOf(), &stride, &offset);
-
-				// 인덱스 버퍼 설정
-				g_deviceContext->IASetIndexBuffer(ResourceManager::Get()->GetMesh(mesh->meshID)->GetIndexBuffer().Get(), DXGI_FORMAT_R32_UINT, 0);
-
-				// 그린다
-				g_deviceContext->DrawIndexed(ResourceManager::Get()->GetMesh(mesh->meshID)->GetIdxBufferSize(), 0, 0);
-
-				Graphics_Interface::Get()->TurnZBufferOn();	// 원래 뎁스로 돌려주기
+				memcpy(&cbPerObejctBuffer.gBoneTransforms, objInfo->finalBoneListMatrix, sizeof(Matrix) * 96);
+				_model_PBR_Skinned_VS->ConstantBufferUpdate(&cbPerObejctBuffer, "cbPerObject");
+				_model_PBR_Skinned_VS->Update();
 			}
+			// Static Mesh
+			else
+			{
+				_model_PBR_VS->ConstantBufferUpdate(&cbPerObejctBuffer, "cbPerObject");
+				_model_PBR_VS->Update();
+			}
+
+			cbMaterialBuffer.isAlbedo = _mat->isAlbedo;
+			cbMaterialBuffer.isNormal = _mat->isNormal;
+			cbMaterialBuffer.isMetallic = _mat->isMetallic;
+			cbMaterialBuffer.isRoughness = _mat->isRoughness;
+			cbMaterialBuffer.isAO = _mat->isAO;
+			cbMaterialBuffer.isEmissive = _mat->isEmissive;
+			cbMaterialBuffer.isLight = _mat->isLight;
+
+			if (_mat->isAlbedo)
+				_model_PBR_PS->SetResourceViewBuffer(_mat->albedoMap, "AlbedoMap");
+
+			if (_mat->isNormal)
+				_model_PBR_PS->SetResourceViewBuffer(_mat->normalMap, "NormalMap");
+
+			if (_mat->isMetallic)
+				_model_PBR_PS->SetResourceViewBuffer(_mat->metallicMap, "MetallicMap");
+
+			if (_mat->isRoughness)
+				_model_PBR_PS->SetResourceViewBuffer(_mat->roughnessMap, "RoughnessMap");
+
+			if (_mat->isAO)
+				_model_PBR_PS->SetResourceViewBuffer(_mat->AOMap, "AmbientOcclusionMap");
+
+			if (_mat->isEmissive)
+				_model_PBR_PS->SetResourceViewBuffer(_mat->emissiveMap, "EmissiveMap");
+				
+			_model_PBR_PS->ConstantBufferUpdate(&cbMaterialBuffer, "cbMaterial");
+
+			_model_PBR_PS->Update();
+
+			g_deviceContext->RSSetState(_mesh->GetRasterState().Get());
+
+			unsigned int stride = _mesh->stride;
+			unsigned int offset = 0;
+
+			// 토폴로지 설정
+			g_deviceContext->IASetPrimitiveTopology(_mesh->GetPrimitiveTopology());
+
+			// 버텍스 버퍼 설정
+			g_deviceContext->IASetVertexBuffers(0, 1, _mesh->GetVertexBuffer().GetAddressOf(), &stride, &offset);
+
+			// 인덱스 버퍼 설정
+			g_deviceContext->IASetIndexBuffer(_mesh->GetIndexBuffer().Get(), DXGI_FORMAT_R32_UINT, 0);
+
+			// 그린다
+			g_deviceContext->DrawIndexed(_mesh->GetIdxBufferSize(), 0, 0);
+		}
+		break;
+		case OBJECT_TYPE::SKY_BOX:
+		{
+			Graphics_Interface::Get()->TurnSkyboxOn();	// 스카이박스용 뎁스
+
+			cbPerObject cbPerObejctBuffer;
+			Matrix camPos = XMMatrixTranslationFromVector(RenderManager::s_cameraInfo->worldPos);
+			cbPerObejctBuffer.gWorldViewProj = camPos * RenderManager::s_cameraInfo->viewTM * RenderManager::s_cameraInfo->projTM;
+			cbPerObejctBuffer.gWorld = objInfo->worldTM;
+
+			_skybox_VS->ConstantBufferUpdate(&cbPerObejctBuffer, "cbPerObject");
+			_skybox_VS->Update();
+
+			cbMaterial cbMaterialBuffer;
+			cbMaterialBuffer.isLight = false;
+
+			_skybox_PS->ConstantBufferUpdate(&cbMaterialBuffer, "cbMaterial");
+			_skybox_PS->SetResourceViewBuffer(_mat->cubeMap, "CubeMap");
+			_skybox_PS->Update();
+
+			g_deviceContext->RSSetState(Graphics_Interface::Get()->GetSolidNoneCull()->GetrasterizerState().Get());
+
+			unsigned int stride = _mesh->stride;
+			unsigned int offset = 0;
+
+			// 토폴로지 설정
+			g_deviceContext->IASetPrimitiveTopology(_mesh->GetPrimitiveTopology());
+
+			// 버텍스 버퍼 설정
+			g_deviceContext->IASetVertexBuffers(0, 1, _mesh->GetVertexBuffer().GetAddressOf(), &stride, &offset);
+
+			// 인덱스 버퍼 설정
+			g_deviceContext->IASetIndexBuffer(_mesh->GetIndexBuffer().Get(), DXGI_FORMAT_R32_UINT, 0);
+
+			// 그린다
+			g_deviceContext->DrawIndexed(_mesh->GetIdxBufferSize(), 0, 0);
+
+			Graphics_Interface::Get()->TurnZBufferOn();	// 원래 뎁스로 돌려주기
+		}
+		break;
+		default:
 			break;
-			default:
-				break;
-			}
 		}
 	}
 }

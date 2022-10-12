@@ -17,9 +17,9 @@ MeshRenderer::MeshRenderer(std::shared_ptr<GameObject> gameObject)
 MeshRenderer::~MeshRenderer()
 {}
 
-void MeshRenderer::SetMaterial(std::shared_ptr<Material> material)
+void MeshRenderer::SetMaterial(std::string name)
 {
-	_objectInfo->materials.push_back(material);
+	_objectInfo->materialName = name;
 }
 
 void MeshRenderer::Update()

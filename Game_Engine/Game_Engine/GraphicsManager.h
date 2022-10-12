@@ -1,5 +1,6 @@
 #pragma once
 #include "Graphics_Interface.h"
+#include "GameEngineDLL.h"
 
 class GraphicsManager
 {
@@ -15,7 +16,7 @@ private:
 	std::shared_ptr<Graphics_Interface> graphicsEngine;
 	
 public:
-	static std::shared_ptr<GraphicsManager> Get();
+	static GameEngine_DLL std::shared_ptr<GraphicsManager> Get();
 
 public:
 	void Initialize(HWND hWnd, int screenWidth, int screenHeight);
@@ -41,6 +42,8 @@ public:
 	void SendLightData(std::shared_ptr<LightInfo> lightInfo);
 
 	void UpdateLightData(std::shared_ptr<LightInfo> lightInfo);
+
+	GameEngine_DLL void SendMaterialData(std::shared_ptr<Material> material);
 
 	size_t CreateMesh(std::vector<StaticMeshVertex> vertices, std::vector<unsigned int> indicies, int topology, int rasterState);
 

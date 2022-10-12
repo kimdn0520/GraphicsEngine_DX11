@@ -228,6 +228,11 @@ void GraphicsEngine_DX11::UpdateLightData(std::shared_ptr<LightInfo> lightInfo)
 	LightManager::Get()->UpdateLightInfo(lightInfo);
 }
 
+void GraphicsEngine_DX11::SendMaterialData(std::shared_ptr<Material> material)
+{
+	ResourceManager::Get()->AddMaterial(material);
+}
+
 size_t GraphicsEngine_DX11::CreateMesh(std::vector<StaticMeshVertex> vertices, std::vector<unsigned int> indicies, int topology, int rasterState)
 {
 	return ResourceManager::Get()->CreateMesh(vertices, indicies, topology, rasterState);

@@ -7,6 +7,8 @@ class PixelShader;
 class RenderTargetView;
 class DepthStencilView;
 class ViewPort;
+class Mesh;
+struct Material;
 
 // [0 : DEPTH], [1 : Normal], [2 : Position], [3 : Albedo], [4 : ObjectID] 
 // [0 : DMRAO], [1 : Normal], [2 : Position], [3 : Albedo], [4 : Emissive] 
@@ -39,6 +41,10 @@ private:
 	std::shared_ptr<VertexShader> _skybox_VS;
 	std::shared_ptr<PixelShader> _skybox_PS;
 
+	std::shared_ptr<Mesh> _mesh;
+
+	std::shared_ptr<Material> _mat;
+
 public:
 	void Start() override;
 
@@ -48,6 +54,6 @@ public:
 
 	void RenderStart();
 
-	void Render(std::vector<std::shared_ptr<ObjectInfo>> meshs, std::shared_ptr<DepthStencilView> shadowDSV);
+	void Render(std::vector<std::shared_ptr<ObjectInfo>> objInfos, std::shared_ptr<DepthStencilView> shadowDSV);
 };
 

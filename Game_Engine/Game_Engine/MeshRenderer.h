@@ -29,7 +29,7 @@ public:
 
 	GameEngine_DLL void SetMeshID(std::size_t meshID) { _objectInfo->meshID = meshID; }
 
-	GameEngine_DLL void SetMaterial(std::shared_ptr<Material> material);
+	GameEngine_DLL void SetMaterial(std::string name);
 
 	// 스킨메시인지
 	void IsSkinnedMesh(bool value) { _objectInfo->isSkinned = value; }

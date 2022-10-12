@@ -387,14 +387,17 @@ std::vector<std::shared_ptr<GameObject>> Resources::LoadASE(std::string path, in
 			for (auto& mat : aseModel->materials)
 			{
 				std::shared_ptr<Material> material = std::make_shared<Material>();
+				material->name = material->name;
 				material->metallic = 0.1f;
 				material->roughness = 0.0f;
 				material->albedoMap = mat->diffuseTexName;
 				material->normalMap = mat->normalTexName;
 				material->isAlbedo = mat->isDiffuse;
 				material->isNormal = mat->isNormal;
+
+				GraphicsManager::Get()->SendMaterialData(material);
 				
-				gameObject->GetComponent<MeshRenderer>()->SetMaterial(material); 
+				gameObject->GetComponent<MeshRenderer>()->SetMaterial(material->name); 
 			}
 
 			Vector3 localScale = { 1.0f, 1.0f, 1.0f };
@@ -516,7 +519,9 @@ std::vector<std::shared_ptr<GameObject>> Resources::LoadFBX(std::string path, in
 					material->isAO = mat->isAO;
 					material->isEmissive = mat->isEmissive;
 
-					gameObject->GetComponent<MeshRenderer>()->SetMaterial(material);
+					GraphicsManager::Get()->SendMaterialData(material);
+
+					gameObject->GetComponent<MeshRenderer>()->SetMaterial(mat->materialName);
 
 					break;
 				}

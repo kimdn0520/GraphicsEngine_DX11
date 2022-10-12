@@ -53,7 +53,17 @@ void ResourceManager::CreateTexture(const std::wstring& name, const std::wstring
 	_textures.insert(make_pair(name, texture));
 }
 
-std::shared_ptr<Mesh> ResourceManager::GetMesh(size_t id)
+std::shared_ptr<Mesh>& ResourceManager::GetMesh(size_t id)
 {
 	return _meshs[id];
+}
+
+std::shared_ptr<Material>& ResourceManager::GetMaterial(std::string name)
+{
+	return _materials[name];
+}
+
+void ResourceManager::AddMaterial(std::shared_ptr<Material> material)
+{
+	_materials.insert(make_pair(material->name, material));
 }

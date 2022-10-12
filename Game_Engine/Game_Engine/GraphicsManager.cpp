@@ -75,6 +75,11 @@ void GraphicsManager::UpdateLightData(std::shared_ptr<LightInfo> lightInfo)
 	graphicsEngine->UpdateLightData(lightInfo);
 }
 
+void GraphicsManager::SendMaterialData(std::shared_ptr<Material> material)
+{
+	graphicsEngine->SendMaterialData(material);
+}
+
 size_t GraphicsManager::CreateMesh(std::vector<StaticMeshVertex> vertices, std::vector<unsigned int> indicies, int topology, int rasterState)
 {
 	return graphicsEngine->CreateMesh(vertices, indicies, topology, rasterState);

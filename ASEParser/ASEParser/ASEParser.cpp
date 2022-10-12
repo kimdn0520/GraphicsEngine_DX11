@@ -118,6 +118,11 @@ std::shared_ptr<ASEData::ASEModel> ASEParser::Load(string filePath)
 			_ASEModel->materials[_materialIndex] = newMaterial;
 		}
 		break;
+		case TOKENR_MATERIAL_NAME:
+		{
+			_ASEModel->materials[_materialIndex]->name = Parsing_String();
+		}
+		break;
 		case TOKENR_MATERIAL_AMBIENT:
 		{
 			float x = Parsing_Float();

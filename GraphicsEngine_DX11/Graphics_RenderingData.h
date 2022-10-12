@@ -46,7 +46,7 @@ struct ObjectInfo
 	DirectX::SimpleMath::Vector3 worldPos;
 	DirectX::SimpleMath::Matrix finalBoneListMatrix[96];
 	
-	std::vector<std::shared_ptr<Material>> materials;
+	std::string materialName;
 
 	bool isSkinned = false;
 

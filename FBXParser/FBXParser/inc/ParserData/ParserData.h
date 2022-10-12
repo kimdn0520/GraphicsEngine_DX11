@@ -37,6 +37,7 @@ struct Vertex
 	unsigned __int32 boneIndices[8];
 };
 
+// 안쓸듯?
 struct FBXFace
 {
 	// Face를 이루는 3개의 Vertex 정보
@@ -68,6 +69,9 @@ struct FBXMaterialInfo
 	float roughness;
 };
 
+/// <summary>
+/// 쓸..? 안쓸듯?
+/// </summary>
 struct BoneWeight
 {
 	using Pair = std::pair<int, double>;

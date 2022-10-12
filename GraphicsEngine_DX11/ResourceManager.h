@@ -25,6 +25,8 @@ private:
 
 	std::unordered_map<std::size_t, std::shared_ptr<Mesh>> _meshs;
 
+	std::unordered_map<std::string, std::shared_ptr<Material>> _materials;
+
 public:
 	void Initialize();
 
@@ -34,7 +36,11 @@ public:
 
 	void CreateTexture(const std::wstring& name, const std::wstring& path);
 
-	std::shared_ptr<Mesh> GetMesh(size_t id);
+	std::shared_ptr<Mesh>& GetMesh(size_t id);
+
+	std::shared_ptr<Material>& GetMaterial(std::string name);
+
+	void AddMaterial(std::shared_ptr<Material> material);
 
 	template <typename T>
 	size_t CreateMesh(std::vector<T> vertices, std::vector<unsigned int> indices, int topology, int rasterizerState);

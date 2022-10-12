@@ -18,7 +18,9 @@ void DataManager::DataLoad()
 
 	_dataResources.insert(std::make_pair("Genji", Resources::Get()->LoadASE("Data/ASE/genji_max.ase", TOPOLOGY_TRIANGLELIST, RasterState_SOLID)));
 
-	_dataResources.insert(std::make_pair("Eye", Resources::Get()->LoadFBX("Data/FBX/Wooden Crate.fbx", TOPOLOGY_TRIANGLELIST, RasterState_SOLID)));
+	_dataResources.insert(std::make_pair("Crate", Resources::Get()->LoadFBX("Data/FBX/Wooden Crate.fbx", TOPOLOGY_TRIANGLELIST, RasterState_SOLID)));
+	
+	_dataResources.insert(std::make_pair("Wolf", Resources::Get()->LoadFBX("Data/FBX/Wolf.fbx", TOPOLOGY_TRIANGLELIST, RasterState_SOLID)));
 }
 
 void DataManager::Release()

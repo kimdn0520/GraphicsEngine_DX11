@@ -1,5 +1,5 @@
 ﻿  FBXParser.cpp
-C:\Users\김동민\Desktop\GraphicsEngine_DX11\FBXParser\FBXParser\inc\ParserData\ParserData.h(170,1): warning C4099: 'FBXModel': 처음에는 'struct'을(를) 사용하여 형식 이름을 표시했는데 이제는 'class'을(를) 사용하여 표시합니다.
-C:\Users\김동민\Desktop\GraphicsEngine_DX11\FBXParser\FBXParser\inc\ParserData\ParserData.h(169): message : 'FBXModel' 선언을 참조하십시오.
-  FBXParser.vcxproj -> C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\FBXParser.dll
+D:\GraphicsEngine_DX11\FBXParser\FBXParser\inc\ParserData\ParserData.h(174,1): warning C4099: 'FBXModel': 처음에는 'struct'을(를) 사용하여 형식 이름을 표시했는데 이제는 'class'을(를) 사용하여 표시합니다.
+D:\GraphicsEngine_DX11\FBXParser\FBXParser\inc\ParserData\ParserData.h(173): message : 'FBXModel' 선언을 참조하십시오.
+  FBXParser.vcxproj -> D:\GraphicsEngine_DX11\Library\lib\FBXParser.dll
           1개 파일이 복사되었습니다.

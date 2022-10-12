@@ -114,8 +114,10 @@ std::shared_ptr<FBXMeshInfo> FBXParser::LoadMeshInfo(aiMesh* mesh, const aiScene
         fbxMeshInfo->materialName = material->GetName().C_Str();
     }
 
-    if(mesh->HasBones())
-        ExtractBoneWeight(mesh, scene, fbxMeshInfo);
+    /*if(mesh->HasBones())
+        ExtractBoneWeight(mesh, scene, fbxMeshInfo);*/
+
+    //LoadAnimation(scene);
 
     return fbxMeshInfo;
 }
@@ -297,7 +299,7 @@ void FBXParser::ExtractBoneWeight(aiMesh* mesh, const aiScene* scene, std::share
 {
     fbxMeshInfo->isSkinned = true;
 
-    int boneNum = mesh->mNumBones;                        // 이 메시에 포함된 bone의 수
+    int boneNum = mesh->mNumBones;                           // 이 메시에 포함된 bone의 수
     
     for (int boneCnt = 0; boneCnt < boneNum; boneCnt++)
     {
@@ -335,7 +337,7 @@ void FBXParser::ExtractBoneWeight(aiMesh* mesh, const aiScene* scene, std::share
 
         fbxBoneInfo->nodeTM = ConvertMatrix(mesh->mBones[boneCnt]->mOffsetMatrix); 
 
-        fbxModel->fbxSkeletionInfo->AddBone(fbxBoneInfo);   // 스키닝 메시에 본 Add
+        fbxModel->fbxSkeletionInfo->AddBone(fbxBoneInfo);               // 스키닝 메시에 본 Add
     
         boneID++;
     }
