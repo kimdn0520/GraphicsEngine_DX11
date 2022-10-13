@@ -111,6 +111,8 @@ struct FBXMeshInfo
 	//std::vector<FBXFace>			meshFaceList;
 	std::vector<unsigned int>		indices;
 
+	DirectX::SimpleMath::Matrix nodeTM;					// Node TransformMatrix
+
 	std::string parentName;		// 부모 이름
 	std::shared_ptr<FBXMeshInfo> parentMesh;	// 부모의 메시
 
@@ -140,6 +142,9 @@ struct FBXBoneInfo
 
 	std::vector<std::shared_ptr<FBXBoneInfo>> childBoneList;	// 자식 노드 리스트
 
+	DirectX::SimpleMath::Matrix offsetMatrix;		// Bone's OffsetMatrix
+
+	// 일단 ... 대기 안쓸수도
 	DirectX::SimpleMath::Matrix nodeTM;		// Bone's Node Transform Matrix
 	DirectX::SimpleMath::Matrix worldTM;	// Bone's World Transform Matrix
 	DirectX::SimpleMath::Matrix localTM;	// Bone's Local Transform Matrix
@@ -149,8 +154,6 @@ struct FBXBoneInfo
 struct FBXSkeletonInfo
 {
 	std::vector<std::shared_ptr<FBXBoneInfo>> fbxBoneInfoList;
-
-	//std::vector<DirectX::SimpleMath::Matrix> boneOffset;
 
 	void AddBone(std::shared_ptr<FBXBoneInfo> bone)
 	{

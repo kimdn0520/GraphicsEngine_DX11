@@ -49,6 +49,9 @@
     <Filter Include="Components\MeshRenderer">
       <UniqueIdentifier>{5fbef701-3e85-48e3-afc5-d952a1a86feb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Components\Animator">
+      <UniqueIdentifier>{8b29c4a3-aaf7-41c0-b66e-87f07410d52a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -111,6 +114,12 @@
     <ClInclude Include="Light.h">
       <Filter>Components\Light</Filter>
     </ClInclude>
+    <ClInclude Include="SkinAnimator.h">
+      <Filter>Components\Animator</Filter>
+    </ClInclude>
+    <ClInclude Include="Animator.h">
+      <Filter>Components\Animator</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -169,6 +178,12 @@
     </ClCompile>
     <ClCompile Include="Light.cpp">
       <Filter>Components\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="SkinAnimator.cpp">
+      <Filter>Components\Animator</Filter>
+    </ClCompile>
+    <ClCompile Include="Animator.cpp">
+      <Filter>Components\Animator</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

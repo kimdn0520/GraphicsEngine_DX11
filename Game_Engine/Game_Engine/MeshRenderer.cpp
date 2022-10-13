@@ -3,6 +3,7 @@
 #include "Transform.h"
 #include "GameObject.h"
 #include "GraphicsManager.h"
+#include "SkinAnimator.h"
 
 MeshRenderer::MeshRenderer(std::shared_ptr<GameObject> gameObject)
 	: Component(gameObject, COMPONENT_TYPE::MESHRENDERER),
@@ -59,6 +60,11 @@ void MeshRenderer::Render()
 {
 	_objectInfo->worldTM = _transform->GetWorldMatrix();
 	_objectInfo->worldPos = _transform->GetWorldPosition();
+
+	if (_skinAnimator != nullptr)
+	{
+		memcpy(&_objectInfo->finalBoneListMatrix, _skinAnimator->_finalBoneListMatrix, sizeof(Matrix) * 96);
+	}
 
 	if (!_isBone)
 		GraphicsManager::Get()->SendObjectRenderingData(_objectInfo);

@@ -30,14 +30,14 @@ struct StaticMeshVertex
 
 struct SkinnedMeshVertex
 {
-	SkinnedMeshVertex()
+	/*SkinnedMeshVertex()
 	{
 		for (int i = 0; i < 8; i++)
 		{
 			weights[i] = 0.f;
 			boneIndices[i] = 0;
 		}
-	}
+	}*/
 
 	SkinnedMeshVertex(
 		DirectX::SimpleMath::Vector3 paPos = DirectX::SimpleMath::Vector3(0.f, 0.f, 0.f),

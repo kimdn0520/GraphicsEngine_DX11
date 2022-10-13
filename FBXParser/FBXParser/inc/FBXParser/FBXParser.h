@@ -33,7 +33,7 @@ public:
 
 	void ParseNode(aiNode* node, const aiScene* scene);
 
-	std::shared_ptr<FBXMeshInfo> LoadMeshInfo(aiMesh* mesh, const aiScene* scene);
+	std::shared_ptr<FBXMeshInfo> LoadMeshInfo(aiNode* node, aiMesh* mesh, const aiScene* scene);
 
 	void LoadMaterial(const aiScene* scene);
 
@@ -46,13 +46,16 @@ public:
 	void Release() override;
 };
 
+/// <summary>
+///	assimp에서 꺼내는 aiMatrix4x4는 모두 전치가 필요
+/// </summary>
 inline DirectX::SimpleMath::Matrix FBXParser::ConvertMatrix(aiMatrix4x4 aimatrix)
 {
 	return DirectX::SimpleMath::Matrix
 	(
-		aimatrix.a1, aimatrix.a2, aimatrix.a3, aimatrix.a4,
-		aimatrix.b1, aimatrix.b2, aimatrix.b3, aimatrix.b4,
-		aimatrix.c1, aimatrix.c2, aimatrix.c3, aimatrix.c4,
-		aimatrix.d1, aimatrix.d2, aimatrix.d3, aimatrix.d4
+		aimatrix.a1, aimatrix.b1, aimatrix.c1, aimatrix.d1,
+		aimatrix.a2, aimatrix.b2, aimatrix.c2, aimatrix.d2,
+		aimatrix.a3, aimatrix.b3, aimatrix.c3, aimatrix.d3,
+		aimatrix.a4, aimatrix.b4, aimatrix.c4, aimatrix.d4
 	);
 }

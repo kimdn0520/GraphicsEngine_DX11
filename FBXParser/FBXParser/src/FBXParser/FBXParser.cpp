@@ -44,8 +44,8 @@ void FBXParser::ParseNode(aiNode* node, const aiScene* scene)
     for (size_t nodeMeshCnt = 0; nodeMeshCnt < node->mNumMeshes; nodeMeshCnt++)
     {
         aiMesh* mesh = scene->mMeshes[node->mMeshes[nodeMeshCnt]];
-        
-        fbxModel->fbxMeshInfoList.emplace_back(LoadMeshInfo(mesh, scene));
+
+        fbxModel->fbxMeshInfoList.emplace_back(LoadMeshInfo(node, mesh, scene));
     }
 
     // child Node가 있다면 재귀로 들어가준다.
@@ -59,14 +59,16 @@ void FBXParser::ParseNode(aiNode* node, const aiScene* scene)
 /// mesh는 vertex배열과 bone배열을 가지고 있다.
 /// 그렇다면.. 이 mesh의 boen들은.. 이 mesh를 skin으로 삼는것인가?
 /// </summary>
-std::shared_ptr<FBXMeshInfo> FBXParser::LoadMeshInfo(aiMesh* mesh, const aiScene* scene)
+std::shared_ptr<FBXMeshInfo> FBXParser::LoadMeshInfo(aiNode* node, aiMesh* mesh, const aiScene* scene)
 {
     std::shared_ptr<FBXMeshInfo> fbxMeshInfo = std::make_shared<FBXMeshInfo>();
 
     size_t vertexNum = mesh->mNumVertices;           // 현재 메시의 버텍스 총 갯수
         
     fbxMeshInfo->meshName = mesh->mName.C_Str();     // 현재 메시에 이름을 넣는다.
-       
+
+    fbxMeshInfo->nodeTM = ConvertMatrix(node->mTransformation);
+    
     // 버텍스를 넣는다.
     for (int vertexCnt = 0; vertexCnt < vertexNum; vertexCnt++)
     {
@@ -87,9 +89,19 @@ std::shared_ptr<FBXMeshInfo> FBXParser::LoadMeshInfo(aiMesh* mesh, const aiScene
 			
         if(mesh->HasTangentsAndBitangents())
             vertex.tangent = DirectX::SimpleMath::Vector3(mesh->mTangents[vertexCnt].x, mesh->mTangents[vertexCnt].y, mesh->mTangents[vertexCnt].z);
-            
+		
+		/*DirectX::XMMATRIX worldTMInverse = DirectX::XMMatrixInverse(nullptr, fbxMeshInfo->nodeTM);
+		DirectX::XMVECTOR vertexVec = { vertex.position.x, vertex.position.y, vertex.position.z };
+		DirectX::XMVECTOR vertexXworldTM = XMVector3Transform(vertexVec, worldTMInverse);
+		DirectX::XMFLOAT3 temp;
+		XMStoreFloat3(&temp, vertexXworldTM);
+
+		vertex.position.x = temp.x;
+		vertex.position.y = temp.y;
+		vertex.position.z = temp.z;*/
+        
         // 현재 메시에 해당하는 vertex 하나를 넣는다.
-       fbxMeshInfo->meshVertexList.emplace_back(vertex);
+        fbxMeshInfo->meshVertexList.emplace_back(vertex);
     }
 
     size_t faceNum = mesh->mNumFaces;                // 현재 메시의 face 정보
@@ -114,8 +126,8 @@ std::shared_ptr<FBXMeshInfo> FBXParser::LoadMeshInfo(aiMesh* mesh, const aiScene
         fbxMeshInfo->materialName = material->GetName().C_Str();
     }
 
-    /*if(mesh->HasBones())
-        ExtractBoneWeight(mesh, scene, fbxMeshInfo);*/
+	/*if(mesh->HasBones())
+		ExtractBoneWeight(mesh, scene, fbxMeshInfo);*/
 
     //LoadAnimation(scene);
 
@@ -297,7 +309,9 @@ void FBXParser::LoadMaterial(const aiScene* scene)
 /// </summary>
 void FBXParser::ExtractBoneWeight(aiMesh* mesh, const aiScene* scene, std::shared_ptr<FBXMeshInfo>& fbxMeshInfo)
 {
-    fbxMeshInfo->isSkinned = true;
+    fbxModel->isSkinnedAnimation = true;                     // 어쨌든 스키닝 애니메이션이 있다고하자
+
+    fbxMeshInfo->isSkinned = true;                           // 이 메시는 스킨드 메시이다.
 
     int boneNum = mesh->mNumBones;                           // 이 메시에 포함된 bone의 수
     
@@ -335,7 +349,7 @@ void FBXParser::ExtractBoneWeight(aiMesh* mesh, const aiScene* scene, std::share
 
         fbxBoneInfo->boneName = mesh->mBones[boneCnt]->mName.C_Str();   // 본의 이름
 
-        fbxBoneInfo->nodeTM = ConvertMatrix(mesh->mBones[boneCnt]->mOffsetMatrix); 
+        fbxBoneInfo->offsetMatrix = ConvertMatrix(mesh->mBones[boneCnt]->mOffsetMatrix);
 
         fbxModel->fbxSkeletionInfo->AddBone(fbxBoneInfo);               // 스키닝 메시에 본 Add
     

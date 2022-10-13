@@ -5,6 +5,7 @@
 
 class Transform;
 class GameObject;
+class SkinAnimator;
 
 class MeshRenderer : public Component
 {
@@ -14,6 +15,8 @@ public:
 
 private:
 	std::shared_ptr<Transform> _transform;
+
+	shared_ptr<SkinAnimator> _skinAnimator;
 
 	shared_ptr<ObjectInfo> _objectInfo;
 
