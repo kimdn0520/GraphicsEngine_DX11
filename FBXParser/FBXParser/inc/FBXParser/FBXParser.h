@@ -22,7 +22,7 @@ private:
 
 	std::shared_ptr<FBXModel> fbxModel;		// ¸ðµ¨
 
-	int boneID = 0;
+	int boneCounter = 0;
 
 public:
 	FBXParser();
@@ -31,7 +31,7 @@ public:
 public:
 	std::shared_ptr<FBXModel> LoadFbx(const std::string& path) override;
 
-	void ParseNode(aiNode* node, const aiScene* scene);
+	void ProcessNode(aiNode* node, const aiScene* scene);
 
 	std::shared_ptr<FBXMeshInfo> LoadMeshInfo(aiNode* node, aiMesh* mesh, const aiScene* scene);
 

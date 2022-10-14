@@ -30,14 +30,14 @@ std::shared_ptr<FBXModel> FBXParser::LoadFbx(const std::string& filePath)
         MessageBox(0, TEXT("LoadFbx Failed."), 0, 0);
     }
 
-    ParseNode(scene->mRootNode, scene);
+    ProcessNode(scene->mRootNode, scene);
 
     LoadMaterial(scene);
 
 	return fbxModel;
 }
 
-void FBXParser::ParseNode(aiNode* node, const aiScene* scene)
+void FBXParser::ProcessNode(aiNode* node, const aiScene* scene)
 {
     // Assimp의 각 노드는 mesh index들의 모음을 가지고 있다.
     // 각 index는 scene 객체 내부의 특정한 mesh를 가리킨다.
@@ -51,7 +51,7 @@ void FBXParser::ParseNode(aiNode* node, const aiScene* scene)
     // child Node가 있다면 재귀로 들어가준다.
     for (size_t nodeChildMeshCnt = 0; nodeChildMeshCnt < node->mNumChildren; nodeChildMeshCnt++)
     {
-        ParseNode(node->mChildren[nodeChildMeshCnt], scene);
+        ProcessNode(node->mChildren[nodeChildMeshCnt], scene);
     }
 }
 
@@ -126,8 +126,8 @@ std::shared_ptr<FBXMeshInfo> FBXParser::LoadMeshInfo(aiNode* node, aiMesh* mesh,
         fbxMeshInfo->materialName = material->GetName().C_Str();
     }
 
-	/*if(mesh->HasBones())
-		ExtractBoneWeight(mesh, scene, fbxMeshInfo);*/
+	if(mesh->HasBones())
+		ExtractBoneWeight(mesh, scene, fbxMeshInfo);
 
     //LoadAnimation(scene);
 
@@ -304,26 +304,56 @@ void FBXParser::LoadMaterial(const aiScene* scene)
 /// <summary>
 /// 해당 Mesh의 Bone들과 Vertex를 연결해야한다.
 /// 그러면서 vertex에 해당하는 가중치를 넣어준다.
-/// aiMesh는 bone배열과 vertex배열을 가지고 있는데 
-/// bone배열이 있다면 이 mesh는 스키닝 메시인가?
+/// aiMesh는 bone배열과 vertex배열을 가지고 있다.
+/// [주의!] 
+/// Assimp를 써서 로드하면 Bone은 Mesh 취급 안한다 (bone 도 GeomObject 취급하던 ASE랑 다르다)
 /// </summary>
 void FBXParser::ExtractBoneWeight(aiMesh* mesh, const aiScene* scene, std::shared_ptr<FBXMeshInfo>& fbxMeshInfo)
 {
-    fbxModel->isSkinnedAnimation = true;                     // 어쨌든 스키닝 애니메이션이 있다고하자
-
-    fbxMeshInfo->isSkinned = true;                           // 이 메시는 스킨드 메시이다.
-
     int boneNum = mesh->mNumBones;                           // 이 메시에 포함된 bone의 수
     
     for (int boneCnt = 0; boneCnt < boneNum; boneCnt++)
     {
-        auto vertex = mesh->mBones[boneCnt]->mWeights;       // 이 bone에 의해 영향을 받는 vertex들?
+        int boneID = -1;
+
+        auto vertex = mesh->mBones[boneCnt]->mWeights;       // 이 bone에 의해 영향을 받는 vertex들
 
         int vertexNum = mesh->mBones[boneCnt]->mNumWeights;  // 이 bone의 영향을 받는 vertex 수
 
+        // Bone 정보가 추가되지 않았다면
+        if (fbxModel->fbxSkeletionInfo->fbxBoneInfoList.find(mesh->mBones[boneCnt]->mName.C_Str())
+            == fbxModel->fbxSkeletionInfo->fbxBoneInfoList.end())
+        {
+            boneID = boneCounter;
+
+		    std::shared_ptr<FBXBoneInfo> fbxBoneInfo = std::make_shared<FBXBoneInfo>();
+
+		    fbxBoneInfo->boneID = boneCounter;                              // 본 id
+
+		    fbxBoneInfo->boneName = mesh->mBones[boneCnt]->mName.C_Str();   // 본의 이름
+
+		    fbxBoneInfo->offsetMatrix = ConvertMatrix(mesh->mBones[boneCnt]->mOffsetMatrix);
+
+            // 스켈레톤에 Bone 정보 추가
+		    fbxModel->fbxSkeletionInfo->fbxBoneInfoList.insert(make_pair(fbxBoneInfo->boneName, fbxBoneInfo));               
+        
+            boneCounter++;
+        }
+        // Bone 정보가 이미 있다면
+        else
+        {
+            boneID = fbxModel->fbxSkeletionInfo->fbxBoneInfoList[mesh->mBones[boneCnt]->mName.C_Str()]->boneID;
+        }
+
         // 해당 bone에 영향을 받는 vertex들을 돌거야
+        // 해당 메시가 bone에 영향을 받는다면 for문을 돌고 아니면 안돈다.
+        // 돈다면 스키닝 메시이다.
         for (int vertexCnt = 0; vertexCnt < vertexNum; vertexCnt++)
         {
+			fbxModel->isSkinnedAnimation = true;            // 어쨌든 스키닝 애니메이션이 있다고하자
+
+			fbxMeshInfo->isSkinned = true;                  // 이 메시는 스킨드 메시이다.
+
             int vertexID = vertex[vertexCnt].mVertexId;     // 해당 버텍스의 id
 
             float weight = vertex[vertexCnt].mWeight;       // 해당 버텍스의 가중치
@@ -342,21 +372,16 @@ void FBXParser::ExtractBoneWeight(aiMesh* mesh, const aiScene* scene, std::share
                 }
             }
         }
-
-        std::shared_ptr<FBXBoneInfo> fbxBoneInfo = std::make_shared<FBXBoneInfo>();
-        
-        fbxBoneInfo->boneIndex = boneID;                                // 본 id
-
-        fbxBoneInfo->boneName = mesh->mBones[boneCnt]->mName.C_Str();   // 본의 이름
-
-        fbxBoneInfo->offsetMatrix = ConvertMatrix(mesh->mBones[boneCnt]->mOffsetMatrix);
-
-        fbxModel->fbxSkeletionInfo->AddBone(fbxBoneInfo);               // 스키닝 메시에 본 Add
-    
-        boneID++;
     }
 }
 
+/// <summary>
+/// Rotation의 쿼터니언 값은 이전 프레임의 누적된 값을 제공하므로 그대로 사용하면 된다.
+/// 쿼터니언 값의 순서는 그래픽스 개념에 맞춰 wxyz순이므로 DX를 사용할 시 유의
+/// 애니메이션 값은 로컬 행렬이 연산된 값이므로 최종 행렬을 만들때 로컬행렬을 고려할 필요 없다.
+/// 디버그 모드에서는 키값이 없어도 정보를 채워 pos, scale, rot 모든 키 값이 프레임에 맞춰 1:1 매칭되어 나오지만
+/// 릴리즈 모드에서는 키 값이 없는 경우는 추가하지 않아 각각 다르게 나올 수 있다.
+/// </summary>
 void FBXParser::LoadAnimation(const aiScene* scene)
 {
 

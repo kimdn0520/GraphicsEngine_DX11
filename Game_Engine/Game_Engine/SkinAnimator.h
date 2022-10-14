@@ -3,6 +3,8 @@
 
 class Transform;
 
+struct FBXBoneInfo;
+
 class SkinAnimator : public Component
 {
 public:
@@ -15,12 +17,10 @@ private:
 public:
 	Matrix _finalBoneListMatrix[96];
 
-	vector<shared_ptr<GameObject>> boneObjList;
-
-	vector<size_t> boneNameList;
+	vector<shared_ptr<FBXBoneInfo>> boneObjList;
 
 public:
-	void SetBoneObject(shared_ptr<GameObject>& boneObj) { boneObjList.push_back(boneObj); }
+	//void SetBoneObject(shared_ptr<GameObject>& boneObj) { boneObjList.push_back(boneObj); }
 
 	void Update() override;
 };

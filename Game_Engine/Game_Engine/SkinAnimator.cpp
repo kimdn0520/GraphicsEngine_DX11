@@ -3,6 +3,8 @@
 #include "GameObject.h"
 #include "Transform.h"
 
+#include "ParserData.h"
+
 SkinAnimator::SkinAnimator(shared_ptr<GameObject> gameObject)
 	: Component(gameObject, COMPONENT_TYPE::SKINANIMATOR),
 	_transform(gameObject->GetTransform())
@@ -32,10 +34,10 @@ void SkinAnimator::Update()
 
 	for (int i = 0; i < boneObjList.size(); i++)
 	{
-		shared_ptr<GameObject> tmpBone = boneObjList[i];
+		shared_ptr<FBXBoneInfo> tmpBone = boneObjList[i];
 
-		boneWorldTM = tmpBone->GetTransform()->GetWorldMatrix();
-		boneNodeTM = tmpBone->GetTransform()->GetNodeMatrix();
+		boneWorldTM = tmpBone->worldTM;
+		boneNodeTM = tmpBone->offsetMatrix;
 
 		Matrix skinWorldTM = _transform->GetWorldMatrix();
 		Matrix skinNodeTM = _transform->GetNodeMatrix();

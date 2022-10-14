@@ -539,16 +539,17 @@ std::vector<std::shared_ptr<GameObject>> Resources::LoadFBX(std::string path, in
 			gameObjects.push_back(gameObject);
 		}
 
-		for (auto& gameObject : gameObjects)
-		{
-			for(auto& bone : fbxModel->fbxSkeletionInfo->fbxBoneInfoList)
-			{
-				if (bone->boneName.compare(gameObject->GetName()) == 0)
-				{
-					skinnedObject->GetComponent<SkinAnimator>()->SetBoneObject(gameObject);
-				}
-			}
-		}
+		//for (auto& gameObject : gameObjects)
+		//{
+		//	for(auto& bone : fbxModel->fbxSkeletionInfo->fbxBoneInfoList)
+		//	{
+		//		// 본 오브젝트를 찾아서 스키닝 오브젝트에 Set 해준다.
+		//		if (bone->boneName.compare(gameObject->GetName()) == 0)
+		//		{
+		//			skinnedObject->GetComponent<SkinAnimator>()->SetBoneObject(gameObject);
+		//		}
+		//	}
+		//}
 	}
 	// Animation이 없는 경우 StaticMesh
 	else

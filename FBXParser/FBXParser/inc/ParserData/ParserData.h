@@ -37,16 +37,6 @@ struct Vertex
 	unsigned __int32 boneIndices[8];
 };
 
-// 안쓸듯?
-struct FBXFace
-{
-	// Face를 이루는 3개의 Vertex 정보
-	int vertexIndex[3];								// 이 Face를 이루는 Vertex의 인덱스
-	DirectX::SimpleMath::Vector2 vertexUV[2];		// 이 Face를 이루는 Vertex의 uv
-	DirectX::SimpleMath::Vector3 vertexNormal[3];	// 이 Face를 이루는 Vertex의 Normal
-	DirectX::SimpleMath::Vector3 vertexTangent[3];	// 이 Face를 이루는 Vertex의 Tangent
-};
-
 struct FBXMaterialInfo
 {
 	std::string materialName;
@@ -69,46 +59,11 @@ struct FBXMaterialInfo
 	float roughness;
 };
 
-/// <summary>
-/// 쓸..? 안쓸듯?
-/// </summary>
-struct BoneWeight
-{
-	using Pair = std::pair<int, double>;
-	std::vector<Pair> boneWeights;
-
-	void AddWeights(int index, double weight)
-	{
-		if (weight <= 0.f)
-			return;
-
-		auto findIt = std::find_if(boneWeights.begin(), boneWeights.end(),
-			[=](const Pair& p) { return p.second < weight; });
-
-		if (findIt != boneWeights.end())
-			boneWeights.insert(findIt, Pair(index, weight));
-		else
-			boneWeights.push_back(Pair(index, weight));
-
-		// 가중치는 최대 8개
-		if (boneWeights.size() > 8)
-			boneWeights.pop_back();
-	}
-
-	void Normalize()
-	{
-		double sum = 0.f;
-		std::for_each(boneWeights.begin(), boneWeights.end(), [&](Pair& p) { sum += p.second; });
-		std::for_each(boneWeights.begin(), boneWeights.end(), [=](Pair& p) { p.second = p.second / sum; });
-	}
-};
-
 struct FBXMeshInfo
 {
 	std::string						meshName;			// mesh 이름!
 	std::string						materialName;		// 이 mesh에 해당하는 material 이름!
 	std::vector<Vertex>				meshVertexList;
-	//std::vector<FBXFace>			meshFaceList;
 	std::vector<unsigned int>		indices;
 
 	DirectX::SimpleMath::Matrix nodeTM;					// Node TransformMatrix
@@ -120,7 +75,7 @@ struct FBXMeshInfo
 
 	bool isParent;				// 부모가 존재하는지
 
-	bool isSkinned;				// 스키닝오브젝트 인지 아닌지..
+	bool isSkinned = false;		// 스키닝오브젝트 인지 아닌지..
 };
 
 struct FBXKeyFrameInfo
@@ -133,7 +88,7 @@ struct FBXKeyFrameInfo
 struct FBXBoneInfo
 {
 	std::string				boneName;
-	int						boneIndex;
+	int						boneID;
 
 	std::string				parentBoneName;
 	int						parentIndex;
@@ -143,22 +98,19 @@ struct FBXBoneInfo
 	std::vector<std::shared_ptr<FBXBoneInfo>> childBoneList;	// 자식 노드 리스트
 
 	DirectX::SimpleMath::Matrix offsetMatrix;		// Bone's OffsetMatrix
-
-	// 일단 ... 대기 안쓸수도
-	DirectX::SimpleMath::Matrix nodeTM;		// Bone's Node Transform Matrix
+	
 	DirectX::SimpleMath::Matrix worldTM;	// Bone's World Transform Matrix
-	DirectX::SimpleMath::Matrix localTM;	// Bone's Local Transform Matrix
 };
 
 // 본들을 갖고있는 스키닝 오브젝트!
 struct FBXSkeletonInfo
 {
-	std::vector<std::shared_ptr<FBXBoneInfo>> fbxBoneInfoList;
+	std::unordered_map<std::string, std::shared_ptr<FBXBoneInfo>> fbxBoneInfoList;
 
-	void AddBone(std::shared_ptr<FBXBoneInfo> bone)
+	/*void AddBone(std::shared_ptr<FBXBoneInfo> bone)
 	{
 		fbxBoneInfoList.push_back(bone);
-	}
+	}*/
 };
 
 struct FBXAnimClipInfo
