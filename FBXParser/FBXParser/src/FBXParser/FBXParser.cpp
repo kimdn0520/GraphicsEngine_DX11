@@ -12,7 +12,7 @@ std::shared_ptr<FBXModel> FBXParser::LoadFbx(const std::string& filePath)
 {
     fbxModel = std::make_shared<FBXModel>();
 
-    fbxModel->fbxSkeletionInfo = std::make_shared<FBXSkeletonInfo>();
+    fbxModel->fbxSkeletonInfo = std::make_shared<FBXSkeletonInfo>();
 
     scene = importer.ReadFile(filePath,
         aiProcess_CalcTangentSpace |                // 가져온 메쉬의 tangent 및 bitangent를 계산한다. 메쉬에 법선이 없으면 작업을 수행하지 않는다.
@@ -126,8 +126,8 @@ std::shared_ptr<FBXMeshInfo> FBXParser::LoadMeshInfo(aiNode* node, aiMesh* mesh,
         fbxMeshInfo->materialName = material->GetName().C_Str();
     }
 
-	if(mesh->HasBones())
-		ExtractBoneWeight(mesh, scene, fbxMeshInfo);
+	/*if(mesh->HasBones())
+		ExtractBoneWeight(mesh, scene, fbxMeshInfo);*/
 
     //LoadAnimation(scene);
 
@@ -320,9 +320,8 @@ void FBXParser::ExtractBoneWeight(aiMesh* mesh, const aiScene* scene, std::share
 
         int vertexNum = mesh->mBones[boneCnt]->mNumWeights;  // 이 bone의 영향을 받는 vertex 수
 
-        // Bone 정보가 추가되지 않았다면
-        if (fbxModel->fbxSkeletionInfo->fbxBoneInfoList.find(mesh->mBones[boneCnt]->mName.C_Str())
-            == fbxModel->fbxSkeletionInfo->fbxBoneInfoList.end())
+        // BoneMap에 Bone 정보가 추가되지 않았다면
+        if (boneMap.find(mesh->mBones[boneCnt]->mName.C_Str()) == boneMap.end())
         {
             boneID = boneCounter;
 
@@ -334,15 +333,18 @@ void FBXParser::ExtractBoneWeight(aiMesh* mesh, const aiScene* scene, std::share
 
 		    fbxBoneInfo->offsetMatrix = ConvertMatrix(mesh->mBones[boneCnt]->mOffsetMatrix);
 
-            // 스켈레톤에 Bone 정보 추가
-		    fbxModel->fbxSkeletionInfo->fbxBoneInfoList.insert(make_pair(fbxBoneInfo->boneName, fbxBoneInfo));               
-        
+            // BoneMap에 Bone 정보 추가
+            boneMap.insert(std::make_pair(fbxBoneInfo->boneName, fbxBoneInfo));
+            
+            // FBXModel Skeleton에 Bone 정보  추가
+            fbxModel->fbxSkeletonInfo->fbxBoneInfoList.emplace_back(fbxBoneInfo);
+
             boneCounter++;
         }
         // Bone 정보가 이미 있다면
         else
         {
-            boneID = fbxModel->fbxSkeletionInfo->fbxBoneInfoList[mesh->mBones[boneCnt]->mName.C_Str()]->boneID;
+            boneID = boneMap[mesh->mBones[boneCnt]->mName.C_Str()]->boneID;
         }
 
         // 해당 bone에 영향을 받는 vertex들을 돌거야
@@ -384,7 +386,77 @@ void FBXParser::ExtractBoneWeight(aiMesh* mesh, const aiScene* scene, std::share
 /// </summary>
 void FBXParser::LoadAnimation(const aiScene* scene)
 {
+    // 애니메이션의 갯수 만큼
+    for (int i = 0; i < scene->mNumAnimations; i++) 
+    {
+        auto aiAni = scene->mAnimations[i];
 
+        float lastTime = 0.f;
+        
+        std::shared_ptr<FBXAnimClipInfo> aniInfo = std::make_shared<FBXAnimClipInfo>();
+        aniInfo->duration = ((float)aiAni->mDuration);
+        aniInfo->ticksPerFrame = ((float)aiAni->mTicksPerSecond);
+
+        std::string aniName = aiAni->mName.C_Str();
+
+        // 연결된 노드 만큼...
+        for (UINT j = 0; j < aiAni->mNumChannels; j++) 
+        {
+            auto aiAniNode = aiAni->mChannels[j];
+
+            std::shared_ptr<FBXKeyFrameInfo> aniKeyFrameInfo = std::make_shared<FBXKeyFrameInfo>();
+
+            // pos, rot, scale key중에 가장 큰걸루다가 하자
+            UINT keyCnt = std::max(aiAniNode->mNumPositionKeys, aiAniNode->mNumRotationKeys);
+            keyCnt = std::max(keyCnt, aiAniNode->mNumScalingKeys);
+
+            // 키 프레임 정보를 구성한다.
+            DirectX::SimpleMath::Vector3 translation = DirectX::SimpleMath::Vector3(0.f, 0.f, 0.f);
+            DirectX::SimpleMath::Vector3 scale = DirectX::SimpleMath::Vector3(0.f, 0.f, 0.f);
+            DirectX::SimpleMath::Vector4 rotation = DirectX::SimpleMath::Vector4(0.f, 0.f, 0.f, 0.f);
+            float	 time = 0.f;
+
+            // 키 값은 있을 수도 있으며, 없을수도 있다.
+            // 없는 경우 이전 값으로 채운다.
+            for (UINT k = 0; k < keyCnt; k++)
+            {
+                if (aiAniNode->mNumPositionKeys > k) 
+                {
+                    auto posKey = aiAniNode->mPositionKeys[k];
+                    memcpy_s(&translation, sizeof(translation), &posKey.mValue, sizeof(posKey.mValue));
+                    time = (float)aiAniNode->mPositionKeys[k].mTime;
+                }
+
+                if (aiAniNode->mNumRotationKeys > k)
+                {
+                    auto rotKey = aiAniNode->mRotationKeys[k];
+                    rotation = DirectX::SimpleMath::Vector4(rotKey.mValue.x, rotKey.mValue.y, rotKey.mValue.z, rotKey.mValue.w);
+                    time = (float)aiAniNode->mRotationKeys[k].mTime;
+                }
+
+                if (aiAniNode->mNumScalingKeys > k)
+                {
+                    auto scaleKey = aiAniNode->mScalingKeys[k];
+                    memcpy_s(&scale, sizeof(scale), &scaleKey.mValue, sizeof(scaleKey.mValue));
+                    time = (float)aiAniNode->mScalingKeys[k].mTime;
+                }
+
+                aniKeyFrameInfo->time = time;
+                aniKeyFrameInfo->transform = translation;
+                aniKeyFrameInfo->rotation = rotation;
+                aniKeyFrameInfo->scale = scale;
+            }
+
+            aniInfo->keyFrameList.emplace_back(aniKeyFrameInfo);
+            
+            lastTime = std::max(aniInfo->keyFrameList.back()->time, lastTime);
+        }
+
+        aniInfo->endKeyFrame = lastTime;
+
+        // 모델의 애니메이션 리스트에 추가
+        fbxModel->animationClipList.emplace_back(aniInfo);
+    }
 }
 
 void FBXParser::Release()

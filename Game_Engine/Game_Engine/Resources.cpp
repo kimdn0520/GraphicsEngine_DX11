@@ -453,9 +453,6 @@ std::vector<std::shared_ptr<GameObject>> Resources::LoadFBX(std::string path, in
 	// 게임오브젝트들로 바꾸어서 반환할거임.
 	vector<std::shared_ptr<GameObject>> gameObjects;
 
-	// 스킨 오브젝토~
-	shared_ptr<GameObject> skinnedObject;
-
 	// Animation이 있는 경우 대부분 SkinnedMesh
 	if (fbxModel->isSkinnedAnimation)
 	{
@@ -495,11 +492,15 @@ std::vector<std::shared_ptr<GameObject>> Resources::LoadFBX(std::string path, in
 			gameObject->GetComponent<MeshRenderer>()->IsSkinnedMesh(mesh->isSkinned);
 			gameObject->GetComponent<MeshRenderer>()->SetMeshID(meshID);		// meshID 등록
 
+			// Bone에 의해 영향을 받는 Mesh라면
 			if (mesh->isSkinned == true)
 			{
 				gameObject->AddComponent<SkinAnimator>();
 
-				skinnedObject = gameObject;
+				for (auto& bone : fbxModel->fbxSkeletonInfo->fbxBoneInfoList)
+				{
+					gameObject->GetComponent<SkinAnimator>()->SetBoneObject(bone);
+				}
 			}
 
 			// 메시 하나당 머터리얼 하나
@@ -538,18 +539,6 @@ std::vector<std::shared_ptr<GameObject>> Resources::LoadFBX(std::string path, in
 
 			gameObjects.push_back(gameObject);
 		}
-
-		//for (auto& gameObject : gameObjects)
-		//{
-		//	for(auto& bone : fbxModel->fbxSkeletionInfo->fbxBoneInfoList)
-		//	{
-		//		// 본 오브젝트를 찾아서 스키닝 오브젝트에 Set 해준다.
-		//		if (bone->boneName.compare(gameObject->GetName()) == 0)
-		//		{
-		//			skinnedObject->GetComponent<SkinAnimator>()->SetBoneObject(gameObject);
-		//		}
-		//	}
-		//}
 	}
 	// Animation이 없는 경우 StaticMesh
 	else

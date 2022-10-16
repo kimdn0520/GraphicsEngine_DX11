@@ -20,7 +20,7 @@ public:
 	vector<shared_ptr<FBXBoneInfo>> boneObjList;
 
 public:
-	//void SetBoneObject(shared_ptr<GameObject>& boneObj) { boneObjList.push_back(boneObj); }
+	void SetBoneObject(shared_ptr<FBXBoneInfo> boneObj) { boneObjList.push_back(boneObj); }
 
 	void Update() override;
 };

@@ -2,6 +2,7 @@
 #include "ParserBase/ParserBase.h"
 
 struct FBXMeshInfo;
+struct FBXBoneInfo;
 
 /// <summary>
 /// 나중에는 파싱만을 목적으로 하는 어플리케이션으로 하나 더 제작 할 것
@@ -21,6 +22,8 @@ private:
 	const aiScene* scene;
 
 	std::shared_ptr<FBXModel> fbxModel;		// 모델
+
+	std::unordered_map<std::string, std::shared_ptr<FBXBoneInfo>> boneMap;
 
 	int boneCounter = 0;
 

@@ -78,13 +78,6 @@ struct FBXMeshInfo
 	bool isSkinned = false;		// 스키닝오브젝트 인지 아닌지..
 };
 
-struct FBXKeyFrameInfo
-{
-	DirectX::SimpleMath::Matrix matTransform;
-
-	double		time;
-};
-
 struct FBXBoneInfo
 {
 	std::string				boneName;
@@ -97,15 +90,15 @@ struct FBXBoneInfo
 
 	std::vector<std::shared_ptr<FBXBoneInfo>> childBoneList;	// 자식 노드 리스트
 
-	DirectX::SimpleMath::Matrix offsetMatrix;		// Bone's OffsetMatrix
+	DirectX::SimpleMath::Matrix offsetMatrix;							// Bone's OffsetMatrix
 	
-	DirectX::SimpleMath::Matrix worldTM;	// Bone's World Transform Matrix
+	DirectX::SimpleMath::Matrix worldTM = DirectX::XMMatrixIdentity();	// Bone's World Transform Matrix
 };
 
 // 본들을 갖고있는 스키닝 오브젝트!
 struct FBXSkeletonInfo
 {
-	std::unordered_map<std::string, std::shared_ptr<FBXBoneInfo>> fbxBoneInfoList;
+	std::vector<std::shared_ptr<FBXBoneInfo>> fbxBoneInfoList;
 
 	/*void AddBone(std::shared_ptr<FBXBoneInfo> bone)
 	{
@@ -113,16 +106,27 @@ struct FBXSkeletonInfo
 	}*/
 };
 
+struct FBXKeyFrameInfo
+{
+	float		time;
+
+	DirectX::SimpleMath::Vector3 transform;
+	DirectX::SimpleMath::Vector4 rotation;
+	DirectX::SimpleMath::Vector3 scale;
+};
+
 struct FBXAnimClipInfo
 {
 	std::string			animationName;
 	
-	float	ticksPerFrame;
-	int		totalKeyFrame;
-	int		startKeyFrame;
-	int		endKeyFrame;
+	float	ticksPerFrame;	// 틱 값
+	int		totalKeyFrame;	// 총 프레임
+	int		startKeyFrame;	// 시작 프레임
+	int		endKeyFrame;	// 마지막 프레임
 
-	std::vector<std::vector<std::shared_ptr<FBXKeyFrameInfo>>> keyFrames;
+	float	duration;		// 속도
+
+	std::vector<std::shared_ptr<FBXKeyFrameInfo>> keyFrameList;	 //	키프레임 리스트
 };
 
 class FBXModel
@@ -132,7 +136,7 @@ public:
 
 	std::vector<std::shared_ptr<FBXMaterialInfo>>	materialList;
 	
-	std::shared_ptr<FBXSkeletonInfo> fbxSkeletionInfo;
+	std::shared_ptr<FBXSkeletonInfo> fbxSkeletonInfo;
 	
 	std::vector<std::shared_ptr<FBXAnimClipInfo>> animationClipList;
 
