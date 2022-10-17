@@ -14,7 +14,7 @@ std::shared_ptr<FBXModel> FBXParser::LoadFbx(const std::string& filePath)
 
     fbxModel->fbxSkeletonInfo = std::make_shared<FBXSkeletonInfo>();
 
-    scene = importer.ReadFile(filePath,
+    const aiScene* scene = importer.ReadFile(filePath,
         aiProcess_CalcTangentSpace |                // 가져온 메쉬의 tangent 및 bitangent를 계산한다. 메쉬에 법선이 없으면 작업을 수행하지 않는다.
         aiProcess_Triangulate |                     // 3개 이상의 모서리를 가진 다각형 면을 삼각형으로 만든다.
         aiProcess_JoinIdenticalVertices |           // 동일한 꼭지점 결합, 인덱싱 최적화
@@ -43,9 +43,11 @@ std::shared_ptr<FBXModel> FBXParser::LoadFbx(const std::string& filePath)
 /// 늑대 파싱할때 Mesh 5개인데 Mesh Node 안에 5개가 있었다 Node이름은 Wolf_body 어쩌고.. 였고
 /// blender에 있는 Mesh 이름과 여기서 파싱할때 Mesh 이름은 달랐다.
 /// </summary>
-void FBXParser::ProcessNode(aiNode* node, const aiScene* scene)
+void FBXParser::ProcessNode(aiNode* node, const aiScene* scene, std::shared_ptr<NodeInfo> parent, int depth)
 {
-    std::string tmpName = node->mName.C_Str();
+    std::shared_ptr<NodeInfo> nodeInfo = std::make_shared<NodeInfo>(parent, node->mName.C_Str(), ConvertMatrix(node->mTransformation), depth);
+
+    nodeInfoList.insert(std::make_pair(node->mName.C_Str() ,nodeInfo));
 
     // Assimp의 각 노드는 mesh index들의 모음을 가지고 있다.
     // 각 index는 scene 객체 내부의 특정한 mesh를 가리킨다.
@@ -59,13 +61,12 @@ void FBXParser::ProcessNode(aiNode* node, const aiScene* scene)
     // child Node가 있다면 재귀로 들어가준다.
     for (size_t nodeChildMeshCnt = 0; nodeChildMeshCnt < node->mNumChildren; nodeChildMeshCnt++)
     {
-        ProcessNode(node->mChildren[nodeChildMeshCnt], scene);
+        ProcessNode(node->mChildren[nodeChildMeshCnt], scene, nodeInfo, depth + 1);
     }
 }
 
 /// <summary>
 /// mesh는 vertex배열과 bone배열을 가지고 있다.
-/// 그렇다면.. 이 mesh의 boen들은.. 이 mesh를 skin으로 삼는것인가?
 /// </summary>
 std::shared_ptr<FBXMeshInfo> FBXParser::LoadMeshInfo(aiNode* node, aiMesh* mesh, const aiScene* scene)
 {
@@ -134,8 +135,14 @@ std::shared_ptr<FBXMeshInfo> FBXParser::LoadMeshInfo(aiNode* node, aiMesh* mesh,
         fbxMeshInfo->materialName = material->GetName().C_Str();
     }
 
-	/*if (mesh->HasBones())
-		ExtractBoneWeight(mesh, scene, fbxMeshInfo);*/
+    if (mesh->HasBones())
+    {
+		ExtractBoneWeight(mesh, scene, fbxMeshInfo);
+
+        std::sort(fbxModel->fbxSkeletonInfo->fbxBoneInfoList.begin(), fbxModel->fbxSkeletonInfo->fbxBoneInfoList.end(),
+            [](std::shared_ptr<FBXBoneInfo> a, std::shared_ptr<FBXBoneInfo> b)->bool {	return a->depth < b->depth; });
+    }
+
 
     //LoadAnimation(scene);
 
@@ -344,13 +351,14 @@ void FBXParser::ExtractBoneWeight(aiMesh* mesh, const aiScene* scene, std::share
 			// 해당 Bone이 있는 Node를 찾는다.
 			aiNode* node = scene->mRootNode->FindNode(mesh->mBones[boneCnt]->mName);
 
-            // 루트 노드가 아니고 부모가 존재한다면
+            // 부모가 존재한다면
             if (node->mParent != nullptr)
             {
-                fbxBoneInfo->isParent = true;
-
                 fbxBoneInfo->parentBoneName = node->mParent->mName.C_Str();
             }
+
+            // 정렬을 위한 depth를 추가해준다.
+            fbxBoneInfo->depth = nodeInfoList[fbxBoneInfo->boneName]->depth;
 
             // BoneMap에 Bone 정보 추가
             boneMap.insert(std::make_pair(fbxBoneInfo->boneName, fbxBoneInfo));
@@ -399,7 +407,7 @@ void FBXParser::ExtractBoneWeight(aiMesh* mesh, const aiScene* scene, std::share
 void FBXParser::CalcBoneOffset(aiBone* bone, std::shared_ptr<FBXBoneInfo>& fbxBoneInfo)
 {
     // 해당 Bone이 있는 Node를 찾는다.
-    aiNode* node = scene->mRootNode->FindNode(bone->mName);
+    /*aiNode* node = scene->mRootNode->FindNode(bone->mName);
 
 	fbxBoneInfo->offsetMatrix = ConvertMatrix(bone->mOffsetMatrix);
 
@@ -412,7 +420,7 @@ void FBXParser::CalcBoneOffset(aiBone* bone, std::shared_ptr<FBXBoneInfo>& fbxBo
         fbxBoneInfo->offsetMatrix = ConvertMatrix(tmpNode->mTransformation) * fbxBoneInfo->offsetMatrix;
 
         tmpNode = tmpNode->mParent;
-    }
+    }*/
 }
 
 /// <summary>

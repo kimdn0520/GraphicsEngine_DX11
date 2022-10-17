@@ -4,6 +4,18 @@
 struct FBXMeshInfo;
 struct FBXBoneInfo;
 
+struct NodeInfo 
+{
+	int				depth = 0;			
+
+	std::string		nodeName = "none";
+	std::shared_ptr<NodeInfo> parent = nullptr;
+
+	NodeInfo(std::shared_ptr<NodeInfo> parent, std::string name, DirectX::SimpleMath::Matrix tm, int depth = 0)
+		: parent(parent), nodeName(name), depth(depth)
+	{}
+};
+
 /// <summary>
 /// 나중에는 자체포맷 파싱만을 목적으로 하는 어플리케이션으로 하나 더 제작 할 것
 /// 일단 이것은 FBXLoad 테스트용 dll, binarySerializer후 테스트용 으로 쓰자
@@ -19,13 +31,13 @@ class FBXParser : public ParserBase
 private:
 	Assimp::Importer importer;
 
-	const aiScene* scene;
-
 	std::shared_ptr<FBXModel> fbxModel;		// 모델
 
 	std::unordered_map<std::string, std::shared_ptr<FBXBoneInfo>> boneMap;
 
 	int boneCounter = 0;
+
+	std::unordered_map<std::string, std::shared_ptr<NodeInfo>> nodeInfoList;
 
 public:
 	FBXParser();
@@ -34,7 +46,7 @@ public:
 public:
 	std::shared_ptr<FBXModel> LoadFbx(const std::string& path) override;
 
-	void ProcessNode(aiNode* node, const aiScene* scene);
+	void ProcessNode(aiNode* node, const aiScene* scene, std::shared_ptr<NodeInfo> parent = nullptr, int depth = 0);
 
 	std::shared_ptr<FBXMeshInfo> LoadMeshInfo(aiNode* node, aiMesh* mesh, const aiScene* scene);
 

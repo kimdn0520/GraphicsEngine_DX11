@@ -86,7 +86,7 @@ struct FBXBoneInfo
 	std::string				parentBoneName;
 	int						parentIndex;
 
-	bool isParent;			// 본의 부모가 있는지 없는지..
+	int						depth = 0;
 
 	std::vector<std::shared_ptr<FBXBoneInfo>> childBoneList;	// 자식 노드 리스트
 
