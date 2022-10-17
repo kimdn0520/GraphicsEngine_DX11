@@ -66,11 +66,11 @@ void MeshRenderer::Update()
 
 	for (int i = 0; i < boneObjList.size(); i++)
 	{
-		shared_ptr<FBXBoneInfo> tmpBone = boneObjList[i];
+		shared_ptr<GameObject> tmpBone = boneObjList[i];
 
-		boneWorldTM = tmpBone->worldTM;
+		boneWorldTM = tmpBone->GetTransform()->GetWorldMatrix();
 
-		boneNodeTM = tmpBone->offsetMatrix;
+		boneNodeTM = tmpBone->GetTransform()->GetNodeMatrix();
 
 		boneOffsetTM = boneNodeTM * _transform->GetNodeMatrix().Invert();
 

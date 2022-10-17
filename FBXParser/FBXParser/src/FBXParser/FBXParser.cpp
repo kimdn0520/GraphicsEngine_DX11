@@ -339,9 +339,18 @@ void FBXParser::ExtractBoneWeight(aiMesh* mesh, const aiScene* scene, std::share
 
 		    fbxBoneInfo->boneName = mesh->mBones[boneCnt]->mName.C_Str();   // 본의 이름
 
-            CalcBoneOffset(mesh->mBones[boneCnt], fbxBoneInfo);             // 본 offset, world 계산..?
+            fbxBoneInfo->offsetMatrix = ConvertMatrix(mesh->mBones[boneCnt]->mOffsetMatrix);
 
-		    fbxBoneInfo->offsetMatrix = ConvertMatrix(mesh->mBones[boneCnt]->mOffsetMatrix);
+			// 해당 Bone이 있는 Node를 찾는다.
+			aiNode* node = scene->mRootNode->FindNode(mesh->mBones[boneCnt]->mName);
+
+            // 루트 노드가 아니고 부모가 존재한다면
+            if (node->mParent != nullptr)
+            {
+                fbxBoneInfo->isParent = true;
+
+                fbxBoneInfo->parentBoneName = node->mParent->mName.C_Str();
+            }
 
             // BoneMap에 Bone 정보 추가
             boneMap.insert(std::make_pair(fbxBoneInfo->boneName, fbxBoneInfo));

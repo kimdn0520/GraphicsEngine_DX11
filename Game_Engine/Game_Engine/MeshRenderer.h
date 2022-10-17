@@ -21,10 +21,12 @@ private:
 	shared_ptr<ObjectInfo> _objectInfo;
 
 public:
-	vector<shared_ptr<FBXBoneInfo>> boneObjList;
+	vector<shared_ptr<GameObject>> boneObjList;
+
+	bool isBone = false;
 
 public:
-	void SetBoneObject(shared_ptr<FBXBoneInfo> boneObj) { boneObjList.push_back(boneObj); }
+	void SetBoneObject(shared_ptr<GameObject> boneObj) { boneObjList.push_back(boneObj); }
 	
 	shared_ptr<ObjectInfo> GetObjectInfo() { return _objectInfo; }
 
@@ -36,7 +38,6 @@ public:
 	void IsSkinnedMesh(bool value) { _objectInfo->isSkinned = value; }
 
 	void IsShadow(bool value) { _objectInfo->isShadow = value; }
-
 
 	void Update() override;
 

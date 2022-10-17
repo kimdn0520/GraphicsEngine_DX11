@@ -455,6 +455,30 @@ std::vector<std::shared_ptr<GameObject>> Resources::LoadFBX(std::string path, in
 	// Animation이 있는 경우 대부분 SkinnedMesh
 	if (fbxModel->isSkinnedAnimation)
 	{
+		// 본오브젝트를 만들자..
+		for (auto& bone : fbxModel->fbxSkeletonInfo->fbxBoneInfoList)
+		{
+			std::shared_ptr<GameObject> boneObject = std::make_shared<GameObject>();
+			boneObject->SetName(bone->boneName);
+			boneObject->AddComponent<Transform>();
+			boneObject->GetComponent<Transform>()->SetNodeTM(bone->offsetMatrix);	// NodeTM 넣기
+			boneObject->AddComponent<MeshRenderer>();
+			boneObject->GetComponent<MeshRenderer>()->isBone = true;
+
+			// 부모가 먼저 생김
+			for (auto& gameObj : gameObjects)
+			{
+				if (gameObj->GetName() == bone->parentBoneName)
+				{
+					boneObject->GetTransform()->SetParent(gameObj->GetTransform());
+					gameObj->SetChild(boneObject);
+					break;
+				}
+			}
+
+			gameObjects.push_back(boneObject);
+		}
+
 		for (auto& mesh : fbxModel->fbxMeshInfoList)
 		{
 			std::vector<SkinnedMeshVertex> skinnedMeshVertices;
@@ -495,10 +519,10 @@ std::vector<std::shared_ptr<GameObject>> Resources::LoadFBX(std::string path, in
 			// Bone에 의해 영향을 받는 Mesh라면
 			if (mesh->isSkinned == true)
 			{
-				for (auto& bone : fbxModel->fbxSkeletonInfo->fbxBoneInfoList)
+				/*for (auto& bone : fbxModel->fbxSkeletonInfo->fbxBoneInfoList)
 				{
 					gameObject->GetComponent<MeshRenderer>()->SetBoneObject(bone);
-				}
+				}*/
 			}
 
 			// 메시 하나당 머터리얼 하나
