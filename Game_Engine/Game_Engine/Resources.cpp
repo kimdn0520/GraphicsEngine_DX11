@@ -6,7 +6,6 @@
 #include "MonoBehaviour.h"
 #include "Transform.h"
 #include "MeshRenderer.h"
-#include "SkinAnimator.h"
 
 #include "ParserBase.h"
 #include "ParserData.h"
@@ -488,6 +487,7 @@ std::vector<std::shared_ptr<GameObject>> Resources::LoadFBX(std::string path, in
 			std::shared_ptr<GameObject> gameObject = std::make_shared<GameObject>();
 			gameObject->SetName(mesh->meshName);
 			gameObject->AddComponent<Transform>();
+			gameObject->GetComponent<Transform>()->SetNodeTM(mesh->nodeTM);		// NodeTM 넣기
 			gameObject->AddComponent<MeshRenderer>();
 			gameObject->GetComponent<MeshRenderer>()->IsSkinnedMesh(mesh->isSkinned);
 			gameObject->GetComponent<MeshRenderer>()->SetMeshID(meshID);		// meshID 등록
@@ -495,11 +495,9 @@ std::vector<std::shared_ptr<GameObject>> Resources::LoadFBX(std::string path, in
 			// Bone에 의해 영향을 받는 Mesh라면
 			if (mesh->isSkinned == true)
 			{
-				gameObject->AddComponent<SkinAnimator>();
-
 				for (auto& bone : fbxModel->fbxSkeletonInfo->fbxBoneInfoList)
 				{
-					gameObject->GetComponent<SkinAnimator>()->SetBoneObject(bone);
+					gameObject->GetComponent<MeshRenderer>()->SetBoneObject(bone);
 				}
 			}
 

@@ -7,6 +7,8 @@ class Transform;
 class GameObject;
 class SkinAnimator;
 
+struct FBXBoneInfo;
+
 class MeshRenderer : public Component
 {
 public:
@@ -16,18 +18,14 @@ public:
 private:
 	std::shared_ptr<Transform> _transform;
 
-	shared_ptr<SkinAnimator> _skinAnimator;
-
 	shared_ptr<ObjectInfo> _objectInfo;
 
-	bool _isBone = false;				// 본인지 아닌지(본은 안 그릴거라서)
+public:
+	vector<shared_ptr<FBXBoneInfo>> boneObjList;
 
 public:
-	std::vector<std::shared_ptr<GameObject>> boneObjList;
-
-	std::vector<std::string> boneNameList;
-
-public:
+	void SetBoneObject(shared_ptr<FBXBoneInfo> boneObj) { boneObjList.push_back(boneObj); }
+	
 	shared_ptr<ObjectInfo> GetObjectInfo() { return _objectInfo; }
 
 	GameEngine_DLL void SetMeshID(std::size_t meshID) { _objectInfo->meshID = meshID; }
@@ -39,8 +37,6 @@ public:
 
 	void IsShadow(bool value) { _objectInfo->isShadow = value; }
 
-	// 본인지 아닌지
-	void SetIsBone(bool val) { _isBone = val; }
 
 	void Update() override;
 

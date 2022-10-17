@@ -3,7 +3,8 @@
 #include "Transform.h"
 #include "GameObject.h"
 #include "GraphicsManager.h"
-#include "SkinAnimator.h"
+
+#include "ParserData.h"
 
 MeshRenderer::MeshRenderer(std::shared_ptr<GameObject> gameObject)
 	: Component(gameObject, COMPONENT_TYPE::MESHRENDERER),
@@ -25,34 +26,55 @@ void MeshRenderer::SetMaterial(std::string name)
 
 void MeshRenderer::Update()
 {
+	//Matrix boneWorldTM;
+	//Matrix boneNodeTM;
+	//Matrix boneNodeTM_Inverse;
+	//Matrix boneOffsetTM;
+	//Matrix boneOffsetTM_Inverse;
+	//Matrix skinWorldTM;
+	//Matrix skinWorldTM_Inverse;
+	//Matrix finalBoneTM;
+
+	//for (int i = 0; i < boneObjList.size(); i++)
+	//{
+	//	shared_ptr<FBXBoneInfo> tmpBone = boneObjList[i];
+
+	//	boneWorldTM = tmpBone->worldTM;
+	//	boneNodeTM = tmpBone->offsetMatrix;
+
+	//	Matrix skinWorldTM = _transform->GetWorldMatrix();
+	//	Matrix skinNodeTM = _transform->GetNodeMatrix();
+	//	skinWorldTM_Inverse = XMMatrixInverse(nullptr, skinWorldTM);
+
+	//	boneNodeTM_Inverse = XMMatrixInverse(nullptr, boneNodeTM);
+
+	//	// skinNode에 boneNode 역행렬을 곱하면 boneNode에서 skinNode를 가리키는 행렬이 나오고
+	//	// boneWorld를 곱해서 world로 보내고 스키닝셰이더에서 자신의world를 두번곱해주고 있어가지구..
+	//	// skinWorldTM_Inverse를 여기다가 곱해주거나 스키닝셰이더에서 값을 하나 뺀다.
+	//	finalBoneTM = skinNodeTM * boneNodeTM_Inverse * boneWorldTM * skinWorldTM_Inverse;
+
+	//	_objectInfo->finalBoneListMatrix[i] = finalBoneTM;
+	//}
+
 	Matrix boneWorldTM;
-	Matrix boneNodeTM;
-	Matrix boneNodeTM_Inverse;
+
 	Matrix boneOffsetTM;
-	Matrix boneOffsetTM_Inverse;
-	Matrix skinWorldTM;
-	Matrix skinWorldTM_Inverse;
+
+	Matrix boneNodeTM;
+
 	Matrix finalBoneTM;
 
 	for (int i = 0; i < boneObjList.size(); i++)
 	{
-		std::shared_ptr<GameObject> tmpBone = boneObjList[i];
+		shared_ptr<FBXBoneInfo> tmpBone = boneObjList[i];
 
-		boneWorldTM = tmpBone->GetTransform()->GetWorldMatrix();
-		boneNodeTM = tmpBone->GetTransform()->GetNodeMatrix();
+		boneWorldTM = tmpBone->worldTM;
 
-		Matrix skinWorldTM = _transform->GetWorldMatrix();
-		Matrix skinNodeTM = _transform->GetNodeMatrix();
-		skinWorldTM_Inverse = XMMatrixInverse(nullptr, skinWorldTM);
+		boneNodeTM = tmpBone->offsetMatrix;
 
-		boneNodeTM_Inverse = XMMatrixInverse(nullptr, boneNodeTM);
+		boneOffsetTM = boneNodeTM * _transform->GetNodeMatrix().Invert();
 
-		// skinNode에 boneNode 역행렬을 곱하면 boneNode에서 skinNode를 가리키는 행렬이 나오고
-		// boneWorld를 곱해서 world로 보내고 스키닝셰이더에서 자신의world를 두번곱해주고 있어가지구..
-		// skinWorldTM_Inverse를 여기다가 곱해주거나 스키닝셰이더에서 값을 하나 뺀다.
-		finalBoneTM = skinNodeTM * boneNodeTM_Inverse * boneWorldTM * skinWorldTM_Inverse;
-
-		_objectInfo->finalBoneListMatrix[i] = finalBoneTM;
+		_objectInfo->finalBoneListMatrix[i] = boneOffsetTM.Invert() * boneWorldTM * _transform->GetWorldMatrix().Invert();
 	}
 }
 
@@ -60,12 +82,6 @@ void MeshRenderer::Render()
 {
 	_objectInfo->worldTM = _transform->GetWorldMatrix();
 	_objectInfo->worldPos = _transform->GetWorldPosition();
-
-	if (_skinAnimator != nullptr)
-	{
-		memcpy(&_objectInfo->finalBoneListMatrix, _skinAnimator->_finalBoneListMatrix, sizeof(Matrix) * 96);
-	}
-
-	if (!_isBone)
-		GraphicsManager::Get()->SendObjectRenderingData(_objectInfo);
+	
+	GraphicsManager::Get()->SendObjectRenderingData(_objectInfo);
 }

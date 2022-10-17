@@ -114,9 +114,6 @@
     <ClInclude Include="Light.h">
       <Filter>Components\Light</Filter>
     </ClInclude>
-    <ClInclude Include="SkinAnimator.h">
-      <Filter>Components\Animator</Filter>
-    </ClInclude>
     <ClInclude Include="Animator.h">
       <Filter>Components\Animator</Filter>
     </ClInclude>
@@ -178,9 +175,6 @@
     </ClCompile>
     <ClCompile Include="Light.cpp">
       <Filter>Components\Light</Filter>
-    </ClCompile>
-    <ClCompile Include="SkinAnimator.cpp">
-      <Filter>Components\Animator</Filter>
     </ClCompile>
     <ClCompile Include="Animator.cpp">
       <Filter>Components\Animator</Filter>

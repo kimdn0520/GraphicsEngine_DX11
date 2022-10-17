@@ -95,7 +95,6 @@ struct FBXBoneInfo
 	DirectX::SimpleMath::Matrix worldTM = DirectX::XMMatrixIdentity();	// Bone's World Transform Matrix
 };
 
-// 본들을 갖고있는 스키닝 오브젝트!
 struct FBXSkeletonInfo
 {
 	std::vector<std::shared_ptr<FBXBoneInfo>> fbxBoneInfoList;

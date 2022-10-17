@@ -31,14 +31,22 @@ std::shared_ptr<FBXModel> FBXParser::LoadFbx(const std::string& filePath)
     }
 
     ProcessNode(scene->mRootNode, scene);
-
+    
     LoadMaterial(scene);
 
 	return fbxModel;
 }
 
+/// <summary>
+/// 오호.. bone들도 Node가 있고 Mesh도 Node가 있네..
+/// blender에 있는 bone 이름은 Wolf_01 , Becken_05 이런식인데 여기는 Node이름이 Wolf_Skeletion, Becken 이런식이다
+/// 늑대 파싱할때 Mesh 5개인데 Mesh Node 안에 5개가 있었다 Node이름은 Wolf_body 어쩌고.. 였고
+/// blender에 있는 Mesh 이름과 여기서 파싱할때 Mesh 이름은 달랐다.
+/// </summary>
 void FBXParser::ProcessNode(aiNode* node, const aiScene* scene)
 {
+    std::string tmpName = node->mName.C_Str();
+
     // Assimp의 각 노드는 mesh index들의 모음을 가지고 있다.
     // 각 index는 scene 객체 내부의 특정한 mesh를 가리킨다.
     for (size_t nodeMeshCnt = 0; nodeMeshCnt < node->mNumMeshes; nodeMeshCnt++)
@@ -63,11 +71,11 @@ std::shared_ptr<FBXMeshInfo> FBXParser::LoadMeshInfo(aiNode* node, aiMesh* mesh,
 {
     std::shared_ptr<FBXMeshInfo> fbxMeshInfo = std::make_shared<FBXMeshInfo>();
 
-    size_t vertexNum = mesh->mNumVertices;           // 현재 메시의 버텍스 총 갯수
+    size_t vertexNum = mesh->mNumVertices;                       // 현재 메시의 버텍스 총 갯수
         
-    fbxMeshInfo->meshName = mesh->mName.C_Str();     // 현재 메시에 이름을 넣는다.
+    fbxMeshInfo->meshName = mesh->mName.C_Str();                 // 현재 메시에 이름을 넣는다.
 
-    fbxMeshInfo->nodeTM = ConvertMatrix(node->mTransformation);
+    fbxMeshInfo->nodeTM = ConvertMatrix(node->mTransformation);  // 현재 메시가 속해있는 노드의 TM
     
     // 버텍스를 넣는다.
     for (int vertexCnt = 0; vertexCnt < vertexNum; vertexCnt++)
@@ -76,8 +84,8 @@ std::shared_ptr<FBXMeshInfo> FBXParser::LoadMeshInfo(aiNode* node, aiMesh* mesh,
 
 		vertex.position = DirectX::SimpleMath::Vector3(mesh->mVertices[vertexCnt].x, mesh->mVertices[vertexCnt].y, mesh->mVertices[vertexCnt].z);
 		
-        if (mesh->HasVertexColors(0))
-            vertex.color = DirectX::SimpleMath::Vector4(mesh->mColors[vertexCnt]->r, mesh->mColors[vertexCnt]->g, mesh->mColors[vertexCnt]->b, mesh->mColors[vertexCnt]->a);
+        /*if (mesh->HasVertexColors(0))
+            vertex.color = DirectX::SimpleMath::Vector4(mesh->mColors[vertexCnt]->r, mesh->mColors[vertexCnt]->g, mesh->mColors[vertexCnt]->b, mesh->mColors[vertexCnt]->a);*/
 
         if(mesh->HasTextureCoords(0))
             vertex.uv = DirectX::SimpleMath::Vector2(mesh->mTextureCoords[0][vertexCnt].x, mesh->mTextureCoords[0][vertexCnt].y);
@@ -126,7 +134,7 @@ std::shared_ptr<FBXMeshInfo> FBXParser::LoadMeshInfo(aiNode* node, aiMesh* mesh,
         fbxMeshInfo->materialName = material->GetName().C_Str();
     }
 
-	/*if(mesh->HasBones())
+	/*if (mesh->HasBones())
 		ExtractBoneWeight(mesh, scene, fbxMeshInfo);*/
 
     //LoadAnimation(scene);
@@ -331,6 +339,8 @@ void FBXParser::ExtractBoneWeight(aiMesh* mesh, const aiScene* scene, std::share
 
 		    fbxBoneInfo->boneName = mesh->mBones[boneCnt]->mName.C_Str();   // 본의 이름
 
+            CalcBoneOffset(mesh->mBones[boneCnt], fbxBoneInfo);             // 본 offset, world 계산..?
+
 		    fbxBoneInfo->offsetMatrix = ConvertMatrix(mesh->mBones[boneCnt]->mOffsetMatrix);
 
             // BoneMap에 Bone 정보 추가
@@ -374,6 +384,25 @@ void FBXParser::ExtractBoneWeight(aiMesh* mesh, const aiScene* scene, std::share
                 }
             }
         }
+    }
+}
+
+void FBXParser::CalcBoneOffset(aiBone* bone, std::shared_ptr<FBXBoneInfo>& fbxBoneInfo)
+{
+    // 해당 Bone이 있는 Node를 찾는다.
+    aiNode* node = scene->mRootNode->FindNode(bone->mName);
+
+	fbxBoneInfo->offsetMatrix = ConvertMatrix(bone->mOffsetMatrix);
+
+	fbxBoneInfo->worldTM = ConvertMatrix(bone->mOffsetMatrix);
+
+    aiNode* tmpNode = node;
+
+    while (tmpNode)
+    {
+        fbxBoneInfo->offsetMatrix = ConvertMatrix(tmpNode->mTransformation) * fbxBoneInfo->offsetMatrix;
+
+        tmpNode = tmpNode->mParent;
     }
 }
 

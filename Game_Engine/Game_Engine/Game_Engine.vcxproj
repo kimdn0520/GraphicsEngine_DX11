@@ -180,7 +180,6 @@
     <ClInclude Include="Resources.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneManager.h" />
-    <ClInclude Include="SkinAnimator.h" />
     <ClInclude Include="Text.h" />
     <ClInclude Include="TimeManager.h" />
     <ClInclude Include="Transform.h" />
@@ -208,7 +207,6 @@
     <ClCompile Include="Resources.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneManager.cpp" />
-    <ClCompile Include="SkinAnimator.cpp" />
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="TimeManager.cpp" />
     <ClCompile Include="Transform.cpp" />

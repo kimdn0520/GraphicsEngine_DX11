@@ -9,7 +9,6 @@ enum class COMPONENT_TYPE
 	COLLIDER,					// FIXED UPDATE
 
 	ANIMATOR,					// UPDATE
-	SKINANIMATOR,				// UPDATE
 	CAMERA,						// UPDATE, script ¿¡¼­´Â LateUpdate
 	LIGHT,						// UPDATE
 
