@@ -37,10 +37,10 @@ void MeshRenderer::Update()
 
 	//for (int i = 0; i < boneObjList.size(); i++)
 	//{
-	//	shared_ptr<FBXBoneInfo> tmpBone = boneObjList[i];
+	//	shared_ptr<GameObject> tmpBone = boneObjList[i];
 
-	//	boneWorldTM = tmpBone->worldTM;
-	//	boneNodeTM = tmpBone->offsetMatrix;
+	//	boneWorldTM = tmpBone->GetTransform()->GetWorldMatrix();
+	//	boneNodeTM = tmpBone->GetTransform()->GetNodeMatrix();
 
 	//	Matrix skinWorldTM = _transform->GetWorldMatrix();
 	//	Matrix skinNodeTM = _transform->GetNodeMatrix();

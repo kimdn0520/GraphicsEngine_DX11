@@ -449,6 +449,9 @@ std::vector<std::shared_ptr<GameObject>> Resources::LoadFBX(std::string path, in
 	// fbx 모델 로드
 	shared_ptr<FBXModel> fbxModel = fbxLoader->LoadFbx(path);
 
+	// Map에 저장
+	unordered_map<std::string ,std::shared_ptr<GameObject>> boneMap;
+
 	// 게임오브젝트들로 바꾸어서 반환할거임.
 	vector<std::shared_ptr<GameObject>> gameObjects;
 
@@ -462,8 +465,6 @@ std::vector<std::shared_ptr<GameObject>> Resources::LoadFBX(std::string path, in
 			boneObject->SetName(bone->boneName);
 			boneObject->AddComponent<Transform>();
 			boneObject->GetComponent<Transform>()->SetNodeTM(bone->offsetMatrix);	// NodeTM 넣기
-			boneObject->AddComponent<MeshRenderer>();
-			boneObject->GetComponent<MeshRenderer>()->isBone = true;
 
 			// 부모가 먼저 생김
 			for (auto& gameObj : gameObjects)
@@ -475,6 +476,8 @@ std::vector<std::shared_ptr<GameObject>> Resources::LoadFBX(std::string path, in
 					break;
 				}
 			}
+
+			boneMap.insert(make_pair(bone->boneName, boneObject));
 
 			gameObjects.push_back(boneObject);
 		}
@@ -519,10 +522,10 @@ std::vector<std::shared_ptr<GameObject>> Resources::LoadFBX(std::string path, in
 			// Bone에 의해 영향을 받는 Mesh라면
 			if (mesh->isSkinned == true)
 			{
-				/*for (auto& bone : fbxModel->fbxSkeletonInfo->fbxBoneInfoList)
+				for (auto& bone : fbxModel->fbxSkeletonInfo->fbxBoneInfoList)
 				{
-					gameObject->GetComponent<MeshRenderer>()->SetBoneObject(bone);
-				}*/
+					gameObject->GetComponent<MeshRenderer>()->SetBoneObject(boneMap[bone->boneName]);
+				}
 			}
 
 			// 메시 하나당 머터리얼 하나
