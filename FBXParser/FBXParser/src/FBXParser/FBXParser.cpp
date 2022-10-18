@@ -132,15 +132,18 @@ void FBXParser::LoadMesh(fbxsdk::FbxMesh* mesh)
 		for (int j = 0; j < 3; j++) // 삼각형은 세 개의 정점으로 구성
 		{
 			int controlPointIndex = mesh->GetPolygonVertex(i, j); // 제어점의 인덱스 추출
+
 			arrIdx[j] = controlPointIndex;
 
-			// normal, tangent, uv 정보를 가져온다.
+			// uv 정보를 가져온다.
+			GetUV(mesh, meshInfo, controlPointIndex, mesh->GetTextureUVIndex(i, j));
+			
+			// normal 정보를 가져온다.
 			GetNormal(mesh, meshInfo, controlPointIndex, vertexCounter);
 
 			// tangent 정보를 가져온다.
 			GetTangent(mesh, meshInfo, controlPointIndex, vertexCounter);
 
-			GetUV(mesh, meshInfo, controlPointIndex, mesh->GetTextureUVIndex(i, j));
 
 			vertexCounter++;
 		}
@@ -175,7 +178,7 @@ void FBXParser::LoadMaterial(fbxsdk::FbxSurfaceMaterial* surfaceMaterial)
 
 void FBXParser::Optimize(std::shared_ptr<FBXMeshInfo>& meshInfo)
 {
-	// 인덱스들을 돌면서 
+	// 인덱스들을 돌면서 체크한다.
 	for (int i = 0; i < meshInfo->indices.size(); i++)
 	{
 		
@@ -293,13 +296,6 @@ std::wstring FBXParser::GetTextureRelativeName(fbxsdk::FbxSurfaceMaterial* surfa
 				name = texture->GetRelativeFileName();
 		}
 	}
-
-	// 테스트 하자
-	/*std::string textureName = name.substr(name.find_last_of("\\") + 1, name.length() - name.find_last_of("\\"));
-
-	std::wstring wstr = L"";
-
-	wstr.assign(textureName.begin(), textureName.end());*/
 
 	std::wstring wstr = L"";
 
