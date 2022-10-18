@@ -173,6 +173,15 @@ void FBXParser::LoadMaterial(fbxsdk::FbxSurfaceMaterial* surfaceMaterial)
 	fbxModel->materialList.push_back(material);
 }
 
+void FBXParser::Optimize(std::shared_ptr<FBXMeshInfo>& meshInfo)
+{
+	// 인덱스들을 돌면서 
+	for (int i = 0; i < meshInfo->indices.size(); i++)
+	{
+		
+	}
+}
+
 void FBXParser::GetNormal(fbxsdk::FbxMesh* mesh, std::shared_ptr<FBXMeshInfo>& meshInfo, int idx, int vertexCounter)
 {
 	if (mesh->GetElementNormalCount() == 0)
