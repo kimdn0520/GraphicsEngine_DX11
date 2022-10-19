@@ -38,8 +38,6 @@ public:
 	
 	void LoadMaterial(fbxsdk::FbxSurfaceMaterial* surfaceMaterial);
 
-	void Optimize(std::shared_ptr<FBXMeshInfo>& meshInfo);
-
 	void GetNormal(fbxsdk::FbxMesh* mesh, std::shared_ptr<FBXMeshInfo>& meshInfo, int idx, int vertexCounter);
 	
 	void GetTangent(fbxsdk::FbxMesh* mesh, std::shared_ptr<FBXMeshInfo>& meshInfo, int idx, int vertexCounter);

@@ -15,6 +15,7 @@
 #include <filesystem>
 #include <string>
 #include <vector>
+#include <queue>
 #include <memory>
 #include "SimpleMath.h"
 

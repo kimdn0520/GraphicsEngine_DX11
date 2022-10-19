@@ -107,6 +107,9 @@ void FBXParser::LoadMesh(fbxsdk::FbxMesh* mesh)
 	const int vertexCount = mesh->GetControlPointsCount();
 	meshInfo->meshVertexList.resize(vertexCount);
 
+	// 중복 체크를 위한 것
+	std::vector<bool> isVertex(vertexCount, false);
+
 	// Position정보를 가져옴(축 바꿔서 가져옴)
 	FbxVector4* controlPoints = mesh->GetControlPoints();
 	for (int i = 0; i < vertexCount; ++i)
@@ -133,6 +136,19 @@ void FBXParser::LoadMesh(fbxsdk::FbxMesh* mesh)
 		{
 			int controlPointIndex = mesh->GetPolygonVertex(i, j); // 제어점의 인덱스 추출
 
+			// 나왔었던 controlPointIndex 라면 새로운 버텍스 생성 및 controlPointIndex 값 바꿔주기 
+			if (isVertex[controlPointIndex] == true)
+			{
+				Vertex vertex;
+				vertex.position = meshInfo->meshVertexList[controlPointIndex].position;	// 포지션은 동일
+
+				meshInfo->meshVertexList.push_back(vertex);								// 새로운 버텍스 삽입
+				
+				controlPointIndex = meshInfo->meshVertexList.size() - 1;				// index 새로운 버텍스 껄로 바꾸기
+				
+				isVertex.push_back(true);
+			}
+
 			arrIdx[j] = controlPointIndex;
 
 			// uv 정보를 가져온다.
@@ -144,8 +160,10 @@ void FBXParser::LoadMesh(fbxsdk::FbxMesh* mesh)
 			// tangent 정보를 가져온다.
 			GetTangent(mesh, meshInfo, controlPointIndex, vertexCounter);
 
-
 			vertexCounter++;
+
+			// 나왔었던 controlPointIndex면 true
+			isVertex[controlPointIndex] = true;
 		}
 
 		meshInfo->indices.push_back(arrIdx[0]);
@@ -165,24 +183,20 @@ void FBXParser::LoadMaterial(fbxsdk::FbxSurfaceMaterial* surfaceMaterial)
 
 	material->albedoMap = GetTextureRelativeName(surfaceMaterial, fbxsdk::FbxSurfaceMaterial::sDiffuse);
 	material->normalMap = GetTextureRelativeName(surfaceMaterial, fbxsdk::FbxSurfaceMaterial::sNormalMap);
+	material->metallicMap = GetTextureRelativeName(surfaceMaterial, fbxsdk::FbxSurfaceMaterial::sSpecular);
+	material->roughnessMap = GetTextureRelativeName(surfaceMaterial, fbxsdk::FbxSurfaceMaterial::sShininess);
+	material->emissiveMap = GetTextureRelativeName(surfaceMaterial, fbxsdk::FbxSurfaceMaterial::sEmissive);
 
 	if (material->albedoMap != L"") { material->isAlbedo = true; }
 	if (material->normalMap != L"") { material->isNormal = true; }
+	if (material->roughnessMap != L"") { material->isRoughness = true; }
+	if (material->emissiveMap != L"") { material->isEmissive = true; }
 
 	// 메시에는 머터리얼 이름만
 	fbxModel->fbxMeshInfoList.back()->materialName = surfaceMaterial->GetName();
 
 	// 머터리얼 리스트에 추가
 	fbxModel->materialList.push_back(material);
-}
-
-void FBXParser::Optimize(std::shared_ptr<FBXMeshInfo>& meshInfo)
-{
-	// 인덱스들을 돌면서 체크한다.
-	for (int i = 0; i < meshInfo->indices.size(); i++)
-	{
-		
-	}
 }
 
 void FBXParser::GetNormal(fbxsdk::FbxMesh* mesh, std::shared_ptr<FBXMeshInfo>& meshInfo, int idx, int vertexCounter)
@@ -193,6 +207,8 @@ void FBXParser::GetNormal(fbxsdk::FbxMesh* mesh, std::shared_ptr<FBXMeshInfo>& m
 	FbxGeometryElementNormal* normal = mesh->GetElementNormal();
 	int normalIdx = 0;
 
+	// 인덱스를 기준으로 노멀 값이 들어간다
+	// 버텍스 스플릿이 필요하다.
 	if (normal->GetMappingMode() == FbxGeometryElement::eByPolygonVertex)
 	{
 		if (normal->GetReferenceMode() == FbxGeometryElement::eDirect)
@@ -200,6 +216,7 @@ void FBXParser::GetNormal(fbxsdk::FbxMesh* mesh, std::shared_ptr<FBXMeshInfo>& m
 		else
 			normalIdx = normal->GetIndexArray().GetAt(vertexCounter);
 	}
+	// 정점을 기준으로 노멀 값이 들어간다.
 	else if (normal->GetMappingMode() == FbxGeometryElement::eByControlPoint)
 	{
 		if (normal->GetReferenceMode() == FbxGeometryElement::eDirect)
@@ -209,6 +226,7 @@ void FBXParser::GetNormal(fbxsdk::FbxMesh* mesh, std::shared_ptr<FBXMeshInfo>& m
 	}
 
 	FbxVector4 vec = normal->GetDirectArray().GetAt(normalIdx);
+
 	meshInfo->meshVertexList[idx].normal.x = static_cast<float>(vec.mData[0]);
 	meshInfo->meshVertexList[idx].normal.y = static_cast<float>(vec.mData[2]);
 	meshInfo->meshVertexList[idx].normal.z = static_cast<float>(vec.mData[1]);

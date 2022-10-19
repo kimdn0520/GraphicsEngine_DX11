@@ -4,15 +4,15 @@
 
 struct Vertex
 {
-	Vertex()
+	/*Vertex()
 	{
 		for (int i = 0; i < 8; i++)
 		{
 			weights[i] = 0.f;
 			boneIndices[i] = -1;
 		}
-	}
-	Vertex(DirectX::SimpleMath::Vector3 paPos,
+	}*/
+	Vertex(DirectX::SimpleMath::Vector3 paPos = { 0.f, 0.f, 0.f },
 		DirectX::SimpleMath::Vector4 paColor = { 1.0f, 1.0f, 1.0f, 1.0f },
 		DirectX::SimpleMath::Vector2 paUV = { 0.f, 0.f },
 		DirectX::SimpleMath::Vector3 paNormal = { 0.f, 0.f, 0.f },
@@ -34,7 +34,7 @@ struct Vertex
 
 	// Skinned Data
 	float weights[8];
-	unsigned __int32 boneIndices[8];
+	int boneIndices[8];
 };
 
 struct FBXMaterialInfo
