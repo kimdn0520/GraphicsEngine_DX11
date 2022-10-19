@@ -638,3 +638,8 @@ std::vector<std::shared_ptr<GameObject>> Resources::LoadFBX(std::string path, in
 	return gameObjects;
 }
 
+void Resources::MaterialReconstruction(std::string materialName, std::string textureName, std::string info)
+{
+	GraphicsManager::Get()->MaterialReconstruction(materialName, textureName, info);
+}
+

@@ -243,3 +243,8 @@ size_t GraphicsEngine_DX11::CreateMesh(std::vector<SkinnedMeshVertex> vertices, 
 	return ResourceManager::Get()->CreateMesh(vertices, indicies, topology, rasterState);
 }
 
+void GraphicsEngine_DX11::MaterialReconstruction(std::string materialName, std::string textureName, std::string info)
+{
+	ResourceManager::Get()->MaterialReconstruction(materialName, textureName, info);
+}
+

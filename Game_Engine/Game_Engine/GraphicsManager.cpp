@@ -89,3 +89,8 @@ size_t GraphicsManager::CreateMesh(std::vector<SkinnedMeshVertex> vertices, std:
 {
 	return graphicsEngine->CreateMesh(vertices, indicies, topology, rasterState);
 }
+
+void GraphicsManager::MaterialReconstruction(std::string materialName, std::string textureName, std::string info)
+{
+	graphicsEngine->MaterialReconstruction(materialName, textureName, info);
+}

@@ -23,6 +23,8 @@ std::shared_ptr<FBXModel> FBXParser::LoadFbx(const std::string& path)
 	// 파일 데이터 로드
 	Import(path);
 
+	//LoadBones(scene->GetRootNode(), 0, -1);
+
 	ParseNode(scene->GetRootNode());
 
 	return fbxModel;
@@ -32,6 +34,7 @@ void FBXParser::ParseNode(fbxsdk::FbxNode* node)
 {
 	fbxsdk::FbxNodeAttribute* attribute = node->GetNodeAttribute();
 
+	// Mesh만 하자 bone은 따로
 	if (attribute)
 	{
 		switch (attribute->GetAttributeType())
@@ -39,7 +42,6 @@ void FBXParser::ParseNode(fbxsdk::FbxNode* node)
 		case fbxsdk::FbxNodeAttribute::eMesh:
 		{
 			LoadMesh(node->GetMesh());
-
 		}
 		break;
 		}
@@ -157,8 +159,6 @@ void FBXParser::LoadMesh(fbxsdk::FbxMesh* mesh)
 			// normal 정보를 가져온다.
 			GetNormal(mesh, meshInfo, controlPointIndex, vertexCounter);
 
-			// tangent 정보를 가져온다.
-			GetTangent(mesh, meshInfo, controlPointIndex, vertexCounter);
 
 			vertexCounter++;
 
@@ -171,22 +171,45 @@ void FBXParser::LoadMesh(fbxsdk::FbxMesh* mesh)
 		meshInfo->indices.push_back(arrIdx[1]);
 	}
 
+	// tangent 정보를 가져온다.
+	GetTangent(meshInfo);
+
 	// Animation 데이터를 받아준다.
 	//LoadAnimationData(mesh, &meshInfo);
+}
+
+void FBXParser::LoadBones(fbxsdk::FbxNode* node, int idx, int parentIdx)
+{
+	FbxNodeAttribute* attribute = node->GetNodeAttribute();
+
+	if (attribute && attribute->GetAttributeType() == FbxNodeAttribute::eSkeleton)
+	{
+		std::shared_ptr<FBXBoneInfo> fbxBoneInfo = std::make_shared<FBXBoneInfo>();
+
+		fbxBoneInfo->boneName = node->GetName();
+
+		fbxBoneInfo->parentIndex = parentIdx;
+
+		fbxModel->fbxBoneInfoList.push_back(fbxBoneInfo);
+	}
+
+	const int childCount = node->GetChildCount();
+
+	for (int i = 0; i < childCount; i++)
+		LoadBones(node->GetChild(i), static_cast<int>(fbxModel->fbxBoneInfoList.size()), idx);
 }
 
 void FBXParser::LoadMaterial(fbxsdk::FbxSurfaceMaterial* surfaceMaterial)
 {
 	std::shared_ptr<FBXMaterialInfo> material = std::make_shared<FBXMaterialInfo>();
 
-	material->materialName = surfaceMaterial->GetName();
+	material->materialName = surfaceMaterial->GetName();	
 
 	material->albedoMap = GetTextureRelativeName(surfaceMaterial, fbxsdk::FbxSurfaceMaterial::sDiffuse);
 	material->normalMap = GetTextureRelativeName(surfaceMaterial, fbxsdk::FbxSurfaceMaterial::sNormalMap);
-	material->metallicMap = GetTextureRelativeName(surfaceMaterial, fbxsdk::FbxSurfaceMaterial::sSpecular);
 	material->roughnessMap = GetTextureRelativeName(surfaceMaterial, fbxsdk::FbxSurfaceMaterial::sShininess);
 	material->emissiveMap = GetTextureRelativeName(surfaceMaterial, fbxsdk::FbxSurfaceMaterial::sEmissive);
-
+	
 	if (material->albedoMap != L"") { material->isAlbedo = true; }
 	if (material->normalMap != L"") { material->isNormal = true; }
 	if (material->roughnessMap != L"") { material->isRoughness = true; }
@@ -232,62 +255,33 @@ void FBXParser::GetNormal(fbxsdk::FbxMesh* mesh, std::shared_ptr<FBXMeshInfo>& m
 	meshInfo->meshVertexList[idx].normal.z = static_cast<float>(vec.mData[1]);
 }
 
-void FBXParser::GetTangent(fbxsdk::FbxMesh* mesh, std::shared_ptr<FBXMeshInfo>& meshInfo, int idx, int vertexCounter)
+void FBXParser::GetTangent(std::shared_ptr<FBXMeshInfo>& meshInfo)
 {
-	// fbxModel에 tangent 정보가 없다면 계산해서 tangent 값을 넣어주자!
-	if (mesh->GetElementTangentCount() == 0)
+	for (int i = 0; i < meshInfo->indices.size(); i += 3) // 삼각형의 개수
 	{
-		for (int i = 0; i < meshInfo->indices.size(); i += 3) // 삼각형의 개수
-		{
-			int i0 = meshInfo->indices[i];
-			int i1 = meshInfo->indices[i + 1];
-			int i2 = meshInfo->indices[i + 2];
+		int i0 = meshInfo->indices[i];
+		int i1 = meshInfo->indices[i + 1];
+		int i2 = meshInfo->indices[i + 2];
 
-			// e1 = p1 - p0, e2 = p2 - p0
-			DirectX::SimpleMath::Vector3 e1 = meshInfo->meshVertexList[i1].position - meshInfo->meshVertexList[i0].position;
-			DirectX::SimpleMath::Vector3 e2 = meshInfo->meshVertexList[i2].position - meshInfo->meshVertexList[i0].position;
+		// e1 = p1 - p0, e2 = p2 - p0
+		DirectX::SimpleMath::Vector3 e1 = meshInfo->meshVertexList[i1].position - meshInfo->meshVertexList[i0].position;
+		DirectX::SimpleMath::Vector3 e2 = meshInfo->meshVertexList[i2].position - meshInfo->meshVertexList[i0].position;
 
-			float x1 = meshInfo->meshVertexList[i1].uv.x - meshInfo->meshVertexList[i0].uv.x; // u1 - u0
-			float y1 = meshInfo->meshVertexList[i1].uv.y - meshInfo->meshVertexList[i0].uv.y; // v1 - v0
-			float x2 = meshInfo->meshVertexList[i2].uv.y - meshInfo->meshVertexList[i0].uv.x; // u2 - u0
-			float y2 = meshInfo->meshVertexList[i2].uv.y - meshInfo->meshVertexList[i0].uv.y; // v2 - v0
+		float x1 = meshInfo->meshVertexList[i1].uv.x - meshInfo->meshVertexList[i0].uv.x; // u1 - u0
+		float y1 = meshInfo->meshVertexList[i1].uv.y - meshInfo->meshVertexList[i0].uv.y; // v1 - v0
+		float x2 = meshInfo->meshVertexList[i2].uv.y - meshInfo->meshVertexList[i0].uv.x; // u2 - u0
+		float y2 = meshInfo->meshVertexList[i2].uv.y - meshInfo->meshVertexList[i0].uv.y; // v2 - v0
 
-			float det = (x1 * y2) - (x2 * y1); // ad - bc
-			if (det == 0.f) { det = 0.00001f; }
-			float r = 1.0f / det;
+		float det = (x1 * y2) - (x2 * y1); // ad - bc
+		if (det == 0.f) { det = 0.00001f; }
+		float r = 1.0f / det;
 
-			DirectX::SimpleMath::Vector3 tangent = (e1 * y2 - e2 * y1) * r;
+		DirectX::SimpleMath::Vector3 tangent = (e1 * y2 - e2 * y1) * r;
 
-			meshInfo->meshVertexList[i0].tangent += tangent;
-			meshInfo->meshVertexList[i1].tangent += tangent;
-			meshInfo->meshVertexList[i2].tangent += tangent;
-		}
-
-		return;
+		meshInfo->meshVertexList[i0].tangent += tangent;
+		meshInfo->meshVertexList[i1].tangent += tangent;
+		meshInfo->meshVertexList[i2].tangent += tangent;
 	}
-
-	FbxGeometryElementTangent* tangent = mesh->GetElementTangent();
-	int tangentIdx = 0;
-
-	if (tangent->GetMappingMode() == FbxGeometryElement::eByPolygonVertex)
-	{
-		if (tangent->GetReferenceMode() == FbxGeometryElement::eDirect)
-			tangentIdx = vertexCounter;
-		else
-			tangentIdx = tangent->GetIndexArray().GetAt(vertexCounter);
-	}
-	else if (tangent->GetMappingMode() == FbxGeometryElement::eByControlPoint)
-	{
-		if (tangent->GetReferenceMode() == FbxGeometryElement::eDirect)
-			tangentIdx = idx;
-		else
-			tangentIdx = tangent->GetIndexArray().GetAt(idx);
-	}
-
-	FbxVector4 vec = tangent->GetDirectArray().GetAt(tangentIdx);
-	meshInfo->meshVertexList[idx].tangent.x = static_cast<float>(vec.mData[0]);
-	meshInfo->meshVertexList[idx].tangent.y = static_cast<float>(vec.mData[2]);
-	meshInfo->meshVertexList[idx].tangent.z = static_cast<float>(vec.mData[1]);
 }
 
 void FBXParser::GetUV(fbxsdk::FbxMesh* mesh, std::shared_ptr<FBXMeshInfo>& meshInfo, int idx, int uvIndex)

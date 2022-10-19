@@ -86,10 +86,6 @@ struct FBXBoneInfo
 	std::string				parentBoneName;
 	int						parentIndex;
 
-	int						depth = 0;
-
-	std::vector<std::shared_ptr<FBXBoneInfo>> childBoneList;	// 자식 노드 리스트
-
 	DirectX::SimpleMath::Matrix offsetMatrix;							// Bone's OffsetMatrix
 	
 	DirectX::SimpleMath::Matrix worldTM = DirectX::XMMatrixIdentity();	// Bone's World Transform Matrix
@@ -135,8 +131,10 @@ public:
 
 	std::vector<std::shared_ptr<FBXMaterialInfo>>	materialList;
 	
-	std::shared_ptr<FBXSkeletonInfo> fbxSkeletonInfo;
-	
+	//std::shared_ptr<FBXSkeletonInfo> fbxSkeletonInfo;
+
+	std::vector<std::shared_ptr<FBXBoneInfo>> fbxBoneInfoList;
+
 	std::vector<std::shared_ptr<FBXAnimClipInfo>> animationClipList;
 
 	bool isSkinnedAnimation;		// 스키닝 애니메이션 존재 여부

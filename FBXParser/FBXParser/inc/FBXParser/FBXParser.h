@@ -35,12 +35,14 @@ public:
 	void Import(const std::string& path);
 
 	void LoadMesh(fbxsdk::FbxMesh* mesh);
+
+	void LoadBones(fbxsdk::FbxNode* node, int idx, int parentIdx);
 	
 	void LoadMaterial(fbxsdk::FbxSurfaceMaterial* surfaceMaterial);
 
 	void GetNormal(fbxsdk::FbxMesh* mesh, std::shared_ptr<FBXMeshInfo>& meshInfo, int idx, int vertexCounter);
 	
-	void GetTangent(fbxsdk::FbxMesh* mesh, std::shared_ptr<FBXMeshInfo>& meshInfo, int idx, int vertexCounter);
+	void GetTangent(std::shared_ptr<FBXMeshInfo>& meshInfo);
 	
 	void GetUV(fbxsdk::FbxMesh* mesh, std::shared_ptr<FBXMeshInfo>& meshInfo, int idx, int uvIndex);
 

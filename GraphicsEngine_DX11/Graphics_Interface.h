@@ -73,6 +73,8 @@ public:
 	virtual GraphicsEngine_DLL size_t CreateMesh(std::vector<StaticMeshVertex> vertices, std::vector<unsigned int> indicies, int topology, int rasterState) abstract;
 	
 	virtual GraphicsEngine_DLL size_t CreateMesh(std::vector<SkinnedMeshVertex> vertices, std::vector<unsigned int> indicies, int topology, int rasterState) abstract;
+
+	virtual GraphicsEngine_DLL void MaterialReconstruction(std::string materialName, std::string textureName, std::string info) abstract;
 };
 
 

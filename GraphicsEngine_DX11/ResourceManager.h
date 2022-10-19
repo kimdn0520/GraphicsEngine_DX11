@@ -44,6 +44,8 @@ public:
 
 	template <typename T>
 	size_t CreateMesh(std::vector<T> vertices, std::vector<unsigned int> indices, int topology, int rasterizerState);
+
+	void MaterialReconstruction(std::string materialName, std::string textureName, std::string info);
 };
 
 template<typename T>

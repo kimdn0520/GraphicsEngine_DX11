@@ -23,6 +23,8 @@ public:
 public:
 	void DataLoad();
 
+	void MaterialReconstruction();
+
 	void Release();
 	
 	std::vector<std::shared_ptr<GameObject>> GetDataResources(std::string data);
