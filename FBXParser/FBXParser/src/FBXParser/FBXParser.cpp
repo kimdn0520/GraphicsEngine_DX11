@@ -331,7 +331,7 @@ void FBXParser::LoadAnimation()
 			continue;
 
 		std::shared_ptr<FBXAnimClipInfo> animClip = std::make_shared<FBXAnimClipInfo>();
-		animClip->animationName = animStack->GetName();
+		animClip->animationName = animStack->GetName();						// 애니메이션 이름
 		animClip->keyFrameList.resize(fbxModel->fbxBoneInfoList.size());	// 키프레임은 본의 개수만큼
 
 		// 애니메이션의 시작시간, 종료시간, 초당 프레임에 대한 정보
@@ -340,7 +340,12 @@ void FBXParser::LoadAnimation()
 		animClip->endTime = takeInfo->mLocalTimeSpan.GetStop().GetSecondDouble();
 		animClip->frameRate = (float)FbxTime::GetFrameRate(scene->GetGlobalSettings().GetTimeMode());
 		
- 		//_animClips.push_back(animClip);
+		if (animClip->startTime < animClip->endTime)
+		{
+
+		}
+
+ 		fbxModel->animationClipList.push_back(animClip);
 	}
 }
 
