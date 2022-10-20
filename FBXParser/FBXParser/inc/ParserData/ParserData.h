@@ -92,10 +92,14 @@ struct FBXKeyFrameInfo
 struct FBXAnimClipInfo
 {
 	std::string			animationName;
+
+	float	ticksPerFrame = 0.0f;					
 	
-	float		frameRate;		// 초당 프레임
-	double		startTime;		// 시작 시간
-	double		endTime;		// 종료 시간
+	int totalKeyFrame = 0;							
+
+	int startKeyFrame = 0;
+	
+	int endKeyFrame = 0;
 
 	std::vector<std::shared_ptr<FBXKeyFrameInfo>> keyFrameList;	 //	키프레임 리스트
 };

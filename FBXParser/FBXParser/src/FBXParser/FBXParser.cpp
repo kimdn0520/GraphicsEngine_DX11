@@ -23,33 +23,25 @@ std::shared_ptr<FBXModel> FBXParser::LoadFbx(const std::string& path)
 	// 파일 데이터 로드
 	Import(path);
 
-	LoadBones(scene->GetRootNode(), 0, -1);
+	ProcessBones(scene->GetRootNode(), 0, -1);
 
-	ParseNode(scene->GetRootNode());
+	ProcessMesh(scene->GetRootNode(), FbxNodeAttribute::eMesh);
 
 	return fbxModel;
 }
 
 /// <summary>
 /// Mesh들을 로드해서 FBXModel의 fbxMeshInfoList에 저장한다.
-/// 버텍스의 정보를 모두 담고 bone에 영향을 받는 mesh가 있다면 bone 가중치도 넣어주고</summary>
-/// bone에 offsetMatrix 정보도 추가해준다.<param name="node"></param>
+/// 버텍스의 정보를 모두 담고 bone에 영향을 받는 mesh가 있다면 bone 가중치도 넣어주고
+/// bone에 offsetMatrix 정보도 추가해준다
 /// <summary>
-void FBXParser::ParseNode(fbxsdk::FbxNode* node)
+void FBXParser::ProcessMesh(fbxsdk::FbxNode* node, FbxNodeAttribute::EType attribute)
 {
-	fbxsdk::FbxNodeAttribute* attribute = node->GetNodeAttribute();
+	fbxsdk::FbxNodeAttribute* nodeAttribute = node->GetNodeAttribute();
 
-	// Mesh만 하자 bone은 따로
-	if (attribute)
+	if (nodeAttribute && nodeAttribute->GetAttributeType() == attribute)
 	{
-		switch (attribute->GetAttributeType())
-		{
-		case fbxsdk::FbxNodeAttribute::eMesh:
-		{
-			LoadMesh(node->GetMesh());
-		}
-		break;
-		}
+		LoadMesh(node->GetMesh());
 	}
 
 	// Material 로드
@@ -66,7 +58,7 @@ void FBXParser::ParseNode(fbxsdk::FbxNode* node)
 	const int childCount = node->GetChildCount();
 
 	for (int i = 0; i < childCount; ++i)
-		ParseNode(node->GetChild(i));
+		ProcessMesh(node->GetChild(i), FbxNodeAttribute::eMesh);
 }
 
 void FBXParser::Import(const std::string& path)
@@ -167,13 +159,13 @@ void FBXParser::LoadMesh(fbxsdk::FbxMesh* mesh)
 
 						// 최대 8개로 할거야
 						// 돌면서 빈곳에 넣고 break 함
-						for (int i = 0; i < 8; i++)
+						for (int weightIdx = 0; weightIdx < 8; weightIdx++)
 						{
-							if (meshInfo->meshVertexList[vtxIdx].boneIndices[i] == -1)
+							if (meshInfo->meshVertexList[vtxIdx].boneIndices[weightIdx] == -1)
 							{
-								meshInfo->meshVertexList[vtxIdx].weights[i] = weight;
+								meshInfo->meshVertexList[vtxIdx].weights[weightIdx] = weight;
 
-								meshInfo->meshVertexList[vtxIdx].boneIndices[i] = boneIdx;
+								meshInfo->meshVertexList[vtxIdx].boneIndices[weightIdx] = boneIdx;
 
 								break;
 							}
@@ -271,7 +263,7 @@ void FBXParser::LoadMesh(fbxsdk::FbxMesh* mesh)
 /// FBXModel의 fbxBoneInfoList에 bone들을 전부 저장한다.
 /// 정보는 boneName, parentIndex 이 담긴다.
 /// </summary>
-void FBXParser::LoadBones(fbxsdk::FbxNode* node, int idx, int parentIdx)
+void FBXParser::ProcessBones(fbxsdk::FbxNode* node, int idx, int parentIdx)
 {
 	FbxNodeAttribute* attribute = node->GetNodeAttribute();
 
@@ -289,7 +281,7 @@ void FBXParser::LoadBones(fbxsdk::FbxNode* node, int idx, int parentIdx)
 	const int childCount = node->GetChildCount();
 
 	for (int i = 0; i < childCount; i++)
-		LoadBones(node->GetChild(i), static_cast<int>(fbxModel->fbxBoneInfoList.size()), idx);
+		ProcessBones(node->GetChild(i), static_cast<int>(fbxModel->fbxBoneInfoList.size()), idx);
 }
 
 void FBXParser::LoadMaterial(fbxsdk::FbxSurfaceMaterial* surfaceMaterial)
@@ -334,19 +326,26 @@ void FBXParser::LoadAnimation()
 		animClip->animationName = animStack->GetName();						// 애니메이션 이름
 		animClip->keyFrameList.resize(fbxModel->fbxBoneInfoList.size());	// 키프레임은 본의 개수만큼
 
-		// 애니메이션의 시작시간, 종료시간, 초당 프레임에 대한 정보
+		// 시작시간, 종료시간, 초당 프레임에 대한 정보
 		FbxTakeInfo* takeInfo = scene->GetTakeInfo(animStack->GetName());
-		animClip->startTime = takeInfo->mLocalTimeSpan.GetStart().GetSecondDouble();
-		animClip->endTime = takeInfo->mLocalTimeSpan.GetStop().GetSecondDouble();
-		animClip->frameRate = (float)FbxTime::GetFrameRate(scene->GetGlobalSettings().GetTimeMode());
+		double startTime = takeInfo->mLocalTimeSpan.GetStart().GetSecondDouble();
+		double endTime = takeInfo->mLocalTimeSpan.GetStop().GetSecondDouble();
+		double frameRate = (float)FbxTime::GetFrameRate(scene->GetGlobalSettings().GetTimeMode());
 		
-		if (animClip->startTime < animClip->endTime)
+		if (startTime < endTime)
 		{
-
+			// TODO : total, start, end keyframe 정보 생성 코드
 		}
 
  		fbxModel->animationClipList.push_back(animClip);
 	}
+}
+
+void FBXParser::LoadKeyFrame()
+{
+	std::shared_ptr<FBXKeyFrameInfo> fbxKeyFrameInfo = std::make_shared<FBXKeyFrameInfo>();
+
+	// TODO : 키프레임 정보들 트랜스폼 로테이션 스케일 코드
 }
 
 int FBXParser::FindBoneIndex(std::string boneName)

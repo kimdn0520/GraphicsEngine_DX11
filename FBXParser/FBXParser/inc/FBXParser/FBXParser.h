@@ -30,17 +30,19 @@ public:
 public:
 	std::shared_ptr<FBXModel> LoadFbx(const std::string& path) override;
 
-	void ParseNode(fbxsdk::FbxNode* node);
+	void ProcessMesh(fbxsdk::FbxNode* node, FbxNodeAttribute::EType attribute);
 
 	void Import(const std::string& path);
 
 	void LoadMesh(fbxsdk::FbxMesh* mesh);
 
-	void LoadBones(fbxsdk::FbxNode* node, int idx, int parentIdx);
+	void ProcessBones(fbxsdk::FbxNode* node, int idx, int parentIdx);
 	
 	void LoadMaterial(fbxsdk::FbxSurfaceMaterial* surfaceMaterial);
 
 	void LoadAnimation();
+
+	void LoadKeyFrame();
 
 	int FindBoneIndex(std::string boneName);
 
