@@ -40,6 +40,10 @@ public:
 	
 	void LoadMaterial(fbxsdk::FbxSurfaceMaterial* surfaceMaterial);
 
+	void LoadAnimation();
+
+	int FindBoneIndex(std::string boneName);
+
 	void GetNormal(fbxsdk::FbxMesh* mesh, std::shared_ptr<FBXMeshInfo>& meshInfo, int idx, int vertexCounter);
 	
 	void GetTangent(std::shared_ptr<FBXMeshInfo>& meshInfo);
@@ -47,18 +51,38 @@ public:
 	void GetUV(fbxsdk::FbxMesh* mesh, std::shared_ptr<FBXMeshInfo>& meshInfo, int idx, int uvIndex);
 
 	std::wstring GetTextureRelativeName(fbxsdk::FbxSurfaceMaterial* surface, const char* materialProperty);
+
+	FbxAMatrix GetTransformMatrix(FbxNode* node);
+
+	DirectX::SimpleMath::Vector4 ConvertVector4(fbxsdk::FbxVector4 v4);
+
+	DirectX::SimpleMath::Matrix ConvertMatrix(fbxsdk::FbxMatrix matrix);
 };
 
-/// <summary>
-///	assimp에서 꺼내는 aiMatrix4x4는 모두 전치가 필요
-/// </summary>
-//inline DirectX::SimpleMath::Matrix FBXParser::ConvertMatrix(aiMatrix4x4 aimatrix)
-//{
-//	return DirectX::SimpleMath::Matrix
-//	(
-//		aimatrix.a1, aimatrix.b1, aimatrix.c1, aimatrix.d1,
-//		aimatrix.a2, aimatrix.b2, aimatrix.c2, aimatrix.d2,
-//		aimatrix.a3, aimatrix.b3, aimatrix.c3, aimatrix.d3,
-//		aimatrix.a4, aimatrix.b4, aimatrix.c4, aimatrix.d4
-//	);
-//}
+inline DirectX::SimpleMath::Vector4 FBXParser::ConvertVector4(fbxsdk::FbxVector4 v4)
+{
+	// xyzw -> xzyw
+	return DirectX::SimpleMath::Vector4
+	(
+		static_cast<float>(v4.mData[0]),
+		static_cast<float>(v4.mData[2]),
+		static_cast<float>(v4.mData[1]),
+		static_cast<float>(v4.mData[3])
+	);
+}
+
+inline DirectX::SimpleMath::Matrix FBXParser::ConvertMatrix(fbxsdk::FbxMatrix matrix)
+{
+	FbxVector4 r1 = matrix.GetRow(0);
+	FbxVector4 r2 = matrix.GetRow(1);
+	FbxVector4 r3 = matrix.GetRow(2);
+	FbxVector4 r4 = matrix.GetRow(3);
+
+	return DirectX::SimpleMath::Matrix
+	(
+		ConvertVector4(r1),
+		ConvertVector4(r3),
+		ConvertVector4(r2),
+		ConvertVector4(r4)
+	);
+}

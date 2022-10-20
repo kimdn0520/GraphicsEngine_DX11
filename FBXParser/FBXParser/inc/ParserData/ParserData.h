@@ -68,37 +68,16 @@ struct FBXMeshInfo
 
 	DirectX::SimpleMath::Matrix nodeTM;					// Node TransformMatrix
 
-	std::string parentName;		// 부모 이름
-	std::shared_ptr<FBXMeshInfo> parentMesh;	// 부모의 메시
-
-	std::vector<std::shared_ptr<FBXMeshInfo>> childMeshList;	// 자식 메시들
-
-	bool isParent;				// 부모가 존재하는지
-
 	bool isSkinned = false;		// 스키닝오브젝트 인지 아닌지..
 };
 
 struct FBXBoneInfo
 {
 	std::string				boneName;
-	int						boneID;
 
-	std::string				parentBoneName;
 	int						parentIndex;
 
 	DirectX::SimpleMath::Matrix offsetMatrix;							// Bone's OffsetMatrix
-	
-	DirectX::SimpleMath::Matrix worldTM = DirectX::XMMatrixIdentity();	// Bone's World Transform Matrix
-};
-
-struct FBXSkeletonInfo
-{
-	std::vector<std::shared_ptr<FBXBoneInfo>> fbxBoneInfoList;
-
-	/*void AddBone(std::shared_ptr<FBXBoneInfo> bone)
-	{
-		fbxBoneInfoList.push_back(bone);
-	}*/
 };
 
 struct FBXKeyFrameInfo
@@ -114,12 +93,9 @@ struct FBXAnimClipInfo
 {
 	std::string			animationName;
 	
-	float	ticksPerFrame;	// 틱 값
-	int		totalKeyFrame;	// 총 프레임
-	int		startKeyFrame;	// 시작 프레임
-	int		endKeyFrame;	// 마지막 프레임
-
-	float	duration;		// 속도
+	float		frameRate;		// 초당 프레임
+	double		startTime;		// 시작 시간
+	double		endTime;		// 종료 시간
 
 	std::vector<std::shared_ptr<FBXKeyFrameInfo>> keyFrameList;	 //	키프레임 리스트
 };

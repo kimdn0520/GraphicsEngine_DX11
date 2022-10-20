@@ -23,13 +23,18 @@ std::shared_ptr<FBXModel> FBXParser::LoadFbx(const std::string& path)
 	// 파일 데이터 로드
 	Import(path);
 
-	//LoadBones(scene->GetRootNode(), 0, -1);
+	LoadBones(scene->GetRootNode(), 0, -1);
 
 	ParseNode(scene->GetRootNode());
 
 	return fbxModel;
 }
 
+/// <summary>
+/// Mesh들을 로드해서 FBXModel의 fbxMeshInfoList에 저장한다.
+/// 버텍스의 정보를 모두 담고 bone에 영향을 받는 mesh가 있다면 bone 가중치도 넣어주고</summary>
+/// bone에 offsetMatrix 정보도 추가해준다.<param name="node"></param>
+/// <summary>
 void FBXParser::ParseNode(fbxsdk::FbxNode* node)
 {
 	fbxsdk::FbxNodeAttribute* attribute = node->GetNodeAttribute();
@@ -121,7 +126,87 @@ void FBXParser::LoadMesh(fbxsdk::FbxMesh* mesh)
 		meshInfo->meshVertexList[i].position.z = static_cast<float>(controlPoints[i].mData[1]);
 	}
 
-	FbxGeometryElementMaterial* geometryElementMaterial = mesh->GetElementMaterial();
+	// DeformerCount가 1보다 작으면 Bone Data가 없다고 가정
+	const int deformerCount = mesh->GetDeformerCount(FbxDeformer::eSkin);
+
+	for (int i = 0; i < deformerCount; i++)
+	{
+		meshInfo->isSkinned = true;
+
+		fbxModel->isSkinnedAnimation = true;	// 일단 여기서..?
+
+		FbxSkin* fbxSkin = static_cast<FbxSkin*>(mesh->GetDeformer(i, FbxDeformer::eSkin));
+
+		if (fbxSkin)
+		{
+			FbxSkin::EType type = fbxSkin->GetSkinningType();
+
+			if (FbxSkin::eRigid == type || FbxSkin::eLinear)
+			{
+				// FbxCluster는 Skinning정보가 있는 뼈대의 갯수만 준다.
+				const int clusterCount = fbxSkin->GetClusterCount();
+
+				for (int j = 0; j < clusterCount; j++)
+				{
+					FbxCluster* cluster = fbxSkin->GetCluster(j);
+					if (cluster->GetLink() == nullptr)
+						continue;
+
+					// 해당 본이 뭔지 찾아옴
+					int boneIdx = FindBoneIndex(cluster->GetLink()->GetName());
+					assert(boneIdx >= 0);
+
+					// 해당 본에 영향을 받는 정점의 인덱스 갯수가 나옴
+					const int indicesCount = cluster->GetControlPointIndicesCount();
+
+					for (int k = 0; k < indicesCount; k++)
+					{
+						double weight = cluster->GetControlPointWeights()[k];	// 해당 정점에서의 가중치
+
+						int vtxIdx = cluster->GetControlPointIndices()[k];		// 해당 정점의 인덱스를 얻기
+
+						// 최대 8개로 할거야
+						// 돌면서 빈곳에 넣고 break 함
+						for (int i = 0; i < 8; i++)
+						{
+							if (meshInfo->meshVertexList[vtxIdx].boneIndices[i] == -1)
+							{
+								meshInfo->meshVertexList[vtxIdx].weights[i] = weight;
+
+								meshInfo->meshVertexList[vtxIdx].boneIndices[i] = boneIdx;
+
+								break;
+							}
+						}
+					}
+
+					// 계층구조를 가진 BoneOffsetMatrix를 구해야한다.
+					// GetTrasnformLinkMatrix로 해당 Bone의 월드 Matrix를 얻고 GetTransformMatrix로는 부모까지 오게된 Matrix를 얻는다.
+					// 해당 부모 행렬의 역행렬을 곱하면 부모행렬기준 자기 자신의 정보에 대한 행렬값만 남게 되서 계층 구조적 행렬 값을 갖는다.
+					FbxAMatrix matClusterTransformMatrix;
+					FbxAMatrix matClusterLinkTransformMatrix;
+
+					cluster->GetTransformMatrix(matClusterTransformMatrix);				// The transformation of the mesh at binding time 
+					cluster->GetTransformLinkMatrix(matClusterLinkTransformMatrix);		// The transformation of the cluster(joint) at binding time from joint space to world space 
+
+					// Bone Matrix 설정..
+					DirectX::SimpleMath::Matrix clusterMatrix = ConvertMatrix(matClusterTransformMatrix);
+					DirectX::SimpleMath::Matrix clusterlinkMatrix = ConvertMatrix(matClusterLinkTransformMatrix);
+
+					// BindPose 행렬을 구하자
+					FbxAMatrix geometryTransform = GetTransformMatrix(mesh->GetNode());
+					DirectX::SimpleMath::Matrix geometryMatrix = ConvertMatrix(geometryTransform);
+
+					meshInfo->nodeTM = geometryMatrix;
+
+					// OffsetMatrix는 WorldBindPose의 역행렬
+					DirectX::SimpleMath::Matrix offsetMatrix = clusterMatrix * clusterlinkMatrix.Invert() * geometryMatrix;
+
+					fbxModel->fbxBoneInfoList[boneIdx]->offsetMatrix = offsetMatrix;
+				}
+			}
+		}
+	}
 
 	const int polygonSize = mesh->GetPolygonSize(0);
 
@@ -144,6 +229,14 @@ void FBXParser::LoadMesh(fbxsdk::FbxMesh* mesh)
 				Vertex vertex;
 				vertex.position = meshInfo->meshVertexList[controlPointIndex].position;	// 포지션은 동일
 
+				// 가중치 정보 동일
+				for (int weightIdx = 0; weightIdx < 8; weightIdx++)
+				{
+					vertex.weights[weightIdx] = meshInfo->meshVertexList[controlPointIndex].weights[weightIdx];
+
+					vertex.boneIndices[weightIdx] = meshInfo->meshVertexList[controlPointIndex].boneIndices[weightIdx];
+				}
+
 				meshInfo->meshVertexList.push_back(vertex);								// 새로운 버텍스 삽입
 				
 				controlPointIndex = meshInfo->meshVertexList.size() - 1;				// index 새로운 버텍스 껄로 바꾸기
@@ -159,7 +252,6 @@ void FBXParser::LoadMesh(fbxsdk::FbxMesh* mesh)
 			// normal 정보를 가져온다.
 			GetNormal(mesh, meshInfo, controlPointIndex, vertexCounter);
 
-
 			vertexCounter++;
 
 			// 나왔었던 controlPointIndex면 true
@@ -173,11 +265,12 @@ void FBXParser::LoadMesh(fbxsdk::FbxMesh* mesh)
 
 	// tangent 정보를 가져온다.
 	GetTangent(meshInfo);
-
-	// Animation 데이터를 받아준다.
-	//LoadAnimationData(mesh, &meshInfo);
 }
 
+/// <summary>
+/// FBXModel의 fbxBoneInfoList에 bone들을 전부 저장한다.
+/// 정보는 boneName, parentIndex 이 담긴다.
+/// </summary>
 void FBXParser::LoadBones(fbxsdk::FbxNode* node, int idx, int parentIdx)
 {
 	FbxNodeAttribute* attribute = node->GetNodeAttribute();
@@ -220,6 +313,46 @@ void FBXParser::LoadMaterial(fbxsdk::FbxSurfaceMaterial* surfaceMaterial)
 
 	// 머터리얼 리스트에 추가
 	fbxModel->materialList.push_back(material);
+}
+
+void FBXParser::LoadAnimation()
+{
+	FbxArray<FbxString*>			  animNames;
+
+	scene->FillAnimStackNameArray(OUT animNames);
+
+	const int animCount = animNames.GetCount();
+
+	for (int i = 0; i < animCount; i++)
+	{
+		FbxAnimStack* animStack = scene->FindMember<FbxAnimStack>(animNames[i]->Buffer());
+		
+		if (animStack == nullptr)
+			continue;
+
+		std::shared_ptr<FBXAnimClipInfo> animClip = std::make_shared<FBXAnimClipInfo>();
+		animClip->animationName = animStack->GetName();
+		animClip->keyFrameList.resize(fbxModel->fbxBoneInfoList.size());	// 키프레임은 본의 개수만큼
+
+		// 애니메이션의 시작시간, 종료시간, 초당 프레임에 대한 정보
+		FbxTakeInfo* takeInfo = scene->GetTakeInfo(animStack->GetName());
+		animClip->startTime = takeInfo->mLocalTimeSpan.GetStart().GetSecondDouble();
+		animClip->endTime = takeInfo->mLocalTimeSpan.GetStop().GetSecondDouble();
+		animClip->frameRate = (float)FbxTime::GetFrameRate(scene->GetGlobalSettings().GetTimeMode());
+		
+ 		//_animClips.push_back(animClip);
+	}
+}
+
+int FBXParser::FindBoneIndex(std::string boneName)
+{
+	for (int i = 0; i < fbxModel->fbxBoneInfoList.size(); ++i)
+	{
+		if (fbxModel->fbxBoneInfoList[i]->boneName == boneName)
+			return i;
+	}
+
+	return -1;
 }
 
 void FBXParser::GetNormal(fbxsdk::FbxMesh* mesh, std::shared_ptr<FBXMeshInfo>& meshInfo, int idx, int vertexCounter)
@@ -287,6 +420,7 @@ void FBXParser::GetTangent(std::shared_ptr<FBXMeshInfo>& meshInfo)
 void FBXParser::GetUV(fbxsdk::FbxMesh* mesh, std::shared_ptr<FBXMeshInfo>& meshInfo, int idx, int uvIndex)
 {
 	FbxVector2 uv = mesh->GetElementUV()->GetDirectArray().GetAt(uvIndex);
+
 	meshInfo->meshVertexList[idx].uv.x = static_cast<float>(uv.mData[0]);
 	meshInfo->meshVertexList[idx].uv.y = 1.f - static_cast<float>(uv.mData[1]);
 }
@@ -316,4 +450,12 @@ std::wstring FBXParser::GetTextureRelativeName(fbxsdk::FbxSurfaceMaterial* surfa
 	std::wstring filename = fs::path(wstr).filename();
 
 	return filename;
+}
+
+FbxAMatrix FBXParser::GetTransformMatrix(FbxNode* node)
+{
+	const FbxVector4 translation = node->GetGeometricTranslation(FbxNode::eSourcePivot);
+	const FbxVector4 rotation = node->GetGeometricRotation(FbxNode::eSourcePivot);
+	const FbxVector4 scaling = node->GetGeometricScaling(FbxNode::eSourcePivot);
+	return FbxAMatrix(translation, rotation, scaling);
 }

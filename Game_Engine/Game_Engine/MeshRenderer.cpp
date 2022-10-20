@@ -72,7 +72,7 @@ void MeshRenderer::Update()
 
 		boneNodeTM = tmpBone->GetTransform()->GetNodeMatrix();
 
-		boneOffsetTM = boneNodeTM * _transform->GetNodeMatrix().Invert();
+		//boneOffsetTM = boneNodeTM * _transform->GetNodeMatrix().Invert();
 
 		_objectInfo->finalBoneListMatrix[i] = boneOffsetTM.Invert() * boneWorldTM * _transform->GetWorldMatrix().Invert();
 	}
