@@ -84,16 +84,20 @@ struct FBXKeyFrameInfo
 {
 	float		time;
 
-	DirectX::SimpleMath::Vector3 transform;
-	DirectX::SimpleMath::Vector4 rotation;
-	DirectX::SimpleMath::Vector3 scale;
+	DirectX::SimpleMath::Vector3 localTransform;
+	DirectX::SimpleMath::Vector4 localRotation;
+	DirectX::SimpleMath::Vector3 localScale;
+
+	DirectX::SimpleMath::Vector3 worldTransform;
+	DirectX::SimpleMath::Vector4 worldRotation;
+	DirectX::SimpleMath::Vector3 worldScale;
 };
 
 struct FBXAnimClipInfo
 {
 	std::string			animationName;
 
-	float	ticksPerFrame = 0.0f;					
+	float	tickPerFrame = 0.0f;					
 	
 	int totalKeyFrame = 0;							
 
@@ -101,7 +105,7 @@ struct FBXAnimClipInfo
 	
 	int endKeyFrame = 0;
 
-	std::vector<std::shared_ptr<FBXKeyFrameInfo>> keyFrameList;	 //	키프레임 리스트
+	std::vector<std::vector<std::shared_ptr<FBXKeyFrameInfo>>> keyFrameList;	 //	키프레임 리스트
 };
 
 class FBXModel

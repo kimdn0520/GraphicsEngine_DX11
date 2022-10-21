@@ -23,6 +23,8 @@ private:
 	fbxsdk::FbxScene* scene = nullptr;
 	fbxsdk::FbxImporter* importer = nullptr;
 
+	bool isParsingAnim = false;
+
 public:
 	FBXParser();
 	~FBXParser();
@@ -42,7 +44,7 @@ public:
 
 	void LoadAnimation();
 
-	void LoadKeyFrame();
+	void LoadKeyFrame(int animIndex, FbxNode* node, FbxCluster* cluster, int boneIdx);
 
 	int FindBoneIndex(std::string boneName);
 

@@ -25,6 +25,8 @@ std::shared_ptr<FBXModel> FBXParser::LoadFbx(const std::string& path)
 
 	ProcessBones(scene->GetRootNode(), 0, -1);
 
+	LoadAnimation();
+
 	ProcessMesh(scene->GetRootNode(), FbxNodeAttribute::eMesh);
 
 	return fbxModel;
@@ -125,7 +127,7 @@ void FBXParser::LoadMesh(fbxsdk::FbxMesh* mesh)
 	{
 		meshInfo->isSkinned = true;
 
-		fbxModel->isSkinnedAnimation = true;	// 일단 여기서..?
+		fbxModel->isSkinnedAnimation = true;	// 일단 여기서..
 
 		FbxSkin* fbxSkin = static_cast<FbxSkin*>(mesh->GetDeformer(i, FbxDeformer::eSkin));
 
@@ -195,7 +197,18 @@ void FBXParser::LoadMesh(fbxsdk::FbxMesh* mesh)
 					DirectX::SimpleMath::Matrix offsetMatrix = clusterMatrix * clusterlinkMatrix.Invert() * geometryMatrix;
 
 					fbxModel->fbxBoneInfoList[boneIdx]->offsetMatrix = offsetMatrix;
+
+					const int animCount = fbxModel->animationClipList.size();
+
+					// 키프레임 파싱을 아직 안했으면..
+					if (!isParsingAnim)
+					{
+						for (int animIdx = 0; animIdx < animCount; animIdx++)
+							LoadKeyFrame(animIdx, mesh->GetNode(), cluster, boneIdx);
+					}
 				}
+
+				isParsingAnim = true;
 			}
 		}
 	}
@@ -324,7 +337,6 @@ void FBXParser::LoadAnimation()
 
 		std::shared_ptr<FBXAnimClipInfo> animClip = std::make_shared<FBXAnimClipInfo>();
 		animClip->animationName = animStack->GetName();						// 애니메이션 이름
-		animClip->keyFrameList.resize(fbxModel->fbxBoneInfoList.size());	// 키프레임은 본의 개수만큼
 
 		// 시작시간, 종료시간, 초당 프레임에 대한 정보
 		FbxTakeInfo* takeInfo = scene->GetTakeInfo(animStack->GetName());
@@ -334,18 +346,62 @@ void FBXParser::LoadAnimation()
 		
 		if (startTime < endTime)
 		{
-			// TODO : total, start, end keyframe 정보 생성 코드
+			animClip->totalKeyFrame = (int)((endTime - startTime) * (double)frameRate);
+			animClip->endKeyFrame = (int)((endTime - startTime) * (double)frameRate);
+			animClip->tickPerFrame = (endTime - startTime) / animClip->totalKeyFrame;
+			animClip->startKeyFrame = (int)(startTime) * animClip->totalKeyFrame;
 		}
+
+		// 애니클립의 키프레임은 본의 갯수 만큼
+		animClip->keyFrameList.resize(fbxModel->fbxBoneInfoList.size());
 
  		fbxModel->animationClipList.push_back(animClip);
 	}
 }
 
-void FBXParser::LoadKeyFrame()
+void FBXParser::LoadKeyFrame(int animIndex, FbxNode* node, FbxCluster* cluster, int boneIdx)
 {
 	std::shared_ptr<FBXKeyFrameInfo> fbxKeyFrameInfo = std::make_shared<FBXKeyFrameInfo>();
 
-	// TODO : 키프레임 정보들 트랜스폼 로테이션 스케일 코드
+	FbxTime::EMode timeMode = scene->GetGlobalSettings().GetTimeMode();
+
+	for (FbxLongLong frame = 0; frame < fbxModel->animationClipList[animIndex]->totalKeyFrame; frame++)
+	{
+		std::shared_ptr<FBXKeyFrameInfo> keyFrameInfo = std::make_shared<FBXKeyFrameInfo>();
+
+		FbxTime fbxTime = 0;
+
+		fbxTime.SetFrame(fbxModel->animationClipList[animIndex]->startKeyFrame + frame, timeMode);
+
+		// Local Transform = 부모 Bone의 Global Transform의 inverse Transform * 자신 Bone의 Global Transform;
+		FbxAMatrix localTransform = node->EvaluateLocalTransform(fbxTime);
+		FbxAMatrix worldTransform = node->EvaluateGlobalTransform(fbxTime);
+
+		DirectX::SimpleMath::Matrix localTM = ConvertMatrix(localTransform);
+		DirectX::SimpleMath::Matrix worldTM = ConvertMatrix(worldTransform);
+
+		DirectX::XMVECTOR localScale;
+		DirectX::XMVECTOR localRot;
+		DirectX::XMVECTOR localPos;
+
+		DirectX::XMVECTOR worldScale;
+		DirectX::XMVECTOR worldRot;
+		DirectX::XMVECTOR worldPos;
+
+		XMMatrixDecompose(&localScale, &localRot, &localPos, localTM);
+		XMMatrixDecompose(&worldScale, &worldRot, &worldPos, worldTM);
+
+		keyFrameInfo->time = fbxTime.GetSecondDouble();
+
+		keyFrameInfo->localTransform = DirectX::SimpleMath::Vector3(localPos);
+		keyFrameInfo->localRotation = DirectX::SimpleMath::Quaternion(localRot);
+		keyFrameInfo->localScale = DirectX::SimpleMath::Vector3(localScale);
+		keyFrameInfo->worldTransform = DirectX::SimpleMath::Vector3(worldPos);
+		keyFrameInfo->worldRotation = DirectX::SimpleMath::Quaternion(worldRot);
+		keyFrameInfo->worldScale = DirectX::SimpleMath::Vector3(worldScale);
+
+		fbxModel->animationClipList[animIndex]->keyFrameList[boneIdx].push_back(keyFrameInfo);
+	}
 }
 
 int FBXParser::FindBoneIndex(std::string boneName)

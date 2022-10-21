@@ -117,6 +117,9 @@
     <ClInclude Include="Animator.h">
       <Filter>Components\Animator</Filter>
     </ClInclude>
+    <ClInclude Include="StructDefine.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">

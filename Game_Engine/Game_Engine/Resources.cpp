@@ -9,6 +9,8 @@
 
 #include "ParserBase.h"
 #include "ParserData.h"
+#include "Animator.h"
+#include "StructDefine.h"
 
 std::shared_ptr<Resources> Resources::resources = nullptr;
 
@@ -459,20 +461,54 @@ std::vector<std::shared_ptr<GameObject>> Resources::LoadFBX(std::string path, in
 	if (fbxModel->isSkinnedAnimation)
 	{
 		// 본오브젝트를 만들자..
-		for (auto& bone : fbxModel->fbxBoneInfoList)
+		for (int boneIdx = 0; boneIdx < fbxModel->fbxBoneInfoList.size(); boneIdx++)
 		{
 			std::shared_ptr<GameObject> boneObject = std::make_shared<GameObject>();
-			boneObject->SetName(bone->boneName);
+			boneObject->SetName(fbxModel->fbxBoneInfoList[boneIdx]->boneName);
 			boneObject->AddComponent<Transform>();
-			boneObject->GetComponent<Transform>()->SetNodeTM(bone->offsetMatrix);	// NodeTM 넣기
+			boneObject->GetComponent<Transform>()->SetNodeTM(fbxModel->fbxBoneInfoList[boneIdx]->offsetMatrix);	// NodeTM 넣기
 
 			if (!gameObjects.empty())
 			{
-				boneObject->GetTransform()->SetParent(gameObjects[bone->parentIndex]->GetTransform());
-				gameObjects[bone->parentIndex]->SetChild(boneObject);
+				boneObject->GetTransform()->SetParent(gameObjects[fbxModel->fbxBoneInfoList[boneIdx]->parentIndex]->GetTransform());
+				gameObjects[fbxModel->fbxBoneInfoList[boneIdx]->parentIndex]->SetChild(boneObject);
 			}
 
-			boneMap.insert(make_pair(bone->boneName, boneObject));
+			// 일단 모델의 애니메이션 클립 리스트를 돈다
+			for (auto& anim : fbxModel->animationClipList)
+			{
+				std::shared_ptr<AnimationClip> animationClip = std::make_shared<AnimationClip>();
+				animationClip->animationName = anim->animationName;
+				animationClip->startKeyFrame = anim->startKeyFrame;
+				animationClip->endKeyFrame = anim->endKeyFrame;
+				animationClip->totalKeyFrame = anim->totalKeyFrame;
+				animationClip->tickPerFrame = anim->tickPerFrame;
+
+				// 애니메이션의 키프레임 리스트에서 boneIdx에 해당하는게 있으면 Animator 생성해주고 정보를 넣어준다.
+				if (!anim->keyFrameList[boneIdx].empty())
+				{
+					if(boneObject->GetComponent<Animator>() == nullptr)
+						boneObject->AddComponent<Animator>();
+					
+					for (int keyIdx = 0; keyIdx < anim->keyFrameList[boneIdx].size(); keyIdx++)
+					{
+						std::shared_ptr<AnimKeyFrame> animKeyFrame = std::make_shared<AnimKeyFrame>();
+						animKeyFrame->time = anim->keyFrameList[boneIdx][keyIdx]->time;
+						animKeyFrame->localTransform = anim->keyFrameList[boneIdx][keyIdx]->localTransform;
+						animKeyFrame->localRotation = anim->keyFrameList[boneIdx][keyIdx]->localRotation;
+						animKeyFrame->localScale = anim->keyFrameList[boneIdx][keyIdx]->localScale;
+						animKeyFrame->worldTransform = anim->keyFrameList[boneIdx][keyIdx]->worldTransform;
+						animKeyFrame->worldRotation = anim->keyFrameList[boneIdx][keyIdx]->worldRotation;
+						animKeyFrame->worldScale = anim->keyFrameList[boneIdx][keyIdx]->worldScale;
+
+						animationClip->keyFrame.push_back(animKeyFrame);
+					}
+
+					boneObject->GetComponent<Animator>()->SetAnimClip(anim->animationName, animationClip);
+				}
+			}
+
+			boneMap.insert(make_pair(fbxModel->fbxBoneInfoList[boneIdx]->boneName, boneObject));
 
 			gameObjects.push_back(boneObject);
 		}

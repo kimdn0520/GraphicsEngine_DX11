@@ -1,2 +1,6 @@
-﻿  Game_Engine.vcxproj -> C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\Game_Engine.dll
+﻿  Resources.cpp
+D:\GraphicsEngine_DX11\FBXParser\FBXParser\inc\ParserData\ParserData.h(112,1): warning C4099: 'FBXModel': 처음에는 'struct'을(를) 사용하여 형식 이름을 표시했는데 이제는 'class'을(를) 사용하여 표시합니다.
+D:\GraphicsEngine_DX11\FBXParser\FBXParser\inc\ParserData\ParserData.h(111): message : 'FBXModel' 선언을 참조하십시오.
+D:\GraphicsEngine_DX11\Game_Engine\Game_Engine\Resources.cpp(485,39): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  Game_Engine.vcxproj -> D:\GraphicsEngine_DX11\Library\lib\Game_Engine.dll
           1개 파일이 복사되었습니다.
