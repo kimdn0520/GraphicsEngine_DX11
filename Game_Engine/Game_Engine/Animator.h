@@ -13,6 +13,18 @@ private:
 
 	unordered_map<std::string, shared_ptr<AnimationClip>> animClips;
 
+	shared_ptr<AnimationClip> currentClip;
+
+	int currentFrame;
+
+	int preFrame;
+
+	float updateTime;
+
+	bool isPlay;
+
+	bool isLoop;
+
 public:
 	GameEngine_DLL Animator(shared_ptr<GameObject> gameObject);
 	GameEngine_DLL virtual ~Animator();
