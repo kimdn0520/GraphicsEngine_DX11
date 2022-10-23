@@ -1,40 +1,5 @@
-﻿  pch.cpp
-  Animator.cpp
-  Camera.cpp
-  Component.cpp
-  dllmain.cpp
-  GameEngine.cpp
-  GameEngine_Interface.cpp
-  GameObject.cpp
-  GraphicsManager.cpp
-  InputManager.cpp
-  Light.cpp
-  MeshRenderer.cpp
-  MonoBehaviour.cpp
-  Resources.cpp
-C:\Users\김동민\Desktop\GraphicsEngine_DX11\FBXParser\FBXParser\inc\ParserData\ParserData.h(112,1): warning C4099: 'FBXModel': 처음에는 'struct'을(를) 사용하여 형식 이름을 표시했는데 이제는 'class'을(를) 사용하여 표시합니다.
-C:\Users\김동민\Desktop\GraphicsEngine_DX11\FBXParser\FBXParser\inc\ParserData\ParserData.h(111): message : 'FBXModel' 선언을 참조하십시오.
-C:\Users\김동민\Desktop\GraphicsEngine_DX11\Game_Engine\Game_Engine\Resources.cpp(485,39): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-  Scene.cpp
-  SceneManager.cpp
-  Text.cpp
-  TimeManager.cpp
-  Transform.cpp
-C:\Users\김동민\Desktop\GraphicsEngine_DX11\Game_Engine\Game_Engine\Transform.cpp(96,20): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\김동민\Desktop\GraphicsEngine_DX11\Game_Engine\Game_Engine\Transform.cpp(102,16): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\김동민\Desktop\GraphicsEngine_DX11\Game_Engine\Game_Engine\Transform.cpp(104,15): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\김동민\Desktop\GraphicsEngine_DX11\Game_Engine\Game_Engine\Transform.cpp(105,15): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\김동민\Desktop\GraphicsEngine_DX11\Game_Engine\Game_Engine\Transform.cpp(225,15): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\김동민\Desktop\GraphicsEngine_DX11\Game_Engine\Game_Engine\Transform.cpp(226,15): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\김동민\Desktop\GraphicsEngine_DX11\Game_Engine\Game_Engine\Transform.cpp(238,15): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\김동민\Desktop\GraphicsEngine_DX11\Game_Engine\Game_Engine\Transform.cpp(239,15): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\김동민\Desktop\GraphicsEngine_DX11\Game_Engine\Game_Engine\Transform.cpp(259,15): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\김동민\Desktop\GraphicsEngine_DX11\Game_Engine\Game_Engine\Transform.cpp(260,15): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\김동민\Desktop\GraphicsEngine_DX11\Game_Engine\Game_Engine\Transform.cpp(261,15): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\김동민\Desktop\GraphicsEngine_DX11\Game_Engine\Game_Engine\Transform.cpp(247,11): warning C4101: 'localRotationVec' :참조되지 않은 지역 변수입니다.
-  UI.cpp
-  코드를 생성하고 있습니다...
-  LINK : C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\Game_Engine.dll을(를) 찾을 수 없거나 마지막 증분 링크에 의해 빌드되지 않았습니다. 전체 링크를 수행하고 있습니다.
-     C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\Game_Engine.lib 라이브러리 및 C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\Game_Engine.exp 개체를 생성하고 있습니다.
+﻿  Resources.cpp
+C:\Users\김동민\Desktop\GraphicsEngine_DX11\FBXParser\FBXParser\inc\ParserData\ParserData.h(114,1): warning C4099: 'FBXModel': 처음에는 'struct'을(를) 사용하여 형식 이름을 표시했는데 이제는 'class'을(를) 사용하여 표시합니다.
+C:\Users\김동민\Desktop\GraphicsEngine_DX11\FBXParser\FBXParser\inc\ParserData\ParserData.h(113): message : 'FBXModel' 선언을 참조하십시오.
   Game_Engine.vcxproj -> C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\Game_Engine.dll
           1개 파일이 복사되었습니다.

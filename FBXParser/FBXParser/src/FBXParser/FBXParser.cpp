@@ -343,6 +343,8 @@ void FBXParser::LoadAnimation()
 		double startTime = takeInfo->mLocalTimeSpan.GetStart().GetSecondDouble();
 		double endTime = takeInfo->mLocalTimeSpan.GetStop().GetSecondDouble();
 		double frameRate = (float)FbxTime::GetFrameRate(scene->GetGlobalSettings().GetTimeMode());
+
+		animClip->frameRate = frameRate;
 		
 		if (startTime < endTime)
 		{

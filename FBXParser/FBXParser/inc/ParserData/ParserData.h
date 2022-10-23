@@ -95,9 +95,11 @@ struct FBXKeyFrameInfo
 
 struct FBXAnimClipInfo
 {
-	std::string			animationName;
+	std::string	animationName;
 
-	float	tickPerFrame = 0.0f;					
+	float frameRate = 0.0f;
+
+	float tickPerFrame = 0.0f;					
 	
 	int totalKeyFrame = 0;							
 

@@ -479,6 +479,7 @@ std::vector<std::shared_ptr<GameObject>> Resources::LoadFBX(std::string path, in
 			{
 				std::shared_ptr<AnimationClip> animationClip = std::make_shared<AnimationClip>();
 				animationClip->animationName = anim->animationName;
+				animationClip->frameRate = anim->frameRate;
 				animationClip->startKeyFrame = anim->startKeyFrame;
 				animationClip->endKeyFrame = anim->endKeyFrame;
 				animationClip->totalKeyFrame = anim->totalKeyFrame;

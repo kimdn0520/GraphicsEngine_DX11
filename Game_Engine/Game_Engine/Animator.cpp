@@ -29,6 +29,8 @@ void Animator::Play(std::string animName, bool loop)
 	currentClip = animClips[animName];
 
 	isLoop = loop;
+
+	currentFrame = currentClip->startKeyFrame;
 }
 
 void Animator::Update()
@@ -38,67 +40,93 @@ void Animator::Update()
 
 	updateTime += TimeManager::Get()->GetDeltaTime();
 
-	currentFrame = (int)(updateTime / currentClip->tickPerFrame);
-
-	if (preFrame != currentFrame)
-	{
-		preFrame = currentFrame;
-
-		//for (int key = 0; key < currentClip->keyFrame.size(); key++)
-		//{
-		//	// 현재 틱이 맨 처음 애니메이션보다 작거나 같은 경우
-		//	// 맨처음 애니메이션을 재생한다.
-		//	if (currentPosTick <= _tickNumberPosList[_clipIndex][0])
-		//	{
-		//		preIndex = 0;
-		//		postIndex = 1;
-
-		//		// tickPos 가 한개일경우..?!
-		//		if (_tickNumberPosList[_clipIndex].size() == 1)
-		//			postIndex = 0;
-
-		//		t = 0.f;
-
-		//		break;
-		//	}
-
-		//	// 현재 틱이 모든 posTick 보다 큰 경우
-		//	// 마지막 애니메이션을 재생한다.
-		//	if (currentPosTick >= _tickNumberPosList[_clipIndex][_tickNumberPosList[_clipIndex].size() - 1])
-		//	{
-		//		// tickPos 가 한개일 경우?
-		//		if (_tickNumberPosList[_clipIndex].size() == 1)
-		//		{
-		//			preIndex = 0;
-		//			postIndex = 0;
-		//		}
-		//		else
-		//		{
-		//			preIndex = _tickNumberPosList[_clipIndex].size() - 2;
-		//			postIndex = _tickNumberPosList[_clipIndex].size() - 1;
-		//		}
-
-		//		t = 1.0f;
-
-		//		break;
-		//	}
-
-		//	if (currentPosTick > _tickNumberPosList[_clipIndex][i])
-		//		continue;
-
-		//	// 현재 틱이 작은 경우
-		//	// 그 전의 가장 가까운 틱으로 한다.
-		//	preIndex = i - 1;
-		//	postIndex = i;
-
-		//	t = static_cast<float>(currentPosTick - _tickNumberPosList[_clipIndex][preIndex]) / (_tickNumberPosList[_clipIndex][postIndex] - _tickNumberPosList[_clipIndex][preIndex]);
-		//	break;
-		//}
-
-		//Vector3 pos = XMVectorLerp(_currentClip->position[preIndex]->pos, _currentClip->position[postIndex]->pos, t);
-
-		//_transform->SetLocalPosition(pos);
-	}
+	if (updateTime < 1.0f / currentClip->frameRate)
+		return;
 
 	updateTime = 0.f;
+
+	// 현재 틱을 구한당.
+	// 증가하는 frame 에다가 ticksperFrame(프레임 마다의 틱) 을 곱해준다.
+	float currentTick = currentFrame * currentClip->tickPerFrame;		
+	int preIndex = 0;
+	int postIndex = 0;
+	float t = 0.f;				// 보간 계수
+
+	for (int key = 0; key < currentClip->keyFrame.size(); key++)
+	{
+		// 현재 틱이 맨 처음 애니메이션보다 작거나 같은 경우
+		// 맨처음 애니메이션을 재생한다.
+		if (currentTick <= currentClip->keyFrame[0]->time)
+		{
+			preIndex = 0;
+
+			postIndex = 1;
+
+			// tick이 한개일경우..
+			if (currentClip->keyFrame.size() == 1)
+				postIndex = 0;
+
+			t = 0.f;
+
+			break;
+		}
+
+		// 현재 틱이 모든 tick 보다 큰 경우
+		// 마지막 애니메이션을 재생한다.
+		if (currentTick >= currentClip->keyFrame[currentClip->keyFrame.size() - 1]->time)
+		{
+			// tick이 한개일 경우..
+			if (currentClip->keyFrame.size() == 1)
+			{
+				preIndex = 0;
+				postIndex = 0;
+			}
+			else
+			{
+				preIndex = currentClip->keyFrame.size() - 2;
+				postIndex = currentClip->keyFrame.size() - 1;
+			}
+
+			t = 1.0f;
+
+			break;
+		}
+
+		if (currentTick > currentClip->keyFrame[key]->time)
+			continue;
+
+		// 현재 틱이 작은 경우
+		// 그 전의 가장 가까운 틱으로 한다.
+		preIndex = key - 1;
+		postIndex = key;
+
+		t = static_cast<float>(currentTick - currentClip->keyFrame[preIndex]->time) / (currentClip->keyFrame[postIndex]->time - currentClip->keyFrame[preIndex]->time);
+		
+		break;
+	}
+
+	//Vector3 pos = XMVectorLerp(_currentClip->position[preIndex]->pos, _currentClip->position[postIndex]->pos, t);
+
+	//Vector4 rotQT = XMQuaternionSlerp(_currentClip->rotation[preIndex]->rotQT, _currentClip->rotation[postIndex]->rotQT, t);
+	
+	//Vector3 rotation = _transform->QuatToEuler(rotQT);
+
+	//_transform->SetLocalPosition(pos);
+
+	//_transform->SetLocalRotation(Vector3(rotation.x, rotation.y, rotation.z));
+
+	currentFrame++;
+
+	// 루프면 다시 처음으로
+	if (isLoop)
+	{
+		if (currentFrame > currentClip->totalKeyFrame)
+			currentFrame = currentClip->startKeyFrame;
+	}
+	// 루프 아니면 멈춤
+	else
+	{
+		if (currentFrame > currentClip->totalKeyFrame)
+			isPlay = false;
+	}
 }

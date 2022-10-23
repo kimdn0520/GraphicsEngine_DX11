@@ -21,7 +21,11 @@ struct AnimKeyFrame
 struct AnimationClip
 {
 	std::string		animationName;
+
 	std::vector<std::shared_ptr<AnimKeyFrame>>	keyFrame;
+
+	// 프레임 Rate
+	float frameRate;
 
 	// 애니메이션 첫 번째 프레임
 	int startKeyFrame;
@@ -33,5 +37,5 @@ struct AnimationClip
 	int endKeyFrame;
 
 	// 프레임당 몇 Tick이 지나가는지
-	int tickPerFrame;
+	float tickPerFrame;
 };
