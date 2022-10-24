@@ -43,7 +43,7 @@ void FBXParser::ProcessMesh(fbxsdk::FbxNode* node, FbxNodeAttribute::EType attri
 
 	if (nodeAttribute && nodeAttribute->GetAttributeType() == attribute)
 	{
-		LoadMesh(node->GetMesh());
+		LoadMesh(node);
 	}
 
 	// Material 로드
@@ -95,13 +95,17 @@ void FBXParser::Import(const std::string& path)
 	importer->Destroy();
 }
 
-void FBXParser::LoadMesh(fbxsdk::FbxMesh* mesh)
+void FBXParser::LoadMesh(fbxsdk::FbxNode* node)
 {
+	fbxsdk::FbxMesh* mesh = node->GetMesh();
+
 	std::shared_ptr<FBXMeshInfo> fbxMeshInfo = std::make_shared<FBXMeshInfo>();
 
 	fbxModel->fbxMeshInfoList.push_back(fbxMeshInfo);
 
 	std::shared_ptr<FBXMeshInfo>& meshInfo = fbxModel->fbxMeshInfoList.back();
+
+	meshInfo->nodeTM = GetNodeTM(node);
 
 	meshInfo->meshName = mesh->GetName();
 
@@ -190,8 +194,6 @@ void FBXParser::LoadMesh(fbxsdk::FbxMesh* mesh)
 					// BindPose 행렬을 구하자
 					FbxAMatrix geometryTransform = GetTransformMatrix(mesh->GetNode());
 					DirectX::SimpleMath::Matrix geometryMatrix = ConvertMatrix(geometryTransform);
-
-					meshInfo->nodeTM = geometryMatrix;
 
 					// OffsetMatrix는 WorldBindPose의 역행렬
 					DirectX::SimpleMath::Matrix offsetMatrix = clusterMatrix * clusterlinkMatrix.Invert() * geometryMatrix;
@@ -287,6 +289,8 @@ void FBXParser::ProcessBones(fbxsdk::FbxNode* node, int idx, int parentIdx)
 		fbxBoneInfo->boneName = node->GetName();
 
 		fbxBoneInfo->parentIndex = parentIdx;
+
+		fbxBoneInfo->nodeMatrix = GetNodeTM(node);
 
 		fbxModel->fbxBoneInfoList.push_back(fbxBoneInfo);
 	}
@@ -433,6 +437,15 @@ int FBXParser::FindBoneIndex(std::string boneName)
 	}
 
 	return -1;
+}
+
+DirectX::SimpleMath::Matrix FBXParser::GetNodeTM(fbxsdk::FbxNode* node)
+{
+	FbxMatrix localpos = scene->GetAnimationEvaluator()->GetNodeLocalTransform(node);
+
+	DirectX::SimpleMath::Matrix localTM = ConvertMatrix(localpos);
+
+	return localTM;
 }
 
 void FBXParser::GetNormal(fbxsdk::FbxMesh* mesh, std::shared_ptr<FBXMeshInfo>& meshInfo, int idx, int vertexCounter)

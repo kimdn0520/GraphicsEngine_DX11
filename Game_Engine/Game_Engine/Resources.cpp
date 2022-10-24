@@ -466,14 +466,15 @@ std::vector<std::shared_ptr<GameObject>> Resources::LoadFBX(std::string path, in
 			std::shared_ptr<GameObject> boneObject = std::make_shared<GameObject>();
 			boneObject->SetName(fbxModel->fbxBoneInfoList[boneIdx]->boneName);
 			boneObject->AddComponent<Transform>();
-			boneObject->GetComponent<Transform>()->SetNodeTM(fbxModel->fbxBoneInfoList[boneIdx]->offsetMatrix);	// NodeTM 넣기( 맞나..? )
+			boneObject->GetComponent<Transform>()->SetBoneOffsetMatrix(fbxModel->fbxBoneInfoList[boneIdx]->offsetMatrix);
+			boneObject->GetComponent<Transform>()->SetNodeTM(fbxModel->fbxBoneInfoList[boneIdx]->nodeMatrix);	
 
 			if (!gameObjects.empty())
 			{
 				boneObject->GetTransform()->SetParent(gameObjects[fbxModel->fbxBoneInfoList[boneIdx]->parentIndex]->GetTransform());
 				gameObjects[fbxModel->fbxBoneInfoList[boneIdx]->parentIndex]->SetChild(boneObject);
 
-				/*Vector3 localScale = { 1.0f, 1.0f, 1.0f };
+				Vector3 localScale = { 1.0f, 1.0f, 1.0f };
 				Vector3 localRotation = { 0.f, 0.f, 0.f };
 				Vector3 localTranslation = { 0.f, .0f, 0.f };
 
@@ -482,7 +483,7 @@ std::vector<std::shared_ptr<GameObject>> Resources::LoadFBX(std::string path, in
 
 				Transform::DecomposeMatrix(multipleMatrix, localScale, localRotation, localTranslation);
 
-				boneObject->GetComponent<Transform>()->SetLocalScale(localScale);
+				/*boneObject->GetComponent<Transform>()->SetLocalScale(localScale);
 				boneObject->GetComponent<Transform>()->SetLocalRotation(localRotation);
 				boneObject->GetComponent<Transform>()->SetLocalPosition(localTranslation);*/
 			}
@@ -564,11 +565,11 @@ std::vector<std::shared_ptr<GameObject>> Resources::LoadFBX(std::string path, in
 			gameObject->GetComponent<MeshRenderer>()->IsSkinnedMesh(mesh->isSkinned);
 			gameObject->GetComponent<MeshRenderer>()->SetMeshID(meshID);		// meshID 등록
 
-			/*Vector3 localScale = { 1.0f, 1.0f, 1.0f };
+			Vector3 localScale = { 1.0f, 1.0f, 1.0f };
 			Vector3 localRotation = { 0.f, 0.f, 0.f };
 			Vector3 localTranslation = { 0.f, .0f, 0.f };
 			Transform::DecomposeMatrix(gameObject->GetTransform()->GetNodeMatrix(), localScale, localRotation, localTranslation);
-			gameObject->GetComponent<Transform>()->SetLocalScale(localScale);
+			/*gameObject->GetComponent<Transform>()->SetLocalScale(localScale);
 			gameObject->GetComponent<Transform>()->SetLocalRotation(localRotation);
 			gameObject->GetComponent<Transform>()->SetLocalPosition(localTranslation);*/
 

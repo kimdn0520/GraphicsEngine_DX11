@@ -21,6 +21,8 @@ private:
 	Matrix _localMatrix;
 	Matrix _worldMatrix;
 
+	Matrix _boneOffsetMatrix;
+
 	std::shared_ptr<Transform> _parent;
 
 	Vector3 _targetPos;
@@ -47,6 +49,8 @@ public:
 
 	GameEngine_DLL const Matrix& GetWorldMatrix() { return _worldMatrix; }
 	const Matrix& GetNodeMatrix() { return _nodeMatrix; }
+	const Matrix& GetBoneOffsetmatrix() { return _boneOffsetMatrix; }
+
 	GameEngine_DLL const Vector3& GetLocalPosition() { return _localPosition; }
 	GameEngine_DLL const Vector3& GetLocalRotation() { return _localRotation; }
 	GameEngine_DLL const Vector3& GetLocalScale() { return _localScale; }
@@ -60,6 +64,8 @@ public:
 
 	void SetNodeTM(Matrix nodeTM) { _nodeMatrix = nodeTM; }
 
+	void SetBoneOffsetMatrix(Matrix boneOffsetMatrix) { _boneOffsetMatrix = boneOffsetMatrix; };
+	
 	GameEngine_DLL Vector3 QuatToEuler(Vector4 quat);
 
 	GameEngine_DLL Vector4 EulerToQuat(Vector3& euler);
@@ -80,6 +86,7 @@ public:
 	GameEngine_DLL void OnMouseDown(int x, int y);
 	// 마우스 움직임에따라 회전
 	GameEngine_DLL void OnMouseMove(int x, int y, float speed);
+
 
 	// ASE파서에서 Decompose해서 받았던 original scale,rot,trans
 	const Vector3& GetOriScale() { return _oriScale; }

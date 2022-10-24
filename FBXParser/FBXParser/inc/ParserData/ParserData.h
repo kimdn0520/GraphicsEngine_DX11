@@ -77,7 +77,9 @@ struct FBXBoneInfo
 
 	int						parentIndex;
 
-	DirectX::SimpleMath::Matrix offsetMatrix;							// Bone's OffsetMatrix
+	DirectX::SimpleMath::Matrix offsetMatrix;				// Bone's OffsetMatrix
+	DirectX::SimpleMath::Matrix nodeMatrix;					// Bone's NodeMatrix
+	DirectX::SimpleMath::Matrix worldMatrix;				// Bone's WorldMatrix
 };
 
 struct FBXKeyFrameInfo

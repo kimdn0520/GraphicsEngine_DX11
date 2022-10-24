@@ -38,7 +38,7 @@ public:
 
 	void Import(const std::string& path);
 
-	void LoadMesh(fbxsdk::FbxMesh* mesh);
+	void LoadMesh(fbxsdk::FbxNode* node);
 
 	void ProcessBones(fbxsdk::FbxNode* node, int idx, int parentIdx);
 	
@@ -50,10 +50,12 @@ public:
 
 	int FindBoneIndex(std::string boneName);
 
+	DirectX::SimpleMath::Matrix GetNodeTM(fbxsdk::FbxNode* node);
+	
 	void GetNormal(fbxsdk::FbxMesh* mesh, std::shared_ptr<FBXMeshInfo>& meshInfo, int idx, int vertexCounter);
 	
 	void GetTangent(std::shared_ptr<FBXMeshInfo>& meshInfo);
-	
+
 	void GetUV(fbxsdk::FbxMesh* mesh, std::shared_ptr<FBXMeshInfo>& meshInfo, int idx, int uvIndex);
 
 	std::wstring GetTextureRelativeName(fbxsdk::FbxSurfaceMaterial* surface, const char* materialProperty);
