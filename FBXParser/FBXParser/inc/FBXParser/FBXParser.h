@@ -23,6 +23,8 @@ private:
 	fbxsdk::FbxScene* scene = nullptr;
 	fbxsdk::FbxImporter* importer = nullptr;
 
+	FbxArray<FbxString*> animNames;
+
 	bool isParsingAnim = false;
 
 public:
@@ -56,7 +58,7 @@ public:
 
 	std::wstring GetTextureRelativeName(fbxsdk::FbxSurfaceMaterial* surface, const char* materialProperty);
 
-	FbxAMatrix GetTransformMatrix(FbxNode* node);
+	fbxsdk::FbxAMatrix GetTransformMatrix(FbxNode* node);
 
 	DirectX::SimpleMath::Vector4 ConvertVector4(fbxsdk::FbxVector4 v4);
 

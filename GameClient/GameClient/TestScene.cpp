@@ -10,6 +10,7 @@
 #include "TestFBXPrefab.h"
 #include "GraphicsManager.h"
 
+#include "Player.h"
 #include "CameraScript.h"
 #include "TestAnimPrefab.h"
 
@@ -103,5 +104,6 @@ void TestScene::Initialize()
 
 	shared_ptr<TestAnimPrefab> wolf = make_shared<TestAnimPrefab>(Vector3(-5.f, 5.f, 0.f));
 	wolf->gameObject->GetTransform()->SetLocalScale(Vector3(5.f, 5.f, 5.f));
+	wolf->gameObject->AddComponent<Player>();
 	AddGameObject(wolf->gameObject);
 }

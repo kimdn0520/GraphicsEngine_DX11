@@ -2,6 +2,7 @@
 #include "Animator.h"
 #include "GameObject.h"
 #include "StructDefine.h"
+#include "Transform.h"
 
 #include "TimeManager.h"
 
@@ -105,15 +106,19 @@ void Animator::Update()
 		break;
 	}
 
-	//Vector3 pos = XMVectorLerp(_currentClip->position[preIndex]->pos, _currentClip->position[postIndex]->pos, t);
+	Vector3 pos = XMVectorLerp(currentClip->keyFrame[preIndex]->worldTransform, currentClip->keyFrame[postIndex]->worldTransform, t);
 
-	//Vector4 rotQT = XMQuaternionSlerp(_currentClip->rotation[preIndex]->rotQT, _currentClip->rotation[postIndex]->rotQT, t);
+	Vector4 rotQT = XMQuaternionSlerp(currentClip->keyFrame[preIndex]->worldRotation, currentClip->keyFrame[postIndex]->worldRotation, t);
 	
-	//Vector3 rotation = _transform->QuatToEuler(rotQT);
+	Vector3 rotation = transform->QuatToEuler(rotQT);
 
-	//_transform->SetLocalPosition(pos);
+	//Vector3 scale = XMVectorLerp(currentClip->keyFrame[preIndex]->localScale, currentClip->keyFrame[postIndex]->localScale, t);
 
-	//_transform->SetLocalRotation(Vector3(rotation.x, rotation.y, rotation.z));
+	transform->SetLocalPosition(pos);
+
+	transform->SetLocalRotation(Vector3(rotation.x, rotation.y, rotation.z));
+
+	//transform->SetLocalScale(Vector3(scale.x, scale.y, scale.z));
 
 	currentFrame++;
 

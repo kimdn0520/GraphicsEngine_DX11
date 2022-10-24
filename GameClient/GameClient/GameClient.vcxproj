@@ -163,6 +163,7 @@
     <ClInclude Include="GenjiPrefab.h" />
     <ClInclude Include="IPrefab.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TestAnimPrefab.h" />
@@ -180,6 +181,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="TestAnimPrefab.cpp" />
     <ClCompile Include="TestFBXPrefab.cpp" />
     <ClCompile Include="TestScene.cpp" />

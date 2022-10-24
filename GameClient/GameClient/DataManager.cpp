@@ -28,7 +28,8 @@ void DataManager::DataLoad()
 void DataManager::MaterialReconstruction()
 {
 	//Resources::Get()->MaterialReconstruction("Material.001", "Wooden Crate_Crate_Metallic.png", "Metallic");
-
+	
+	//Resources::Get()->MaterialReconstruction("Spider", "Spinnen_Bein_tex_COLOR_.jpg", "Albedo");
 }
 
 void DataManager::Release()

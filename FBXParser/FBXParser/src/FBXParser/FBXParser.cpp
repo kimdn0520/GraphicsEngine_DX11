@@ -322,8 +322,7 @@ void FBXParser::LoadMaterial(fbxsdk::FbxSurfaceMaterial* surfaceMaterial)
 
 void FBXParser::LoadAnimation()
 {
-	FbxArray<FbxString*>			  animNames;
-
+	// animNames Array안에 모든 애니메이션 이름이 담긴다.
 	scene->FillAnimStackNameArray(OUT animNames);
 
 	const int animCount = animNames.GetCount();
@@ -365,7 +364,21 @@ void FBXParser::LoadKeyFrame(int animIndex, FbxNode* node, FbxCluster* cluster, 
 {
 	std::shared_ptr<FBXKeyFrameInfo> fbxKeyFrameInfo = std::make_shared<FBXKeyFrameInfo>();
 
+
+	FbxVector4	v1 = { 1, 0, 0, 0 };
+	FbxVector4	v2 = { 0, 0, 1, 0 };
+	FbxVector4	v3 = { 0, 1, 0, 0 };
+	FbxVector4	v4 = { 0, 0, 0, 1 };
+	FbxAMatrix	matReflect;
+	matReflect.mData[0] = v1;
+	matReflect.mData[1] = v2;
+	matReflect.mData[2] = v3;
+	matReflect.mData[3] = v4;
+
 	FbxTime::EMode timeMode = scene->GetGlobalSettings().GetTimeMode();
+
+	FbxAnimStack* animStack = scene->FindMember<FbxAnimStack>(animNames[animIndex]->Buffer());
+	scene->SetCurrentAnimationStack(OUT animStack);
 
 	for (FbxLongLong frame = 0; frame < fbxModel->animationClipList[animIndex]->totalKeyFrame; frame++)
 	{
@@ -373,31 +386,36 @@ void FBXParser::LoadKeyFrame(int animIndex, FbxNode* node, FbxCluster* cluster, 
 
 		FbxTime fbxTime = 0;
 
-		fbxTime.SetFrame(fbxModel->animationClipList[animIndex]->startKeyFrame + frame, timeMode);
+		fbxTime.SetFrame(frame, timeMode);
 
 		// Local Transform = 부모 Bone의 Global Transform의 inverse Transform * 자신 Bone의 Global Transform;
-		FbxAMatrix localTransform = node->EvaluateLocalTransform(fbxTime);
+		//FbxAMatrix localTransform = node->EvaluateLocalTransform(fbxTime);
 		FbxAMatrix worldTransform = node->EvaluateGlobalTransform(fbxTime);
 
-		DirectX::SimpleMath::Matrix localTM = ConvertMatrix(localTransform);
-		DirectX::SimpleMath::Matrix worldTM = ConvertMatrix(worldTransform);
+		//DirectX::SimpleMath::Matrix localTM = ConvertMatrix(localTransform);
 
-		DirectX::XMVECTOR localScale;
+		FbxAMatrix matFromNode = node->EvaluateGlobalTransform(fbxTime);
+		FbxAMatrix matTransform = matFromNode.Inverse() * cluster->GetLink()->EvaluateGlobalTransform(fbxTime);
+		matTransform = matReflect * matTransform * matReflect;
+
+		DirectX::SimpleMath::Matrix worldTM = ConvertMatrix(matTransform);
+
+		/*DirectX::XMVECTOR localScale;
 		DirectX::XMVECTOR localRot;
-		DirectX::XMVECTOR localPos;
+		DirectX::XMVECTOR localPos;*/
 
 		DirectX::XMVECTOR worldScale;
 		DirectX::XMVECTOR worldRot;
 		DirectX::XMVECTOR worldPos;
 
-		XMMatrixDecompose(&localScale, &localRot, &localPos, localTM);
+		//XMMatrixDecompose(&localScale, &localRot, &localPos, localTM);
 		XMMatrixDecompose(&worldScale, &worldRot, &worldPos, worldTM);
 
 		keyFrameInfo->time = fbxTime.GetSecondDouble();
 
-		keyFrameInfo->localTransform = DirectX::SimpleMath::Vector3(localPos);
-		keyFrameInfo->localRotation = DirectX::SimpleMath::Quaternion(localRot);
-		keyFrameInfo->localScale = DirectX::SimpleMath::Vector3(localScale);
+		//keyFrameInfo->localTransform = DirectX::SimpleMath::Vector3(localPos);
+		//keyFrameInfo->localRotation = DirectX::SimpleMath::Quaternion(localRot);
+		//keyFrameInfo->localScale = DirectX::SimpleMath::Vector3(localScale);
 		keyFrameInfo->worldTransform = DirectX::SimpleMath::Vector3(worldPos);
 		keyFrameInfo->worldRotation = DirectX::SimpleMath::Quaternion(worldRot);
 		keyFrameInfo->worldScale = DirectX::SimpleMath::Vector3(worldScale);

@@ -4,6 +4,7 @@
 #include "Component.h"
 #include "Camera.h"
 #include "Transform.h"
+#include "Animator.h"
 #include "UI.h"
 #include "Text.h"
 
@@ -40,6 +41,13 @@ shared_ptr<Text> GameObject::GetText()
 	shared_ptr<Component> component = _components[(int)COMPONENT_TYPE::TEXT];
 
 	return dynamic_pointer_cast<Text>(component);
+}
+
+shared_ptr<Animator> GameObject::GetAnimator()
+{
+	shared_ptr<Component> component = _components[(int)COMPONENT_TYPE::ANIMATOR];
+
+	return dynamic_pointer_cast<Animator>(component);
 }
 
 void GameObject::Awake()
@@ -112,6 +120,27 @@ void GameObject::Render()
 	{
 		if (component)
 			component->Render();
+	}
+}
+
+void GameObject::PlayAnim(std::shared_ptr<GameObject> gameObject, std::string name, bool isLoop)
+{
+	if (gameObject->GetAnimator() != nullptr)
+	{
+		gameObject->GetAnimator()->Play(name, isLoop);
+	}
+
+	if (gameObject->GetChilds().size() != 0)
+	{
+		for (auto& gameObj : gameObject->GetChilds())
+		{
+			if (gameObj->GetAnimator() != nullptr)
+			{
+				gameObj->GetAnimator()->Play(name, isLoop);
+			}
+
+			PlayAnim(gameObj, name, isLoop);
+		}
 	}
 }
 

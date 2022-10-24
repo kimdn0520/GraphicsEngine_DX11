@@ -7,6 +7,7 @@ class Camera;
 class Transform;
 class UI;
 class Text;
+class Animator;
 
 enum class Tag
 {
@@ -57,6 +58,8 @@ public:
 	GameEngine_DLL std::shared_ptr<UI> GetUI();
 
 	GameEngine_DLL std::shared_ptr<Text> GetText();
+
+	GameEngine_DLL std::shared_ptr<Animator> GetAnimator();
 
 	std::string GetName() { return _name; }
 

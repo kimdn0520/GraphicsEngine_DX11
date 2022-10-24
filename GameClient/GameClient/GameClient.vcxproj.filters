@@ -66,6 +66,9 @@
     <ClInclude Include="TestAnimPrefab.h">
       <Filter>Prefab</Filter>
     </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Scripts</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="GameClient.ico">
@@ -110,6 +113,9 @@
     </ClCompile>
     <ClCompile Include="TestAnimPrefab.cpp">
       <Filter>Prefab</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Scripts</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -466,12 +466,25 @@ std::vector<std::shared_ptr<GameObject>> Resources::LoadFBX(std::string path, in
 			std::shared_ptr<GameObject> boneObject = std::make_shared<GameObject>();
 			boneObject->SetName(fbxModel->fbxBoneInfoList[boneIdx]->boneName);
 			boneObject->AddComponent<Transform>();
-			boneObject->GetComponent<Transform>()->SetNodeTM(fbxModel->fbxBoneInfoList[boneIdx]->offsetMatrix);	// NodeTM 넣기
+			boneObject->GetComponent<Transform>()->SetNodeTM(fbxModel->fbxBoneInfoList[boneIdx]->offsetMatrix);	// NodeTM 넣기( 맞나..? )
 
 			if (!gameObjects.empty())
 			{
 				boneObject->GetTransform()->SetParent(gameObjects[fbxModel->fbxBoneInfoList[boneIdx]->parentIndex]->GetTransform());
 				gameObjects[fbxModel->fbxBoneInfoList[boneIdx]->parentIndex]->SetChild(boneObject);
+
+				/*Vector3 localScale = { 1.0f, 1.0f, 1.0f };
+				Vector3 localRotation = { 0.f, 0.f, 0.f };
+				Vector3 localTranslation = { 0.f, .0f, 0.f };
+
+				XMMATRIX parentMatrixInverse = XMMatrixInverse(nullptr, gameObjects[fbxModel->fbxBoneInfoList[boneIdx]->parentIndex]->GetTransform()->GetWorldMatrix());
+				XMMATRIX multipleMatrix = XMMatrixMultiply(boneObject->GetTransform()->GetNodeMatrix(), parentMatrixInverse);
+
+				Transform::DecomposeMatrix(multipleMatrix, localScale, localRotation, localTranslation);
+
+				boneObject->GetComponent<Transform>()->SetLocalScale(localScale);
+				boneObject->GetComponent<Transform>()->SetLocalRotation(localRotation);
+				boneObject->GetComponent<Transform>()->SetLocalPosition(localTranslation);*/
 			}
 
 			// 일단 모델의 애니메이션 클립 리스트를 돈다
@@ -550,6 +563,14 @@ std::vector<std::shared_ptr<GameObject>> Resources::LoadFBX(std::string path, in
 			gameObject->AddComponent<MeshRenderer>();
 			gameObject->GetComponent<MeshRenderer>()->IsSkinnedMesh(mesh->isSkinned);
 			gameObject->GetComponent<MeshRenderer>()->SetMeshID(meshID);		// meshID 등록
+
+			/*Vector3 localScale = { 1.0f, 1.0f, 1.0f };
+			Vector3 localRotation = { 0.f, 0.f, 0.f };
+			Vector3 localTranslation = { 0.f, .0f, 0.f };
+			Transform::DecomposeMatrix(gameObject->GetTransform()->GetNodeMatrix(), localScale, localRotation, localTranslation);
+			gameObject->GetComponent<Transform>()->SetLocalScale(localScale);
+			gameObject->GetComponent<Transform>()->SetLocalRotation(localRotation);
+			gameObject->GetComponent<Transform>()->SetLocalPosition(localTranslation);*/
 
 			// Bone에 의해 영향을 받는 Mesh라면
 			if (mesh->isSkinned == true)
