@@ -36,6 +36,6 @@ void Player::Update()
 	}
 	else if (InputManager::Get()->GetButton(KEY_TYPE::KEY_4))
 	{
-		GetGameObject()->PlayAnim(GetGameObject(), "Wolf_Skeleton|Wolf_seat_", true);
+		GetGameObject()->PlayAnim(GetGameObject(), "Armature|Armature|mixamo.com|Layer0", true);
 	}
 }

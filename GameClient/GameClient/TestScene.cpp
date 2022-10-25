@@ -99,11 +99,11 @@ void TestScene::Initialize()
 	shared_ptr<GenjiPrefab> genji = make_shared<GenjiPrefab>(Vector3(0.f, 1.f, 0.f));
 	AddGameObject(genji->gameObject);
 
-	/*shared_ptr<TestFBXPrefab> crate = make_shared<TestFBXPrefab>(Vector3(5.f, 5.f, 0.f));
-	AddGameObject(crate->gameObject);*/
+	shared_ptr<TestFBXPrefab> crate = make_shared<TestFBXPrefab>(Vector3(0.f, 0.f, 0.f));
+	AddGameObject(crate->gameObject);
 
 	shared_ptr<TestAnimPrefab> wolf = make_shared<TestAnimPrefab>(Vector3(-5.f, 5.f, 0.f));
-	//wolf->gameObject->GetTransform()->SetLocalScale(Vector3(5.f, 5.f, 5.f));
+	wolf->gameObject->GetTransform()->SetLocalScale(Vector3(0.2f, 0.2f, 0.2f));
 	wolf->gameObject->AddComponent<Player>();
 	AddGameObject(wolf->gameObject);
 }

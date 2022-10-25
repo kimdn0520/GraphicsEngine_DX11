@@ -483,9 +483,9 @@ std::vector<std::shared_ptr<GameObject>> Resources::LoadFBX(std::string path, in
 
 				Transform::DecomposeMatrix(multipleMatrix, localScale, localRotation, localTranslation);
 
-				/*boneObject->GetComponent<Transform>()->SetLocalScale(localScale);
+				boneObject->GetComponent<Transform>()->SetLocalScale(localScale);
 				boneObject->GetComponent<Transform>()->SetLocalRotation(localRotation);
-				boneObject->GetComponent<Transform>()->SetLocalPosition(localTranslation);*/
+				boneObject->GetComponent<Transform>()->SetLocalPosition(localTranslation);
 			}
 
 			// 일단 모델의 애니메이션 클립 리스트를 돈다
@@ -569,9 +569,9 @@ std::vector<std::shared_ptr<GameObject>> Resources::LoadFBX(std::string path, in
 			Vector3 localRotation = { 0.f, 0.f, 0.f };
 			Vector3 localTranslation = { 0.f, .0f, 0.f };
 			Transform::DecomposeMatrix(gameObject->GetTransform()->GetNodeMatrix(), localScale, localRotation, localTranslation);
-			/*gameObject->GetComponent<Transform>()->SetLocalScale(localScale);
+			gameObject->GetComponent<Transform>()->SetLocalScale(localScale);
 			gameObject->GetComponent<Transform>()->SetLocalRotation(localRotation);
-			gameObject->GetComponent<Transform>()->SetLocalPosition(localTranslation);*/
+			gameObject->GetComponent<Transform>()->SetLocalPosition(localTranslation);
 
 			// Bone에 의해 영향을 받는 Mesh라면
 			if (mesh->isSkinned == true)
@@ -648,8 +648,17 @@ std::vector<std::shared_ptr<GameObject>> Resources::LoadFBX(std::string path, in
 			std::shared_ptr<GameObject> gameObject = std::make_shared<GameObject>();
 			gameObject->SetName(mesh->meshName);
 			gameObject->AddComponent<Transform>();
+			gameObject->GetComponent<Transform>()->SetNodeTM(mesh->nodeTM);
 			gameObject->AddComponent<MeshRenderer>();
 			gameObject->GetComponent<MeshRenderer>()->SetMeshID(meshID);		// meshID 등록
+
+			Vector3 localScale = { 1.0f, 1.0f, 1.0f };
+			Vector3 localRotation = { 0.f, 0.f, 0.f };
+			Vector3 localTranslation = { 0.f, .0f, 0.f };
+			Transform::DecomposeMatrix(gameObject->GetTransform()->GetNodeMatrix(), localScale, localRotation, localTranslation);
+			gameObject->GetComponent<Transform>()->SetLocalScale(localScale);
+			gameObject->GetComponent<Transform>()->SetLocalRotation(localRotation);
+			gameObject->GetComponent<Transform>()->SetLocalPosition(localTranslation);
 
 			// 메시 하나당 머터리얼 하나
 			for (auto& mat : fbxModel->materialList)

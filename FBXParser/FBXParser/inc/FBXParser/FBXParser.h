@@ -22,6 +22,7 @@ private:
 	fbxsdk::FbxManager* manager = nullptr;
 	fbxsdk::FbxScene* scene = nullptr;
 	fbxsdk::FbxImporter* importer = nullptr;
+	fbxsdk::FbxGeometryConverter* geometryConverter;
 
 	FbxArray<FbxString*> animNames;
 

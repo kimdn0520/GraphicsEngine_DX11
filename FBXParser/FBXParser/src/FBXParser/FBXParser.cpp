@@ -85,11 +85,18 @@ void FBXParser::Import(const std::string& path)
 	importer->Import(scene);
 
 	// Axis를 DirectX에 맞게 변환
+
+	// 좌표축을 가져온다.
+	FbxAxisSystem sceneAxisSystem = scene->GetGlobalSettings().GetAxisSystem();
+
+	// 씬 내의 좌표축을 바꾼다.
 	scene->GetGlobalSettings().SetAxisSystem(fbxsdk::FbxAxisSystem::DirectX);
+	//FbxAxisSystem::DirectX.ConvertScene(scene);
 
 	// 씬 내에서 삼각형화 할 수 있는 모든 노드를 삼각형화 시킨다. 
-	fbxsdk::FbxGeometryConverter geometryConverter(manager);
-	geometryConverter.Triangulate(scene, true);
+	geometryConverter = new FbxGeometryConverter(manager);
+
+	geometryConverter->Triangulate(scene, true, true);
 
 	// importer 파괴
 	importer->Destroy();
@@ -105,7 +112,9 @@ void FBXParser::LoadMesh(fbxsdk::FbxNode* node)
 
 	std::shared_ptr<FBXMeshInfo>& meshInfo = fbxModel->fbxMeshInfoList.back();
 
-	meshInfo->nodeTM = GetNodeTM(node);
+	FbxAMatrix nodeTransform = GetTransformMatrix(node);
+	DirectX::SimpleMath::Matrix nodeMatrix = ConvertMatrix(nodeTransform);
+	meshInfo->nodeTM = nodeMatrix;
 
 	meshInfo->meshName = mesh->GetName();
 
@@ -119,9 +128,15 @@ void FBXParser::LoadMesh(fbxsdk::FbxNode* node)
 	FbxVector4* controlPoints = mesh->GetControlPoints();
 	for (int i = 0; i < vertexCount; ++i)
 	{
-		meshInfo->meshVertexList[i].position.x = static_cast<float>(controlPoints[i].mData[0]);
-		meshInfo->meshVertexList[i].position.y = static_cast<float>(controlPoints[i].mData[2]);
-		meshInfo->meshVertexList[i].position.z = static_cast<float>(controlPoints[i].mData[1]);
+		DirectX::SimpleMath::Matrix localInverse = XMMatrixInverse(nullptr, meshInfo->nodeTM);
+		DirectX::XMVECTOR vertexVec = { controlPoints[i].mData[0], controlPoints[i].mData[1], controlPoints[i].mData[2] };
+		DirectX::XMVECTOR vertexXworldTM = XMVector3Transform(vertexVec, localInverse);
+		DirectX::XMFLOAT3 vertex;
+		DirectX::XMStoreFloat3(&vertex, vertexXworldTM);
+
+		meshInfo->meshVertexList[i].position.x = static_cast<float>(vertex.x);
+		meshInfo->meshVertexList[i].position.y = static_cast<float>(vertex.y);
+		meshInfo->meshVertexList[i].position.z = static_cast<float>(vertex.z);
 	}
 
 	// DeformerCount가 1보다 작으면 Bone Data가 없다고 가정
@@ -266,8 +281,8 @@ void FBXParser::LoadMesh(fbxsdk::FbxNode* node)
 		}
 
 		meshInfo->indices.push_back(arrIdx[0]);
-		meshInfo->indices.push_back(arrIdx[2]);
 		meshInfo->indices.push_back(arrIdx[1]);
+		meshInfo->indices.push_back(arrIdx[2]);
 	}
 
 	// tangent 정보를 가져온다.
@@ -290,7 +305,9 @@ void FBXParser::ProcessBones(fbxsdk::FbxNode* node, int idx, int parentIdx)
 
 		fbxBoneInfo->parentIndex = parentIdx;
 
-		fbxBoneInfo->nodeMatrix = GetNodeTM(node);
+		FbxAMatrix nodeTransform = GetTransformMatrix(node);
+		DirectX::SimpleMath::Matrix nodeMatrix = ConvertMatrix(nodeTransform);
+		fbxBoneInfo->nodeMatrix = nodeMatrix;
 
 		fbxModel->fbxBoneInfoList.push_back(fbxBoneInfo);
 	}
@@ -477,8 +494,8 @@ void FBXParser::GetNormal(fbxsdk::FbxMesh* mesh, std::shared_ptr<FBXMeshInfo>& m
 	FbxVector4 vec = normal->GetDirectArray().GetAt(normalIdx);
 
 	meshInfo->meshVertexList[idx].normal.x = static_cast<float>(vec.mData[0]);
-	meshInfo->meshVertexList[idx].normal.y = static_cast<float>(vec.mData[2]);
-	meshInfo->meshVertexList[idx].normal.z = static_cast<float>(vec.mData[1]);
+	meshInfo->meshVertexList[idx].normal.y = static_cast<float>(vec.mData[1]);
+	meshInfo->meshVertexList[idx].normal.z = static_cast<float>(vec.mData[2]);
 }
 
 void FBXParser::GetTangent(std::shared_ptr<FBXMeshInfo>& meshInfo)
