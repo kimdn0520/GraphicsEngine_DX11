@@ -305,7 +305,10 @@ void FBXParser::ProcessBones(fbxsdk::FbxNode* node, int idx, int parentIdx)
 
 		fbxBoneInfo->parentIndex = parentIdx;
 
-		FbxAMatrix nodeTransform = GetTransformMatrix(node);
+		// TODO : nodeTM을...!! 어케구하지?
+		/*FbxAMatrix nodeTransform = GetTransformMatrix(node);*/
+		FbxAMatrix nodeTransform = scene->GetAnimationEvaluator()->GetNodeLocalTransform(node);
+
 		DirectX::SimpleMath::Matrix nodeMatrix = ConvertMatrix(nodeTransform);
 		fbxBoneInfo->nodeMatrix = nodeMatrix;
 
