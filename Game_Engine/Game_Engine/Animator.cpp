@@ -106,13 +106,13 @@ void Animator::Update()
 		break;
 	}
 
-	Vector3 pos = XMVectorLerp(currentClip->keyFrame[preIndex]->worldTransform, currentClip->keyFrame[postIndex]->worldTransform, t);
+	Vector3 pos = XMVectorLerp(currentClip->keyFrame[preIndex]->localTransform, currentClip->keyFrame[postIndex]->localTransform, t);
 
-	Vector4 rotQT = XMQuaternionSlerp(currentClip->keyFrame[preIndex]->worldRotation, currentClip->keyFrame[postIndex]->worldRotation, t);
+	Vector4 rotQT = XMQuaternionSlerp(currentClip->keyFrame[preIndex]->localRotation, currentClip->keyFrame[postIndex]->localRotation, t);
 	
 	Vector3 rotation = transform->QuatToEuler(rotQT);
 
-	//Vector3 scale = XMVectorLerp(currentClip->keyFrame[preIndex]->localScale, currentClip->keyFrame[postIndex]->localScale, t);
+	//Vector3 scale = XMVectorLerp(currentClip->keyFrame[preIndex]->worldScale, currentClip->keyFrame[postIndex]->worldScale, t);
 
 	transform->SetLocalPosition(pos);
 

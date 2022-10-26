@@ -49,6 +49,8 @@ public:
 
 	void LoadKeyFrame(int animIndex, FbxNode* node, FbxCluster* cluster, int boneIdx);
 
+	void ProcessAnimationData(FbxNode* node);
+
 	int FindBoneIndex(std::string boneName);
 
 	DirectX::SimpleMath::Matrix GetNodeTM(fbxsdk::FbxNode* node);

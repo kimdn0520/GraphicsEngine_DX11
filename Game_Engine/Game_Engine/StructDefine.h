@@ -10,12 +10,8 @@ struct AnimKeyFrame
 	float time;
 
 	DirectX::SimpleMath::Vector3 localTransform;
-	DirectX::SimpleMath::Vector4 localRotation;
+	DirectX::SimpleMath::Quaternion localRotation;
 	DirectX::SimpleMath::Vector3 localScale;
-
-	DirectX::SimpleMath::Vector3 worldTransform;
-	DirectX::SimpleMath::Vector4 worldRotation;
-	DirectX::SimpleMath::Vector3 worldScale;
 };
 
 struct AnimationClip

@@ -23,9 +23,9 @@ std::shared_ptr<FBXModel> FBXParser::LoadFbx(const std::string& path)
 	// 파일 데이터 로드
 	Import(path);
 
-	ProcessBones(scene->GetRootNode(), 0, -1);
-
 	LoadAnimation();
+
+	ProcessBones(scene->GetRootNode(), 0, -1);
 
 	ProcessMesh(scene->GetRootNode(), FbxNodeAttribute::eMesh);
 
@@ -218,11 +218,11 @@ void FBXParser::LoadMesh(fbxsdk::FbxNode* node)
 					const int animCount = fbxModel->animationClipList.size();
 
 					// 키프레임 파싱을 아직 안했으면..
-					if (!isParsingAnim)
+					/*if (!isParsingAnim)
 					{
 						for (int animIdx = 0; animIdx < animCount; animIdx++)
 							LoadKeyFrame(animIdx, mesh->GetNode(), cluster, boneIdx);
-					}
+					}*/
 				}
 
 				isParsingAnim = true;
@@ -260,9 +260,9 @@ void FBXParser::LoadMesh(fbxsdk::FbxNode* node)
 				}
 
 				meshInfo->meshVertexList.push_back(vertex);								// 새로운 버텍스 삽입
-				
+
 				controlPointIndex = meshInfo->meshVertexList.size() - 1;				// index 새로운 버텍스 껄로 바꾸기
-				
+
 				isVertex.push_back(true);
 			}
 
@@ -270,7 +270,7 @@ void FBXParser::LoadMesh(fbxsdk::FbxNode* node)
 
 			// uv 정보를 가져온다.
 			GetUV(mesh, meshInfo, controlPointIndex, mesh->GetTextureUVIndex(i, j));
-			
+
 			// normal 정보를 가져온다.
 			GetNormal(mesh, meshInfo, controlPointIndex, vertexCounter);
 
@@ -310,6 +310,8 @@ void FBXParser::ProcessBones(fbxsdk::FbxNode* node, int idx, int parentIdx)
 		fbxBoneInfo->nodeMatrix = nodeMatrix;
 
 		fbxModel->fbxBoneInfoList.push_back(fbxBoneInfo);
+
+		ProcessAnimationData(node);
 	}
 
 	const int childCount = node->GetChildCount();
@@ -322,13 +324,13 @@ void FBXParser::LoadMaterial(fbxsdk::FbxSurfaceMaterial* surfaceMaterial)
 {
 	std::shared_ptr<FBXMaterialInfo> material = std::make_shared<FBXMaterialInfo>();
 
-	material->materialName = surfaceMaterial->GetName();	
+	material->materialName = surfaceMaterial->GetName();
 
 	material->albedoMap = GetTextureRelativeName(surfaceMaterial, fbxsdk::FbxSurfaceMaterial::sDiffuse);
 	material->normalMap = GetTextureRelativeName(surfaceMaterial, fbxsdk::FbxSurfaceMaterial::sNormalMap);
 	material->roughnessMap = GetTextureRelativeName(surfaceMaterial, fbxsdk::FbxSurfaceMaterial::sShininess);
 	material->emissiveMap = GetTextureRelativeName(surfaceMaterial, fbxsdk::FbxSurfaceMaterial::sEmissive);
-	
+
 	if (material->albedoMap != L"") { material->isAlbedo = true; }
 	if (material->normalMap != L"") { material->isNormal = true; }
 	if (material->roughnessMap != L"") { material->isRoughness = true; }
@@ -351,7 +353,7 @@ void FBXParser::LoadAnimation()
 	for (int i = 0; i < animCount; i++)
 	{
 		FbxAnimStack* animStack = scene->FindMember<FbxAnimStack>(animNames[i]->Buffer());
-		
+
 		if (animStack == nullptr)
 			continue;
 
@@ -365,36 +367,25 @@ void FBXParser::LoadAnimation()
 		double frameRate = (float)FbxTime::GetFrameRate(scene->GetGlobalSettings().GetTimeMode());
 
 		animClip->frameRate = frameRate;
-		
+
 		if (startTime < endTime)
 		{
 			animClip->totalKeyFrame = (int)((endTime - startTime) * (double)frameRate);
 			animClip->endKeyFrame = (int)((endTime - startTime) * (double)frameRate);
 			animClip->tickPerFrame = (endTime - startTime) / animClip->totalKeyFrame;
-			animClip->startKeyFrame = (int)(startTime) * animClip->totalKeyFrame;
+			animClip->startKeyFrame = (int)(startTime)*animClip->totalKeyFrame;
 		}
 
 		// 애니클립의 키프레임은 본의 갯수 만큼
-		animClip->keyFrameList.resize(fbxModel->fbxBoneInfoList.size());
+		//animClip->keyFrameList.resize(fbxModel->fbxBoneInfoList.size());
 
- 		fbxModel->animationClipList.push_back(animClip);
+		fbxModel->animationClipList.push_back(animClip);
 	}
 }
 
 void FBXParser::LoadKeyFrame(int animIndex, FbxNode* node, FbxCluster* cluster, int boneIdx)
 {
 	std::shared_ptr<FBXKeyFrameInfo> fbxKeyFrameInfo = std::make_shared<FBXKeyFrameInfo>();
-
-
-	FbxVector4	v1 = { 1, 0, 0, 0 };
-	FbxVector4	v2 = { 0, 0, 1, 0 };
-	FbxVector4	v3 = { 0, 1, 0, 0 };
-	FbxVector4	v4 = { 0, 0, 0, 1 };
-	FbxAMatrix	matReflect;
-	matReflect.mData[0] = v1;
-	matReflect.mData[1] = v2;
-	matReflect.mData[2] = v3;
-	matReflect.mData[3] = v4;
 
 	FbxTime::EMode timeMode = scene->GetGlobalSettings().GetTimeMode();
 
@@ -411,19 +402,9 @@ void FBXParser::LoadKeyFrame(int animIndex, FbxNode* node, FbxCluster* cluster, 
 
 		// Local Transform = 부모 Bone의 Global Transform의 inverse Transform * 자신 Bone의 Global Transform;
 		//FbxAMatrix localTransform = node->EvaluateLocalTransform(fbxTime);
-		FbxAMatrix worldTransform = node->EvaluateGlobalTransform(fbxTime);
+		FbxAMatrix worldTransform = cluster->GetLink()->EvaluateLocalTransform(fbxTime);
 
-		//DirectX::SimpleMath::Matrix localTM = ConvertMatrix(localTransform);
-
-		FbxAMatrix matFromNode = node->EvaluateGlobalTransform(fbxTime);
-		FbxAMatrix matTransform = matFromNode.Inverse() * cluster->GetLink()->EvaluateGlobalTransform(fbxTime);
-		matTransform = matReflect * matTransform * matReflect;
-
-		DirectX::SimpleMath::Matrix worldTM = ConvertMatrix(matTransform);
-
-		/*DirectX::XMVECTOR localScale;
-		DirectX::XMVECTOR localRot;
-		DirectX::XMVECTOR localPos;*/
+		DirectX::SimpleMath::Matrix worldTM = ConvertMatrix(worldTransform);
 
 		DirectX::XMVECTOR worldScale;
 		DirectX::XMVECTOR worldRot;
@@ -437,11 +418,66 @@ void FBXParser::LoadKeyFrame(int animIndex, FbxNode* node, FbxCluster* cluster, 
 		//keyFrameInfo->localTransform = DirectX::SimpleMath::Vector3(localPos);
 		//keyFrameInfo->localRotation = DirectX::SimpleMath::Quaternion(localRot);
 		//keyFrameInfo->localScale = DirectX::SimpleMath::Vector3(localScale);
-		keyFrameInfo->worldTransform = DirectX::SimpleMath::Vector3(worldPos);
-		keyFrameInfo->worldRotation = DirectX::SimpleMath::Quaternion(worldRot);
-		keyFrameInfo->worldScale = DirectX::SimpleMath::Vector3(worldScale);
 
 		fbxModel->animationClipList[animIndex]->keyFrameList[boneIdx].push_back(keyFrameInfo);
+	}
+}
+
+void FBXParser::ProcessAnimationData(FbxNode* node)
+{
+	const int animCount = fbxModel->animationClipList.size();
+
+	std::vector<std::shared_ptr<FBXKeyFrameInfo>> keyFrameList;
+
+	for (int animIdx = 0; animIdx < animCount; animIdx++)
+	{
+		std::shared_ptr<FBXKeyFrameInfo> fbxKeyFrameInfo = std::make_shared<FBXKeyFrameInfo>();
+
+		FbxTime::EMode timeMode = scene->GetGlobalSettings().GetTimeMode();
+
+		FbxAnimStack* animStack = scene->FindMember<FbxAnimStack>(animNames[animIdx]->Buffer());
+		scene->SetCurrentAnimationStack(OUT animStack);
+
+		for (FbxLongLong frame = 0; frame < fbxModel->animationClipList[animIdx]->totalKeyFrame; frame++)
+		{
+			std::shared_ptr<FBXKeyFrameInfo> keyFrameInfo = std::make_shared<FBXKeyFrameInfo>();
+
+			FbxTime fbxTime = 0;
+
+			fbxTime.SetFrame(frame, timeMode);
+
+			// Local Transform = 부모 Bone의 Global Transform의 inverse Transform * 자신 Bone의 Global Transform;
+			FbxAMatrix localTransform = node->EvaluateGlobalTransform(fbxTime);
+
+			if (FbxNode* parent = node->GetParent())
+			{
+				FbxNodeAttribute* ParentAttribute = parent->GetNodeAttribute();
+
+				if (ParentAttribute && ParentAttribute->GetAttributeType() == FbxNodeAttribute::eSkeleton)
+				{
+					FbxAMatrix GlobalParentTransform = parent->EvaluateGlobalTransform(fbxTime);
+
+					localTransform = GlobalParentTransform.Inverse() * localTransform;
+				}
+			}
+
+			DirectX::SimpleMath::Matrix localTM = ConvertMatrix(localTransform);
+
+			DirectX::XMVECTOR localScale;
+			DirectX::XMVECTOR localRot;
+			DirectX::XMVECTOR localPos;
+			XMMatrixDecompose(&localScale, &localRot, &localPos, localTM);
+
+			keyFrameInfo->time = fbxTime.GetSecondDouble();
+
+			keyFrameInfo->localTransform = DirectX::SimpleMath::Vector3(localPos);
+			keyFrameInfo->localRotation = DirectX::SimpleMath::Quaternion(localRot);
+			keyFrameInfo->localScale = DirectX::SimpleMath::Vector3(localScale);
+
+			keyFrameList.push_back(keyFrameInfo);
+		}
+
+		fbxModel->animationClipList[animIdx]->keyFrameList.push_back(keyFrameList);
 	}
 }
 

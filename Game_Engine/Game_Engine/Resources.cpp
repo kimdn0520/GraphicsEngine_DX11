@@ -467,7 +467,15 @@ std::vector<std::shared_ptr<GameObject>> Resources::LoadFBX(std::string path, in
 			boneObject->SetName(fbxModel->fbxBoneInfoList[boneIdx]->boneName);
 			boneObject->AddComponent<Transform>();
 			boneObject->GetComponent<Transform>()->SetBoneOffsetMatrix(fbxModel->fbxBoneInfoList[boneIdx]->offsetMatrix);
-			boneObject->GetComponent<Transform>()->SetNodeTM(fbxModel->fbxBoneInfoList[boneIdx]->nodeMatrix);	
+			boneObject->GetComponent<Transform>()->SetNodeTM(fbxModel->fbxBoneInfoList[boneIdx]->nodeMatrix);
+			boneObject->AddComponent<MeshRenderer>();
+			boneObject->GetComponent<MeshRenderer>()->SetMeshID(0);				// cube는 0
+			shared_ptr<Material> boneMaterial = make_shared<Material>();
+			boneMaterial->name = "BoneMaterial";
+			boneMaterial->metallic = 0.0f;
+			boneMaterial->roughness = 0.0f;
+			GraphicsManager::Get()->SendMaterialData(boneMaterial);
+			boneObject->GetComponent<MeshRenderer>()->SetMaterial(boneMaterial->name);
 
 			if (!gameObjects.empty())
 			{
@@ -486,6 +494,7 @@ std::vector<std::shared_ptr<GameObject>> Resources::LoadFBX(std::string path, in
 				boneObject->GetComponent<Transform>()->SetLocalScale(localScale);
 				boneObject->GetComponent<Transform>()->SetLocalRotation(localRotation);
 				boneObject->GetComponent<Transform>()->SetLocalPosition(localTranslation);
+				boneObject->GetComponent<Transform>()->FixedUpdate();
 			}
 
 			// 일단 모델의 애니메이션 클립 리스트를 돈다
@@ -512,9 +521,6 @@ std::vector<std::shared_ptr<GameObject>> Resources::LoadFBX(std::string path, in
 						animKeyFrame->localTransform = anim->keyFrameList[boneIdx][keyIdx]->localTransform;
 						animKeyFrame->localRotation = anim->keyFrameList[boneIdx][keyIdx]->localRotation;
 						animKeyFrame->localScale = anim->keyFrameList[boneIdx][keyIdx]->localScale;
-						animKeyFrame->worldTransform = anim->keyFrameList[boneIdx][keyIdx]->worldTransform;
-						animKeyFrame->worldRotation = anim->keyFrameList[boneIdx][keyIdx]->worldRotation;
-						animKeyFrame->worldScale = anim->keyFrameList[boneIdx][keyIdx]->worldScale;
 
 						animationClip->keyFrame.push_back(animKeyFrame);
 					}
