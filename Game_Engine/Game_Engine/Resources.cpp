@@ -477,25 +477,28 @@ std::vector<std::shared_ptr<GameObject>> Resources::LoadFBX(std::string path, in
 			GraphicsManager::Get()->SendMaterialData(boneMaterial);
 			boneObject->GetComponent<MeshRenderer>()->SetMaterial(boneMaterial->name);
 
+			Vector3 localScale = { 1.0f, 1.0f, 1.0f };
+			Vector3 localRotation = { 0.f, 0.f, 0.f };
+			Vector3 localTranslation = { 0.f, .0f, 0.f };
+
 			if (!gameObjects.empty())
 			{
 				boneObject->GetTransform()->SetParent(gameObjects[fbxModel->fbxBoneInfoList[boneIdx]->parentIndex]->GetTransform());
 				gameObjects[fbxModel->fbxBoneInfoList[boneIdx]->parentIndex]->SetChild(boneObject);
 
-				Vector3 localScale = { 1.0f, 1.0f, 1.0f };
-				Vector3 localRotation = { 0.f, 0.f, 0.f };
-				Vector3 localTranslation = { 0.f, .0f, 0.f };
-
 				XMMATRIX parentMatrixInverse = XMMatrixInverse(nullptr, gameObjects[fbxModel->fbxBoneInfoList[boneIdx]->parentIndex]->GetTransform()->GetWorldMatrix());
 				XMMATRIX multipleMatrix = XMMatrixMultiply(boneObject->GetTransform()->GetNodeMatrix(), parentMatrixInverse);
 
 				Transform::DecomposeMatrix(multipleMatrix, localScale, localRotation, localTranslation);
-
-				boneObject->GetComponent<Transform>()->SetLocalScale(localScale);
-				boneObject->GetComponent<Transform>()->SetLocalRotation(localRotation);
-				boneObject->GetComponent<Transform>()->SetLocalPosition(localTranslation);
-				boneObject->GetComponent<Transform>()->FixedUpdate();
 			}
+			else
+			{
+				Transform::DecomposeMatrix(boneObject->GetTransform()->GetNodeMatrix(), localScale, localRotation, localTranslation);
+			}
+			boneObject->GetComponent<Transform>()->SetLocalScale(localScale);
+			boneObject->GetComponent<Transform>()->SetLocalRotation(localRotation);
+			boneObject->GetComponent<Transform>()->SetLocalPosition(localTranslation);
+			boneObject->GetComponent<Transform>()->FixedUpdate();
 
 			// 일단 모델의 애니메이션 클립 리스트를 돈다
 			for (auto& anim : fbxModel->animationClipList)
@@ -578,6 +581,7 @@ std::vector<std::shared_ptr<GameObject>> Resources::LoadFBX(std::string path, in
 			gameObject->GetComponent<Transform>()->SetLocalScale(localScale);
 			gameObject->GetComponent<Transform>()->SetLocalRotation(localRotation);
 			gameObject->GetComponent<Transform>()->SetLocalPosition(localTranslation);
+			gameObject->GetComponent<Transform>()->FixedUpdate();
 
 			// Bone에 의해 영향을 받는 Mesh라면
 			if (mesh->isSkinned == true)

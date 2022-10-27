@@ -47,8 +47,6 @@ public:
 
 	void LoadAnimation();
 
-	void LoadKeyFrame(int animIndex, FbxNode* node, FbxCluster* cluster, int boneIdx);
-
 	void ProcessAnimationData(FbxNode* node);
 
 	int FindBoneIndex(std::string boneName);
@@ -67,7 +65,11 @@ public:
 
 	DirectX::SimpleMath::Vector4 ConvertVector4(fbxsdk::FbxVector4 v4);
 
+	DirectX::SimpleMath::Vector4 ConvertAniVector4(fbxsdk::FbxVector4 v4);
+
 	DirectX::SimpleMath::Matrix ConvertMatrix(fbxsdk::FbxMatrix matrix);
+
+	DirectX::SimpleMath::Matrix ConvertAniMatrix(fbxsdk::FbxMatrix matrix);
 };
 
 inline DirectX::SimpleMath::Vector4 FBXParser::ConvertVector4(fbxsdk::FbxVector4 v4)
@@ -78,6 +80,17 @@ inline DirectX::SimpleMath::Vector4 FBXParser::ConvertVector4(fbxsdk::FbxVector4
 		static_cast<float>(v4.mData[0]),
 		static_cast<float>(v4.mData[2]),
 		static_cast<float>(v4.mData[1]),
+		static_cast<float>(v4.mData[3])
+	);
+}
+
+inline DirectX::SimpleMath::Vector4 FBXParser::ConvertAniVector4(fbxsdk::FbxVector4 v4)
+{
+	return DirectX::SimpleMath::Vector4
+	(
+		static_cast<float>(v4.mData[0]),
+		static_cast<float>(v4.mData[1]),
+		static_cast<float>(v4.mData[2]),
 		static_cast<float>(v4.mData[3])
 	);
 }
@@ -95,5 +108,21 @@ inline DirectX::SimpleMath::Matrix FBXParser::ConvertMatrix(fbxsdk::FbxMatrix ma
 		ConvertVector4(r3),
 		ConvertVector4(r2),
 		ConvertVector4(r4)
+	);
+}
+
+inline DirectX::SimpleMath::Matrix FBXParser::ConvertAniMatrix(fbxsdk::FbxMatrix matrix)
+{
+	FbxVector4 r1 = matrix.GetRow(0);
+	FbxVector4 r2 = matrix.GetRow(1);
+	FbxVector4 r3 = matrix.GetRow(2);
+	FbxVector4 r4 = matrix.GetRow(3);
+
+	return DirectX::SimpleMath::Matrix
+	(
+		ConvertAniVector4(r1),
+		ConvertAniVector4(r2),
+		ConvertAniVector4(r3),
+		ConvertAniVector4(r4)
 	);
 }

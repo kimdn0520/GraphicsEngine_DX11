@@ -23,7 +23,6 @@ void Texture::Initialize(const std::wstring& path)
 	else // png, jpg, jpeg, bmp
 		::LoadFromWICFile(path.c_str(), WIC_FLAGS_NONE, nullptr, _image);
 
-
 	HRESULT hr = ::CreateTexture(Graphics_Interface::Get()->GetDeviceClass()->GetDevice().Get(), _image.GetImages(), _image.GetImageCount(), _image.GetMetadata(),
 		reinterpret_cast<ID3D11Resource**>(_texResource.GetAddressOf()));
 
@@ -31,11 +30,6 @@ void Texture::Initialize(const std::wstring& path)
 		MessageBox(0, TEXT("Texture Failed."), 0, 0);
 
 	bool isCubeMap = _image.GetMetadata().IsCubemap();
-
-	/*if (path.find(L"cube") != std::wstring::npos)
-	{ 
-		isCubeMap = true;
-	}*/
 
 	D3D11_TEXTURE2D_DESC textureDesc;
 

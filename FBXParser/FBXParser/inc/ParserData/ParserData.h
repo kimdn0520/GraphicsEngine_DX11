@@ -61,7 +61,8 @@ struct FBXMaterialInfo
 
 struct FBXMeshInfo
 {
-	std::string						meshName;			// mesh 이름!
+	std::string						meshName;			// mesh 이름
+	std::string						parentName;			// 부모 이름
 	std::string						materialName;		// 이 mesh에 해당하는 material 이름!
 	std::vector<Vertex>				meshVertexList;
 	std::vector<unsigned int>		indices;

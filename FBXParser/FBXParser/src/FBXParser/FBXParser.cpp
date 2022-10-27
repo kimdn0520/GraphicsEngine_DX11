@@ -84,18 +84,12 @@ void FBXParser::Import(const std::string& path)
 	// fbx 파일 내용을 scene 으로 가져온다.
 	importer->Import(scene);
 
-	// Axis를 DirectX에 맞게 변환
-
-	// 좌표축을 가져온다.
-	FbxAxisSystem sceneAxisSystem = scene->GetGlobalSettings().GetAxisSystem();
-
 	// 씬 내의 좌표축을 바꾼다.
 	scene->GetGlobalSettings().SetAxisSystem(fbxsdk::FbxAxisSystem::DirectX);
-	//FbxAxisSystem::DirectX.ConvertScene(scene);
 
-	// 씬 내에서 삼각형화 할 수 있는 모든 노드를 삼각형화 시킨다. 
 	geometryConverter = new FbxGeometryConverter(manager);
 
+	// 씬 내에서 삼각형화 할 수 있는 모든 노드를 삼각형화 시킨다. 
 	geometryConverter->Triangulate(scene, true, true);
 
 	// importer 파괴
@@ -112,11 +106,20 @@ void FBXParser::LoadMesh(fbxsdk::FbxNode* node)
 
 	std::shared_ptr<FBXMeshInfo>& meshInfo = fbxModel->fbxMeshInfoList.back();
 
-	FbxAMatrix nodeTransform = GetTransformMatrix(node);
-	DirectX::SimpleMath::Matrix nodeMatrix = ConvertMatrix(nodeTransform);
+	// Node TM 넣기
+	//FbxAMatrix nodeTransform = GetTransformMatrix(node);
+	FbxAMatrix nodeTransform = scene->GetAnimationEvaluator()->GetNodeLocalTransform(node);
+	DirectX::SimpleMath::Matrix nodeMatrix = ConvertAniMatrix(nodeTransform);
 	meshInfo->nodeTM = nodeMatrix;
 
+	// mesh 이름 넣기
 	meshInfo->meshName = mesh->GetName();
+
+	// Node Parent 찾기
+	std::string parentName = node->GetParent()->GetName();
+
+	// 부모 이름 넣기
+	meshInfo->parentName = parentName;
 
 	const int vertexCount = mesh->GetControlPointsCount();
 	meshInfo->meshVertexList.resize(vertexCount);
@@ -203,12 +206,12 @@ void FBXParser::LoadMesh(fbxsdk::FbxNode* node)
 					cluster->GetTransformLinkMatrix(matClusterLinkTransformMatrix);		// The transformation of the cluster(joint) at binding time from joint space to world space 
 
 					// Bone Matrix 설정..
-					DirectX::SimpleMath::Matrix clusterMatrix = ConvertMatrix(matClusterTransformMatrix);
-					DirectX::SimpleMath::Matrix clusterlinkMatrix = ConvertMatrix(matClusterLinkTransformMatrix);
+					DirectX::SimpleMath::Matrix clusterMatrix = ConvertAniMatrix(matClusterTransformMatrix);
+					DirectX::SimpleMath::Matrix clusterlinkMatrix = ConvertAniMatrix(matClusterLinkTransformMatrix);
 
 					// BindPose 행렬을 구하자
 					FbxAMatrix geometryTransform = GetTransformMatrix(mesh->GetNode());
-					DirectX::SimpleMath::Matrix geometryMatrix = ConvertMatrix(geometryTransform);
+					DirectX::SimpleMath::Matrix geometryMatrix = ConvertAniMatrix(geometryTransform);
 
 					// OffsetMatrix는 WorldBindPose의 역행렬
 					DirectX::SimpleMath::Matrix offsetMatrix = clusterMatrix * clusterlinkMatrix.Invert() * geometryMatrix;
@@ -216,13 +219,6 @@ void FBXParser::LoadMesh(fbxsdk::FbxNode* node)
 					fbxModel->fbxBoneInfoList[boneIdx]->offsetMatrix = offsetMatrix;
 
 					const int animCount = fbxModel->animationClipList.size();
-
-					// 키프레임 파싱을 아직 안했으면..
-					/*if (!isParsingAnim)
-					{
-						for (int animIdx = 0; animIdx < animCount; animIdx++)
-							LoadKeyFrame(animIdx, mesh->GetNode(), cluster, boneIdx);
-					}*/
 				}
 
 				isParsingAnim = true;
@@ -306,10 +302,10 @@ void FBXParser::ProcessBones(fbxsdk::FbxNode* node, int idx, int parentIdx)
 		fbxBoneInfo->parentIndex = parentIdx;
 
 		// TODO : nodeTM을...!! 어케구하지?
-		/*FbxAMatrix nodeTransform = GetTransformMatrix(node);*/
-		FbxAMatrix nodeTransform = scene->GetAnimationEvaluator()->GetNodeLocalTransform(node);
+		//FbxAMatrix nodeTransform = GetTransformMatrix(node);
+		FbxAMatrix nodeTransform = scene->GetAnimationEvaluator()->GetNodeGlobalTransform(node);
 
-		DirectX::SimpleMath::Matrix nodeMatrix = ConvertMatrix(nodeTransform);
+		DirectX::SimpleMath::Matrix nodeMatrix = ConvertAniMatrix(nodeTransform);
 		fbxBoneInfo->nodeMatrix = nodeMatrix;
 
 		fbxModel->fbxBoneInfoList.push_back(fbxBoneInfo);
@@ -386,46 +382,6 @@ void FBXParser::LoadAnimation()
 	}
 }
 
-void FBXParser::LoadKeyFrame(int animIndex, FbxNode* node, FbxCluster* cluster, int boneIdx)
-{
-	std::shared_ptr<FBXKeyFrameInfo> fbxKeyFrameInfo = std::make_shared<FBXKeyFrameInfo>();
-
-	FbxTime::EMode timeMode = scene->GetGlobalSettings().GetTimeMode();
-
-	FbxAnimStack* animStack = scene->FindMember<FbxAnimStack>(animNames[animIndex]->Buffer());
-	scene->SetCurrentAnimationStack(OUT animStack);
-
-	for (FbxLongLong frame = 0; frame < fbxModel->animationClipList[animIndex]->totalKeyFrame; frame++)
-	{
-		std::shared_ptr<FBXKeyFrameInfo> keyFrameInfo = std::make_shared<FBXKeyFrameInfo>();
-
-		FbxTime fbxTime = 0;
-
-		fbxTime.SetFrame(frame, timeMode);
-
-		// Local Transform = 부모 Bone의 Global Transform의 inverse Transform * 자신 Bone의 Global Transform;
-		//FbxAMatrix localTransform = node->EvaluateLocalTransform(fbxTime);
-		FbxAMatrix worldTransform = cluster->GetLink()->EvaluateLocalTransform(fbxTime);
-
-		DirectX::SimpleMath::Matrix worldTM = ConvertMatrix(worldTransform);
-
-		DirectX::XMVECTOR worldScale;
-		DirectX::XMVECTOR worldRot;
-		DirectX::XMVECTOR worldPos;
-
-		//XMMatrixDecompose(&localScale, &localRot, &localPos, localTM);
-		XMMatrixDecompose(&worldScale, &worldRot, &worldPos, worldTM);
-
-		keyFrameInfo->time = fbxTime.GetSecondDouble();
-
-		//keyFrameInfo->localTransform = DirectX::SimpleMath::Vector3(localPos);
-		//keyFrameInfo->localRotation = DirectX::SimpleMath::Quaternion(localRot);
-		//keyFrameInfo->localScale = DirectX::SimpleMath::Vector3(localScale);
-
-		fbxModel->animationClipList[animIndex]->keyFrameList[boneIdx].push_back(keyFrameInfo);
-	}
-}
-
 void FBXParser::ProcessAnimationData(FbxNode* node)
 {
 	const int animCount = fbxModel->animationClipList.size();
@@ -464,7 +420,7 @@ void FBXParser::ProcessAnimationData(FbxNode* node)
 				}
 			}
 
-			DirectX::SimpleMath::Matrix localTM = ConvertMatrix(localTransform);
+			DirectX::SimpleMath::Matrix localTM = ConvertAniMatrix(localTransform);
 
 			DirectX::XMVECTOR localScale;
 			DirectX::XMVECTOR localRot;

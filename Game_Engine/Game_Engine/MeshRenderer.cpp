@@ -70,15 +70,15 @@ void MeshRenderer::Update()
 
 		boneWorldTM = tmpBone->GetTransform()->GetWorldMatrix();
 
-		//boneOffsetTM = tmpBone->GetTransform()->GetBoneOffsetmatrix();
+		boneOffsetTM = tmpBone->GetTransform()->GetBoneOffsetmatrix();
 
 		//boneOffsetTM = _transform->GetNodeMatrix() * tmpBone->GetTransform()->GetNodeMatrix().Invert();
 
-		boneNodeTM = tmpBone->GetTransform()->GetNodeMatrix();
+		//boneNodeTM = tmpBone->GetTransform()->GetNodeMatrix();
 
-		boneOffsetTM = boneNodeTM * _transform->GetNodeMatrix().Invert();
+		//boneOffsetTM = boneNodeTM * _transform->GetNodeMatrix().Invert();
 
-		_objectInfo->finalBoneListMatrix[i] = boneOffsetTM.Invert() * boneWorldTM * _transform->GetWorldMatrix().Invert();
+		_objectInfo->finalBoneListMatrix[i] = boneOffsetTM * boneWorldTM * _transform->GetWorldMatrix().Invert();
 	}
 }
 

@@ -112,13 +112,13 @@ void Animator::Update()
 	
 	Vector3 rotation = transform->QuatToEuler(rotQT);
 
-	//Vector3 scale = XMVectorLerp(currentClip->keyFrame[preIndex]->worldScale, currentClip->keyFrame[postIndex]->worldScale, t);
+	Vector3 scale = XMVectorLerp(currentClip->keyFrame[preIndex]->localScale, currentClip->keyFrame[postIndex]->localScale, t);
 
 	transform->SetLocalPosition(pos);
 
 	transform->SetLocalRotation(Vector3(rotation.x, rotation.y, rotation.z));
 
-	//transform->SetLocalScale(Vector3(scale.x, scale.y, scale.z));
+	transform->SetLocalScale(Vector3(scale.x, scale.y, scale.z));
 
 	currentFrame++;
 
