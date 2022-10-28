@@ -32,37 +32,6 @@ std::shared_ptr<FBXModel> FBXParser::LoadFbx(const std::string& path)
 	return fbxModel;
 }
 
-/// <summary>
-/// Mesh들을 로드해서 FBXModel의 fbxMeshInfoList에 저장한다.
-/// 버텍스의 정보를 모두 담고 bone에 영향을 받는 mesh가 있다면 bone 가중치도 넣어주고
-/// bone에 offsetMatrix 정보도 추가해준다
-/// <summary>
-void FBXParser::ProcessMesh(fbxsdk::FbxNode* node, FbxNodeAttribute::EType attribute)
-{
-	fbxsdk::FbxNodeAttribute* nodeAttribute = node->GetNodeAttribute();
-
-	if (nodeAttribute && nodeAttribute->GetAttributeType() == attribute)
-	{
-		LoadMesh(node);
-	}
-
-	// Material 로드
-	const int materialCount = node->GetMaterialCount();
-
-	for (int i = 0; i < materialCount; ++i)
-	{
-		fbxsdk::FbxSurfaceMaterial* surfaceMaterial = node->GetMaterial(i);
-
-		LoadMaterial(surfaceMaterial);
-	}
-
-	// Tree 구조 재귀 호출
-	const int childCount = node->GetChildCount();
-
-	for (int i = 0; i < childCount; ++i)
-		ProcessMesh(node->GetChild(i), FbxNodeAttribute::eMesh);
-}
-
 void FBXParser::Import(const std::string& path)
 {
 	// FBX SDK 관리자 객체 생성
@@ -96,6 +65,38 @@ void FBXParser::Import(const std::string& path)
 	importer->Destroy();
 }
 
+/// <summary>
+/// Mesh들을 로드해서 FBXModel의 fbxMeshInfoList에 저장한다.
+/// 버텍스의 정보를 모두 담고 bone에 영향을 받는 mesh가 있다면 bone 가중치도 넣어주고
+/// bone에 offsetMatrix 정보도 추가해준다
+/// <summary>
+void FBXParser::ProcessMesh(fbxsdk::FbxNode* node, FbxNodeAttribute::EType attribute)
+{
+	fbxsdk::FbxNodeAttribute* nodeAttribute = node->GetNodeAttribute();
+
+	if (nodeAttribute && nodeAttribute->GetAttributeType() == attribute)
+	{
+		LoadMesh(node);
+	}
+
+	// Material 로드
+	const int materialCount = node->GetMaterialCount();
+
+	for (int i = 0; i < materialCount; ++i)
+	{
+		fbxsdk::FbxSurfaceMaterial* surfaceMaterial = node->GetMaterial(i);
+
+		LoadMaterial(surfaceMaterial);
+	}
+
+	// Tree 구조 재귀 호출
+	const int childCount = node->GetChildCount();
+
+	for (int i = 0; i < childCount; ++i)
+		ProcessMesh(node->GetChild(i), FbxNodeAttribute::eMesh);
+}
+
+
 void FBXParser::LoadMesh(fbxsdk::FbxNode* node)
 {
 	fbxsdk::FbxMesh* mesh = node->GetMesh();
@@ -110,6 +111,7 @@ void FBXParser::LoadMesh(fbxsdk::FbxNode* node)
 	//FbxAMatrix nodeTransform = GetTransformMatrix(node);
 	FbxAMatrix nodeTransform = scene->GetAnimationEvaluator()->GetNodeLocalTransform(node);
 	DirectX::SimpleMath::Matrix nodeMatrix = ConvertAniMatrix(nodeTransform);
+
 	meshInfo->nodeTM = nodeMatrix;
 
 	// mesh 이름 넣기
@@ -217,11 +219,7 @@ void FBXParser::LoadMesh(fbxsdk::FbxNode* node)
 					DirectX::SimpleMath::Matrix offsetMatrix = clusterMatrix * clusterlinkMatrix.Invert() * geometryMatrix;
 
 					fbxModel->fbxBoneInfoList[boneIdx]->offsetMatrix = offsetMatrix;
-
-					const int animCount = fbxModel->animationClipList.size();
 				}
-
-				isParsingAnim = true;
 			}
 		}
 	}
@@ -237,7 +235,7 @@ void FBXParser::LoadMesh(fbxsdk::FbxNode* node)
 
 	for (int i = 0; i < triCount; i++) // 삼각형의 개수
 	{
-		for (int j = 0; j < 3; j++) // 삼각형은 세 개의 정점으로 구성
+		for (int j = 0; j < 3; j++)	   // 삼각형은 세 개의 정점으로 구성
 		{
 			int controlPointIndex = mesh->GetPolygonVertex(i, j); // 제어점의 인덱스 추출
 
@@ -291,9 +289,9 @@ void FBXParser::LoadMesh(fbxsdk::FbxNode* node)
 /// </summary>
 void FBXParser::ProcessBones(fbxsdk::FbxNode* node, int idx, int parentIdx)
 {
-	FbxNodeAttribute* attribute = node->GetNodeAttribute();
+	fbxsdk::FbxNodeAttribute* attribute = node->GetNodeAttribute();
 
-	if (attribute && attribute->GetAttributeType() == FbxNodeAttribute::eSkeleton)
+	if (attribute && attribute->GetAttributeType() == fbxsdk::FbxNodeAttribute::eSkeleton)
 	{
 		std::shared_ptr<FBXBoneInfo> fbxBoneInfo = std::make_shared<FBXBoneInfo>();
 
@@ -303,7 +301,7 @@ void FBXParser::ProcessBones(fbxsdk::FbxNode* node, int idx, int parentIdx)
 
 		// TODO : nodeTM을...!! 어케구하지?
 		//FbxAMatrix nodeTransform = GetTransformMatrix(node);
-		FbxAMatrix nodeTransform = scene->GetAnimationEvaluator()->GetNodeGlobalTransform(node);
+		FbxAMatrix nodeTransform = node->EvaluateGlobalTransform(fbxsdk::FbxTime(0));
 
 		DirectX::SimpleMath::Matrix nodeMatrix = ConvertAniMatrix(nodeTransform);
 		fbxBoneInfo->nodeMatrix = nodeMatrix;

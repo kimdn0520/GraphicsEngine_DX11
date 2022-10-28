@@ -24,15 +24,15 @@ void Player::Update()
 {
 	if (InputManager::Get()->GetButtonDown(KEY_TYPE::KEY_1))
 	{
-		GetGameObject()->PlayAnim(GetGameObject(), "Wolf_Skeleton|Wolf_creep_cycle", true);
+		GetGameObject()->PlayAnim(GetGameObject(), "Armature|Armature|mixamo.com|Layer0", true);
 	}
 	else if (InputManager::Get()->GetButton(KEY_TYPE::KEY_2))
 	{
-		GetGameObject()->PlayAnim(GetGameObject(), "Wolf_Skeleton|Wolf_Idle_", true);
+		GetGameObject()->PlayAnim(GetGameObject(), "Armature|Armature|mixamo.com|Layer0", true);
 	}
 	else if (InputManager::Get()->GetButton(KEY_TYPE::KEY_3))
 	{
-		GetGameObject()->PlayAnim(GetGameObject(), "Wolf_Skeleton|Wolf_Run_Cycle_", true);
+		GetGameObject()->PlayAnim(GetGameObject(), "Armature|Armature|mixamo.com|Layer0", true);
 	}
 	else if (InputManager::Get()->GetButton(KEY_TYPE::KEY_4))
 	{

@@ -26,8 +26,6 @@ private:
 
 	FbxArray<FbxString*> animNames;
 
-	bool isParsingAnim = false;
-
 public:
 	FBXParser();
 	~FBXParser();
@@ -35,9 +33,9 @@ public:
 public:
 	std::shared_ptr<FBXModel> LoadFbx(const std::string& path) override;
 
-	void ProcessMesh(fbxsdk::FbxNode* node, FbxNodeAttribute::EType attribute);
-
 	void Import(const std::string& path);
+
+	void ProcessMesh(fbxsdk::FbxNode* node, FbxNodeAttribute::EType attribute);
 
 	void LoadMesh(fbxsdk::FbxNode* node);
 
