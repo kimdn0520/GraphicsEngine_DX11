@@ -56,11 +56,15 @@ void FBXParser::Import(const std::string& path)
 	// 씬 내의 좌표축을 바꾼다.
 	scene->GetGlobalSettings().SetAxisSystem(fbxsdk::FbxAxisSystem::DirectX);
 
+	// GeometryConverter 객체 생성
 	geometryConverter = new FbxGeometryConverter(manager);
 
 	// 씬 내에서 삼각형화 할 수 있는 모든 노드를 삼각형화 시킨다. 
 	geometryConverter->Triangulate(scene, true, true);
 
+	// 여러 머터리얼이 하나의 메쉬에 할당된것을 하나의 메쉬가 하나의 머터리얼로 가지게함
+	geometryConverter->SplitMeshesPerMaterial(scene, true);
+	
 	// importer 파괴
 	importer->Destroy();
 }
@@ -109,7 +113,8 @@ void FBXParser::LoadMesh(fbxsdk::FbxNode* node)
 
 	// Node TM 넣기
 	//FbxAMatrix nodeTransform = GetTransformMatrix(node);
-	FbxAMatrix nodeTransform = scene->GetAnimationEvaluator()->GetNodeLocalTransform(node);
+	FbxAMatrix nodeTransform = scene->GetAnimationEvaluator()->GetNodeGlobalTransform(node);
+
 	DirectX::SimpleMath::Matrix nodeMatrix = ConvertAniMatrix(nodeTransform);
 
 	meshInfo->nodeTM = nodeMatrix;
@@ -299,11 +304,10 @@ void FBXParser::ProcessBones(fbxsdk::FbxNode* node, int idx, int parentIdx)
 
 		fbxBoneInfo->parentIndex = parentIdx;
 
-		// TODO : nodeTM을...!! 어케구하지?
-		//FbxAMatrix nodeTransform = GetTransformMatrix(node);
 		FbxAMatrix nodeTransform = node->EvaluateGlobalTransform(fbxsdk::FbxTime(0));
 
 		DirectX::SimpleMath::Matrix nodeMatrix = ConvertAniMatrix(nodeTransform);
+
 		fbxBoneInfo->nodeMatrix = nodeMatrix;
 
 		fbxModel->fbxBoneInfoList.push_back(fbxBoneInfo);
@@ -322,6 +326,65 @@ void FBXParser::LoadMaterial(fbxsdk::FbxSurfaceMaterial* surfaceMaterial)
 	std::shared_ptr<FBXMaterialInfo> material = std::make_shared<FBXMaterialInfo>();
 
 	material->materialName = surfaceMaterial->GetName();
+
+	if (surfaceMaterial->GetClassId().Is(FbxSurfacePhong::ClassId))
+	{
+		// Ambient Data
+		material->material_Ambient.x = static_cast<float>(((FbxSurfacePhong*)surfaceMaterial)->Ambient.Get()[0]) * 10.0f;
+		material->material_Ambient.y = static_cast<float>(((FbxSurfacePhong*)surfaceMaterial)->Ambient.Get()[1]) * 10.0f;
+		material->material_Ambient.z = static_cast<float>(((FbxSurfacePhong*)surfaceMaterial)->Ambient.Get()[2]) * 10.0f;
+		material->material_Ambient.w = 1.0f;
+
+		// Diffuse Data
+		material->material_Diffuse.x = static_cast<float>(((FbxSurfacePhong*)surfaceMaterial)->Diffuse.Get()[0]);
+		material->material_Diffuse.y = static_cast<float>(((FbxSurfacePhong*)surfaceMaterial)->Diffuse.Get()[1]);
+		material->material_Diffuse.z = static_cast<float>(((FbxSurfacePhong*)surfaceMaterial)->Diffuse.Get()[2]);
+		material->material_Diffuse.w = 1.0f;
+						
+		// Specular Data
+		material->material_Specular.x = static_cast<float>(((FbxSurfacePhong*)surfaceMaterial)->Specular.Get()[0]);
+		material->material_Specular.y = static_cast<float>(((FbxSurfacePhong*)surfaceMaterial)->Specular.Get()[1]);
+		material->material_Specular.z = static_cast<float>(((FbxSurfacePhong*)surfaceMaterial)->Specular.Get()[2]);
+		material->material_Specular.w = 1.0f;
+						
+		// Emissive Data
+		material->material_Emissive.x = static_cast<float>(((FbxSurfacePhong*)surfaceMaterial)->Emissive.Get()[0]);
+		material->material_Emissive.y = static_cast<float>(((FbxSurfacePhong*)surfaceMaterial)->Emissive.Get()[1]);
+		material->material_Emissive.z = static_cast<float>(((FbxSurfacePhong*)surfaceMaterial)->Emissive.Get()[2]);
+		material->material_Emissive.w = 1.0f;
+
+		// Transparecy Data
+		material->material_Transparency = static_cast<float>(((FbxSurfacePhong*)surfaceMaterial)->TransparencyFactor.Get());
+
+		// Shininess Data
+		material->roughness = static_cast<float>(((FbxSurfacePhong*)surfaceMaterial)->Shininess.Get());
+
+		// Reflectivity Data
+		material->material_Reflectivity = static_cast<float>(((FbxSurfacePhong*)surfaceMaterial)->ReflectionFactor.Get());
+	}
+	else if (surfaceMaterial->GetClassId().Is(FbxSurfaceLambert::ClassId))
+	{
+		// Ambient Data
+		material->material_Ambient.x = static_cast<float>(((FbxSurfaceLambert*)surfaceMaterial)->Ambient.Get()[0]);
+		material->material_Ambient.y = static_cast<float>(((FbxSurfaceLambert*)surfaceMaterial)->Ambient.Get()[1]);
+		material->material_Ambient.z = static_cast<float>(((FbxSurfaceLambert*)surfaceMaterial)->Ambient.Get()[2]);
+		material->material_Ambient.w = 1.0f;
+
+		// Diffuse Data
+		material->material_Diffuse.x = static_cast<float>(((FbxSurfaceLambert*)surfaceMaterial)->Diffuse.Get()[0]);
+		material->material_Diffuse.y = static_cast<float>(((FbxSurfaceLambert*)surfaceMaterial)->Diffuse.Get()[1]);
+		material->material_Diffuse.z = static_cast<float>(((FbxSurfaceLambert*)surfaceMaterial)->Diffuse.Get()[2]);
+		material->material_Diffuse.w = 1.0f;
+
+		// Emissive Data
+		material->material_Emissive.x = static_cast<float>(((FbxSurfaceLambert*)surfaceMaterial)->Emissive.Get()[0]);
+		material->material_Emissive.y = static_cast<float>(((FbxSurfaceLambert*)surfaceMaterial)->Emissive.Get()[1]);
+		material->material_Emissive.z = static_cast<float>(((FbxSurfaceLambert*)surfaceMaterial)->Emissive.Get()[2]);
+		material->material_Emissive.w = 1.0f;
+
+		// Transparecy Data
+		material->material_Transparency = static_cast<float>(((FbxSurfaceLambert*)surfaceMaterial)->TransparencyFactor.Get());
+	}
 
 	material->albedoMap = GetTextureRelativeName(surfaceMaterial, fbxsdk::FbxSurfaceMaterial::sDiffuse);
 	material->normalMap = GetTextureRelativeName(surfaceMaterial, fbxsdk::FbxSurfaceMaterial::sNormalMap);

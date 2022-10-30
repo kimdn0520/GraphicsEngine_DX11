@@ -55,8 +55,16 @@ struct FBXMaterialInfo
 	std::wstring AOMap;
 	std::wstring emissiveMap;
 
-	float metallic;
-	float roughness;
+	DirectX::SimpleMath::Vector4 material_Ambient;
+	DirectX::SimpleMath::Vector4 material_Diffuse;
+	DirectX::SimpleMath::Vector4 material_Specular;
+	DirectX::SimpleMath::Vector4 material_Emissive;
+
+	float material_Transparency;	// 투명도
+	float material_Reflectivity;	// 반사율
+
+	float metallic;					// 금속성
+	float roughness;				// 거칠기
 };
 
 struct FBXMeshInfo
@@ -115,8 +123,6 @@ public:
 	std::vector<std::shared_ptr<FBXMeshInfo>> fbxMeshInfoList;		
 
 	std::vector<std::shared_ptr<FBXMaterialInfo>>	materialList;
-	
-	//std::shared_ptr<FBXSkeletonInfo> fbxSkeletonInfo;
 
 	std::vector<std::shared_ptr<FBXBoneInfo>> fbxBoneInfoList;
 
