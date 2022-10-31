@@ -3,8 +3,7 @@
 #include "ParserData/ParserData.h"
 
 FBXParser::FBXParser()
-{
-}
+{}
 
 FBXParser::~FBXParser()
 {
@@ -53,18 +52,36 @@ void FBXParser::Import(const std::string& path)
 	// fbx 파일 내용을 scene 으로 가져온다.
 	importer->Import(scene);
 
+	FbxSystemUnit lFbxFileSystemUnit = scene->GetGlobalSettings().GetSystemUnit();
+	FbxSystemUnit lFbxOriginSystemUnit = scene->GetGlobalSettings().GetOriginalSystemUnit();
+	double factor = lFbxOriginSystemUnit.GetScaleFactor();
+
+	const FbxSystemUnit::ConversionOptions lConversionOptions =
+	{
+	  true,
+	  true,
+	  true,
+	  true,
+	  true,
+	  true
+	};
+	lFbxFileSystemUnit.m.ConvertScene(scene, lConversionOptions);
+	lFbxOriginSystemUnit.m.ConvertScene(scene, lConversionOptions);
+
+	//FbxAxisSystem::MayaYUp.ConvertScene(scene);
+
 	// 씬 내의 좌표축을 바꾼다.
-	scene->GetGlobalSettings().SetAxisSystem(fbxsdk::FbxAxisSystem::DirectX);
+	//scene->GetGlobalSettings().SetAxisSystem(fbxsdk::FbxAxisSystem::DirectX);
 
 	// GeometryConverter 객체 생성
 	geometryConverter = new FbxGeometryConverter(manager);
 
 	// 씬 내에서 삼각형화 할 수 있는 모든 노드를 삼각형화 시킨다. 
 	geometryConverter->Triangulate(scene, true, true);
-
+	
 	// 여러 머터리얼이 하나의 메쉬에 할당된것을 하나의 메쉬가 하나의 머터리얼로 가지게함
 	geometryConverter->SplitMeshesPerMaterial(scene, true);
-	
+
 	// importer 파괴
 	importer->Destroy();
 }
@@ -112,10 +129,17 @@ void FBXParser::LoadMesh(fbxsdk::FbxNode* node)
 	std::shared_ptr<FBXMeshInfo>& meshInfo = fbxModel->fbxMeshInfoList.back();
 
 	// Node TM 넣기
-	//FbxAMatrix nodeTransform = GetTransformMatrix(node);
 	FbxAMatrix nodeTransform = scene->GetAnimationEvaluator()->GetNodeGlobalTransform(node);
 
-	DirectX::SimpleMath::Matrix nodeMatrix = ConvertAniMatrix(nodeTransform);
+	DirectX::SimpleMath::Matrix nodeMatrix = ConvertMatrix(nodeTransform);
+
+	const auto roll = -90.0f * DirectX::XM_PI / 180.0f;
+
+	const auto pitch = 180.0f * DirectX::XM_PI / 180.0f;
+
+	DirectX::SimpleMath::Quaternion q = DirectX::XMQuaternionRotationRollPitchYaw(roll, pitch, 0.0f);
+
+	nodeMatrix *= XMMatrixRotationQuaternion(q);
 
 	meshInfo->nodeTM = nodeMatrix;
 
@@ -138,7 +162,7 @@ void FBXParser::LoadMesh(fbxsdk::FbxNode* node)
 	FbxVector4* controlPoints = mesh->GetControlPoints();
 	for (int i = 0; i < vertexCount; ++i)
 	{
-		DirectX::SimpleMath::Matrix localInverse = XMMatrixInverse(nullptr, meshInfo->nodeTM);
+		/*DirectX::SimpleMath::Matrix localInverse = XMMatrixInverse(nullptr, meshInfo->nodeTM);
 		DirectX::XMVECTOR vertexVec = { controlPoints[i].mData[0], controlPoints[i].mData[1], controlPoints[i].mData[2] };
 		DirectX::XMVECTOR vertexXworldTM = XMVector3Transform(vertexVec, localInverse);
 		DirectX::XMFLOAT3 vertex;
@@ -146,10 +170,13 @@ void FBXParser::LoadMesh(fbxsdk::FbxNode* node)
 
 		meshInfo->meshVertexList[i].position.x = static_cast<float>(vertex.x);
 		meshInfo->meshVertexList[i].position.y = static_cast<float>(vertex.y);
-		meshInfo->meshVertexList[i].position.z = static_cast<float>(vertex.z);
-	}
+		meshInfo->meshVertexList[i].position.z = static_cast<float>(vertex.z);*/
 
-	// DeformerCount가 1보다 작으면 Bone Data가 없다고 가정
+		meshInfo->meshVertexList[i].position.x = static_cast<float>(controlPoints[i].mData[0]);
+		meshInfo->meshVertexList[i].position.y = static_cast<float>(controlPoints[i].mData[2]);
+		meshInfo->meshVertexList[i].position.z = static_cast<float>(controlPoints[i].mData[1]);
+	}
+	 
 	const int deformerCount = mesh->GetDeformerCount(FbxDeformer::eSkin);
 
 	for (int i = 0; i < deformerCount; i++)
@@ -213,12 +240,12 @@ void FBXParser::LoadMesh(fbxsdk::FbxNode* node)
 					cluster->GetTransformLinkMatrix(matClusterLinkTransformMatrix);		// The transformation of the cluster(joint) at binding time from joint space to world space 
 
 					// Bone Matrix 설정..
-					DirectX::SimpleMath::Matrix clusterMatrix = ConvertAniMatrix(matClusterTransformMatrix);
-					DirectX::SimpleMath::Matrix clusterlinkMatrix = ConvertAniMatrix(matClusterLinkTransformMatrix);
+					DirectX::SimpleMath::Matrix clusterMatrix = ConvertMatrix(matClusterTransformMatrix);
+					DirectX::SimpleMath::Matrix clusterlinkMatrix = ConvertMatrix(matClusterLinkTransformMatrix);
 
 					// BindPose 행렬을 구하자
 					FbxAMatrix geometryTransform = GetTransformMatrix(mesh->GetNode());
-					DirectX::SimpleMath::Matrix geometryMatrix = ConvertAniMatrix(geometryTransform);
+					DirectX::SimpleMath::Matrix geometryMatrix = ConvertMatrix(geometryTransform);
 
 					// OffsetMatrix는 WorldBindPose의 역행렬
 					DirectX::SimpleMath::Matrix offsetMatrix = clusterMatrix * clusterlinkMatrix.Invert() * geometryMatrix;
@@ -268,10 +295,12 @@ void FBXParser::LoadMesh(fbxsdk::FbxNode* node)
 			arrIdx[j] = controlPointIndex;
 
 			// uv 정보를 가져온다.
-			GetUV(mesh, meshInfo, controlPointIndex, mesh->GetTextureUVIndex(i, j));
+			if(mesh->GetElementUVCount() >= 1)
+				GetUV(mesh, meshInfo, controlPointIndex, mesh->GetTextureUVIndex(i, j));
 
 			// normal 정보를 가져온다.
-			GetNormal(mesh, meshInfo, controlPointIndex, vertexCounter);
+			if(mesh->GetElementNormalCount() >= 1)
+				GetNormal(mesh, meshInfo, controlPointIndex, vertexCounter);
 
 			vertexCounter++;
 
@@ -280,12 +309,13 @@ void FBXParser::LoadMesh(fbxsdk::FbxNode* node)
 		}
 
 		meshInfo->indices.push_back(arrIdx[0]);
-		meshInfo->indices.push_back(arrIdx[1]);
 		meshInfo->indices.push_back(arrIdx[2]);
+		meshInfo->indices.push_back(arrIdx[1]);
 	}
 
 	// tangent 정보를 가져온다.
-	GetTangent(meshInfo);
+	if (mesh->GetElementNormalCount() >= 1)
+		GetTangent(meshInfo);
 }
 
 /// <summary>
@@ -306,7 +336,15 @@ void FBXParser::ProcessBones(fbxsdk::FbxNode* node, int idx, int parentIdx)
 
 		FbxAMatrix nodeTransform = node->EvaluateGlobalTransform(fbxsdk::FbxTime(0));
 
-		DirectX::SimpleMath::Matrix nodeMatrix = ConvertAniMatrix(nodeTransform);
+		DirectX::SimpleMath::Matrix nodeMatrix = ConvertMatrix(nodeTransform);
+
+		const auto roll = -90.0f * DirectX::XM_PI / 180.0f;
+
+		const auto pitch = 180.0f * DirectX::XM_PI / 180.0f;
+
+		DirectX::SimpleMath::Quaternion q = DirectX::XMQuaternionRotationRollPitchYaw(roll, pitch, 0.0f);
+
+		nodeMatrix *= XMMatrixRotationQuaternion(q);
 
 		fbxBoneInfo->nodeMatrix = nodeMatrix;
 
@@ -323,6 +361,14 @@ void FBXParser::ProcessBones(fbxsdk::FbxNode* node, int idx, int parentIdx)
 
 void FBXParser::LoadMaterial(fbxsdk::FbxSurfaceMaterial* surfaceMaterial)
 {
+	std::string matName = surfaceMaterial->GetName();
+
+	auto it = find_if(fbxModel->materialList.begin(), fbxModel->materialList.end(), [&name = matName](const std::shared_ptr<FBXMaterialInfo>& s)->bool {return (s->materialName == name); });
+
+	// 이미 있던 material이면 return
+	if(it != fbxModel->materialList.end())
+		return;
+
 	std::shared_ptr<FBXMaterialInfo> material = std::make_shared<FBXMaterialInfo>();
 
 	material->materialName = surfaceMaterial->GetName();
@@ -436,9 +482,6 @@ void FBXParser::LoadAnimation()
 			animClip->startKeyFrame = (int)(startTime)*animClip->totalKeyFrame;
 		}
 
-		// 애니클립의 키프레임은 본의 갯수 만큼
-		//animClip->keyFrameList.resize(fbxModel->fbxBoneInfoList.size());
-
 		fbxModel->animationClipList.push_back(animClip);
 	}
 }
@@ -469,6 +512,8 @@ void FBXParser::ProcessAnimationData(FbxNode* node)
 			// Local Transform = 부모 Bone의 Global Transform의 inverse Transform * 자신 Bone의 Global Transform;
 			FbxAMatrix localTransform = node->EvaluateGlobalTransform(fbxTime);
 
+			DirectX::SimpleMath::Matrix localTM;
+
 			if (FbxNode* parent = node->GetParent())
 			{
 				FbxNodeAttribute* ParentAttribute = parent->GetNodeAttribute();
@@ -478,10 +523,22 @@ void FBXParser::ProcessAnimationData(FbxNode* node)
 					FbxAMatrix GlobalParentTransform = parent->EvaluateGlobalTransform(fbxTime);
 
 					localTransform = GlobalParentTransform.Inverse() * localTransform;
+
+					localTM = ConvertMatrix(localTransform);
+				}
+				else
+				{
+					localTM = ConvertMatrix(localTransform);
+
+					const auto roll = -90.0f * DirectX::XM_PI / 180.0f;
+
+					const auto pitch = 180.0f * DirectX::XM_PI / 180.0f;
+
+					DirectX::SimpleMath::Quaternion q = DirectX::XMQuaternionRotationRollPitchYaw(roll, pitch, 0.0f);
+
+					localTM *= XMMatrixRotationQuaternion(q);
 				}
 			}
-
-			DirectX::SimpleMath::Matrix localTM = ConvertAniMatrix(localTransform);
 
 			DirectX::XMVECTOR localScale;
 			DirectX::XMVECTOR localRot;
@@ -550,8 +607,8 @@ void FBXParser::GetNormal(fbxsdk::FbxMesh* mesh, std::shared_ptr<FBXMeshInfo>& m
 	FbxVector4 vec = normal->GetDirectArray().GetAt(normalIdx);
 
 	meshInfo->meshVertexList[idx].normal.x = static_cast<float>(vec.mData[0]);
-	meshInfo->meshVertexList[idx].normal.y = static_cast<float>(vec.mData[1]);
-	meshInfo->meshVertexList[idx].normal.z = static_cast<float>(vec.mData[2]);
+	meshInfo->meshVertexList[idx].normal.y = static_cast<float>(vec.mData[2]);
+	meshInfo->meshVertexList[idx].normal.z = static_cast<float>(vec.mData[1]);
 }
 
 void FBXParser::GetTangent(std::shared_ptr<FBXMeshInfo>& meshInfo)

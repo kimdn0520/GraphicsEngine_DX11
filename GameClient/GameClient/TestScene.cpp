@@ -103,7 +103,7 @@ void TestScene::Initialize()
 	//AddGameObject(crate->gameObject);
 
 	shared_ptr<TestAnimPrefab> wolf = make_shared<TestAnimPrefab>(Vector3(-5.f, 5.f, 0.f));
-	wolf->gameObject->GetTransform()->SetLocalScale(Vector3(0.2f, 0.2f, 0.2f));
+	//wolf->gameObject->GetTransform()->SetLocalScale(Vector3(0.2f, 0.2f, 0.2f));
 	wolf->gameObject->AddComponent<Player>();
 	AddGameObject(wolf->gameObject);
 }

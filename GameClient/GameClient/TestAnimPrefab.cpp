@@ -10,7 +10,7 @@
 TestAnimPrefab::TestAnimPrefab(Vector3 pos)
 	: IPrefab(make_shared<GameObject>())
 {
-	std::vector<shared_ptr<GameObject>> gameObjects = DataManager::Get()->GetDataResources("Wolf");
+	std::vector<shared_ptr<GameObject>> gameObjects = DataManager::Get()->GetDataResources("Joy");
 
 	gameObject->SetTag(Tag::Default);
 	gameObject->SetName("TestAnim");
