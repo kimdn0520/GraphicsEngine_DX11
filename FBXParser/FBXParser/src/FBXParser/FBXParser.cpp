@@ -78,6 +78,8 @@ void FBXParser::Import(const std::string& path)
 
 	// 씬 내에서 삼각형화 할 수 있는 모든 노드를 삼각형화 시킨다. 
 	geometryConverter->Triangulate(scene, true, true);
+
+	//geometryConverter->RemoveBadPolygonsFromMeshes(scene);
 	
 	// 여러 머터리얼이 하나의 메쉬에 할당된것을 하나의 메쉬가 하나의 머터리얼로 가지게함
 	geometryConverter->SplitMeshesPerMaterial(scene, true);
@@ -121,7 +123,7 @@ void FBXParser::ProcessMesh(fbxsdk::FbxNode* node, FbxNodeAttribute::EType attri
 void FBXParser::LoadMesh(fbxsdk::FbxNode* node)
 {
 	fbxsdk::FbxMesh* mesh = node->GetMesh();
-
+	
 	std::shared_ptr<FBXMeshInfo> fbxMeshInfo = std::make_shared<FBXMeshInfo>();
 
 	fbxModel->fbxMeshInfoList.push_back(fbxMeshInfo);
