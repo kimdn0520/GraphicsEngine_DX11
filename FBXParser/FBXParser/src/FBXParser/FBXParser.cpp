@@ -68,21 +68,14 @@ void FBXParser::Import(const std::string& path)
 	lFbxFileSystemUnit.m.ConvertScene(scene, lConversionOptions);
 	lFbxOriginSystemUnit.m.ConvertScene(scene, lConversionOptions);
 
-	//FbxAxisSystem::MayaYUp.ConvertScene(scene);
-
-	// 씬 내의 좌표축을 바꾼다.
-	//scene->GetGlobalSettings().SetAxisSystem(fbxsdk::FbxAxisSystem::DirectX);
-
 	// GeometryConverter 객체 생성
 	geometryConverter = new FbxGeometryConverter(manager);
 
 	// 씬 내에서 삼각형화 할 수 있는 모든 노드를 삼각형화 시킨다. 
-	geometryConverter->Triangulate(scene, true, true);
+	geometryConverter->Triangulate(scene, true);
 
-	//geometryConverter->RemoveBadPolygonsFromMeshes(scene);
-	
 	// 여러 머터리얼이 하나의 메쉬에 할당된것을 하나의 메쉬가 하나의 머터리얼로 가지게함
-	geometryConverter->SplitMeshesPerMaterial(scene, true);
+	geometryConverter->SplitMeshesPerMaterial(scene, true, true);
 
 	// importer 파괴
 	importer->Destroy();
@@ -99,18 +92,34 @@ void FBXParser::ProcessMesh(fbxsdk::FbxNode* node, FbxNodeAttribute::EType attri
 
 	if (nodeAttribute && nodeAttribute->GetAttributeType() == attribute)
 	{
-		LoadMesh(node);
-	}
+		// SplitMeshesPerMaterial 함수로 인해 메시가 분리된 경우 
+		for (int meshCnt = 0; meshCnt < node->GetNodeAttributeCount(); meshCnt++)
+		{
+			FbxMesh* mesh = (FbxMesh*)node->GetNodeAttributeByIndex(meshCnt);
 
-	// Material 로드
-	const int materialCount = node->GetMaterialCount();
+			LoadMesh(node, mesh);
 
-	for (int i = 0; i < materialCount; ++i)
-	{
-		fbxsdk::FbxSurfaceMaterial* surfaceMaterial = node->GetMaterial(i);
+			fbxsdk::FbxSurfaceMaterial* surfaceMaterial = node->GetMaterial(meshCnt);
 
-		LoadMaterial(surfaceMaterial);
-	}
+			if(surfaceMaterial != nullptr)
+				LoadMaterial(surfaceMaterial);
+		}
+	}		
+
+	//if (nodeAttribute && nodeAttribute->GetAttributeType() == attribute)
+	//{
+	//	LoadMesh(node);
+	//}
+
+	//// Material 로드
+	//const int materialCount = node->GetMaterialCount();
+
+	//for (int i = 0; i < materialCount; ++i)
+	//{
+	//	fbxsdk::FbxSurfaceMaterial* surfaceMaterial = node->GetMaterial(i);
+
+	//	LoadMaterial(surfaceMaterial);
+	//}
 
 	// Tree 구조 재귀 호출
 	const int childCount = node->GetChildCount();
@@ -120,10 +129,10 @@ void FBXParser::ProcessMesh(fbxsdk::FbxNode* node, FbxNodeAttribute::EType attri
 }
 
 
-void FBXParser::LoadMesh(fbxsdk::FbxNode* node)
+void FBXParser::LoadMesh(fbxsdk::FbxNode* node, fbxsdk::FbxMesh* mesh)
 {
-	fbxsdk::FbxMesh* mesh = node->GetMesh();
-	
+	//fbxsdk::FbxMesh* mesh = node->GetMesh();
+
 	std::shared_ptr<FBXMeshInfo> fbxMeshInfo = std::make_shared<FBXMeshInfo>();
 
 	fbxModel->fbxMeshInfoList.push_back(fbxMeshInfo);
@@ -165,7 +174,7 @@ void FBXParser::LoadMesh(fbxsdk::FbxNode* node)
 	for (int i = 0; i < vertexCount; ++i)
 	{
 		/*DirectX::SimpleMath::Matrix localInverse = XMMatrixInverse(nullptr, meshInfo->nodeTM);
-		DirectX::XMVECTOR vertexVec = { controlPoints[i].mData[0], controlPoints[i].mData[1], controlPoints[i].mData[2] };
+		DirectX::XMVECTOR vertexVec = { controlPoints[i].mData[0], controlPoints[i].mData[2], controlPoints[i].mData[1] };
 		DirectX::XMVECTOR vertexXworldTM = XMVector3Transform(vertexVec, localInverse);
 		DirectX::XMFLOAT3 vertex;
 		DirectX::XMStoreFloat3(&vertex, vertexXworldTM);

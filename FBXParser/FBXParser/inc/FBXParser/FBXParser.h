@@ -37,7 +37,7 @@ public:
 
 	void ProcessMesh(fbxsdk::FbxNode* node, FbxNodeAttribute::EType attribute);
 
-	void LoadMesh(fbxsdk::FbxNode* node);
+	void LoadMesh(fbxsdk::FbxNode* node, fbxsdk::FbxMesh* mesh);
 
 	void ProcessBones(fbxsdk::FbxNode* node, int idx, int parentIdx);
 	

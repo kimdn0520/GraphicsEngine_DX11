@@ -34,6 +34,10 @@ public:
 
 	GameEngine_DLL void SetMaterial(std::string name);
 
+	GameEngine_DLL void SetVertexShader(std::wstring name) { _objectInfo->vsName = name; }
+
+	GameEngine_DLL void SetPixelShader(std::wstring name) { _objectInfo->psName = name; }
+
 	// 스킨메시인지
 	void IsSkinnedMesh(bool value) { _objectInfo->isSkinned = value; }
 
