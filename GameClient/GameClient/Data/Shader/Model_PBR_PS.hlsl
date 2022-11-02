@@ -44,38 +44,38 @@ PS_OUT Model_PBR_PS(ModelPixelIn input) : SV_Target
 
 	float4 emissive = float4(0.0f, 0.0f, 0.0f, 1.0f);
 
-	[flatten]
-	if (isAlbedo)
-		input.color = pow(AlbedoMap.Sample(samLinearClamp, input.uv), 2.2f);
+#ifdef USE_ALBEDO
+	input.color = pow(AlbedoMap.Sample(samLinearClamp, input.uv), 2.2f);
+#endif
 
 	// 0 <= r, g, b <= 1 을 만족하는 정규화된 성분들로 이루어진 (r,g,b)가 설정되었다. 
 	// [0, 255] 구간의 정수를 255로 나누어서 [0, 1] 구간의 부동소수점 수로 만드는 작업이 된 것이다.
 	// NormalSampleToWorldSpace 함수에서 단위벡터범위인 [-1, 1]로 비례 시켜준다.
-	[flatten]
-	if (isNormal)
-	{
-		float3 normalMapSample = NormalMap.Sample(samLinearClamp, input.uv).rgb;
-		input.normal = NormalSampleToWorldSpace(normalMapSample, input.normal, input.tangent);
-	}
+#ifdef USE_NORMAL
+	float3 normalMapSample = NormalMap.Sample(samLinearClamp, input.uv).rgb;
+	input.normal = NormalSampleToWorldSpace(normalMapSample, input.normal, input.tangent);
+#endif
 
 	input.normal = normalize(input.normal);
 
-	[flatten]
-	if (isMetallic)
-		metallic = MetallicMap.Sample(samLinearClamp, input.uv);
+#ifdef USE_METALLIC
+	metallic = MetallicMap.Sample(samLinearClamp, input.uv);
+#endif
 	
-	[flatten]
-	if(isRoughness)
-		roughness = RoughnessMap.Sample(samLinearClamp, input.uv);
+#ifdef USE_ROUGHNESS
+	roughness = RoughnessMap.Sample(samLinearClamp, input.uv);
+#endif
 	
-	[flatten]
-	if(isAO)
-		ambientOcclusion = AmbientOcclusionMap.Sample(samLinearClamp, input.uv);
+#ifdef USE_AO
+	ambientOcclusion = AmbientOcclusionMap.Sample(samLinearClamp, input.uv);
+#endif
 
-	[flatten]
-	if(isEmissive)
-		emissive = EmissiveMap.Sample(samLinearClamp, input.uv);
-	
+#ifdef USE_EMISSIVE
+	emissive = EmissiveMap.Sample(samLinearClamp, input.uv);
+#endif
+
+	input.color.rgb += AddColor.rgb;
+	 
 	PS_OUT pout = (PS_OUT)0;
 
 	pout.DMRAO = float4(input.pos.z, metallic, roughness, ambientOcclusion);

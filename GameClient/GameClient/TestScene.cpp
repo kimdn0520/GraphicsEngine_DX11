@@ -77,6 +77,7 @@ void TestScene::Initialize()
 	axisMaterial->isLight = false;
 	GraphicsManager::Get()->SendMaterialData(axisMaterial);
 	axis->GetComponent<MeshRenderer>()->SetMaterial(axisMaterial->name);
+	axis->GetComponent<MeshRenderer>()->SetPixelShader(L"Model_PBR_PS");
 	axis->GetComponent<MeshRenderer>()->IsShadow(false);			// ÀÌ³à¼®Àº ¼¨µµ¿ì ¾ÈÇÒ°Çµ­~
 	AddGameObject(axis);
 
@@ -93,11 +94,12 @@ void TestScene::Initialize()
 	boxMaterial->roughness = 0.0f;
 	GraphicsManager::Get()->SendMaterialData(boxMaterial);
 	box->GetComponent<MeshRenderer>()->SetMaterial(boxMaterial->name);
+	box->GetComponent<MeshRenderer>()->SetPixelShader(L"Model_PBR_PS");
 	//box->GetComponent<MeshRenderer>()->IsShadow(false);			// ÀÌ³à¼®Àº ¼¨µµ¿ì ¾ÈÇÒ°Çµ­~
 	AddGameObject(box);
 
-	shared_ptr<GenjiPrefab> genji = make_shared<GenjiPrefab>(Vector3(0.f, 1.f, 0.f));
-	AddGameObject(genji->gameObject);
+	/*shared_ptr<GenjiPrefab> genji = make_shared<GenjiPrefab>(Vector3(0.f, 1.f, 0.f));
+	AddGameObject(genji->gameObject);*/
 
 	//shared_ptr<TestFBXPrefab> crate = make_shared<TestFBXPrefab>(Vector3(0.f, 0.f, 0.f));
 	//AddGameObject(crate->gameObject);

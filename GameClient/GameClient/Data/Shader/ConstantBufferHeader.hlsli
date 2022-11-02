@@ -15,14 +15,13 @@ cbuffer cbMaterial : register(b1)
 {
 	float metallic;
 	float roughness;
-	float2 pad;
+	float2 pad1;
 
-	bool isAlbedo;
-	bool isNormal;
-	bool isMetallic;
-	bool isRoughness;
-	bool isAO;
-	bool isEmissive;
+	float3 AddColor;
+	float pad2;
+
+	float3 emissiveColor;
+	float pad3;
 	
 	bool isLight;
 }
