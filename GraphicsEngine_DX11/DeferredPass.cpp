@@ -17,7 +17,7 @@ void DeferredPass::Start()
 {
 	_model_PBR_VS = dynamic_pointer_cast<VertexShader>(ShaderManager::Get()->GetShader(L"Model_PBR_VS"));
 	_model_PBR_Skinned_VS = dynamic_pointer_cast<VertexShader>(ShaderManager::Get()->GetShader(L"Model_PBR_Skinned_VS"));
-	_model_PBR_PS = dynamic_pointer_cast<PixelShader>(ShaderManager::Get()->GetShader(L"Model_PBR_PS"));
+	//_model_PBR_PS = dynamic_pointer_cast<PixelShader>(ShaderManager::Get()->GetShader(L"Model_PBR_PS"));
 
 	_skybox_VS = dynamic_pointer_cast<VertexShader>(ShaderManager::Get()->GetShader(L"Skybox_VS"));
 	_skybox_PS = dynamic_pointer_cast<PixelShader>(ShaderManager::Get()->GetShader(L"Skybox_PS"));
@@ -56,6 +56,10 @@ void DeferredPass::Start()
 	_screenViewPort = std::make_shared<ViewPort>();
 
 	_screenViewPort->Initialize(Vector2::Zero, Graphics_Interface::Get()->GetScreenWidth(), Graphics_Interface::Get()->GetScreenHeight());
+
+	tempMat = std::make_shared<Material>();
+	tempMat->metallic = 0.1f;
+	tempMat->roughness = 0.0f;
 }
 
 void DeferredPass::Release()
@@ -128,6 +132,9 @@ void DeferredPass::Render(std::vector<std::shared_ptr<ObjectInfo>> objInfos, std
 	{
 		_mat = ResourceManager::Get()->GetMaterial(objInfo->materialName);
 
+		if(_mat == nullptr)
+			_mat = tempMat;
+
 		_mesh = ResourceManager::Get()->GetMesh(objInfo->meshID);
 
 		switch (objInfo->type)
@@ -139,7 +146,7 @@ void DeferredPass::Render(std::vector<std::shared_ptr<ObjectInfo>> objInfos, std
 			cbPerObejctBuffer.gWorldViewProj = objInfo->worldTM * RenderManager::s_cameraInfo->viewTM * RenderManager::s_cameraInfo->projTM;
 			XMVECTOR det = XMMatrixDeterminant(objInfo->worldTM);
 			cbPerObejctBuffer.gWorldInvTranspose = XMMatrixTranspose(XMMatrixInverse(&det, objInfo->worldTM));
-
+			
 			cbMaterial cbMaterialBuffer;
 			cbMaterialBuffer.metallic = _mat->metallic;
 			cbMaterialBuffer.roughness = _mat->roughness;
@@ -160,30 +167,28 @@ void DeferredPass::Render(std::vector<std::shared_ptr<ObjectInfo>> objInfos, std
 				_model_PBR_VS->Update();
 			}
 
-			cbMaterialBuffer.isAlbedo = _mat->isAlbedo;
-			cbMaterialBuffer.isNormal = _mat->isNormal;
-			cbMaterialBuffer.isMetallic = _mat->isMetallic;
-			cbMaterialBuffer.isRoughness = _mat->isRoughness;
-			cbMaterialBuffer.isAO = _mat->isAO;
-			cbMaterialBuffer.isEmissive = _mat->isEmissive;
-			cbMaterialBuffer.isLight = _mat->isLight;
+			cbMaterialBuffer.AddColor = Vector3(_mat->material_Diffuse.x, _mat->material_Diffuse.y, _mat->material_Diffuse.z);
+			cbMaterialBuffer.emissiveColor = Vector3(_mat->material_Emissive.x, _mat->material_Emissive.y, _mat->material_Emissive.z);
 
-			if (_mat->isAlbedo)
+			_model_PBR_PS = dynamic_pointer_cast<PixelShader>(ShaderManager::Get()->GetShader(objInfo->psName));
+
+			// ÀÏ´Ü..
+			if (_mat->albedoMap != L"")
 				_model_PBR_PS->SetResourceViewBuffer(_mat->albedoMap, "AlbedoMap");
 
-			if (_mat->isNormal)
+			if (_mat->normalMap != L"")
 				_model_PBR_PS->SetResourceViewBuffer(_mat->normalMap, "NormalMap");
 
-			if (_mat->isMetallic)
+			if (_mat->metallicMap != L"")
 				_model_PBR_PS->SetResourceViewBuffer(_mat->metallicMap, "MetallicMap");
 
-			if (_mat->isRoughness)
+			if (_mat->roughnessMap != L"")
 				_model_PBR_PS->SetResourceViewBuffer(_mat->roughnessMap, "RoughnessMap");
 
-			if (_mat->isAO)
+			if (_mat->AOMap != L"")
 				_model_PBR_PS->SetResourceViewBuffer(_mat->AOMap, "AmbientOcclusionMap");
 
-			if (_mat->isEmissive)
+			if (_mat->emissiveMap != L"")
 				_model_PBR_PS->SetResourceViewBuffer(_mat->emissiveMap, "EmissiveMap");
 				
 			_model_PBR_PS->ConstantBufferUpdate(&cbMaterialBuffer, "cbMaterial");

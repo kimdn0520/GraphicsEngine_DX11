@@ -13,12 +13,6 @@ struct Material
 {
 	std::string name;
 
-	bool isAlbedo = false;
-	bool isNormal = false;
-	bool isMetallic = false;
-	bool isRoughness = false;
-	bool isAO = false;
-	bool isEmissive = false;
 	bool isLight = true;
 
 	std::wstring albedoMap;
@@ -29,6 +23,14 @@ struct Material
 	std::wstring emissiveMap;
 
 	std::wstring cubeMap;
+
+	DirectX::SimpleMath::Vector4 material_Ambient;
+	DirectX::SimpleMath::Vector4 material_Diffuse;
+	DirectX::SimpleMath::Vector4 material_Specular;
+	DirectX::SimpleMath::Vector4 material_Emissive;
+
+	float material_Transparency;	// 투명도
+	float material_Reflectivity;	// 반사율
 
 	float metallic;
 	float roughness;
@@ -47,6 +49,10 @@ struct ObjectInfo
 	DirectX::SimpleMath::Matrix finalBoneListMatrix[96];
 	
 	std::string materialName;
+
+	std::wstring vsName;
+
+	std::wstring psName;
 
 	bool isSkinned = false;
 

@@ -81,14 +81,13 @@ __declspec(align(16)) struct cbMaterial
 {
 	float metallic;
 	float roughness;
-	Vector2 pad;
+	Vector2 pad1;
 
-	BOOL isAlbedo;			// hlsl에서 bool타입은 4byte 이므로 일로 구조체 넘겨줄때 BOOL로 넘겨줘야한대
-	BOOL isNormal;
-	BOOL isMetallic;
-	BOOL isRoughness;
-	BOOL isAO;
-	BOOL isEmissive;
+	Vector3 AddColor;
+	float pad2;
+
+	Vector3 emissiveColor;
+	float pad3;
 
 	BOOL isLight = true;
 };

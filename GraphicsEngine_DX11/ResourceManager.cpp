@@ -77,37 +77,25 @@ void ResourceManager::MaterialReconstruction(std::string materialName, std::stri
 	if (info == "Albedo")
 	{
 		_materials[materialName]->albedoMap = wtextureName;
-
-		_materials[materialName]->isAlbedo = true;
 	}
 	else if (info == "Normal")
 	{
 		_materials[materialName]->normalMap = wtextureName;
-
-		_materials[materialName]->isNormal = true;
 	}
 	else if (info == "Metallic")
 	{
 		_materials[materialName]->metallicMap = wtextureName;
-
-		_materials[materialName]->isMetallic = true;
 	}
 	else if (info == "Roughness")
 	{
 		_materials[materialName]->roughnessMap = wtextureName;
-
-		_materials[materialName]->isRoughness = true;
 	}
 	else if (info == "AO")
 	{
 		_materials[materialName]->AOMap = wtextureName;
-
-		_materials[materialName]->isAO = true;
 	}
 	else if (info == "Emissive")
 	{
 		_materials[materialName]->emissiveMap = wtextureName;
-
-		_materials[materialName]->isEmissive = true;
 	}
 }

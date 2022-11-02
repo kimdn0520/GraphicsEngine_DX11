@@ -36,6 +36,7 @@ private:
 private:
 	std::shared_ptr<VertexShader> _model_PBR_VS;
 	std::shared_ptr<VertexShader> _model_PBR_Skinned_VS;
+
 	std::shared_ptr<PixelShader> _model_PBR_PS;
 
 	std::shared_ptr<VertexShader> _skybox_VS;
@@ -44,6 +45,8 @@ private:
 	std::shared_ptr<Mesh> _mesh;
 
 	std::shared_ptr<Material> _mat;
+
+	std::shared_ptr<Material> tempMat;
 
 public:
 	void Start() override;

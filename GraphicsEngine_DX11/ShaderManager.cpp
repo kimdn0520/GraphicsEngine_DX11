@@ -30,7 +30,39 @@ void ShaderManager::CreateAllShaders()
 
 	CreateShader(SHADER_TYPE::VERTEX, L"Model_PBR_VS.hlsl", _filepath, "Model_PBR_VS", L"Model_PBR_VS", nullptr);
 	CreateShader(SHADER_TYPE::VERTEX, L"Model_PBR_VS.hlsl", _filepath, "Model_PBR_VS", L"Model_PBR_Skinned_VS", model_MacroVS_1);
+
+	D3D_SHADER_MACRO model_MacroPS_1[] = { {"USE_ALBEDO"}, {NULL, NULL} };
+	D3D_SHADER_MACRO model_MacroPS_2[] = { {"USE_ALBEDO"}, {"USE_NORMAL"}, {NULL, NULL} };
+	D3D_SHADER_MACRO model_MacroPS_3[] = { {"USE_ALBEDO"}, {"USE_METALLIC"}, {"USE_ROUGHNESS"}, {NULL, NULL} };
+	D3D_SHADER_MACRO model_MacroPS_4[] = { {"USE_ALBEDO"}, {"USE_NORMAL"}, {"USE_METALLIC"}, {"USE_ROUGHNESS"}, {NULL, NULL} };
+	D3D_SHADER_MACRO model_MacroPS_5[] = { {"USE_ALBEDO"}, {"USE_NORMAL"}, {"USE_AO"}, {NULL, NULL} };
+	D3D_SHADER_MACRO model_MacroPS_6[] = { {"USE_ALBEDO"}, {"USE_NORMAL"}, {"USE_METALLIC"}, {"USE_ROUGHNESS"}, {"USE_AO"}, {NULL, NULL} };
+	D3D_SHADER_MACRO model_MacroPS_7[] = { {"USE_ALBEDO"}, {"USE_NORMAL"}, {"USE_METALLIC"}, {"USE_ROUGHNESS"}, {"USE_AO"}, {"USE_EMISSIVE"}, {NULL, NULL} };
+
+	// basic
 	CreateShader(SHADER_TYPE::PIXEL, L"Model_PBR_PS.hlsl", _filepath, "Model_PBR_PS", L"Model_PBR_PS", nullptr);
+	
+	// albedo
+	CreateShader(SHADER_TYPE::PIXEL, L"Model_PBR_PS.hlsl", _filepath, "Model_PBR_PS", L"Model_PBR_C_PS", model_MacroPS_1);
+	
+	// albedo, normal
+	CreateShader(SHADER_TYPE::PIXEL, L"Model_PBR_PS.hlsl", _filepath, "Model_PBR_PS", L"Model_PBR_CN_PS", model_MacroPS_2);
+	
+	// albedo, metallic, roughness
+	CreateShader(SHADER_TYPE::PIXEL, L"Model_PBR_PS.hlsl", _filepath, "Model_PBR_PS", L"Model_PBR_CMR_PS", model_MacroPS_3);
+	
+	// albedo, normal, metallic, roughness
+	CreateShader(SHADER_TYPE::PIXEL, L"Model_PBR_PS.hlsl", _filepath, "Model_PBR_PS", L"Model_PBR_CNMR_PS", model_MacroPS_4);
+	
+	// albedo, normal, ao
+	CreateShader(SHADER_TYPE::PIXEL, L"Model_PBR_PS.hlsl", _filepath, "Model_PBR_PS", L"Model_PBR_CNA_PS", model_MacroPS_5);
+	
+	// albedo, normal, metallic, roughness, ao
+	CreateShader(SHADER_TYPE::PIXEL, L"Model_PBR_PS.hlsl", _filepath, "Model_PBR_PS", L"Model_PBR_CNMRA_PS", model_MacroPS_6);
+	
+	// albedo, normal, metallic, roughness, ao, emissive
+	CreateShader(SHADER_TYPE::PIXEL, L"Model_PBR_PS.hlsl", _filepath, "Model_PBR_PS", L"Model_PBR_CNMRAE_PS", model_MacroPS_7);
+
 
 	D3D_SHADER_MACRO shadow_MacroVS_1[] = { {"Skinned"}, {NULL, NULL} };										
 	CreateShader(SHADER_TYPE::VERTEX, L"Shadow_VS.hlsl", _filepath, "Shadow_VS", L"Shadow_VS", nullptr);
