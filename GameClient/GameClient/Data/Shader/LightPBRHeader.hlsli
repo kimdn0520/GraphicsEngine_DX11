@@ -62,13 +62,13 @@ float3 Disney_Diffuse(in float roughnessPercent, in float3 diffuseColor, in floa
     return diffuseColor * lightScatter * viewScatter * energyFactor;
 }
 
-float D_GGX(float roughness, float NoH, const float3 NxH)
-{
-    float a = NoH * roughness;
-    float k = roughness / (dot(NxH, NxH) + a * a);
-    float d = k * k * (1.0 / PI);
-    return min(d, 65504.0);
-}
+//float D_GGX(float roughness, float NoH, const float3 NxH)
+//{
+//    float a = NoH * roughness;
+//    float k = roughness / (dot(NxH, NxH) + a * a);
+//    float d = k * k * (1.0 / PI);
+//    return min(d, 65504.0);
+//}
 
 // GGX Specular D (normal distribution)
 // https://www.cs.cornell.edu/~srm/publications/EGSR07-btdf.pdf
@@ -131,14 +131,16 @@ float3 BRDF(in float roughness2, in float metallic, in float3 diffuseColor, in f
     float G = G_GGX(roughness2, NdotV, NdotL);      // 미세면 감쇠 함수
     float3 F = F_Shlick(specularColor, HdotV);      // 프레넬 함수
 
-    float3 kS = F;
+    /*float3 kS = F;
     float3 kD = float3(1.0, 1.0, 1.0) - kS;
-    kD *= 1.0 - metallic;
+    kD *= 1.0 - metallic;*/
+
+    float3 kD = lerp(float3(1.f, 1.f, 1.f) - F, float3(0.f, 0.f, 0.f), metallic);
 
     // Diffuse & Specular factors
-    float denom = max(4.0f * NdotV * NdotL, 0.001f); // 0.001f just in case product is 0
+    float denom = max(4.0f * NdotV * NdotL, 0.001f); // 0.001f just in case product is 0 , 일반적으로 스페큘러는 4로 나누는 쪽이 많은듯
     float3 specular_factor = saturate((D * F * G) / denom);
-    float3 diffuse_factor = kD * diffuseColor / PI;
+    float3 diffuse_factor = kD * diffuseColor;
 
     return (diffuse_factor + specular_factor) * NdotL;
 }

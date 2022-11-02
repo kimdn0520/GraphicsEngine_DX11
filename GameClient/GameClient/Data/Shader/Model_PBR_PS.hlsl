@@ -34,7 +34,7 @@ SamplerState samLinearClamp : register(s0);
 
 PS_OUT Model_PBR_PS(ModelPixelIn input) : SV_Target
 {
-	float4 color = input.color;
+	float4 color = float4(0.0f, 0.0f, 0.0f, 1.0f);
 
 	float metallic = input.metallic;
 
@@ -45,7 +45,9 @@ PS_OUT Model_PBR_PS(ModelPixelIn input) : SV_Target
 	float4 emissive = float4(0.0f, 0.0f, 0.0f, 1.0f);
 
 #ifdef USE_ALBEDO
-	input.color = pow(AlbedoMap.Sample(samLinearClamp, input.uv), 2.2f);
+	color = pow(AlbedoMap.Sample(samLinearClamp, input.uv), 2.2f);
+#else
+	color.rgb += AddColor.rgb;
 #endif
 
 	// 0 <= r, g, b <= 1 을 만족하는 정규화된 성분들로 이루어진 (r,g,b)가 설정되었다. 
@@ -73,8 +75,6 @@ PS_OUT Model_PBR_PS(ModelPixelIn input) : SV_Target
 #ifdef USE_EMISSIVE
 	emissive = EmissiveMap.Sample(samLinearClamp, input.uv);
 #endif
-
-	input.color.rgb += AddColor.rgb;
 	 
 	PS_OUT pout = (PS_OUT)0;
 
@@ -85,7 +85,7 @@ PS_OUT Model_PBR_PS(ModelPixelIn input) : SV_Target
 	// position.w에 isLight 여부 넣기
 	pout.pos = float4(input.posW, isLight);
 
-	pout.albedo = input.color;
+	pout.albedo = color;
 
 	pout.emissive = emissive;
 

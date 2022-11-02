@@ -25,7 +25,7 @@ struct Material
 	std::wstring cubeMap;
 
 	DirectX::SimpleMath::Vector4 material_Ambient;
-	DirectX::SimpleMath::Vector4 material_Diffuse;
+	DirectX::SimpleMath::Vector4 material_Diffuse = { 1.0f, 1.0f, 1.0f, 1.0f };
 	DirectX::SimpleMath::Vector4 material_Specular;
 	DirectX::SimpleMath::Vector4 material_Emissive;
 

@@ -72,10 +72,10 @@ void FBXParser::Import(const std::string& path)
 	geometryConverter = new FbxGeometryConverter(manager);
 
 	// 씬 내에서 삼각형화 할 수 있는 모든 노드를 삼각형화 시킨다. 
-	geometryConverter->Triangulate(scene, true);
+	geometryConverter->Triangulate(scene, true, true);
 
 	// 여러 머터리얼이 하나의 메쉬에 할당된것을 하나의 메쉬가 하나의 머터리얼로 가지게함
-	geometryConverter->SplitMeshesPerMaterial(scene, true, true);
+	geometryConverter->SplitMeshesPerMaterial(scene, true);
 
 	// importer 파괴
 	importer->Destroy();
@@ -95,14 +95,20 @@ void FBXParser::ProcessMesh(fbxsdk::FbxNode* node, FbxNodeAttribute::EType attri
 		// SplitMeshesPerMaterial 함수로 인해 메시가 분리된 경우 
 		for (int meshCnt = 0; meshCnt < node->GetNodeAttributeCount(); meshCnt++)
 		{
-			FbxMesh* mesh = (FbxMesh*)node->GetNodeAttributeByIndex(meshCnt);
+			fbxsdk::FbxMesh* mesh = (fbxsdk::FbxMesh*)node->GetNodeAttributeByIndex(meshCnt);
 
 			LoadMesh(node, mesh);
 
-			fbxsdk::FbxSurfaceMaterial* surfaceMaterial = node->GetMaterial(meshCnt);
+			fbxsdk::FbxLayerElementMaterial* findMatIndex = mesh->GetElementMaterial(0);
 
-			if(surfaceMaterial != nullptr)
+			if (findMatIndex != nullptr)
+			{
+				int index = findMatIndex->GetIndexArray().GetAt(0);
+
+				fbxsdk::FbxSurfaceMaterial* surfaceMaterial = mesh->GetNode()->GetSrcObject<fbxsdk::FbxSurfaceMaterial>(index);
+
 				LoadMaterial(surfaceMaterial);
+			}
 		}
 	}		
 
@@ -374,6 +380,9 @@ void FBXParser::LoadMaterial(fbxsdk::FbxSurfaceMaterial* surfaceMaterial)
 {
 	std::string matName = surfaceMaterial->GetName();
 
+	// 메시에는 머터리얼 이름만
+	fbxModel->fbxMeshInfoList.back()->materialName = matName;
+
 	auto it = find_if(fbxModel->materialList.begin(), fbxModel->materialList.end(), [&name = matName](const std::shared_ptr<FBXMaterialInfo>& s)->bool {return (s->materialName == name); });
 
 	// 이미 있던 material이면 return
@@ -452,9 +461,6 @@ void FBXParser::LoadMaterial(fbxsdk::FbxSurfaceMaterial* surfaceMaterial)
 	if (material->normalMap != L"") { material->isNormal = true; }
 	if (material->roughnessMap != L"") { material->isRoughness = true; }
 	if (material->emissiveMap != L"") { material->isEmissive = true; }
-
-	// 메시에는 머터리얼 이름만
-	fbxModel->fbxMeshInfoList.back()->materialName = surfaceMaterial->GetName();
 
 	// 머터리얼 리스트에 추가
 	fbxModel->materialList.push_back(material);

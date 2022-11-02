@@ -60,7 +60,7 @@ void TestScene::Initialize()
 	dirLight->GetComponent<Light>()->SetLightType(LIGHT_TYPE::DIRECTIONAL_LIGHT);
 	dirLight->GetComponent<Light>()->SetLightDirection(Vector3(0.5f, -0.5f, 0.5f));
 	dirLight->GetComponent<Light>()->SetColor(Vector3(0.7f, 0.7f, 0.7f));
-	dirLight->GetComponent<Light>()->SetPower(3.f);
+	dirLight->GetComponent<Light>()->SetPower(2.f);
 	dirLight->GetComponent<Light>()->SendLightInfo();
 	AddGameObject(dirLight);
 
@@ -106,6 +106,7 @@ void TestScene::Initialize()
 
 	shared_ptr<TestAnimPrefab> wolf = make_shared<TestAnimPrefab>(Vector3(-5.f, 5.f, 0.f));
 	//wolf->gameObject->GetTransform()->SetLocalScale(Vector3(0.2f, 0.2f, 0.2f));
+	wolf->gameObject->GetTransform()->SetLocalRotation(Vector3(0.f, 180.f, 0.f));
 	wolf->gameObject->AddComponent<Player>();
 	AddGameObject(wolf->gameObject);
 }
