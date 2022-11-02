@@ -1,19 +1,5 @@
 #include "LightHeader.hlsli"
-
-cbuffer cbMesh : register(b0)
-{
-	float4x4 gWorld;
-	float4x4 gProj;
-	float4x4 gWorldViewProj;
-	float4x4 gWorldInvTranspose;
-
-	uint objectID;
-};
-
-cbuffer cbSkinned : register(b1)
-{
-	float4x4 gBoneTransforms[96];
-};
+#include "ConstantBufferHeader.hlsli"
 
 #ifdef Skinned
 struct ModelVertexIn

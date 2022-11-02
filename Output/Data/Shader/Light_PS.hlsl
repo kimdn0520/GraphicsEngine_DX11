@@ -1,22 +1,5 @@
 #include "LightHeader.hlsli"
-
-cbuffer cbLight : register(b0)
-{
-	DirectionalLight gDirLight[DIRECTION_LIGHT_COUNT];
-	PointLight gPointLight[POINT_LIGHT_COUNT];
-	SpotLight gSpotLight[SPOT_LIGHT_COUNT];
-
-	float3 gEyePosW;				// CameraPos
-
-	int gDirLightCnt;
-	int gPointLightCnt;
-	int gSpotLightCnt;
-}
-
-cbuffer cbTexture : register(b1)
-{
-	float4 textureInfo;
-}
+#include "ConstantBufferHeader.hlsli"
 
 struct LightPixelIN
 {
