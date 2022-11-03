@@ -36,3 +36,7 @@
 .vs/GraphicsEngine_DX11/v16/Browse.VC.db-shm
 .vs/GraphicsEngine_DX11/v16/.suo
 .vs
+Library/lib/boost/
+Library/lib/FBXParser.pdb
+Library/lib/Game_Engine.pdb
+Library/lib/FBXParser.pdb
