@@ -172,9 +172,6 @@ void FBXParser::LoadMesh(fbxsdk::FbxNode* node, fbxsdk::FbxMesh* mesh)
 	const int vertexCount = mesh->GetControlPointsCount();
 	meshInfo->meshVertexList.resize(vertexCount);
 
-	// 중복 체크를 위한 것
-	std::vector<bool> isVertex(vertexCount, false);
-
 	// Position정보를 가져옴(축 바꿔서 가져옴)
 	FbxVector4* controlPoints = mesh->GetControlPoints();
 	for (int i = 0; i < vertexCount; ++i)
@@ -282,11 +279,22 @@ void FBXParser::LoadMesh(fbxsdk::FbxNode* node, fbxsdk::FbxMesh* mesh)
 
 	const int triCount = mesh->GetPolygonCount(); // 메쉬의 삼각형 개수를 가져온다
 
+	// 중복 체크를 위한 것
+	std::vector<bool> isVertex(vertexCount, false);
+
+	std::unordered_map<int, std::vector<std::pair<DirectX::SimpleMath::Vector2, DirectX::SimpleMath::Vector3>>> vertexMap;
+
 	for (int i = 0; i < triCount; i++) // 삼각형의 개수
 	{
 		for (int j = 0; j < 3; j++)	   // 삼각형은 세 개의 정점으로 구성
 		{
 			int controlPointIndex = mesh->GetPolygonVertex(i, j); // 제어점의 인덱스 추출
+
+			// map에 없으면 insert
+			/*if (vertexMap.find(controlPointIndex) == vertexMap.end())
+			{
+				vertexMap.insert(std::make_pair(controlPointIndex, meshInfo->meshVertexList[controlPointIndex].));
+			}*/
 
 			// 나왔었던 controlPointIndex 라면 새로운 버텍스 생성 및 controlPointIndex 값 바꿔주기 
 			if (isVertex[controlPointIndex] == true)
