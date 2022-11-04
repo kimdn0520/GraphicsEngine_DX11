@@ -52,7 +52,7 @@ void FinalPass::Render(std::shared_ptr<RenderTargetView> rtv)
 	_quad_VS->Update();
 
 	cbToneMapping cbToneMappingBuffer;
-	cbToneMappingBuffer.exposure = 1.5f;
+	cbToneMappingBuffer.exposure = 1.0f;
 
 	_tone_PS->ConstantBufferUpdate(&cbToneMappingBuffer, "cbToneMapping");
 

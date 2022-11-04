@@ -34,7 +34,7 @@ SamplerState samLinearClamp : register(s0);
 
 PS_OUT Model_PBR_PS(ModelPixelIn input) : SV_Target
 {
-	float4 color = float4(0.0f, 0.0f, 0.0f, 1.0f);
+	float4 color = input.color;
 
 	float metallic = input.metallic;
 
