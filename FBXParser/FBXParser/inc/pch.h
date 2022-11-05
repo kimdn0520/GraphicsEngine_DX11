@@ -17,6 +17,7 @@
 #include <vector>
 #include <queue>
 #include <memory>
+#include <tuple>
 #include "SimpleMath.h"
 
 #include <assimp/Importer.hpp>
