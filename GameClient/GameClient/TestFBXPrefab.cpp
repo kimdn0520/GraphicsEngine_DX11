@@ -10,7 +10,7 @@
 TestFBXPrefab::TestFBXPrefab(Vector3 pos)
 	: IPrefab(make_shared<GameObject>())
 {
-	std::vector<shared_ptr<GameObject>> gameObjects = DataManager::Get()->GetDataResources("Crate");
+	std::vector<shared_ptr<GameObject>> gameObjects = DataManager::Get()->GetDataResources("loby");
 
 	gameObject->SetTag(Tag::Default);
 	gameObject->SetName("Test");

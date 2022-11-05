@@ -59,8 +59,8 @@ void TestScene::Initialize()
 	dirLight->AddComponent<Light>();
 	dirLight->GetComponent<Light>()->SetLightType(LIGHT_TYPE::DIRECTIONAL_LIGHT);
 	dirLight->GetComponent<Light>()->SetLightDirection(Vector3(0.5f, -0.5f, 0.5f));
-	dirLight->GetComponent<Light>()->SetColor(Vector3(0.7f, 0.7f, 0.7f));
-	dirLight->GetComponent<Light>()->SetPower(2.f);
+	dirLight->GetComponent<Light>()->SetColor(Vector3(1.0f, 1.0f, 1.0f));
+	dirLight->GetComponent<Light>()->SetPower(1.f);
 	dirLight->GetComponent<Light>()->SendLightInfo();
 	AddGameObject(dirLight);
 
@@ -81,28 +81,28 @@ void TestScene::Initialize()
 	axis->GetComponent<MeshRenderer>()->IsShadow(false);			// ÀÌ³à¼®Àº ¼¨µµ¿ì ¾ÈÇÒ°Çµ­~
 	AddGameObject(axis);
 
-	shared_ptr<GameObject> box = make_shared<GameObject>();
-	box->SetName("box");
-	box->AddComponent<Transform>();
-	box->GetComponent<Transform>()->SetLocalPosition(DirectX::SimpleMath::Vector3(0.f, 0.f, 0.f));
-	box->GetComponent<Transform>()->SetLocalScale(DirectX::SimpleMath::Vector3(20.f, 1.0f, 20.f));
-	box->AddComponent<MeshRenderer>();
-	box->GetComponent<MeshRenderer>()->SetMeshID(0);				// cube´Â 0
-	shared_ptr<Material> boxMaterial = make_shared<Material>();
-	boxMaterial->name = "BoxMaterial";
-	boxMaterial->metallic = 0.0f;
-	boxMaterial->roughness = 0.0f;
-	GraphicsManager::Get()->SendMaterialData(boxMaterial);
-	box->GetComponent<MeshRenderer>()->SetMaterial(boxMaterial->name);
-	box->GetComponent<MeshRenderer>()->SetPixelShader(L"Model_PBR_PS");
-	//box->GetComponent<MeshRenderer>()->IsShadow(false);			// ÀÌ³à¼®Àº ¼¨µµ¿ì ¾ÈÇÒ°Çµ­~
-	AddGameObject(box);
+	//shared_ptr<GameObject> box = make_shared<GameObject>();
+	//box->SetName("box");
+	//box->AddComponent<Transform>();
+	//box->GetComponent<Transform>()->SetLocalPosition(DirectX::SimpleMath::Vector3(0.f, 0.f, 0.f));
+	//box->GetComponent<Transform>()->SetLocalScale(DirectX::SimpleMath::Vector3(20.f, 1.0f, 20.f));
+	//box->AddComponent<MeshRenderer>();
+	//box->GetComponent<MeshRenderer>()->SetMeshID(0);				// cube´Â 0
+	//shared_ptr<Material> boxMaterial = make_shared<Material>();
+	//boxMaterial->name = "BoxMaterial";
+	//boxMaterial->metallic = 0.0f;
+	//boxMaterial->roughness = 0.0f;
+	//GraphicsManager::Get()->SendMaterialData(boxMaterial);
+	//box->GetComponent<MeshRenderer>()->SetMaterial(boxMaterial->name);
+	//box->GetComponent<MeshRenderer>()->SetPixelShader(L"Model_PBR_PS");
+	//AddGameObject(box);
 
 	/*shared_ptr<GenjiPrefab> genji = make_shared<GenjiPrefab>(Vector3(0.f, 1.f, 0.f));
 	AddGameObject(genji->gameObject);*/
 
-	//shared_ptr<TestFBXPrefab> crate = make_shared<TestFBXPrefab>(Vector3(0.f, 0.f, 0.f));
-	//AddGameObject(crate->gameObject);
+	shared_ptr<TestFBXPrefab> crate = make_shared<TestFBXPrefab>(Vector3(0.f, 0.f, 0.f));
+	crate->gameObject->GetTransform()->SetLocalRotation(Vector3(0.f, 180.f, 0.f));
+	AddGameObject(crate->gameObject);
 
 	shared_ptr<TestAnimPrefab> wolf = make_shared<TestAnimPrefab>(Vector3(-5.f, 5.f, 0.f));
 	//wolf->gameObject->GetTransform()->SetLocalScale(Vector3(0.2f, 0.2f, 0.2f));
