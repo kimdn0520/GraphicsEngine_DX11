@@ -42,3 +42,4 @@ Library/lib/Game_Engine.pdb
 Library/lib/FBXParser.pdb
 *.pdb
 Library/lib/Game_Engine.lib
+*.pdb

@@ -112,21 +112,6 @@ void FBXParser::ProcessMesh(fbxsdk::FbxNode* node, FbxNodeAttribute::EType attri
 		}
 	}		
 
-	//if (nodeAttribute && nodeAttribute->GetAttributeType() == attribute)
-	//{
-	//	LoadMesh(node);
-	//}
-
-	//// Material 로드
-	//const int materialCount = node->GetMaterialCount();
-
-	//for (int i = 0; i < materialCount; ++i)
-	//{
-	//	fbxsdk::FbxSurfaceMaterial* surfaceMaterial = node->GetMaterial(i);
-
-	//	LoadMaterial(surfaceMaterial);
-	//}
-
 	// Tree 구조 재귀 호출
 	const int childCount = node->GetChildCount();
 
@@ -137,8 +122,6 @@ void FBXParser::ProcessMesh(fbxsdk::FbxNode* node, FbxNodeAttribute::EType attri
 
 void FBXParser::LoadMesh(fbxsdk::FbxNode* node, fbxsdk::FbxMesh* mesh)
 {
-	//fbxsdk::FbxMesh* mesh = node->GetMesh();
-
 	std::shared_ptr<FBXMeshInfo> fbxMeshInfo = std::make_shared<FBXMeshInfo>();
 
 	fbxModel->fbxMeshInfoList.push_back(fbxMeshInfo);
@@ -294,193 +277,158 @@ void FBXParser::LoadMesh(fbxsdk::FbxNode* node, fbxsdk::FbxMesh* mesh)
 
 			arrIdx[j] = controlPointIndex;
 
-			/*FbxVector2 fbxUV = mesh->GetElementUV()->GetDirectArray().GetAt(mesh->GetTextureUVIndex(i, j));
-
-			float uvX = static_cast<float>(fbxUV.mData[0]);
-			float uvY = 1.f - static_cast<float>(fbxUV.mData[1]);
-
-			FbxGeometryElementNormal* fbxNormal = mesh->GetElementNormal();
-			int normalIdx = 0;
-
-			if (fbxNormal->GetMappingMode() == FbxGeometryElement::eByPolygonVertex)
-			{
-				if (fbxNormal->GetReferenceMode() == FbxGeometryElement::eDirect)
-					normalIdx = vertexCounter;
-				else
-					normalIdx = fbxNormal->GetIndexArray().GetAt(vertexCounter);
-			}
-			else if (fbxNormal->GetMappingMode() == FbxGeometryElement::eByControlPoint)
-			{
-				if (fbxNormal->GetReferenceMode() == FbxGeometryElement::eDirect)
-					normalIdx = controlPointIndex;
-				else
-					normalIdx = fbxNormal->GetIndexArray().GetAt(controlPointIndex);
-			}
-
-			FbxVector4 vec = fbxNormal->GetDirectArray().GetAt(normalIdx);
-
-			float normalX = static_cast<float>(vec.mData[0]);
-			float normalY = static_cast<float>(vec.mData[2]);
-			float normalZ = static_cast<float>(vec.mData[1]);
-
-			DirectX::SimpleMath::Vector2 uv = { uvX, uvY };
-			DirectX::SimpleMath::Vector3 normal = { normalX, normalY, normalZ };
-
-			vertexTuple = std::make_tuple(controlPointIndex, uv, normal);*/
-
-
-			// map에 없으면 insert
-			if (vertexMap.find(controlPointIndex) == vertexMap.end())
-			{
-				// uv 정보를 가져온다.
-				if (mesh->GetElementUVCount() >= 1)
-					GetUV(mesh, meshInfo, controlPointIndex, mesh->GetTextureUVIndex(i, j));
-
-				// normal 정보를 가져온다.
-				if (mesh->GetElementNormalCount() >= 1)
-					GetNormal(mesh, meshInfo, controlPointIndex, vertexCounter);
-
-				vertexMap[controlPointIndex].push_back(
-					std::make_pair(meshInfo->meshVertexList[controlPointIndex].uv
-					, meshInfo->meshVertexList[controlPointIndex].normal));
-			}
-			// map에 있던거라면 비교해준다.
-			else
-			{
-				FbxVector2 uv = mesh->GetElementUV()->GetDirectArray().GetAt(mesh->GetTextureUVIndex(i, j));
-
-				float uvX = static_cast<float>(uv.mData[0]);
-				float uvY = 1.f - static_cast<float>(uv.mData[1]);
-
-				FbxGeometryElementNormal* normal = mesh->GetElementNormal();
-				int normalIdx = 0;
-
-				// 인덱스를 기준으로 노멀 값이 들어간다
-				// 버텍스 스플릿이 필요하다.
-				if (normal->GetMappingMode() == FbxGeometryElement::eByPolygonVertex)
-				{
-					if (normal->GetReferenceMode() == FbxGeometryElement::eDirect)
-						normalIdx = vertexCounter;
-					else
-						normalIdx = normal->GetIndexArray().GetAt(vertexCounter);
-				}
-				// 정점을 기준으로 노멀 값이 들어간다.
-				else if (normal->GetMappingMode() == FbxGeometryElement::eByControlPoint)
-				{
-					if (normal->GetReferenceMode() == FbxGeometryElement::eDirect)
-						normalIdx = controlPointIndex;
-					else
-						normalIdx = normal->GetIndexArray().GetAt(controlPointIndex);
-				}
-
-				FbxVector4 vec = normal->GetDirectArray().GetAt(normalIdx);
-
-				float normalX = static_cast<float>(vec.mData[0]);
-				float normalY = static_cast<float>(vec.mData[2]);
-				float normalZ = static_cast<float>(vec.mData[1]);
-
-				bool isUV = false;
-				bool isNormal = false;
-				bool isNew = true;		// 새로운 버텍스를 제작해야함
-
-				for (int controlCnt = 0; controlCnt < vertexMap[controlPointIndex].size(); controlCnt++)
-				{
-					if (uvX == vertexMap[controlPointIndex][controlCnt].first.x
-						&& uvY == vertexMap[controlPointIndex][controlCnt].first.y)
-					{
-						isUV = true;
-					}
-
-					if (normalX == vertexMap[controlPointIndex][controlCnt].second.x
-						&& normalY == vertexMap[controlPointIndex][controlCnt].second.y
-						&& normalZ == vertexMap[controlPointIndex][controlCnt].second.z)
-					{
-						isNormal = true;
-					}
-
-					// 동일한걸 찾았다면 기존에 있던 버텍스를 쓴다.
-					if (isUV == true && isNormal == true)
-					{
-						meshInfo->meshVertexList[controlPointIndex].uv.x = static_cast<float>(uvX);
-						meshInfo->meshVertexList[controlPointIndex].uv.y = static_cast<float>(uvY);
-
-						meshInfo->meshVertexList[controlPointIndex].normal.x = static_cast<float>(normalX);
-						meshInfo->meshVertexList[controlPointIndex].normal.y = static_cast<float>(normalY);
-						meshInfo->meshVertexList[controlPointIndex].normal.z = static_cast<float>(normalZ);
-						
-						isNew = false;
-						break;
-					}
-
-					isUV = false;
-					isNormal = false;
-				}
-
-				// uv, normal이 동일한걸 못찾았다면 새로만들어 준다.
-				if (isNew == true)
-				{
-					DirectX::SimpleMath::Vector2 uv = { uvX, uvY };
-					DirectX::SimpleMath::Vector3 normal = { normalX, normalY, normalZ };
-
-					vertexMap[controlPointIndex].push_back(std::make_pair(uv, normal));
-
-					Vertex vertex;
-					vertex.position = meshInfo->meshVertexList[controlPointIndex].position;	// 포지션은 동일
-
-					// 가중치 정보 동일
-					for (int weightIdx = 0; weightIdx < 8; weightIdx++)
-					{
-						vertex.weights[weightIdx] = meshInfo->meshVertexList[controlPointIndex].weights[weightIdx];
-
-						vertex.boneIndices[weightIdx] = meshInfo->meshVertexList[controlPointIndex].boneIndices[weightIdx];
-					}
-
-					meshInfo->meshVertexList.push_back(vertex);								// 새로운 버텍스 삽입
-
-					controlPointIndex = meshInfo->meshVertexList.size() - 1;				// index 새로운 버텍스 껄로 바꾸기
-
-					arrIdx[j] = controlPointIndex;
-
-					meshInfo->meshVertexList[controlPointIndex].uv = uv;
-					meshInfo->meshVertexList[controlPointIndex].normal = normal;
-				}
-			}
-
-			// 나왔었던 controlPointIndex 라면 새로운 버텍스 생성 및 controlPointIndex 값 바꿔주기 
-			//if (isVertex[controlPointIndex] == true)
+			//// map에 없으면 insert
+			//if (vertexMap.find(controlPointIndex) == vertexMap.end())
 			//{
-			//	Vertex vertex;
-			//	vertex.position = meshInfo->meshVertexList[controlPointIndex].position;	// 포지션은 동일
+			//	// uv 정보를 가져온다.
+			//	if (mesh->GetElementUVCount() >= 1)
+			//		GetUV(mesh, meshInfo, controlPointIndex, mesh->GetTextureUVIndex(i, j));
 
-			//	// 가중치 정보 동일
-			//	for (int weightIdx = 0; weightIdx < 8; weightIdx++)
+			//	// normal 정보를 가져온다.
+			//	if (mesh->GetElementNormalCount() >= 1)
+			//		GetNormal(mesh, meshInfo, controlPointIndex, vertexCounter);
+
+			//	vertexMap[controlPointIndex].push_back(
+			//		std::make_pair(meshInfo->meshVertexList[controlPointIndex].uv
+			//		, meshInfo->meshVertexList[controlPointIndex].normal));
+			//}
+			//// map에 있던거라면 비교해준다.
+			//else
+			//{
+			//	FbxVector2 uv = mesh->GetElementUV()->GetDirectArray().GetAt(mesh->GetTextureUVIndex(i, j));
+
+			//	float uvX = static_cast<float>(uv.mData[0]);
+			//	float uvY = 1.f - static_cast<float>(uv.mData[1]);
+
+			//	FbxGeometryElementNormal* normal = mesh->GetElementNormal();
+			//	int normalIdx = 0;
+
+			//	// 인덱스를 기준으로 노멀 값이 들어간다
+			//	// 버텍스 스플릿이 필요하다.
+			//	if (normal->GetMappingMode() == FbxGeometryElement::eByPolygonVertex)
 			//	{
-			//		vertex.weights[weightIdx] = meshInfo->meshVertexList[controlPointIndex].weights[weightIdx];
-
-			//		vertex.boneIndices[weightIdx] = meshInfo->meshVertexList[controlPointIndex].boneIndices[weightIdx];
+			//		if (normal->GetReferenceMode() == FbxGeometryElement::eDirect)
+			//			normalIdx = vertexCounter;
+			//		else
+			//			normalIdx = normal->GetIndexArray().GetAt(vertexCounter);
+			//	}
+			//	// 정점을 기준으로 노멀 값이 들어간다.
+			//	else if (normal->GetMappingMode() == FbxGeometryElement::eByControlPoint)
+			//	{
+			//		if (normal->GetReferenceMode() == FbxGeometryElement::eDirect)
+			//			normalIdx = controlPointIndex;
+			//		else
+			//			normalIdx = normal->GetIndexArray().GetAt(controlPointIndex);
 			//	}
 
-			//	meshInfo->meshVertexList.push_back(vertex);								// 새로운 버텍스 삽입
+			//	FbxVector4 vec = normal->GetDirectArray().GetAt(normalIdx);
 
-			//	controlPointIndex = meshInfo->meshVertexList.size() - 1;				// index 새로운 버텍스 껄로 바꾸기
+			//	float normalX = static_cast<float>(vec.mData[0]);
+			//	float normalY = static_cast<float>(vec.mData[2]);
+			//	float normalZ = static_cast<float>(vec.mData[1]);
 
-			//	isVertex.push_back(true);
+			//	bool isUV = false;
+			//	bool isNormal = false;
+			//	bool isNew = true;		// 새로운 버텍스를 제작해야함
+
+			//	for (int controlCnt = 0; controlCnt < vertexMap[controlPointIndex].size(); controlCnt++)
+			//	{
+			//		if (uvX == vertexMap[controlPointIndex][controlCnt].first.x
+			//			&& uvY == vertexMap[controlPointIndex][controlCnt].first.y)
+			//		{
+			//			isUV = true;
+			//		}
+
+			//		if (normalX == vertexMap[controlPointIndex][controlCnt].second.x
+			//			&& normalY == vertexMap[controlPointIndex][controlCnt].second.y
+			//			&& normalZ == vertexMap[controlPointIndex][controlCnt].second.z)
+			//		{
+			//			isNormal = true;
+			//		}
+
+			//		// 동일한걸 찾았다면 기존에 있던 버텍스를 쓴다.
+			//		if (isUV == true && isNormal == true)
+			//		{
+			//			meshInfo->meshVertexList[controlPointIndex].uv.x = static_cast<float>(uvX);
+			//			meshInfo->meshVertexList[controlPointIndex].uv.y = static_cast<float>(uvY);
+
+			//			meshInfo->meshVertexList[controlPointIndex].normal.x = static_cast<float>(normalX);
+			//			meshInfo->meshVertexList[controlPointIndex].normal.y = static_cast<float>(normalY);
+			//			meshInfo->meshVertexList[controlPointIndex].normal.z = static_cast<float>(normalZ);
+			//			
+			//			isNew = false;
+			//			break;
+			//		}
+
+			//		isUV = false;
+			//		isNormal = false;
+			//	}
+
+			//	// uv, normal이 동일한걸 못찾았다면 새로만들어 준다.
+			//	if (isNew == true)
+			//	{
+			//		DirectX::SimpleMath::Vector2 uv = { uvX, uvY };
+			//		DirectX::SimpleMath::Vector3 normal = { normalX, normalY, normalZ };
+
+			//		vertexMap[controlPointIndex].push_back(std::make_pair(uv, normal));
+
+			//		Vertex vertex;
+			//		vertex.position = meshInfo->meshVertexList[controlPointIndex].position;	// 포지션은 동일
+
+			//		// 가중치 정보 동일
+			//		for (int weightIdx = 0; weightIdx < 8; weightIdx++)
+			//		{
+			//			vertex.weights[weightIdx] = meshInfo->meshVertexList[controlPointIndex].weights[weightIdx];
+
+			//			vertex.boneIndices[weightIdx] = meshInfo->meshVertexList[controlPointIndex].boneIndices[weightIdx];
+			//		}
+
+			//		meshInfo->meshVertexList.push_back(vertex);								// 새로운 버텍스 삽입
+
+			//		controlPointIndex = meshInfo->meshVertexList.size() - 1;				// index 새로운 버텍스 껄로 바꾸기
+
+			//		arrIdx[j] = controlPointIndex;
+
+			//		meshInfo->meshVertexList[controlPointIndex].uv = uv;
+			//		meshInfo->meshVertexList[controlPointIndex].normal = normal;
+			//	}
 			//}
 
-			//arrIdx[j] = controlPointIndex;
+			// 나왔었던 controlPointIndex 라면 새로운 버텍스 생성 및 controlPointIndex 값 바꿔주기 
+			if (isVertex[controlPointIndex] == true)
+			{
+				Vertex vertex;
+				vertex.position = meshInfo->meshVertexList[controlPointIndex].position;	// 포지션은 동일
 
-			//// uv 정보를 가져온다.
-			//if(mesh->GetElementUVCount() >= 1)
-			//	GetUV(mesh, meshInfo, controlPointIndex, mesh->GetTextureUVIndex(i, j));
+				// 가중치 정보 동일
+				for (int weightIdx = 0; weightIdx < 8; weightIdx++)
+				{
+					vertex.weights[weightIdx] = meshInfo->meshVertexList[controlPointIndex].weights[weightIdx];
 
-			//// normal 정보를 가져온다.
-			//if(mesh->GetElementNormalCount() >= 1)
-			//	GetNormal(mesh, meshInfo, controlPointIndex, vertexCounter);
+					vertex.boneIndices[weightIdx] = meshInfo->meshVertexList[controlPointIndex].boneIndices[weightIdx];
+				}
+
+				meshInfo->meshVertexList.push_back(vertex);								// 새로운 버텍스 삽입
+
+				controlPointIndex = meshInfo->meshVertexList.size() - 1;				// index 새로운 버텍스 껄로 바꾸기
+
+				isVertex.push_back(true);
+			}
+
+			arrIdx[j] = controlPointIndex;
+
+			// uv 정보를 가져온다.
+			if(mesh->GetElementUVCount() >= 1)
+				GetUV(mesh, meshInfo, controlPointIndex, mesh->GetTextureUVIndex(i, j));
+
+			// normal 정보를 가져온다.
+			if(mesh->GetElementNormalCount() >= 1)
+				GetNormal(mesh, meshInfo, controlPointIndex, vertexCounter);
 
 			vertexCounter++;
 
-			//// 나왔었던 controlPointIndex면 true
-			//isVertex[controlPointIndex] = true;
+			// 나왔었던 controlPointIndex면 true
+			isVertex[controlPointIndex] = true;
 		}
 
 		meshInfo->indices.push_back(arrIdx[0]);
@@ -614,11 +562,6 @@ void FBXParser::LoadMaterial(fbxsdk::FbxSurfaceMaterial* surfaceMaterial)
 	material->normalMap = GetTextureRelativeName(surfaceMaterial, fbxsdk::FbxSurfaceMaterial::sNormalMap);
 	material->roughnessMap = GetTextureRelativeName(surfaceMaterial, fbxsdk::FbxSurfaceMaterial::sShininess);
 	material->emissiveMap = GetTextureRelativeName(surfaceMaterial, fbxsdk::FbxSurfaceMaterial::sEmissive);
-
-	if (material->albedoMap != L"") { material->isAlbedo = true; }
-	if (material->normalMap != L"") { material->isNormal = true; }
-	if (material->roughnessMap != L"") { material->isRoughness = true; }
-	if (material->emissiveMap != L"") { material->isEmissive = true; }
 
 	// 머터리얼 리스트에 추가
 	fbxModel->materialList.push_back(material);

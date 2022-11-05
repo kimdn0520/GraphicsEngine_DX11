@@ -13,7 +13,7 @@ struct Vertex
 		}
 	}*/
 	Vertex(DirectX::SimpleMath::Vector3 paPos = { 0.f, 0.f, 0.f },
-		DirectX::SimpleMath::Vector4 paColor = { 1.0f, 1.0f, 1.0f, 1.0f },
+		DirectX::SimpleMath::Vector4 paColor = { 0.0f, 0.0f, 0.0f, 1.0f },
 		DirectX::SimpleMath::Vector2 paUV = { 0.f, 0.f },
 		DirectX::SimpleMath::Vector3 paNormal = { 0.f, 0.f, 0.f },
 		DirectX::SimpleMath::Vector3 paTangent = { 0.f, 0.f, 0.f })
@@ -40,13 +40,6 @@ struct Vertex
 struct FBXMaterialInfo
 {
 	std::string materialName;
-
-	bool isAlbedo = false;
-	bool isNormal = false;
-	bool isMetallic = false;
-	bool isRoughness = false;
-	bool isAO = false;
-	bool isEmissive = false;
 
 	std::wstring albedoMap;
 	std::wstring normalMap;
@@ -88,7 +81,6 @@ struct FBXBoneInfo
 
 	DirectX::SimpleMath::Matrix offsetMatrix;				// Bone's OffsetMatrix
 	DirectX::SimpleMath::Matrix nodeMatrix;					// Bone's NodeMatrix
-	DirectX::SimpleMath::Matrix worldMatrix;				// Bone's WorldMatrix
 };
 
 struct FBXKeyFrameInfo
