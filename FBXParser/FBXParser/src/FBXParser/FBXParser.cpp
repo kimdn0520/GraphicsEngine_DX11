@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "FBXParser/FBXParser.h"
 #include "ParserData/ParserData.h"
+#include "Serializer/BinarySerializer.h"
 
 FBXParser::FBXParser()
 {}
@@ -27,6 +28,9 @@ std::shared_ptr<FBXModel> FBXParser::LoadFbx(const std::string& path)
 	ProcessBones(scene->GetRootNode(), 0, -1);
 
 	ProcessMesh(scene->GetRootNode(), FbxNodeAttribute::eMesh);
+
+	std::shared_ptr<BinarySerializer> s = std::make_shared<BinarySerializer>();
+	s->SaveBinaryFile(fbxModel, "text", path);
 
 	return fbxModel;
 }

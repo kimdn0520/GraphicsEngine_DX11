@@ -137,8 +137,8 @@ namespace FBXBinaryData
 
 		MaterialData() = default;
 
-		MaterialData(std::string _materialName, std::string _albedoMap, std::string _normalMap, std::string _metallicMap, std::string _roughnessMap
-			, std::string _AOMap, std::string _emissiveMap, Float4 _material_Ambient, Float4 _material_Diffuse, Float4 _material_Specular, Float4 _material_Emissive
+		MaterialData(std::string _materialName, std::wstring _albedoMap, std::wstring _normalMap, std::wstring _metallicMap, std::wstring _roughnessMap
+			, std::wstring _AOMap, std::wstring _emissiveMap, Float4 _material_Ambient, Float4 _material_Diffuse, Float4 _material_Specular, Float4 _material_Emissive
 			, float _material_Transparency, float _material_Reflectivity, float _metallic, float _roughness)
 			: materialName(std::move(_materialName))
 			, albedoMap(std::move(_albedoMap))
@@ -160,12 +160,12 @@ namespace FBXBinaryData
 	private:
 		std::string materialName;
 
-		std::string albedoMap;
-		std::string normalMap;
-		std::string metallicMap;
-		std::string roughnessMap;
-		std::string AOMap;
-		std::string emissiveMap;
+		std::wstring albedoMap;
+		std::wstring normalMap;
+		std::wstring metallicMap;
+		std::wstring roughnessMap;
+		std::wstring AOMap;
+		std::wstring emissiveMap;
 
 		Float4 material_Ambient;
 		Float4 material_Diffuse;
@@ -206,6 +206,7 @@ namespace FBXBinaryData
 
 	class MeshData
 	{
+	public:
 		friend boost::serialization::access;
 
 		MeshData() = default;
@@ -248,6 +249,7 @@ namespace FBXBinaryData
 
 	class BoneData
 	{
+	public:
 		friend boost::serialization::access;
 
 		BoneData() = default;
@@ -280,6 +282,7 @@ namespace FBXBinaryData
 
 	class KeyFrameInfoData
 	{
+	public:
 		friend boost::serialization::access;
 
 		KeyFrameInfoData() = default;
@@ -311,6 +314,7 @@ namespace FBXBinaryData
 
 	class AnimationClipData
 	{
+	public:
 		friend boost::serialization::access;
 
 		AnimationClipData() = default;
@@ -318,6 +322,7 @@ namespace FBXBinaryData
 		AnimationClipData(std::string _animationName, float _frameRate, float _tickPerFrame, int _totalKeyFrame, int _startKeyFrame, int _endKeyFrame
 			, std::vector<std::vector<std::shared_ptr<KeyFrameInfoData>>> _keyFrameList)
 			: animationName(std::move(_animationName))
+			, frameRate(std::move(_frameRate))
 			, tickPerFrame(std::move(_tickPerFrame))
 			, totalKeyFrame(std::move(_totalKeyFrame))
 			, startKeyFrame(std::move(_startKeyFrame))
@@ -356,6 +361,7 @@ namespace FBXBinaryData
 
 	class ModelData
 	{
+	public:
 		friend boost::serialization::access;
 
 		ModelData() = default;
