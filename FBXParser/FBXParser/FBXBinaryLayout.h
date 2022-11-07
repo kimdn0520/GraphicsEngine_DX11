@@ -157,7 +157,7 @@ namespace FBXBinaryData
 			, roughness(std::move(_roughness))
 		{}
 
-	private:
+	public:
 		std::string materialName;
 
 		std::wstring albedoMap;
@@ -222,7 +222,7 @@ namespace FBXBinaryData
 			, isSkinned(std::move(_isSkinned))
 		{}
 
-	private:
+	public:
 		std::string						meshName;
 		std::string						parentName;
 		std::string						materialName;
@@ -261,7 +261,7 @@ namespace FBXBinaryData
 			, nodeMatrix(std::move(_nodeMatrix))
 		{}
 
-	private:
+	public:
 		std::string	boneName;
 
 		int			parentIndex;
@@ -294,7 +294,7 @@ namespace FBXBinaryData
 			, localScale(std::move(_localScale))
 		{}
 
-	private:
+	public:
 		float  time;
 
 		Float3 localTransform;
@@ -330,7 +330,7 @@ namespace FBXBinaryData
 			, keyFrameList(std::move(_keyFrameList))
 		{}
 
-	private:
+	public:
 		std::string	animationName;
 
 		float frameRate = 0.0f;
@@ -376,7 +376,7 @@ namespace FBXBinaryData
 			, isSkinnedAnimation(std::move(isSkinnedAnimation))
 		{}
 
-	private:
+	public:
 		std::vector<std::shared_ptr<MeshData>> meshInfoList;
 
 		std::vector<std::shared_ptr<MaterialData>>	materialList;

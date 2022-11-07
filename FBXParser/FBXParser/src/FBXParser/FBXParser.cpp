@@ -30,6 +30,7 @@ std::shared_ptr<FBXModel> FBXParser::LoadFbx(const std::string& path)
 	ProcessMesh(scene->GetRootNode(), FbxNodeAttribute::eMesh);
 
 	std::shared_ptr<BinarySerializer> s = std::make_shared<BinarySerializer>();
+
 	s->SaveBinaryFile(fbxModel, "text", path);
 
 	return fbxModel;

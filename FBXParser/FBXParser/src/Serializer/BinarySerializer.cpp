@@ -4,9 +4,9 @@
 
 void BinarySerializer::SaveBinaryFile(std::shared_ptr<FBXModel> fbxModel, std::string name, std::string path)
 {
-	std::ofstream output(name + ".noob", std::ios::binary);
+	std::ofstream output(name + ".noob", std::ios_base::binary);
 
-	boost::archive::text_oarchive oa(output);
+	boost::archive::binary_oarchive oa(output);				// 연 스트림을 넘겨주어서 직렬화 객체 초기화
 
 	std::vector<std::shared_ptr<FBXBinaryData::MeshData>> meshInfoList;
 
@@ -84,7 +84,6 @@ void BinarySerializer::SaveBinaryFile(std::shared_ptr<FBXModel> fbxModel, std::s
 
 			keyFrameInfoList.emplace_back(keyFrames);
 		}
-
 
 		std::shared_ptr<FBXBinaryData::AnimationClipData> animData = std::make_shared<FBXBinaryData::AnimationClipData>(
 			anim->animationName, anim->frameRate, anim->tickPerFrame, anim->totalKeyFrame, anim->startKeyFrame, anim->endKeyFrame,
