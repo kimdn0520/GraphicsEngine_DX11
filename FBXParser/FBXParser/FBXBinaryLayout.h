@@ -158,25 +158,25 @@ namespace FBXBinaryData
 		{}
 
 	public:
-		std::string materialName;
+		std::string materialName = "";;
 
-		std::wstring albedoMap;
-		std::wstring normalMap;
-		std::wstring metallicMap;
-		std::wstring roughnessMap;
-		std::wstring AOMap;
-		std::wstring emissiveMap;
+		std::wstring albedoMap = L"";;
+		std::wstring normalMap = L"";;
+		std::wstring metallicMap = L"";;
+		std::wstring roughnessMap = L"";;
+		std::wstring AOMap = L"";;
+		std::wstring emissiveMap = L"";
 
-		Float4 material_Ambient;
-		Float4 material_Diffuse;
-		Float4 material_Specular;
-		Float4 material_Emissive;
+		Float4 material_Ambient = { 0.f, 0.f, 0.f, 0.f };;
+		Float4 material_Diffuse = { 0.f, 0.f, 0.f, 0.f };;
+		Float4 material_Specular = { 0.f, 0.f, 0.f, 0.f };;
+		Float4 material_Emissive = { 0.f, 0.f, 0.f, 0.f };
 
-		float material_Transparency;
-		float material_Reflectivity;
+		float material_Transparency = 0.f;
+		float material_Reflectivity = 0.f;
 
-		float metallic;
-		float roughness;
+		float metallic = 0.f;
+		float roughness = 0.f;
 
 	private:
 		template<typename Archive>
@@ -223,9 +223,9 @@ namespace FBXBinaryData
 		{}
 
 	public:
-		std::string						meshName;
-		std::string						parentName;
-		std::string						materialName;
+		std::string						meshName = "";
+		std::string						parentName = "";
+		std::string						materialName = "";
 		std::vector<VertexData>			meshVertexList;
 		std::vector<unsigned int>		indices;
 
@@ -262,9 +262,9 @@ namespace FBXBinaryData
 		{}
 
 	public:
-		std::string	boneName;
+		std::string	boneName = "";
 
-		int			parentIndex;
+		int			parentIndex = 0;
 
 		Float4x4	offsetMatrix;
 		Float4x4	nodeMatrix;
@@ -295,11 +295,11 @@ namespace FBXBinaryData
 		{}
 
 	public:
-		float  time;
+		float  time = 0.f;
 
-		Float3 localTransform;
-		Float4 localRotation;
-		Float3 localScale;
+		Float3 localTransform = { 0.f, 0.f, 0.f};
+		Float4 localRotation = { 0.f, 0.f, 0.f, 0.f};
+		Float3 localScale = { 0.f, 0.f, 0.f };
 
 	private:
 		template<typename Archive>

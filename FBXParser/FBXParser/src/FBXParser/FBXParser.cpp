@@ -300,37 +300,47 @@ void FBXParser::LoadMesh(fbxsdk::FbxNode* node, fbxsdk::FbxMesh* mesh)
 			//// map에 있던거라면 비교해준다.
 			//else
 			//{
-			//	FbxVector2 uv = mesh->GetElementUV()->GetDirectArray().GetAt(mesh->GetTextureUVIndex(i, j));
+			//	DirectX::SimpleMath::Vector2 fbxUV = { 0.f, 0.f };
 
-			//	float uvX = static_cast<float>(uv.mData[0]);
-			//	float uvY = 1.f - static_cast<float>(uv.mData[1]);
-
-			//	FbxGeometryElementNormal* normal = mesh->GetElementNormal();
-			//	int normalIdx = 0;
-
-			//	// 인덱스를 기준으로 노멀 값이 들어간다
-			//	// 버텍스 스플릿이 필요하다.
-			//	if (normal->GetMappingMode() == FbxGeometryElement::eByPolygonVertex)
+			//	if (mesh->GetElementUVCount() >= 1)
 			//	{
-			//		if (normal->GetReferenceMode() == FbxGeometryElement::eDirect)
-			//			normalIdx = vertexCounter;
-			//		else
-			//			normalIdx = normal->GetIndexArray().GetAt(vertexCounter);
-			//	}
-			//	// 정점을 기준으로 노멀 값이 들어간다.
-			//	else if (normal->GetMappingMode() == FbxGeometryElement::eByControlPoint)
-			//	{
-			//		if (normal->GetReferenceMode() == FbxGeometryElement::eDirect)
-			//			normalIdx = controlPointIndex;
-			//		else
-			//			normalIdx = normal->GetIndexArray().GetAt(controlPointIndex);
+			//		FbxVector2 uv = mesh->GetElementUV()->GetDirectArray().GetAt(mesh->GetTextureUVIndex(i, j));
+
+			//		fbxUV.x = static_cast<float>(uv.mData[0]);
+			//		fbxUV.y = 1.f - static_cast<float>(uv.mData[1]);
 			//	}
 
-			//	FbxVector4 vec = normal->GetDirectArray().GetAt(normalIdx);
+			//	DirectX::SimpleMath::Vector3 fbxNormal = { 0.f, 0.f, 0.f };
 
-			//	float normalX = static_cast<float>(vec.mData[0]);
-			//	float normalY = static_cast<float>(vec.mData[2]);
-			//	float normalZ = static_cast<float>(vec.mData[1]);
+			//	if (mesh->GetElementNormalCount() >= 1)
+			//	{
+			//		FbxGeometryElementNormal* normal = mesh->GetElementNormal();
+			//		int normalIdx = 0;
+
+			//		// 인덱스를 기준으로 노멀 값이 들어간다
+			//		// 버텍스 스플릿이 필요하다.
+			//		if (normal->GetMappingMode() == FbxGeometryElement::eByPolygonVertex)
+			//		{
+			//			if (normal->GetReferenceMode() == FbxGeometryElement::eDirect)
+			//				normalIdx = vertexCounter;
+			//			else
+			//				normalIdx = normal->GetIndexArray().GetAt(vertexCounter);
+			//		}
+			//		// 정점을 기준으로 노멀 값이 들어간다.
+			//		else if (normal->GetMappingMode() == FbxGeometryElement::eByControlPoint)
+			//		{
+			//			if (normal->GetReferenceMode() == FbxGeometryElement::eDirect)
+			//				normalIdx = controlPointIndex;
+			//			else
+			//				normalIdx = normal->GetIndexArray().GetAt(controlPointIndex);
+			//		}
+
+			//		FbxVector4 vec = normal->GetDirectArray().GetAt(normalIdx);
+			//		fbxNormal.x = static_cast<float>(vec.mData[0]);
+			//		fbxNormal.y = static_cast<float>(vec.mData[2]);
+			//		fbxNormal.z = static_cast<float>(vec.mData[1]);
+			//	}
+
 
 			//	bool isUV = false;
 			//	bool isNormal = false;
@@ -338,28 +348,25 @@ void FBXParser::LoadMesh(fbxsdk::FbxNode* node, fbxsdk::FbxMesh* mesh)
 
 			//	for (int controlCnt = 0; controlCnt < vertexMap[controlPointIndex].size(); controlCnt++)
 			//	{
-			//		if (uvX == vertexMap[controlPointIndex][controlCnt].first.x
-			//			&& uvY == vertexMap[controlPointIndex][controlCnt].first.y)
+			//		if (fbxUV == vertexMap[controlPointIndex][controlCnt].first)
 			//		{
 			//			isUV = true;
 			//		}
 
-			//		if (normalX == vertexMap[controlPointIndex][controlCnt].second.x
-			//			&& normalY == vertexMap[controlPointIndex][controlCnt].second.y
-			//			&& normalZ == vertexMap[controlPointIndex][controlCnt].second.z)
+			//		if (fbxNormal == vertexMap[controlPointIndex][controlCnt].second)
 			//		{
 			//			isNormal = true;
 			//		}
 
-			//		// 동일한걸 찾았다면 기존에 있던 버텍스를 쓴다.
+			//		// uv랑 normal이 동일한걸 찾았다면 기존에 있던 버텍스를 쓴다.
 			//		if (isUV == true && isNormal == true)
 			//		{
-			//			meshInfo->meshVertexList[controlPointIndex].uv.x = static_cast<float>(uvX);
-			//			meshInfo->meshVertexList[controlPointIndex].uv.y = static_cast<float>(uvY);
+			//			meshInfo->meshVertexList[controlPointIndex].uv.x = static_cast<float>(fbxUV.x);
+			//			meshInfo->meshVertexList[controlPointIndex].uv.y = static_cast<float>(fbxUV.y);
 
-			//			meshInfo->meshVertexList[controlPointIndex].normal.x = static_cast<float>(normalX);
-			//			meshInfo->meshVertexList[controlPointIndex].normal.y = static_cast<float>(normalY);
-			//			meshInfo->meshVertexList[controlPointIndex].normal.z = static_cast<float>(normalZ);
+			//			meshInfo->meshVertexList[controlPointIndex].normal.x = static_cast<float>(fbxNormal.x);
+			//			meshInfo->meshVertexList[controlPointIndex].normal.y = static_cast<float>(fbxNormal.y);
+			//			meshInfo->meshVertexList[controlPointIndex].normal.z = static_cast<float>(fbxNormal.z);
 			//			
 			//			isNew = false;
 			//			break;
@@ -372,10 +379,8 @@ void FBXParser::LoadMesh(fbxsdk::FbxNode* node, fbxsdk::FbxMesh* mesh)
 			//	// uv, normal이 동일한걸 못찾았다면 새로만들어 준다.
 			//	if (isNew == true)
 			//	{
-			//		DirectX::SimpleMath::Vector2 uv = { uvX, uvY };
-			//		DirectX::SimpleMath::Vector3 normal = { normalX, normalY, normalZ };
-
-			//		vertexMap[controlPointIndex].push_back(std::make_pair(uv, normal));
+			//		// map에 추가해주고..
+			//		vertexMap[controlPointIndex].push_back(std::make_pair(fbxUV, fbxNormal));
 
 			//		Vertex vertex;
 			//		vertex.position = meshInfo->meshVertexList[controlPointIndex].position;	// 포지션은 동일
@@ -394,8 +399,8 @@ void FBXParser::LoadMesh(fbxsdk::FbxNode* node, fbxsdk::FbxMesh* mesh)
 
 			//		arrIdx[j] = controlPointIndex;
 
-			//		meshInfo->meshVertexList[controlPointIndex].uv = uv;
-			//		meshInfo->meshVertexList[controlPointIndex].normal = normal;
+			//		meshInfo->meshVertexList[controlPointIndex].uv = fbxUV;
+			//		meshInfo->meshVertexList[controlPointIndex].normal = fbxNormal;
 			//	}
 			//}
 
