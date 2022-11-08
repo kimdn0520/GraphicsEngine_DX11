@@ -793,7 +793,7 @@ std::vector<std::shared_ptr<GameObject>> Resources::LoadFBX(std::string path, in
 
 std::vector<std::shared_ptr<GameObject>> Resources::LoadFBXBinary(std::string path, int topology, int rasterizerState)
 {
-	ifstream input("text.noob", ios_base::binary);
+	ifstream input("test.noob", ios_base::binary);
 
 	boost::archive::binary_iarchive ia(input);
 
@@ -810,211 +810,245 @@ std::vector<std::shared_ptr<GameObject>> Resources::LoadFBXBinary(std::string pa
 	// Animation이 있는 경우 대부분 SkinnedMesh
 	if (modelData->isSkinnedAnimation)
 	{
-		//// 본오브젝트를 만들자..
-		//for (int boneIdx = 0; boneIdx < modelData->boneInfoList.size(); boneIdx++)
-		//{
-		//	std::shared_ptr<GameObject> boneObject = std::make_shared<GameObject>();
-		//	boneObject->SetName(modelData->boneInfoList[boneIdx]->boneName);
-		//	boneObject->AddComponent<Transform>();
-		//	boneObject->GetComponent<Transform>()->SetBoneOffsetMatrix(modelData->boneInfoList[boneIdx]->offsetMatrix);
-		//	boneObject->GetComponent<Transform>()->SetNodeTM(modelData->boneInfoList[boneIdx]->nodeMatrix);
-		//	boneObject->AddComponent<MeshRenderer>();
-		//	boneObject->GetComponent<MeshRenderer>()->SetMeshID(0);				// cube는 0
-		//	shared_ptr<Material> boneMaterial = make_shared<Material>();
-		//	boneMaterial->name = "BoneMaterial";
-		//	boneMaterial->metallic = 0.0f;
-		//	boneMaterial->roughness = 0.0f;
-		//	GraphicsManager::Get()->SendMaterialData(boneMaterial);
-		//	boneObject->GetComponent<MeshRenderer>()->SetMaterial(boneMaterial->name);
-		//	boneObject->GetComponent<MeshRenderer>()->SetPixelShader(L"Model_PBR_PS");
+		// 본오브젝트를 만들자..
+		for (int boneIdx = 0; boneIdx < modelData->boneInfoList.size(); boneIdx++)
+		{
+			std::shared_ptr<GameObject> boneObject = std::make_shared<GameObject>();
+			boneObject->SetName(modelData->boneInfoList[boneIdx]->boneName);
+			boneObject->AddComponent<Transform>();
 
-		//	Vector3 localScale = { 1.0f, 1.0f, 1.0f };
-		//	Vector3 localRotation = { 0.f, 0.f, 0.f };
-		//	Vector3 localTranslation = { 0.f, .0f, 0.f };
+			FBXBinaryData::Float4x4 offset4x4 = modelData->boneInfoList[boneIdx]->offsetMatrix;
+			Matrix offsetMatrix
+			(
+				offset4x4.m00, offset4x4.m01, offset4x4.m02, offset4x4.m03,
+				offset4x4.m10, offset4x4.m11, offset4x4.m12, offset4x4.m13,
+				offset4x4.m20, offset4x4.m21, offset4x4.m22, offset4x4.m23,
+				offset4x4.m30, offset4x4.m31, offset4x4.m32, offset4x4.m33
+			);
 
-		//	if (!gameObjects.empty())
-		//	{
-		//		boneObject->GetTransform()->SetParent(gameObjects[modelData->boneInfoList[boneIdx]->parentIndex]->GetTransform());
-		//		gameObjects[modelData->boneInfoList[boneIdx]->parentIndex]->SetChild(boneObject);
+			FBXBinaryData::Float4x4 node4x4 = modelData->boneInfoList[boneIdx]->nodeMatrix;
+			Matrix nodeMatrix
+			(
+				node4x4.m00, node4x4.m01, node4x4.m02, node4x4.m03,
+				node4x4.m10, node4x4.m11, node4x4.m12, node4x4.m13,
+				node4x4.m20, node4x4.m21, node4x4.m22, node4x4.m23,
+				node4x4.m30, node4x4.m31, node4x4.m32, node4x4.m33
+			);
 
-		//		XMMATRIX parentMatrixInverse = XMMatrixInverse(nullptr, gameObjects[modelData->boneInfoList[boneIdx]->parentIndex]->GetTransform()->GetWorldMatrix());
-		//		XMMATRIX multipleMatrix = XMMatrixMultiply(boneObject->GetTransform()->GetNodeMatrix(), parentMatrixInverse);
+			boneObject->GetComponent<Transform>()->SetBoneOffsetMatrix(offsetMatrix);
+			boneObject->GetComponent<Transform>()->SetNodeTM(nodeMatrix);
+			boneObject->AddComponent<MeshRenderer>();
+			boneObject->GetComponent<MeshRenderer>()->SetMeshID(0);				// cube는 0
+			shared_ptr<Material> boneMaterial = make_shared<Material>();
+			boneMaterial->name = "BoneMaterial";
+			boneMaterial->metallic = 0.0f;
+			boneMaterial->roughness = 0.0f;
+			GraphicsManager::Get()->SendMaterialData(boneMaterial);
+			boneObject->GetComponent<MeshRenderer>()->SetMaterial(boneMaterial->name);
+			boneObject->GetComponent<MeshRenderer>()->SetPixelShader(L"Model_PBR_PS");
 
-		//		Transform::DecomposeMatrix(multipleMatrix, localScale, localRotation, localTranslation);
-		//	}
-		//	else
-		//	{
-		//		Transform::DecomposeMatrix(boneObject->GetTransform()->GetNodeMatrix(), localScale, localRotation, localTranslation);
-		//	}
-		//	boneObject->GetComponent<Transform>()->SetLocalScale(localScale);
-		//	boneObject->GetComponent<Transform>()->SetLocalRotation(localRotation);
-		//	boneObject->GetComponent<Transform>()->SetLocalPosition(localTranslation);
-		//	boneObject->GetComponent<Transform>()->FixedUpdate();
+			Vector3 localScale = { 1.0f, 1.0f, 1.0f };
+			Vector3 localRotation = { 0.f, 0.f, 0.f };
+			Vector3 localTranslation = { 0.f, .0f, 0.f };
 
-		//	// 일단 모델의 애니메이션 클립 리스트를 돈다
-		//	for (auto& anim : modelData->animationClipList)
-		//	{
-		//		std::shared_ptr<AnimationClip> animationClip = std::make_shared<AnimationClip>();
-		//		animationClip->animationName = anim->animationName;
-		//		animationClip->frameRate = anim->frameRate;
-		//		animationClip->startKeyFrame = anim->startKeyFrame;
-		//		animationClip->endKeyFrame = anim->endKeyFrame;
-		//		animationClip->totalKeyFrame = anim->totalKeyFrame;
-		//		animationClip->tickPerFrame = anim->tickPerFrame;
+			if (!gameObjects.empty())
+			{
+				boneObject->GetTransform()->SetParent(gameObjects[modelData->boneInfoList[boneIdx]->parentIndex]->GetTransform());
+				gameObjects[modelData->boneInfoList[boneIdx]->parentIndex]->SetChild(boneObject);
 
-		//		// 애니메이션의 키프레임 리스트에서 boneIdx에 해당하는게 있으면 Animator 생성해주고 정보를 넣어준다.
-		//		if (!anim->keyFrameList[boneIdx].empty())
-		//		{
-		//			if (boneObject->GetComponent<Animator>() == nullptr)
-		//				boneObject->AddComponent<Animator>();
+				XMMATRIX parentMatrixInverse = XMMatrixInverse(nullptr, gameObjects[modelData->boneInfoList[boneIdx]->parentIndex]->GetTransform()->GetWorldMatrix());
+				XMMATRIX multipleMatrix = XMMatrixMultiply(boneObject->GetTransform()->GetNodeMatrix(), parentMatrixInverse);
 
-		//			for (int keyIdx = 0; keyIdx < anim->keyFrameList[boneIdx].size(); keyIdx++)
-		//			{
-		//				std::shared_ptr<AnimKeyFrame> animKeyFrame = std::make_shared<AnimKeyFrame>();
-		//				animKeyFrame->time = anim->keyFrameList[boneIdx][keyIdx]->time;
-		//				animKeyFrame->localTransform = anim->keyFrameList[boneIdx][keyIdx]->localTransform;
-		//				animKeyFrame->localRotation = anim->keyFrameList[boneIdx][keyIdx]->localRotation;
-		//				animKeyFrame->localScale = anim->keyFrameList[boneIdx][keyIdx]->localScale;
+				Transform::DecomposeMatrix(multipleMatrix, localScale, localRotation, localTranslation);
+			}
+			else
+			{
+				Transform::DecomposeMatrix(boneObject->GetTransform()->GetNodeMatrix(), localScale, localRotation, localTranslation);
+			}
+			boneObject->GetComponent<Transform>()->SetLocalScale(localScale);
+			boneObject->GetComponent<Transform>()->SetLocalRotation(localRotation);
+			boneObject->GetComponent<Transform>()->SetLocalPosition(localTranslation);
+			boneObject->GetComponent<Transform>()->FixedUpdate();
 
-		//				animationClip->keyFrame.push_back(animKeyFrame);
-		//			}
+			// 일단 모델의 애니메이션 클립 리스트를 돈다
+			for (auto& anim : modelData->animationClipList)
+			{
+				std::shared_ptr<AnimationClip> animationClip = std::make_shared<AnimationClip>();
+				animationClip->animationName = anim->animationName;
+				animationClip->frameRate = anim->frameRate;
+				animationClip->startKeyFrame = anim->startKeyFrame;
+				animationClip->endKeyFrame = anim->endKeyFrame;
+				animationClip->totalKeyFrame = anim->totalKeyFrame;
+				animationClip->tickPerFrame = anim->tickPerFrame;
 
-		//			boneObject->GetComponent<Animator>()->SetAnimClip(anim->animationName, animationClip);
-		//		}
-		//	}
+				// 애니메이션의 키프레임 리스트에서 boneIdx에 해당하는게 있으면 Animator 생성해주고 정보를 넣어준다.
+				if (!anim->keyFrameList[boneIdx].empty())
+				{
+					if (boneObject->GetComponent<Animator>() == nullptr)
+						boneObject->AddComponent<Animator>();
 
-		//	boneMap.insert(make_pair(modelData->boneInfoList[boneIdx]->boneName, boneObject));
+					for (int keyIdx = 0; keyIdx < anim->keyFrameList[boneIdx].size(); keyIdx++)
+					{
+						std::shared_ptr<AnimKeyFrame> animKeyFrame = std::make_shared<AnimKeyFrame>();
+						animKeyFrame->time = anim->keyFrameList[boneIdx][keyIdx]->time;
+						Vector3 localTransform = { anim->keyFrameList[boneIdx][keyIdx]->localTransform.x, anim->keyFrameList[boneIdx][keyIdx]->localTransform.y, anim->keyFrameList[boneIdx][keyIdx]->localTransform.z };
+						Vector4 localRotation = { anim->keyFrameList[boneIdx][keyIdx]->localRotation.x,  anim->keyFrameList[boneIdx][keyIdx]->localRotation.y,  anim->keyFrameList[boneIdx][keyIdx]->localRotation.z, anim->keyFrameList[boneIdx][keyIdx]->localRotation.w };
+						Vector3 localScale = { anim->keyFrameList[boneIdx][keyIdx]->localScale.x, anim->keyFrameList[boneIdx][keyIdx]->localScale.y, anim->keyFrameList[boneIdx][keyIdx]->localScale.z};
+						animKeyFrame->localTransform = localTransform;
+						animKeyFrame->localRotation = localRotation;
+						animKeyFrame->localScale = localScale;
 
-		//	gameObjects.push_back(boneObject);
-		//}
+						animationClip->keyFrame.push_back(animKeyFrame);
+					}
 
-		//for (auto& mesh : modelData->meshInfoList)
-		//{
-		//	std::vector<SkinnedMeshVertex> skinnedMeshVertices;
+					boneObject->GetComponent<Animator>()->SetAnimClip(anim->animationName, animationClip);
+				}
+			}
 
-		//	for (auto& vertex : mesh->meshVertexList)
-		//	{
-		//		SkinnedMeshVertex skinnedMeshVertex;
-		//		skinnedMeshVertex.position = vertex.position;
-		//		skinnedMeshVertex.color = vertex.color;
-		//		skinnedMeshVertex.uv = vertex.uv;
-		//		skinnedMeshVertex.normal = vertex.normal;
-		//		skinnedMeshVertex.tangent = vertex.tangent;
+			boneMap.insert(make_pair(modelData->boneInfoList[boneIdx]->boneName, boneObject));
 
-		//		for (int weightCnt = 0; weightCnt < 8; weightCnt++)
-		//		{
-		//			skinnedMeshVertex.weights[weightCnt] = vertex.weights[weightCnt];
-		//			skinnedMeshVertex.boneIndices[weightCnt] = vertex.boneIndices[weightCnt];
-		//		}
+			gameObjects.push_back(boneObject);
+		}
 
-		//		skinnedMeshVertices.push_back(skinnedMeshVertex);
-		//	}
+		for (auto& mesh : modelData->meshInfoList)
+		{
+			std::vector<SkinnedMeshVertex> skinnedMeshVertices;
 
-		//	// 해당 메시의 vertices, indices 그래픽스 ResourceManager에등록과 해당 meshID를 가져온다.
-		//	size_t meshID = GraphicsManager::Get()->CreateMesh(
-		//		skinnedMeshVertices,
-		//		mesh->indices,
-		//		topology,
-		//		rasterizerState);
+			for (auto& vertex : mesh->meshVertexList)
+			{
+				SkinnedMeshVertex skinnedMeshVertex;
+				Vector3 position = { vertex.position.x, vertex.position.y, vertex.position.z };
+				Vector4 color = { vertex.color.x, vertex.color.y, vertex.color.z, vertex.color.w };
+				Vector2 uv = { vertex.uv.x, vertex.uv.y };
+				Vector3 normal = { vertex.normal.x, vertex.normal.y, vertex.normal.z };
+				Vector3 tangent = { vertex.tangent.x, vertex.tangent.y, vertex.tangent.z };
+				skinnedMeshVertex.position = position;
+				skinnedMeshVertex.color = color;
+				skinnedMeshVertex.uv = uv;
+				skinnedMeshVertex.normal = normal;
+				skinnedMeshVertex.tangent = tangent;
 
-		//	std::shared_ptr<GameObject> gameObject = std::make_shared<GameObject>();
-		//	gameObject->SetName(mesh->meshName);
-		//	gameObject->AddComponent<Transform>();
-		//	gameObject->GetComponent<Transform>()->SetNodeTM(mesh->nodeTM);		// NodeTM 넣기
-		//	gameObject->AddComponent<MeshRenderer>();
-		//	gameObject->GetComponent<MeshRenderer>()->IsSkinnedMesh(mesh->isSkinned);
-		//	gameObject->GetComponent<MeshRenderer>()->SetMeshID(meshID);		// meshID 등록
+				for (int weightCnt = 0; weightCnt < 8; weightCnt++)
+				{
+					skinnedMeshVertex.weights[weightCnt] = vertex.weights[weightCnt];
+					skinnedMeshVertex.boneIndices[weightCnt] = vertex.boneIndices[weightCnt];
+				}
 
-		//	Vector3 localScale = { 1.0f, 1.0f, 1.0f };
-		//	Vector3 localRotation = { 0.f, 0.f, 0.f };
-		//	Vector3 localTranslation = { 0.f, .0f, 0.f };
-		//	Transform::DecomposeMatrix(gameObject->GetTransform()->GetNodeMatrix(), localScale, localRotation, localTranslation);
-		//	gameObject->GetComponent<Transform>()->SetLocalScale(localScale);
-		//	gameObject->GetComponent<Transform>()->SetLocalRotation(localRotation);
-		//	gameObject->GetComponent<Transform>()->SetLocalPosition(localTranslation);
-		//	gameObject->GetComponent<Transform>()->FixedUpdate();
+				skinnedMeshVertices.push_back(skinnedMeshVertex);
+			}
 
-		//	// Bone에 의해 영향을 받는 Mesh라면
-		//	if (mesh->isSkinned == true)
-		//	{
-		//		for (auto& bone : modelData->boneInfoList)
-		//		{
-		//			gameObject->GetComponent<MeshRenderer>()->SetBoneObject(boneMap[bone->boneName]);
-		//		}
-		//	}
+			// 해당 메시의 vertices, indices 그래픽스 ResourceManager에등록과 해당 meshID를 가져온다.
+			size_t meshID = GraphicsManager::Get()->CreateMesh(
+				skinnedMeshVertices,
+				mesh->indices,
+				topology,
+				rasterizerState);
 
-		//	// 메시 하나당 머터리얼 하나
-		//	for (auto& mat : modelData->materialList)
-		//	{
-		//		if (mesh->materialName == mat->materialName)
-		//		{
-		//			std::shared_ptr<Material> material = std::make_shared<Material>();
+			std::shared_ptr<GameObject> gameObject = std::make_shared<GameObject>();
+			gameObject->SetName(mesh->meshName);
+			gameObject->AddComponent<Transform>();
+			Matrix matrix
+			(
+				mesh->nodeTM.m00, mesh->nodeTM.m01, mesh->nodeTM.m02, mesh->nodeTM.m03,
+				mesh->nodeTM.m10, mesh->nodeTM.m11, mesh->nodeTM.m12, mesh->nodeTM.m13,
+				mesh->nodeTM.m20, mesh->nodeTM.m21, mesh->nodeTM.m22, mesh->nodeTM.m23,
+				mesh->nodeTM.m30, mesh->nodeTM.m31, mesh->nodeTM.m32, mesh->nodeTM.m33
+			);
+			gameObject->GetComponent<Transform>()->SetNodeTM(matrix);		// NodeTM 넣기
+			gameObject->AddComponent<MeshRenderer>();
+			gameObject->GetComponent<MeshRenderer>()->IsSkinnedMesh(mesh->isSkinned);
+			gameObject->GetComponent<MeshRenderer>()->SetMeshID(meshID);		// meshID 등록
 
-		//			material->name = mat->materialName;
+			Vector3 localScale = { 1.0f, 1.0f, 1.0f };
+			Vector3 localRotation = { 0.f, 0.f, 0.f };
+			Vector3 localTranslation = { 0.f, .0f, 0.f };
+			Transform::DecomposeMatrix(gameObject->GetTransform()->GetNodeMatrix(), localScale, localRotation, localTranslation);
+			gameObject->GetComponent<Transform>()->SetLocalScale(localScale);
+			gameObject->GetComponent<Transform>()->SetLocalRotation(localRotation);
+			gameObject->GetComponent<Transform>()->SetLocalPosition(localTranslation);
+			gameObject->GetComponent<Transform>()->FixedUpdate();
 
-		//			material->metallic = 0.1f;
-		//			material->roughness = 0.0f;
+			// Bone에 의해 영향을 받는 Mesh라면
+			if (mesh->isSkinned == true)
+			{
+				for (auto& bone : modelData->boneInfoList)
+				{
+					gameObject->GetComponent<MeshRenderer>()->SetBoneObject(boneMap[bone->boneName]);
+				}
+			}
 
-		//			material->albedoMap = mat->albedoMap;
-		//			material->normalMap = mat->normalMap;
-		//			material->metallicMap = mat->metallicMap;
-		//			material->roughnessMap = mat->roughnessMap;
-		//			material->AOMap = mat->AOMap;
-		//			material->emissiveMap = mat->emissiveMap;
+			// 메시 하나당 머터리얼 하나
+			for (auto& mat : modelData->materialList)
+			{
+				if (mesh->materialName == mat->materialName)
+				{
+					std::shared_ptr<Material> material = std::make_shared<Material>();
 
-		//			if (material->albedoMap != L"" && material->normalMap != L"" && material->metallicMap != L"" && material->roughnessMap != L""
-		//				&& material->AOMap != L"" && material->emissiveMap != L"")
-		//			{
-		//				gameObject->GetComponent<MeshRenderer>()->SetPixelShader(L"Model_PBR_CNMRAE_PS");
-		//			}
-		//			else if (material->albedoMap != L"" && material->normalMap != L"" && material->metallicMap != L"" && material->roughnessMap != L""
-		//				&& material->AOMap != L"" && material->emissiveMap == L"")
-		//			{
-		//				gameObject->GetComponent<MeshRenderer>()->SetPixelShader(L"Model_PBR_CNMRA_PS");
-		//			}
-		//			else if (material->albedoMap != L"" && material->normalMap != L"" && material->metallicMap == L"" && material->roughnessMap == L""
-		//				&& material->AOMap != L"" && material->emissiveMap == L"")
-		//			{
-		//				gameObject->GetComponent<MeshRenderer>()->SetPixelShader(L"Model_PBR_CNA_PS");
-		//			}
-		//			else if (material->albedoMap != L"" && material->normalMap != L"" && material->metallicMap != L"" && material->roughnessMap != L""
-		//				&& material->AOMap == L"" && material->emissiveMap == L"")
-		//			{
-		//				gameObject->GetComponent<MeshRenderer>()->SetPixelShader(L"Model_PBR_CNMR_PS");
-		//			}
-		//			else if (material->albedoMap != L"" && material->normalMap == L"" && material->metallicMap != L"" && material->roughnessMap != L""
-		//				&& material->AOMap == L"" && material->emissiveMap == L"")
-		//			{
-		//				gameObject->GetComponent<MeshRenderer>()->SetPixelShader(L"Model_PBR_CMR_PS");
-		//			}
-		//			else if (material->albedoMap != L"" && material->normalMap != L"" && material->metallicMap == L"" && material->roughnessMap == L""
-		//				&& material->AOMap == L"" && material->emissiveMap == L"")
-		//			{
-		//				gameObject->GetComponent<MeshRenderer>()->SetPixelShader(L"Model_PBR_CN_PS");
-		//			}
-		//			else if (material->albedoMap != L"" && material->normalMap == L"" && material->metallicMap == L"" && material->roughnessMap == L""
-		//				&& material->AOMap == L"" && material->emissiveMap == L"")
-		//			{
-		//				gameObject->GetComponent<MeshRenderer>()->SetPixelShader(L"Model_PBR_C_PS");
-		//			}
-		//			else
-		//			{
-		//				gameObject->GetComponent<MeshRenderer>()->SetPixelShader(L"Model_PBR_PS");
-		//			}
+					material->name = mat->materialName;
 
-		//			GraphicsManager::Get()->SendMaterialData(material);
+					material->metallic = 0.1f;
+					material->roughness = 0.0f;
 
-		//			gameObject->GetComponent<MeshRenderer>()->SetMaterial(mat->materialName);
+					material->albedoMap = mat->albedoMap;
+					material->normalMap = mat->normalMap;
+					material->metallicMap = mat->metallicMap;
+					material->roughnessMap = mat->roughnessMap;
+					material->AOMap = mat->AOMap;
+					material->emissiveMap = mat->emissiveMap;
 
-		//			break;
-		//		}
-		//	}
+					if (material->albedoMap != L"" && material->normalMap != L"" && material->metallicMap != L"" && material->roughnessMap != L""
+						&& material->AOMap != L"" && material->emissiveMap != L"")
+					{
+						gameObject->GetComponent<MeshRenderer>()->SetPixelShader(L"Model_PBR_CNMRAE_PS");
+					}
+					else if (material->albedoMap != L"" && material->normalMap != L"" && material->metallicMap != L"" && material->roughnessMap != L""
+						&& material->AOMap != L"" && material->emissiveMap == L"")
+					{
+						gameObject->GetComponent<MeshRenderer>()->SetPixelShader(L"Model_PBR_CNMRA_PS");
+					}
+					else if (material->albedoMap != L"" && material->normalMap != L"" && material->metallicMap == L"" && material->roughnessMap == L""
+						&& material->AOMap != L"" && material->emissiveMap == L"")
+					{
+						gameObject->GetComponent<MeshRenderer>()->SetPixelShader(L"Model_PBR_CNA_PS");
+					}
+					else if (material->albedoMap != L"" && material->normalMap != L"" && material->metallicMap != L"" && material->roughnessMap != L""
+						&& material->AOMap == L"" && material->emissiveMap == L"")
+					{
+						gameObject->GetComponent<MeshRenderer>()->SetPixelShader(L"Model_PBR_CNMR_PS");
+					}
+					else if (material->albedoMap != L"" && material->normalMap == L"" && material->metallicMap != L"" && material->roughnessMap != L""
+						&& material->AOMap == L"" && material->emissiveMap == L"")
+					{
+						gameObject->GetComponent<MeshRenderer>()->SetPixelShader(L"Model_PBR_CMR_PS");
+					}
+					else if (material->albedoMap != L"" && material->normalMap != L"" && material->metallicMap == L"" && material->roughnessMap == L""
+						&& material->AOMap == L"" && material->emissiveMap == L"")
+					{
+						gameObject->GetComponent<MeshRenderer>()->SetPixelShader(L"Model_PBR_CN_PS");
+					}
+					else if (material->albedoMap != L"" && material->normalMap == L"" && material->metallicMap == L"" && material->roughnessMap == L""
+						&& material->AOMap == L"" && material->emissiveMap == L"")
+					{
+						gameObject->GetComponent<MeshRenderer>()->SetPixelShader(L"Model_PBR_C_PS");
+					}
+					else
+					{
+						gameObject->GetComponent<MeshRenderer>()->SetPixelShader(L"Model_PBR_PS");
+					}
 
-		//	if (mesh->materialName == "")
-		//		gameObject->GetComponent<MeshRenderer>()->SetPixelShader(L"Model_PBR_PS");
+					GraphicsManager::Get()->SendMaterialData(material);
 
-		//	gameObjects.push_back(gameObject);
-		//}
+					gameObject->GetComponent<MeshRenderer>()->SetMaterial(mat->materialName);
+
+					break;
+				}
+			}
+
+			if (mesh->materialName == "")
+				gameObject->GetComponent<MeshRenderer>()->SetPixelShader(L"Model_PBR_PS");
+
+			gameObjects.push_back(gameObject);
+		}
 	}
 	// Animation이 없는 경우 StaticMesh
 	else
@@ -1077,7 +1111,7 @@ std::vector<std::shared_ptr<GameObject>> Resources::LoadFBXBinary(std::string pa
 					material->metallic = 0.1f;
 					material->roughness = 0.0f;
 
-					//material->albedoMap = mat->albedoMap;
+					material->albedoMap = mat->albedoMap;
 					material->normalMap = mat->normalMap;
 					material->metallicMap = mat->metallicMap;
 					material->roughnessMap = mat->roughnessMap;

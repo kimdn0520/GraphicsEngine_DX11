@@ -31,7 +31,7 @@ std::shared_ptr<FBXModel> FBXParser::LoadFbx(const std::string& path)
 
 	std::shared_ptr<BinarySerializer> s = std::make_shared<BinarySerializer>();
 
-	s->SaveBinaryFile(fbxModel, "text", path);
+	s->SaveBinaryFile(fbxModel, "test", path);
 
 	return fbxModel;
 }
@@ -267,12 +267,7 @@ void FBXParser::LoadMesh(fbxsdk::FbxNode* node, fbxsdk::FbxMesh* mesh)
 
 	const int triCount = mesh->GetPolygonCount(); // 메쉬의 삼각형 개수를 가져온다
 
-	// 중복 체크를 위한 것
-	std::vector<bool> isVertex(vertexCount, false);
-
-	std::unordered_map<int, std::vector<std::pair<DirectX::SimpleMath::Vector2, DirectX::SimpleMath::Vector3>>> vertexMap;
-
-	std::tuple<int ,DirectX::SimpleMath::Vector2, DirectX::SimpleMath::Vector3> vertexTuple;
+	std::map<std::tuple<unsigned, unsigned, float, float, float>, unsigned> indexMap;
 
 	for (int i = 0; i < triCount; i++) // 삼각형의 개수
 	{
@@ -282,130 +277,48 @@ void FBXParser::LoadMesh(fbxsdk::FbxNode* node, fbxsdk::FbxMesh* mesh)
 
 			arrIdx[j] = controlPointIndex;
 
-			//// map에 없으면 insert
-			//if (vertexMap.find(controlPointIndex) == vertexMap.end())
-			//{
-			//	// uv 정보를 가져온다.
-			//	if (mesh->GetElementUVCount() >= 1)
-			//		GetUV(mesh, meshInfo, controlPointIndex, mesh->GetTextureUVIndex(i, j));
+			int uvIndex = -1;
 
-			//	// normal 정보를 가져온다.
-			//	if (mesh->GetElementNormalCount() >= 1)
-			//		GetNormal(mesh, meshInfo, controlPointIndex, vertexCounter);
+			if (mesh->GetElementUVCount() >= 1)
+				uvIndex = mesh->GetTextureUVIndex(i, j);
 
-			//	vertexMap[controlPointIndex].push_back(
-			//		std::make_pair(meshInfo->meshVertexList[controlPointIndex].uv
-			//		, meshInfo->meshVertexList[controlPointIndex].normal));
-			//}
-			//// map에 있던거라면 비교해준다.
-			//else
-			//{
-			//	DirectX::SimpleMath::Vector2 fbxUV = { 0.f, 0.f };
+			DirectX::SimpleMath::Vector3 fbxNormal = { -1.f, -1.f, -1.f };
 
-			//	if (mesh->GetElementUVCount() >= 1)
-			//	{
-			//		FbxVector2 uv = mesh->GetElementUV()->GetDirectArray().GetAt(mesh->GetTextureUVIndex(i, j));
+			if (mesh->GetElementNormalCount() >= 1)
+			{
+				FbxGeometryElementNormal* normal = mesh->GetElementNormal();
+				int normalIdx = 0;
 
-			//		fbxUV.x = static_cast<float>(uv.mData[0]);
-			//		fbxUV.y = 1.f - static_cast<float>(uv.mData[1]);
-			//	}
+				// 인덱스를 기준으로 노멀 값이 들어간다
+				// 버텍스 스플릿이 필요하다.
+				if (normal->GetMappingMode() == FbxGeometryElement::eByPolygonVertex)
+				{
+					if (normal->GetReferenceMode() == FbxGeometryElement::eDirect)
+						normalIdx = vertexCounter;
+					else
+						normalIdx = normal->GetIndexArray().GetAt(vertexCounter);
+				}
+				// 정점을 기준으로 노멀 값이 들어간다.
+				else if (normal->GetMappingMode() == FbxGeometryElement::eByControlPoint)
+				{
+					if (normal->GetReferenceMode() == FbxGeometryElement::eDirect)
+						normalIdx = controlPointIndex;
+					else
+						normalIdx = normal->GetIndexArray().GetAt(controlPointIndex);
+				}
 
-			//	DirectX::SimpleMath::Vector3 fbxNormal = { 0.f, 0.f, 0.f };
+				FbxVector4 vec = normal->GetDirectArray().GetAt(normalIdx);
+				fbxNormal.x = static_cast<float>(vec.mData[0]);
+				fbxNormal.y = static_cast<float>(vec.mData[2]);
+				fbxNormal.z = static_cast<float>(vec.mData[1]);
+			}
 
-			//	if (mesh->GetElementNormalCount() >= 1)
-			//	{
-			//		FbxGeometryElementNormal* normal = mesh->GetElementNormal();
-			//		int normalIdx = 0;
+			const auto indexPair = std::make_tuple(controlPointIndex, uvIndex, fbxNormal.x, fbxNormal.y, fbxNormal.z);
 
-			//		// 인덱스를 기준으로 노멀 값이 들어간다
-			//		// 버텍스 스플릿이 필요하다.
-			//		if (normal->GetMappingMode() == FbxGeometryElement::eByPolygonVertex)
-			//		{
-			//			if (normal->GetReferenceMode() == FbxGeometryElement::eDirect)
-			//				normalIdx = vertexCounter;
-			//			else
-			//				normalIdx = normal->GetIndexArray().GetAt(vertexCounter);
-			//		}
-			//		// 정점을 기준으로 노멀 값이 들어간다.
-			//		else if (normal->GetMappingMode() == FbxGeometryElement::eByControlPoint)
-			//		{
-			//			if (normal->GetReferenceMode() == FbxGeometryElement::eDirect)
-			//				normalIdx = controlPointIndex;
-			//			else
-			//				normalIdx = normal->GetIndexArray().GetAt(controlPointIndex);
-			//		}
+			const auto iter = indexMap.find(indexPair);
 
-			//		FbxVector4 vec = normal->GetDirectArray().GetAt(normalIdx);
-			//		fbxNormal.x = static_cast<float>(vec.mData[0]);
-			//		fbxNormal.y = static_cast<float>(vec.mData[2]);
-			//		fbxNormal.z = static_cast<float>(vec.mData[1]);
-			//	}
-
-
-			//	bool isUV = false;
-			//	bool isNormal = false;
-			//	bool isNew = true;		// 새로운 버텍스를 제작해야함
-
-			//	for (int controlCnt = 0; controlCnt < vertexMap[controlPointIndex].size(); controlCnt++)
-			//	{
-			//		if (fbxUV == vertexMap[controlPointIndex][controlCnt].first)
-			//		{
-			//			isUV = true;
-			//		}
-
-			//		if (fbxNormal == vertexMap[controlPointIndex][controlCnt].second)
-			//		{
-			//			isNormal = true;
-			//		}
-
-			//		// uv랑 normal이 동일한걸 찾았다면 기존에 있던 버텍스를 쓴다.
-			//		if (isUV == true && isNormal == true)
-			//		{
-			//			meshInfo->meshVertexList[controlPointIndex].uv.x = static_cast<float>(fbxUV.x);
-			//			meshInfo->meshVertexList[controlPointIndex].uv.y = static_cast<float>(fbxUV.y);
-
-			//			meshInfo->meshVertexList[controlPointIndex].normal.x = static_cast<float>(fbxNormal.x);
-			//			meshInfo->meshVertexList[controlPointIndex].normal.y = static_cast<float>(fbxNormal.y);
-			//			meshInfo->meshVertexList[controlPointIndex].normal.z = static_cast<float>(fbxNormal.z);
-			//			
-			//			isNew = false;
-			//			break;
-			//		}
-
-			//		isUV = false;
-			//		isNormal = false;
-			//	}
-
-			//	// uv, normal이 동일한걸 못찾았다면 새로만들어 준다.
-			//	if (isNew == true)
-			//	{
-			//		// map에 추가해주고..
-			//		vertexMap[controlPointIndex].push_back(std::make_pair(fbxUV, fbxNormal));
-
-			//		Vertex vertex;
-			//		vertex.position = meshInfo->meshVertexList[controlPointIndex].position;	// 포지션은 동일
-
-			//		// 가중치 정보 동일
-			//		for (int weightIdx = 0; weightIdx < 8; weightIdx++)
-			//		{
-			//			vertex.weights[weightIdx] = meshInfo->meshVertexList[controlPointIndex].weights[weightIdx];
-
-			//			vertex.boneIndices[weightIdx] = meshInfo->meshVertexList[controlPointIndex].boneIndices[weightIdx];
-			//		}
-
-			//		meshInfo->meshVertexList.push_back(vertex);								// 새로운 버텍스 삽입
-
-			//		controlPointIndex = meshInfo->meshVertexList.size() - 1;				// index 새로운 버텍스 껄로 바꾸기
-
-			//		arrIdx[j] = controlPointIndex;
-
-			//		meshInfo->meshVertexList[controlPointIndex].uv = fbxUV;
-			//		meshInfo->meshVertexList[controlPointIndex].normal = fbxNormal;
-			//	}
-			//}
-
-			// 나왔었던 controlPointIndex 라면 새로운 버텍스 생성 및 controlPointIndex 값 바꿔주기 
-			if (isVertex[controlPointIndex] == true)
+			// map에 없으면 insert 및 새로운 버텍스 제작
+			if (iter == indexMap.end())
 			{
 				Vertex vertex;
 				vertex.position = meshInfo->meshVertexList[controlPointIndex].position;	// 포지션은 동일
@@ -418,27 +331,32 @@ void FBXParser::LoadMesh(fbxsdk::FbxNode* node, fbxsdk::FbxMesh* mesh)
 					vertex.boneIndices[weightIdx] = meshInfo->meshVertexList[controlPointIndex].boneIndices[weightIdx];
 				}
 
+				vertex.uv = { -1.f, -1.f };
+
+				if (uvIndex != -1)
+				{
+					FbxVector2 fbxUV = mesh->GetElementUV()->GetDirectArray().GetAt(uvIndex);
+
+					vertex.uv = DirectX::SimpleMath::Vector2(static_cast<float>(fbxUV.mData[0]), 1.f - static_cast<float>(fbxUV.mData[1]));
+				}
+
+				vertex.normal = fbxNormal;
+
 				meshInfo->meshVertexList.push_back(vertex);								// 새로운 버텍스 삽입
 
 				controlPointIndex = meshInfo->meshVertexList.size() - 1;				// index 새로운 버텍스 껄로 바꾸기
 
-				isVertex.push_back(true);
+				arrIdx[j] = controlPointIndex;
+
+				indexMap.insert({ indexPair, controlPointIndex });
+			}
+			// map에 있던거라면
+			else
+			{
+				arrIdx[j] = iter->second;
 			}
 
-			arrIdx[j] = controlPointIndex;
-
-			// uv 정보를 가져온다.
-			if(mesh->GetElementUVCount() >= 1)
-				GetUV(mesh, meshInfo, controlPointIndex, mesh->GetTextureUVIndex(i, j));
-
-			// normal 정보를 가져온다.
-			if(mesh->GetElementNormalCount() >= 1)
-				GetNormal(mesh, meshInfo, controlPointIndex, vertexCounter);
-
 			vertexCounter++;
-
-			// 나왔었던 controlPointIndex면 true
-			isVertex[controlPointIndex] = true;
 		}
 
 		meshInfo->indices.push_back(arrIdx[0]);

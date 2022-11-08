@@ -47,7 +47,7 @@ void BinarySerializer::SaveBinaryFile(std::shared_ptr<FBXModel> fbxModel, std::s
 			material_Ambient, material_Diffuse, material_Specular, material_Emissive, mat->material_Transparency, mat->material_Reflectivity,
 			mat->metallic, mat->roughness);
 
-		materialList.push_back(materialData);
+		materialList.emplace_back(materialData);
 	}
 
 	std::vector<std::shared_ptr<FBXBinaryData::BoneData>> boneInfoList;
@@ -57,7 +57,7 @@ void BinarySerializer::SaveBinaryFile(std::shared_ptr<FBXModel> fbxModel, std::s
 		std::shared_ptr<FBXBinaryData::BoneData> boneData = std::make_shared<FBXBinaryData::BoneData>(
 			bone->boneName, bone->parentIndex, ConvertFloat4x4(bone->offsetMatrix), ConvertFloat4x4(bone->nodeMatrix));
 
-		boneInfoList.push_back(boneData);
+		boneInfoList.emplace_back(boneData);
 	}
 
 	std::vector<std::shared_ptr<FBXBinaryData::AnimationClipData>> animationClipList;
