@@ -48,16 +48,16 @@ struct FBXMaterialInfo
 	std::wstring AOMap;
 	std::wstring emissiveMap;
 
-	DirectX::SimpleMath::Vector4 material_Ambient;
-	DirectX::SimpleMath::Vector4 material_Diffuse;
-	DirectX::SimpleMath::Vector4 material_Specular;
-	DirectX::SimpleMath::Vector4 material_Emissive;
+	DirectX::SimpleMath::Vector4 material_Ambient = { 0.f, 0.f, 0.f, 0.f };
+	DirectX::SimpleMath::Vector4 material_Diffuse = { 0.f, 0.f, 0.f, 0.f };
+	DirectX::SimpleMath::Vector4 material_Specular = { 0.f, 0.f, 0.f, 0.f };
+	DirectX::SimpleMath::Vector4 material_Emissive = { 0.f, 0.f, 0.f, 0.f };
 
-	float material_Transparency;	// 투명도
-	float material_Reflectivity;	// 반사율
+	float material_Transparency = 0.f;	// 투명도
+	float material_Reflectivity = 0.f;	// 반사율
 
-	float metallic;					// 금속성
-	float roughness;				// 거칠기
+	float metallic = 0.f;				// 금속성
+	float roughness = 0.f;				// 거칠기
 };
 
 struct FBXMeshInfo
@@ -68,7 +68,7 @@ struct FBXMeshInfo
 	std::vector<Vertex>				meshVertexList;
 	std::vector<unsigned int>		indices;
 
-	DirectX::SimpleMath::Matrix nodeTM;					// Node TransformMatrix
+	DirectX::SimpleMath::Matrix nodeTM = DirectX::XMMatrixIdentity();			// Node TransformMatrix
 
 	bool isSkinned = false;		// 스키닝오브젝트 인지 아닌지..
 };
@@ -79,17 +79,17 @@ struct FBXBoneInfo
 
 	int						parentIndex;
 
-	DirectX::SimpleMath::Matrix offsetMatrix;				// Bone's OffsetMatrix
-	DirectX::SimpleMath::Matrix nodeMatrix;					// Bone's NodeMatrix
+	DirectX::SimpleMath::Matrix offsetMatrix = DirectX::XMMatrixIdentity();		// Bone's OffsetMatrix
+	DirectX::SimpleMath::Matrix nodeMatrix = DirectX::XMMatrixIdentity();		// Bone's NodeMatrix
 };
 
 struct FBXKeyFrameInfo
 {
 	float		time;
 
-	DirectX::SimpleMath::Vector3 localTransform;
-	DirectX::SimpleMath::Quaternion localRotation;
-	DirectX::SimpleMath::Vector3 localScale;
+	DirectX::SimpleMath::Vector3 localTransform = { 0.f, 0.f, 0.f };
+	DirectX::SimpleMath::Quaternion localRotation = { 0.f, 0.f, 0.f, 0.f };
+	DirectX::SimpleMath::Vector3 localScale = { 0.f, 0.f, 0.f };
 };
 
 struct FBXAnimClipInfo

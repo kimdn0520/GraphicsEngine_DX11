@@ -5,6 +5,8 @@ namespace FBXBinaryData
 {
 	struct Float2
 	{
+		friend boost::serialization::access;
+
 		Float2() = default;
 
 		Float2(float _x, float _y)
@@ -24,6 +26,8 @@ namespace FBXBinaryData
 
 	struct Float3
 	{
+		friend boost::serialization::access;
+
 		Float3() = default;
 
 		Float3(float _x, float _y, float _z)
@@ -45,6 +49,8 @@ namespace FBXBinaryData
 
 	struct Float4
 	{
+		friend boost::serialization::access;
+
 		Float4() = default;
 
 		Float4(float _x, float _y, float _z, float _w)
@@ -68,6 +74,8 @@ namespace FBXBinaryData
 
 	struct Float4x4
 	{
+		friend boost::serialization::access;
+
 		union
 		{
 			struct
@@ -90,7 +98,7 @@ namespace FBXBinaryData
 
 	struct VertexData
 	{
-		VertexData() = default;
+		friend boost::serialization::access;
 
 		VertexData(
 			Float3 _position = { 0.f, 0.f, 0.f },
@@ -98,7 +106,11 @@ namespace FBXBinaryData
 			Float2 _uv = { 0.f, 0.f },
 			Float3 _normal = { 0.f, 0.f, 0.f },
 			Float3 _tangent = { 0.f, 0.f, 0.f })
-			: position(_position), normal(_normal), uv(_uv), tangent(_tangent), color(_color)
+			: position(std::move(_position))
+			, normal(std::move(_normal))
+			, uv(std::move(_uv))
+			, tangent(std::move(_tangent))
+			, color(std::move(_color))
 		{
 			for (int i = 0; i < 8; i++)
 			{
@@ -115,7 +127,7 @@ namespace FBXBinaryData
 
 		// Skinned Data
 		float weights[8];
-		int boneIndices[8];
+		short boneIndices[8];
 
 		template <typename Archive>
 		void serialize(Archive& ar, const unsigned int version)
@@ -158,18 +170,18 @@ namespace FBXBinaryData
 		{}
 
 	public:
-		std::string materialName = "";;
+		std::string materialName = "";
 
-		std::wstring albedoMap = L"";;
-		std::wstring normalMap = L"";;
-		std::wstring metallicMap = L"";;
-		std::wstring roughnessMap = L"";;
-		std::wstring AOMap = L"";;
+		std::wstring albedoMap = L"";
+		std::wstring normalMap = L"";
+		std::wstring metallicMap = L"";
+		std::wstring roughnessMap = L"";
+		std::wstring AOMap = L"";
 		std::wstring emissiveMap = L"";
 
-		Float4 material_Ambient = { 0.f, 0.f, 0.f, 0.f };;
-		Float4 material_Diffuse = { 0.f, 0.f, 0.f, 0.f };;
-		Float4 material_Specular = { 0.f, 0.f, 0.f, 0.f };;
+		Float4 material_Ambient = { 0.f, 0.f, 0.f, 0.f };
+		Float4 material_Diffuse = { 0.f, 0.f, 0.f, 0.f };
+		Float4 material_Specular = { 0.f, 0.f, 0.f, 0.f };
 		Float4 material_Emissive = { 0.f, 0.f, 0.f, 0.f };
 
 		float material_Transparency = 0.f;
@@ -184,12 +196,12 @@ namespace FBXBinaryData
 		{
 			ar& materialName;
 
-			ar& albedoMap;
-			ar& normalMap;
-			ar& metallicMap;
-			ar& roughnessMap;
-			ar& AOMap;
-			ar& emissiveMap;
+			ar& BOOST_SERIALIZATION_NVP(albedoMap);
+			ar& BOOST_SERIALIZATION_NVP(normalMap);
+			ar& BOOST_SERIALIZATION_NVP(metallicMap);
+			ar& BOOST_SERIALIZATION_NVP(roughnessMap);
+			ar& BOOST_SERIALIZATION_NVP(AOMap);
+			ar& BOOST_SERIALIZATION_NVP(emissiveMap);
 
 			ar& material_Ambient;
 			ar& material_Diffuse;
@@ -264,7 +276,7 @@ namespace FBXBinaryData
 	public:
 		std::string	boneName = "";
 
-		int			parentIndex = 0;
+		short 		parentIndex = 0;
 
 		Float4x4	offsetMatrix;
 		Float4x4	nodeMatrix;
@@ -319,7 +331,7 @@ namespace FBXBinaryData
 
 		AnimationClipData() = default;
 
-		AnimationClipData(std::string _animationName, float _frameRate, float _tickPerFrame, int _totalKeyFrame, int _startKeyFrame, int _endKeyFrame
+		AnimationClipData(std::string _animationName, float _frameRate, float _tickPerFrame, short  _totalKeyFrame, short  _startKeyFrame, short  _endKeyFrame
 			, std::vector<std::vector<std::shared_ptr<KeyFrameInfoData>>> _keyFrameList)
 			: animationName(std::move(_animationName))
 			, frameRate(std::move(_frameRate))
@@ -337,11 +349,11 @@ namespace FBXBinaryData
 
 		float tickPerFrame = 0.0f;
 
-		int totalKeyFrame = 0;
+		short  totalKeyFrame = 0;
 
-		int startKeyFrame = 0;
+		short  startKeyFrame = 0;
 
-		int endKeyFrame = 0;
+		short  endKeyFrame = 0;
 
 		std::vector<std::vector<std::shared_ptr<KeyFrameInfoData>>> keyFrameList;	 
 
@@ -385,7 +397,7 @@ namespace FBXBinaryData
 
 		std::vector<std::shared_ptr<AnimationClipData>> animationClipList;
 
-		bool isSkinnedAnimation;		
+		bool isSkinnedAnimation = false;		
 
 	private:
 		template<typename Archive>

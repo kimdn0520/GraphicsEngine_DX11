@@ -718,7 +718,7 @@ std::vector<std::shared_ptr<GameObject>> Resources::LoadFBX(std::string path, in
 					material->metallic = 0.1f;
 					material->roughness = 0.0f;
 
-					//material->albedoMap = mat->albedoMap;
+					material->albedoMap = mat->albedoMap;
 					material->normalMap = mat->normalMap;
 					material->metallicMap = mat->metallicMap;
 					material->roughnessMap = mat->roughnessMap;
