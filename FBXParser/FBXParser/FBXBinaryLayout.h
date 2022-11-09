@@ -196,12 +196,12 @@ namespace FBXBinaryData
 		{
 			ar& materialName;
 
-			ar& BOOST_SERIALIZATION_NVP(albedoMap);
-			ar& BOOST_SERIALIZATION_NVP(normalMap);
-			ar& BOOST_SERIALIZATION_NVP(metallicMap);
-			ar& BOOST_SERIALIZATION_NVP(roughnessMap);
-			ar& BOOST_SERIALIZATION_NVP(AOMap);
-			ar& BOOST_SERIALIZATION_NVP(emissiveMap);
+			ar& albedoMap;
+			ar& normalMap;
+			ar& metallicMap;
+			ar& roughnessMap;
+			ar& AOMap;
+			ar& emissiveMap;
 
 			ar& material_Ambient;
 			ar& material_Diffuse;
@@ -332,7 +332,7 @@ namespace FBXBinaryData
 		AnimationClipData() = default;
 
 		AnimationClipData(std::string _animationName, float _frameRate, float _tickPerFrame, short  _totalKeyFrame, short  _startKeyFrame, short  _endKeyFrame
-			, std::vector<std::vector<std::shared_ptr<KeyFrameInfoData>>> _keyFrameList)
+			, std::vector<std::vector<KeyFrameInfoData>> _keyFrameList)
 			: animationName(std::move(_animationName))
 			, frameRate(std::move(_frameRate))
 			, tickPerFrame(std::move(_tickPerFrame))
@@ -355,7 +355,7 @@ namespace FBXBinaryData
 
 		short  endKeyFrame = 0;
 
-		std::vector<std::vector<std::shared_ptr<KeyFrameInfoData>>> keyFrameList;	 
+		std::vector<std::vector<KeyFrameInfoData>> keyFrameList;	 
 
 	private:
 		template<typename Archive>
@@ -378,8 +378,8 @@ namespace FBXBinaryData
 
 		ModelData() = default;
 
-		ModelData(std::vector<std::shared_ptr<MeshData>> _meshInfoList, std::vector<std::shared_ptr<MaterialData>> _materialList
-		, std::vector<std::shared_ptr<BoneData>> _boneInfoList, std::vector<std::shared_ptr<AnimationClipData>> _animationList
+		ModelData(std::vector<MeshData> _meshInfoList, std::vector<MaterialData> _materialList
+		, std::vector<BoneData> _boneInfoList, std::vector<AnimationClipData> _animationList
 		, bool isSkinnedAnimation = false)
 			: meshInfoList(std::move(_meshInfoList))
 			, materialList(std::move(_materialList))
@@ -389,13 +389,13 @@ namespace FBXBinaryData
 		{}
 
 	public:
-		std::vector<std::shared_ptr<MeshData>> meshInfoList;
+		std::vector<MeshData> meshInfoList;
 
-		std::vector<std::shared_ptr<MaterialData>>	materialList;
+		std::vector<MaterialData>	materialList;
 
-		std::vector<std::shared_ptr<BoneData>> boneInfoList;
+		std::vector<BoneData> boneInfoList;
 
-		std::vector<std::shared_ptr<AnimationClipData>> animationClipList;
+		std::vector<AnimationClipData> animationClipList;
 
 		bool isSkinnedAnimation = false;		
 

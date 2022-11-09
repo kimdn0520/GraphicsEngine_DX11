@@ -6,9 +6,13 @@ void BinarySerializer::SaveBinaryFile(std::shared_ptr<FBXModel> fbxModel, std::s
 {
 	std::ofstream output(name + ".noob", std::ios_base::binary);
 
+	/*typedef std::vector<char> buffer_type;
+	buffer_type buffer;
+	boost::iostreams::stream<boost::iostreams::back_insert_device<buffer_type>> output(buffer);*/
+
 	boost::archive::binary_oarchive oa(output);				// 연 스트림을 넘겨주어서 직렬화 객체 초기화
 
-	std::vector<std::shared_ptr<FBXBinaryData::MeshData>> meshInfoList;
+	std::vector<FBXBinaryData::MeshData> meshInfoList;
 
 	for (auto& mesh : fbxModel->fbxMeshInfoList)
 	{
@@ -27,13 +31,12 @@ void BinarySerializer::SaveBinaryFile(std::shared_ptr<FBXModel> fbxModel, std::s
 			vertexDataList.emplace_back(vertexdata);
 		}
 
-		std::shared_ptr<FBXBinaryData::MeshData> meshData = std::make_shared<FBXBinaryData::MeshData>(
-			mesh->meshName, mesh->parentName, mesh->materialName, vertexDataList, mesh->indices, ConvertFloat4x4(mesh->nodeTM));
+		FBXBinaryData::MeshData meshData(mesh->meshName, mesh->parentName, mesh->materialName, vertexDataList, mesh->indices, ConvertFloat4x4(mesh->nodeTM));
 
 		meshInfoList.emplace_back(meshData);
 	}
 
-	std::vector<std::shared_ptr<FBXBinaryData::MaterialData>> materialList;
+	std::vector<FBXBinaryData::MaterialData> materialList;
 
 	for (auto& mat : fbxModel->materialList)
 	{
@@ -42,7 +45,7 @@ void BinarySerializer::SaveBinaryFile(std::shared_ptr<FBXModel> fbxModel, std::s
 		FBXBinaryData::Float4 material_Specular(mat->material_Specular.x, mat->material_Specular.y, mat->material_Specular.z, mat->material_Specular.w);
 		FBXBinaryData::Float4 material_Emissive(mat->material_Emissive.x, mat->material_Emissive.y, mat->material_Emissive.z, mat->material_Emissive.w);
 
-		std::shared_ptr<FBXBinaryData::MaterialData> materialData = std::make_shared<FBXBinaryData::MaterialData>(
+		FBXBinaryData::MaterialData materialData(
 			mat->materialName, mat->albedoMap, mat->normalMap, mat->metallicMap, mat->roughnessMap, mat->AOMap, mat->emissiveMap,
 			material_Ambient, material_Diffuse, material_Specular, material_Emissive, mat->material_Transparency, mat->material_Reflectivity,
 			mat->metallic, mat->roughness);
@@ -50,25 +53,24 @@ void BinarySerializer::SaveBinaryFile(std::shared_ptr<FBXModel> fbxModel, std::s
 		materialList.emplace_back(materialData);
 	}
 
-	std::vector<std::shared_ptr<FBXBinaryData::BoneData>> boneInfoList;
+	std::vector<FBXBinaryData::BoneData> boneInfoList;
 
 	for (auto& bone : fbxModel->fbxBoneInfoList)
 	{
-		std::shared_ptr<FBXBinaryData::BoneData> boneData = std::make_shared<FBXBinaryData::BoneData>(
-			bone->boneName, bone->parentIndex, ConvertFloat4x4(bone->offsetMatrix), ConvertFloat4x4(bone->nodeMatrix));
+		FBXBinaryData::BoneData boneData(bone->boneName, bone->parentIndex, ConvertFloat4x4(bone->offsetMatrix), ConvertFloat4x4(bone->nodeMatrix));
 
 		boneInfoList.emplace_back(boneData);
 	}
 
-	std::vector<std::shared_ptr<FBXBinaryData::AnimationClipData>> animationClipList;
+	std::vector<FBXBinaryData::AnimationClipData> animationClipList;
 
 	for (auto& anim : fbxModel->animationClipList)
 	{
-		std::vector<std::vector<std::shared_ptr<FBXBinaryData::KeyFrameInfoData>>> keyFrameInfoList;
+		std::vector<std::vector<FBXBinaryData::KeyFrameInfoData>> keyFrameInfoList;
 
 		for (auto& keyList : anim->keyFrameList)
 		{
-			std::vector<std::shared_ptr<FBXBinaryData::KeyFrameInfoData>> keyFrames;
+			std::vector<FBXBinaryData::KeyFrameInfoData> keyFrames;
 
 			for (auto& key : keyList)
 			{
@@ -76,8 +78,7 @@ void BinarySerializer::SaveBinaryFile(std::shared_ptr<FBXModel> fbxModel, std::s
 				FBXBinaryData::Float4 localRotation(key->localRotation.x, key->localRotation.y, key->localRotation.z, key->localRotation.w);
 				FBXBinaryData::Float3 localScale(key->localScale.x, key->localScale.y, key->localScale.z);
 
-				std::shared_ptr<FBXBinaryData::KeyFrameInfoData> keyFrameData = std::make_shared<FBXBinaryData::KeyFrameInfoData>(
-					key->time, localTransform, localRotation, localScale);
+				FBXBinaryData::KeyFrameInfoData keyFrameData(key->time, localTransform, localRotation, localScale);
 
 				keyFrames.emplace_back(keyFrameData);
 			}
@@ -85,15 +86,14 @@ void BinarySerializer::SaveBinaryFile(std::shared_ptr<FBXModel> fbxModel, std::s
 			keyFrameInfoList.emplace_back(keyFrames);
 		}
 
-		std::shared_ptr<FBXBinaryData::AnimationClipData> animData = std::make_shared<FBXBinaryData::AnimationClipData>(
+		FBXBinaryData::AnimationClipData animData(
 			anim->animationName, anim->frameRate, anim->tickPerFrame, anim->totalKeyFrame, anim->startKeyFrame, anim->endKeyFrame,
 			keyFrameInfoList);
 
 		animationClipList.emplace_back(animData);
 	}
 
-	std::shared_ptr<FBXBinaryData::ModelData> modelData = std::make_shared<FBXBinaryData::ModelData>(
-		meshInfoList, materialList, boneInfoList, animationClipList, fbxModel->isSkinnedAnimation);
+	FBXBinaryData::ModelData modelData(meshInfoList, materialList, boneInfoList, animationClipList, fbxModel->isSkinnedAnimation);
 
 	oa << modelData;
 }

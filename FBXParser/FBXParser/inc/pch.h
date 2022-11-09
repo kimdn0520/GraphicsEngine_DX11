@@ -30,6 +30,12 @@
 #include <boost/archive/binary_iarchive.hpp> 
 #include <boost/archive/binary_oarchive.hpp> 
 #include <boost/asio/streambuf.hpp>
+#include <boost/iostreams/filtering_stream.hpp>
+#include <boost/iostreams/device/back_inserter.hpp>
+#include <boost/iostreams/copy.hpp>
+#include <boost/iostreams/device/back_inserter.hpp>
+#include <boost/iostreams/stream_buffer.hpp>
+#include <boost/iostreams/stream.hpp>
 
 namespace fs = std::filesystem;
 
