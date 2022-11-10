@@ -4,13 +4,18 @@
 
 void BinarySerializer::SaveBinaryFile(std::shared_ptr<FBXModel> fbxModel, std::string name, std::string path)
 {
-	std::ofstream output(name + ".noob", std::ios_base::binary);
+	//std::ofstream output(name + ".noob", std::ios_base::binary);
 
-	/*typedef std::vector<char> buffer_type;
-	buffer_type buffer;
-	boost::iostreams::stream<boost::iostreams::back_insert_device<buffer_type>> output(buffer);*/
+	/*boost::iostreams::filtering_ostream ofs;
+	ofs.push(boost::iostreams::zlib_compressor());
+	ofs.push(boost::iostreams::file_sink(name + ".noob"));
+	boost::archive::binary_oarchive oa{ ofs };*/
 
-	boost::archive::binary_oarchive oa(output);				// 연 스트림을 넘겨주어서 직렬화 객체 초기화
+	std::ofstream ofs(name + ".noob", std::ios_base::binary);
+	boost::iostreams::filtering_stream<boost::iostreams::output> buffer;
+	buffer.push(boost::iostreams::zlib_compressor());
+	buffer.push(ofs);
+	boost::archive::binary_oarchive oa(buffer);
 
 	std::vector<FBXBinaryData::MeshData> meshInfoList;
 

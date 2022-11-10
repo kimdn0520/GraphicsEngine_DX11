@@ -793,9 +793,19 @@ std::vector<std::shared_ptr<GameObject>> Resources::LoadFBX(std::string path, in
 
 std::vector<std::shared_ptr<GameObject>> Resources::LoadFBXBinary(std::string path, int topology, int rasterizerState)
 {
-	ifstream input("test.noob", ios_base::binary);
+	//ifstream input("test.noob", ios_base::binary);
 
-	boost::archive::binary_iarchive ia(input);
+	/*boost::iostreams::filtering_istream input;
+	input.push(boost::iostreams::zlib_decompressor());
+	input.push(boost::iostreams::file_source("test.noob"));*/
+
+	std::ifstream ifs("test.noob", std::ios_base::binary);
+	boost::iostreams::filtering_streambuf<boost::iostreams::input> buffer;
+	buffer.push(boost::iostreams::zlib_decompressor());
+	buffer.push(ifs);
+	boost::archive::binary_iarchive ia(buffer);
+
+	//boost::archive::binary_iarchive ia(input);
 
 	FBXBinaryData::ModelData modelData;
 
