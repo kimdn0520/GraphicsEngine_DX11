@@ -33,10 +33,16 @@ void BinarySerializer::SaveBinaryFile(std::shared_ptr<FBXModel> fbxModel, std::s
 
 			FBXBinaryData::VertexData vertexdata(position, color, uv, normal, tangent);
 
+			for (int i = 0; i < 8; i++)
+			{
+				vertexdata.weights[i] = vertex.weights[i];
+				vertexdata.boneIndices[i] = vertex.boneIndices[i];
+			}
+
 			vertexDataList.emplace_back(vertexdata);
 		}
 
-		FBXBinaryData::MeshData meshData(mesh->meshName, mesh->parentName, mesh->materialName, vertexDataList, mesh->indices, ConvertFloat4x4(mesh->nodeTM));
+		FBXBinaryData::MeshData meshData(mesh->meshName, mesh->parentName, mesh->materialName, vertexDataList, mesh->indices, ConvertFloat4x4(mesh->nodeTM), mesh->isSkinned);
 
 		meshInfoList.emplace_back(meshData);
 	}

@@ -34,7 +34,7 @@ struct Vertex
 
 	// Skinned Data
 	float weights[8];
-	int boneIndices[8];
+	short boneIndices[8];
 };
 
 struct FBXMaterialInfo
