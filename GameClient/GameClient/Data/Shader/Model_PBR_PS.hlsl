@@ -74,6 +74,8 @@ PS_OUT Model_PBR_PS(ModelPixelIn input) : SV_Target
 
 #ifdef USE_EMISSIVE
 	emissive = EmissiveMap.Sample(samLinearClamp, input.uv);
+#else
+	emissive = float4(emissiveColor, 1.0f);
 #endif
 	 
 	PS_OUT pout = (PS_OUT)0;

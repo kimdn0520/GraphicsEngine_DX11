@@ -20,9 +20,9 @@ void DataManager::DataLoad()
 
 	//_dataResources.insert(std::make_pair("Crate", Resources::Get()->LoadFBX("Data/FBX/Wooden Crate.fbx", TOPOLOGY_TRIANGLELIST, RasterState_SOLID)));
 	
-	//_dataResources.insert(std::make_pair("Joy", Resources::Get()->LoadFBX("Data/FBX/Joy.fbx", TOPOLOGY_TRIANGLELIST, RasterState_SOLID)));
+	_dataResources.insert(std::make_pair("loby", Resources::Get()->LoadFBX("Data/FBX/loby2.fbx", TOPOLOGY_TRIANGLELIST, RasterState_SOLID)));
 
-	_dataResources.insert(std::make_pair("Joy", Resources::Get()->LoadFBXBinary("test.noob", TOPOLOGY_TRIANGLELIST, RasterState_SOLID)));
+	//_dataResources.insert(std::make_pair("Joy", Resources::Get()->LoadFBXBinary("test.noob", TOPOLOGY_TRIANGLELIST, RasterState_SOLID)));
 
 	//_dataResources.insert(std::make_pair("Joy", Resources::Get()->LoadFBX("Data/FBX/Joy.fbx", TOPOLOGY_TRIANGLELIST, RasterState_SOLID)));
 	
