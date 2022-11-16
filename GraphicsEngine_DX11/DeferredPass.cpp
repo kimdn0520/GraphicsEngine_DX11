@@ -149,7 +149,11 @@ void DeferredPass::Render(std::vector<std::shared_ptr<ObjectInfo>> objInfos, std
 			
 			cbMaterial cbMaterialBuffer;
 			cbMaterialBuffer.metallic = _mat->metallic;
-			cbMaterialBuffer.roughness = _mat->roughness;
+
+			if(_mat->roughness >= 1.f)
+				cbMaterialBuffer.roughness = 1.f;
+			else
+				cbMaterialBuffer.roughness = _mat->roughness;
 
 			_model_PBR_VS->ConstantBufferUpdate(&cbMaterialBuffer, "cbMaterial");
 				

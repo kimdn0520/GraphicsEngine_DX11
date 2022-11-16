@@ -31,7 +31,7 @@ std::shared_ptr<FBXModel> FBXParser::LoadFbx(const std::string& path)
 
 	std::shared_ptr<BinarySerializer> s = std::make_shared<BinarySerializer>();
 
-	s->SaveBinaryFile(fbxModel, "test", path);
+	//s->SaveBinaryFile(fbxModel, "test", path);
 
 	return fbxModel;
 }
@@ -457,7 +457,10 @@ void FBXParser::LoadMaterial(fbxsdk::FbxSurfaceMaterial* surfaceMaterial)
 		material->material_Transparency = static_cast<float>(((FbxSurfacePhong*)surfaceMaterial)->TransparencyFactor.Get());
 
 		// Shininess Data
-		material->roughness = static_cast<float>(((FbxSurfacePhong*)surfaceMaterial)->Shininess.Get());
+		material->roughness = 1.0f - float(sqrt(fmax(static_cast<float>(((FbxSurfacePhong*)surfaceMaterial)->Shininess.Get()), 0.0)) / 10.0); 
+
+		// 메탈이 맞을까?
+		material->metallic = static_cast<float>(((FbxSurfacePhong*)surfaceMaterial)->ReflectionFactor.Get());
 
 		// Reflectivity Data
 		material->material_Reflectivity = static_cast<float>(((FbxSurfacePhong*)surfaceMaterial)->ReflectionFactor.Get());

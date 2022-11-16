@@ -1,5 +1,5 @@
-﻿D:\GraphicsEngine_DX11\GameClient\GameClient\Data\Shader\Model_PBR_PS.hlsl(35,19-51): warning X3576: semantics in type overridden by variable/function or enclosing type
-  
-  compilation object save succeeded; see D:\GraphicsEngine_DX11\Library\lib\Model_PBR_PS.cso
+﻿  DeferredPass.cpp
+D:\GraphicsEngine_DX11\GraphicsEngine_DX11\WindowInfo.h(4,1): warning C4099: 'WindowInfo': 처음에는 'class'을(를) 사용하여 형식 이름을 표시했는데 이제는 'struct'을(를) 사용하여 표시합니다.
+D:\GraphicsEngine_DX11\GraphicsEngine_DX11\WindowInfo.h(3): message : 'WindowInfo' 선언을 참조하십시오.
   GraphicsEngine_DX11.vcxproj -> D:\GraphicsEngine_DX11\Library\lib\GraphicsEngine_DX11.dll
           1개 파일이 복사되었습니다.
