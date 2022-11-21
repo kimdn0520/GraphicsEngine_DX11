@@ -611,6 +611,15 @@ std::vector<std::shared_ptr<GameObject>> Resources::LoadFBX(std::string path, in
 					material->AOMap = mat->AOMap;
 					material->emissiveMap = mat->emissiveMap;
 
+					material->material_Ambient = mat->material_Ambient;
+					material->material_Diffuse = mat->material_Diffuse;
+					material->material_Specular = mat->material_Specular;
+					material->material_Emissive = mat->material_Emissive;
+
+					material->emissionFactor = mat->emissionFactor;
+					material->material_Transparency = mat->material_Transparency;
+					material->material_Reflectivity = mat->material_Reflectivity;
+
 					if (material->albedoMap != L"" && material->normalMap != L"" && material->metallicMap != L"" && material->roughnessMap != L""
 						&& material->AOMap != L"" && material->emissiveMap != L"")
 					{
@@ -730,6 +739,7 @@ std::vector<std::shared_ptr<GameObject>> Resources::LoadFBX(std::string path, in
 					material->material_Specular = mat->material_Specular;
 					material->material_Emissive = mat->material_Emissive;
 
+					material->emissionFactor = mat->emissionFactor;
 					material->material_Transparency = mat->material_Transparency;
 					material->material_Reflectivity = mat->material_Reflectivity;
 
@@ -1006,6 +1016,15 @@ std::vector<std::shared_ptr<GameObject>> Resources::LoadFBXBinary(std::string pa
 					material->AOMap = mat.AOMap;
 					material->emissiveMap = mat.emissiveMap;
 
+					material->material_Ambient = Vector4(mat.material_Ambient.x, mat.material_Ambient.y, mat.material_Ambient.z, mat.material_Ambient.w);
+					material->material_Diffuse = Vector4(mat.material_Diffuse.x, mat.material_Diffuse.y, mat.material_Diffuse.z, mat.material_Diffuse.w);
+					material->material_Specular = Vector4(mat.material_Specular.x, mat.material_Specular.y, mat.material_Specular.z, mat.material_Specular.w);
+					material->material_Emissive = Vector4(mat.material_Emissive.x, mat.material_Emissive.y, mat.material_Emissive.z, mat.material_Emissive.w);
+
+					material->emissionFactor = mat.emissionFactor;
+					material->material_Transparency = mat.material_Transparency;
+					material->material_Reflectivity = mat.material_Reflectivity;
+
 					if (material->albedoMap != L"" && material->normalMap != L"" && material->metallicMap != L"" && material->roughnessMap != L""
 						&& material->AOMap != L"" && material->emissiveMap != L"")
 					{
@@ -1133,6 +1152,7 @@ std::vector<std::shared_ptr<GameObject>> Resources::LoadFBXBinary(std::string pa
 					material->material_Specular = Vector4(mat.material_Specular.x, mat.material_Specular.y, mat.material_Specular.z, mat.material_Specular.w);
 					material->material_Emissive = Vector4(mat.material_Emissive.x, mat.material_Emissive.y, mat.material_Emissive.z, mat.material_Emissive.w);
 
+					material->emissionFactor = mat.emissionFactor;
 					material->material_Transparency = mat.material_Transparency;
 					material->material_Reflectivity = mat.material_Reflectivity;
 

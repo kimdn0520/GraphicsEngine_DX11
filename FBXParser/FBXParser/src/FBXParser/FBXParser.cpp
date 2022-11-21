@@ -452,6 +452,9 @@ void FBXParser::LoadMaterial(fbxsdk::FbxSurfaceMaterial* surfaceMaterial)
 		material->material_Emissive.y = static_cast<float>(((FbxSurfacePhong*)surfaceMaterial)->Emissive.Get()[1]);
 		material->material_Emissive.z = static_cast<float>(((FbxSurfacePhong*)surfaceMaterial)->Emissive.Get()[2]);
 		material->material_Emissive.w = 1.0f;
+		
+		// Emissive Strength
+		material->emissionFactor = static_cast<float>(((FbxSurfacePhong*)surfaceMaterial)->EmissiveFactor);
 
 		// Transparecy Data
 		material->material_Transparency = static_cast<float>(((FbxSurfacePhong*)surfaceMaterial)->TransparencyFactor.Get());
@@ -484,6 +487,9 @@ void FBXParser::LoadMaterial(fbxsdk::FbxSurfaceMaterial* surfaceMaterial)
 		material->material_Emissive.y = static_cast<float>(((FbxSurfaceLambert*)surfaceMaterial)->Emissive.Get()[1]);
 		material->material_Emissive.z = static_cast<float>(((FbxSurfaceLambert*)surfaceMaterial)->Emissive.Get()[2]);
 		material->material_Emissive.w = 1.0f;
+
+		// Emissive Strength
+		material->emissionFactor = static_cast<float>(((FbxSurfacePhong*)surfaceMaterial)->EmissiveFactor);
 
 		// Transparecy Data
 		material->material_Transparency = static_cast<float>(((FbxSurfaceLambert*)surfaceMaterial)->TransparencyFactor.Get());

@@ -151,7 +151,7 @@ namespace FBXBinaryData
 
 		MaterialData(std::string _materialName, std::wstring _albedoMap, std::wstring _normalMap, std::wstring _metallicMap, std::wstring _roughnessMap
 			, std::wstring _AOMap, std::wstring _emissiveMap, Float4 _material_Ambient, Float4 _material_Diffuse, Float4 _material_Specular, Float4 _material_Emissive
-			, float _material_Transparency, float _material_Reflectivity, float _metallic, float _roughness)
+			, float _emissionFactor, float _material_Transparency, float _material_Reflectivity, float _metallic, float _roughness)
 			: materialName(std::move(_materialName))
 			, albedoMap(std::move(_albedoMap))
 			, normalMap(std::move(_normalMap))
@@ -163,6 +163,7 @@ namespace FBXBinaryData
 			, material_Diffuse(std::move(_material_Diffuse))
 			, material_Specular(std::move(_material_Specular))
 			, material_Emissive(std::move(_material_Emissive))
+			, emissionFactor(std::move(_emissionFactor))
 			, material_Transparency(std::move(_material_Transparency))
 			, material_Reflectivity(std::move(_material_Reflectivity))
 			, metallic(std::move(_metallic))
@@ -184,6 +185,7 @@ namespace FBXBinaryData
 		Float4 material_Specular = { 0.f, 0.f, 0.f, 0.f };
 		Float4 material_Emissive = { 0.f, 0.f, 0.f, 0.f };
 
+		float emissionFactor = 0.f;
 		float material_Transparency = 0.f;
 		float material_Reflectivity = 0.f;
 
@@ -208,6 +210,7 @@ namespace FBXBinaryData
 			ar& material_Specular;
 			ar& material_Emissive;
 
+			ar& emissionFactor;
 			ar& material_Transparency;
 			ar& material_Reflectivity;
 

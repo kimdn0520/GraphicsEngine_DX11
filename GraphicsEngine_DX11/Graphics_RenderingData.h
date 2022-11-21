@@ -29,6 +29,7 @@ struct Material
 	DirectX::SimpleMath::Vector4 material_Specular;
 	DirectX::SimpleMath::Vector4 material_Emissive;
 
+	float emissionFactor = 0.f;
 	float material_Transparency;	// 투명도
 	float material_Reflectivity;	// 반사율
 

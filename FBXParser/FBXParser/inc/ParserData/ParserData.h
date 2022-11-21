@@ -53,6 +53,7 @@ struct FBXMaterialInfo
 	DirectX::SimpleMath::Vector4 material_Specular = { 0.f, 0.f, 0.f, 0.f };
 	DirectX::SimpleMath::Vector4 material_Emissive = { 0.f, 0.f, 0.f, 0.f };
 
+	float emissionFactor = 0.f;			// 방출 크기
 	float material_Transparency = 0.f;	// 투명도
 	float material_Reflectivity = 0.f;	// 반사율
 

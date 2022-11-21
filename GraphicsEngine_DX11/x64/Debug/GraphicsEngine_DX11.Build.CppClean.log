@@ -33,6 +33,7 @@ d:\graphicsengine_dx11\graphicsengine_dx11\x64\debug\shaderbase.obj
 d:\graphicsengine_dx11\library\lib\debug_ps.cso
 d:\graphicsengine_dx11\library\lib\light_pbr_ps.cso
 d:\graphicsengine_dx11\library\lib\light_ps.cso
+d:\graphicsengine_dx11\library\lib\model_pbr_ps.cso
 d:\graphicsengine_dx11\library\lib\model_pbr_vs.cso
 d:\graphicsengine_dx11\library\lib\model_vs.cso
 d:\graphicsengine_dx11\library\lib\quad_vs.cso
@@ -40,9 +41,6 @@ d:\graphicsengine_dx11\library\lib\shadow_vs.cso
 d:\graphicsengine_dx11\library\lib\skybox_ps.cso
 d:\graphicsengine_dx11\library\lib\skybox_vs.cso
 d:\graphicsengine_dx11\library\lib\tonemapping_ps.cso
-d:\graphicsengine_dx11\library\lib\model_pbr_ps.cso
-c:\users\김동민\desktop\graphicsengine_dx11\library\lib\graphicsengine_dx11.lib
-c:\users\김동민\desktop\graphicsengine_dx11\library\lib\graphicsengine_dx11.exp
 d:\graphicsengine_dx11\library\lib\graphicsengine_dx11.lib
 d:\graphicsengine_dx11\library\lib\graphicsengine_dx11.exp
 d:\graphicsengine_dx11\graphicsengine_dx11\x64\debug\graphicsengine_dx11.ilk

@@ -58,7 +58,7 @@ void BinarySerializer::SaveBinaryFile(std::shared_ptr<FBXModel> fbxModel, std::s
 
 		FBXBinaryData::MaterialData materialData(
 			mat->materialName, mat->albedoMap, mat->normalMap, mat->metallicMap, mat->roughnessMap, mat->AOMap, mat->emissiveMap,
-			material_Ambient, material_Diffuse, material_Specular, material_Emissive, mat->material_Transparency, mat->material_Reflectivity,
+			material_Ambient, material_Diffuse, material_Specular, material_Emissive, mat->emissionFactor, mat->material_Transparency, mat->material_Reflectivity,
 			mat->metallic, mat->roughness);
 
 		materialList.emplace_back(materialData);
