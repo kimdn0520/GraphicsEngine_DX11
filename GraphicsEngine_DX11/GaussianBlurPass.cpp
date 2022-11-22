@@ -88,29 +88,33 @@ void GaussianBlur::OnResize(int width, int height)
 	blurX_Texture->RenderTargetTextureInit(g_device, width, height, DXGI_FORMAT_R32G32B32A32_FLOAT);
 
 	// move를 하면 새로 메모리를 할당하지 않아도 되고 이미 메모리에 할당된것을 소유권만 넘겨주기때문에 copy동작보다 빠르다.
-	/*auto&& halfWidth = std::move(width / 2);
+	auto&& halfWidth = std::move(width / 2);
 	auto&& halfHeight = std::move(height / 2);
 
 	halfViewPort->OnResize(halfWidth, halfHeight);
-	downHalfTexture->OnResize(_device, halfWidth, halfHeight);
+	downHalfTexture->Release();
+	downHalfTexture->RenderTargetTextureInit(g_device, halfWidth, halfHeight, DXGI_FORMAT_R32G32B32A32_FLOAT);
 
 	auto&& quarterWidth = std::move(width / 4);
 	auto&& quarterHeight = std::move(height / 4);
 
 	quarterViewPort->OnResize(quarterWidth, quarterHeight);
-	downQuarterTexture->OnResize(_device, quarterWidth, quarterHeight);
+	downQuarterTexture->Release();
+	downQuarterTexture->RenderTargetTextureInit(g_device, quarterWidth, quarterHeight, DXGI_FORMAT_R32G32B32A32_FLOAT);
 
 	auto&& octarWidth = std::move(width / 8);
 	auto&& octarHeight = std::move(height / 8);
 
 	octarViewPort->OnResize(octarWidth, octarHeight);
-	downOctarTexture->OnResize(g_device, octarWidth, octarHeight);
+	downOctarTexture->Release();
+	downOctarTexture->RenderTargetTextureInit(g_device, octarWidth, octarHeight, DXGI_FORMAT_R32G32B32A32_FLOAT);
 
 	auto&& sixteenWidth = std::move(width / 16);
 	auto&& sixteenHeight = std::move(height / 16);
 
 	sixteenViewPort->OnResize(sixteenWidth, sixteenHeight);
-	downSixteenTexture->OnResize(g_device, sixteenWidth, sixteenHeight);*/
+	downSixteenTexture->Release();
+	downSixteenTexture->RenderTargetTextureInit(g_device, sixteenWidth, sixteenHeight, DXGI_FORMAT_R32G32B32A32_FLOAT);
 }
 
 void GaussianBlur::RenderStart(std::shared_ptr<RenderTargetView>& screen)
@@ -185,7 +189,6 @@ void GaussianBlur::Render(std::shared_ptr<RenderTargetView>& screen)
 
 void GaussianBlur::RenderEnd()
 {
-	// Target Screen SRV UnBind
 	ID3D11ShaderResourceView* nullSRV[1] = { nullptr };
 
 	g_deviceContext->PSSetShaderResources(0, 1, nullSRV);
