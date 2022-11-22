@@ -166,6 +166,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="BlendState.h" />
+    <ClInclude Include="BloomPass.h" />
     <ClInclude Include="ConstantBufferDefine.h" />
     <ClInclude Include="DebugPass.h" />
     <ClInclude Include="DeferredPass.h" />
@@ -174,6 +175,7 @@
     <ClInclude Include="Device.h" />
     <ClInclude Include="EnginePch.h" />
     <ClInclude Include="FinalPass.h" />
+    <ClInclude Include="GaussianBlurPass.h" />
     <ClInclude Include="GraphicsEngineDLL.h" />
     <ClInclude Include="GraphicsEngine_DX11.h" />
     <ClInclude Include="Graphics_Interface.h" />
@@ -203,6 +205,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BlendState.cpp" />
+    <ClCompile Include="BloomPass.cpp" />
     <ClCompile Include="DebugPass.cpp" />
     <ClCompile Include="DeferredPass.cpp" />
     <ClCompile Include="DepthStencilState.cpp" />
@@ -211,6 +214,7 @@
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="EnginePch.cpp" />
     <ClCompile Include="FinalPass.cpp" />
+    <ClCompile Include="GaussianBlurPass.cpp" />
     <ClCompile Include="GraphicsEngine_DX11.cpp" />
     <ClCompile Include="Graphics_Interface.cpp" />
     <ClCompile Include="LightManager.cpp" />
@@ -247,6 +251,16 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Debug_PS</EntryPointName>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="..\GameClient\GameClient\Data\Shader\GaussianBlur_PS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">BlurX_PS</EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">BlurX_PS</EntryPointName>
     </FxCompile>
     <FxCompile Include="..\GameClient\GameClient\Data\Shader\Light_PBR_PS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>

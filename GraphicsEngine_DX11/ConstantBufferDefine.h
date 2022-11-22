@@ -87,7 +87,7 @@ __declspec(align(16)) struct cbMaterial
 	float pad2;
 
 	Vector3 emissiveColor;
-	float pad3;
+	float emissionFactor;
 
 	BOOL isLight = true;
 };

@@ -7,6 +7,13 @@ private:
 	ComPtr<ID3D11RenderTargetView> _renderTargetView;			// ∑ª¥ı≈∏∞Ÿ ∫‰
 	ComPtr<ID3D11ShaderResourceView> _shaderResourceView;		// ºŒ¿Ã¥ı ∏Æº“Ω∫ ∫‰
 
+	int _width = 0;
+	int _height = 0;
+
+public:
+	int GetWidth() { return _width; }
+	int GetHeight() { return _height; }
+
 public:
 	void BackBufferRenderTarget(
 		const ComPtr<ID3D11Device>& device,

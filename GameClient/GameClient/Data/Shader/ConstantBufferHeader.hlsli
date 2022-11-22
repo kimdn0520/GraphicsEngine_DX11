@@ -21,7 +21,7 @@ cbuffer cbMaterial : register(b1)
 	float pad2;
 
 	float3 emissiveColor;
-	float pad3;
+	float emissionFactor;
 	
 	bool isLight;
 }

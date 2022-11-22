@@ -26,6 +26,9 @@ void RenderTargetView::BackBufferRenderTarget(
 
 bool RenderTargetView::RenderTargetTextureInit(ComPtr<ID3D11Device> device, int width, int height, DXGI_FORMAT format)
 {
+	_width = width;
+	_height = height;
+
 	D3D11_TEXTURE2D_DESC textureDesc;
 	HRESULT result;
 	D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc;

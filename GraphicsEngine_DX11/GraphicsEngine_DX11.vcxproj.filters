@@ -77,6 +77,12 @@
     <Filter Include="Shader\Pass\Debug">
       <UniqueIdentifier>{9354fc02-02ae-47de-9095-1d32d6a7e07f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader\Pass\GaussianBlurPass">
+      <UniqueIdentifier>{445014fa-90cd-4c04-92b9-b95b7fb15b72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader\Pass\BloomPass">
+      <UniqueIdentifier>{0084fab8-e5d2-4b9f-864d-29b7f23336e6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -184,6 +190,12 @@
     <ClInclude Include="DebugPass.h">
       <Filter>Shader\Pass\Debug</Filter>
     </ClInclude>
+    <ClInclude Include="GaussianBlurPass.h">
+      <Filter>Shader\Pass\GaussianBlurPass</Filter>
+    </ClInclude>
+    <ClInclude Include="BloomPass.h">
+      <Filter>Shader\Pass\BloomPass</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EnginePch.cpp">
@@ -273,6 +285,12 @@
     <ClCompile Include="DebugPass.cpp">
       <Filter>Shader\Pass\Debug</Filter>
     </ClCompile>
+    <ClCompile Include="GaussianBlurPass.cpp">
+      <Filter>Shader\Pass\GaussianBlurPass</Filter>
+    </ClCompile>
+    <ClCompile Include="BloomPass.cpp">
+      <Filter>Shader\Pass\BloomPass</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\GameClient\GameClient\Data\Shader\Model_VS.hlsl">
@@ -309,6 +327,9 @@
       <Filter>Shader\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="..\GameClient\GameClient\Data\Shader\Skybox_PS.hlsl">
+      <Filter>Shader\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="..\GameClient\GameClient\Data\Shader\GaussianBlur_PS.hlsl">
       <Filter>Shader\HLSL</Filter>
     </FxCompile>
   </ItemGroup>

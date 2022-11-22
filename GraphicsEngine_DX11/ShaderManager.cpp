@@ -83,6 +83,9 @@ void ShaderManager::CreateAllShaders()
 	CreateShader(SHADER_TYPE::VERTEX, L"Skybox_VS.hlsl", _filepath, "Skybox_VS", L"Skybox_VS", nullptr);
 	CreateShader(SHADER_TYPE::PIXEL, L"Skybox_PS.hlsl", _filepath, "Skybox_PS", L"Skybox_PS", nullptr);
 
+	CreateShader(SHADER_TYPE::PIXEL, L"GaussianBlur_PS.hlsl", _filepath, "BlurX_PS", L"BlurX_PS", nullptr);
+	CreateShader(SHADER_TYPE::PIXEL, L"GaussianBlur_PS.hlsl", _filepath, "BlurY_PS", L"BlurY_PS", nullptr);
+
 	SetInfo();
 	AddConstantBuffer();
 	AddSamplerBuffer();

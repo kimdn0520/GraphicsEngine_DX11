@@ -10,6 +10,9 @@
       <FullPath>D:\GraphicsEngine_DX11\Library\lib\Debug_PS.cso</FullPath>
     </ContentFile>
     <ContentFile>
+      <FullPath>D:\GraphicsEngine_DX11\Library\lib\GaussianBlur_PS.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
       <FullPath>D:\GraphicsEngine_DX11\Library\lib\Light_PBR_PS.cso</FullPath>
     </ContentFile>
     <ContentFile>

@@ -43,6 +43,7 @@ void DebugPass::Render()
 	_debug_PS->SetResourceViewBuffer(_deferredPass->gBuffers[2]->GetSRV().Get(), "Normal");
 	_debug_PS->SetResourceViewBuffer(_deferredPass->gBuffers[3]->GetSRV().Get(), "Position");
 	_debug_PS->SetResourceViewBuffer(_shadowPass->shadowDSV->GetShaderResourceView().Get(), "Shadow");
+	_debug_PS->SetResourceViewBuffer(_deferredPass->gBuffers[4]->GetSRV().Get(), "Emissive");
 
 	_debug_PS->Update();
 

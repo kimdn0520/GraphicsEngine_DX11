@@ -22,6 +22,8 @@ Texture2D Position : register(t3);
 
 Texture2D Shadow : register(t4);
 
+Texture2D Emissive : register(t5);
+
 SamplerState samLinearClamp : register(s0);
 
 float4 Debug_PS(DebugPixelIN input) : SV_Target
@@ -50,6 +52,11 @@ float4 Debug_PS(DebugPixelIN input) : SV_Target
     else if (((input.uv.x >= 4 * xStep) && (input.uv.x <= 5 * xStep)))
     {
         return float4(Shadow.Sample(samLinearClamp, (input.uv - float2(4 * xStep, 0.f)) * float2(OUT_BUFFER_COUNT, 1.f)).xyz, 1.f);
+    }
+    // 6. Emissive
+    else if (((input.uv.x >= 5 * xStep) && (input.uv.x <= 6 * xStep)))
+    {
+        return float4(Emissive.Sample(samLinearClamp, (input.uv - float2(5 * xStep, 0.f)) * float2(OUT_BUFFER_COUNT, 1.f)).xyz, 1.f);
     }
 
     return float4(0.f, 0.f, 0.f, 1.f);

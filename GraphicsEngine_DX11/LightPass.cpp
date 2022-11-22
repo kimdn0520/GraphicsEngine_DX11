@@ -48,6 +48,8 @@ void LightPass::Release()
 
 void LightPass::OnResize(int width, int height)
 {
+	lightingRTV->Release();
+
 	lightingRTV->RenderTargetTextureInit(g_device, width, height, DXGI_FORMAT_R32G32B32A32_FLOAT);
 
 	_screenViewPort->OnResize(width, height);
