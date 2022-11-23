@@ -179,8 +179,8 @@ void FBXParser::LoadMesh(fbxsdk::FbxNode* node, fbxsdk::FbxMesh* mesh)
 	meshInfo->parentName = parentName;
 
 	const int vertexCount = mesh->GetControlPointsCount();
-	//meshInfo->meshVertexList.resize(vertexCount);
-
+	
+	// 임시 버텍스리스트
 	std::vector<Vertex> tmpMeshVertexList;
 	tmpMeshVertexList.resize(vertexCount);
 

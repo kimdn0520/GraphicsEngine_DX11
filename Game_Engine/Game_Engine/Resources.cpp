@@ -630,6 +630,11 @@ std::vector<std::shared_ptr<GameObject>> Resources::LoadFBX(std::string path, in
 					{
 						gameObject->GetComponent<MeshRenderer>()->SetPixelShader(L"Model_PBR_CNMRA_PS");
 					}
+					else if (material->albedoMap != L"" && material->normalMap != L"" && material->metallicMap == L"" && material->roughnessMap != L""
+						&& material->AOMap == L"" && material->emissiveMap != L"")
+					{
+						gameObject->GetComponent<MeshRenderer>()->SetPixelShader(L"Model_PBR_CNRE_PS");
+					}
 					else if (material->albedoMap != L"" && material->normalMap != L"" && material->metallicMap == L"" && material->roughnessMap == L""
 						&& material->AOMap != L"" && material->emissiveMap == L"")
 					{
@@ -752,6 +757,11 @@ std::vector<std::shared_ptr<GameObject>> Resources::LoadFBX(std::string path, in
 						&& material->AOMap != L"" && material->emissiveMap == L"")
 					{
 						gameObject->GetComponent<MeshRenderer>()->SetPixelShader(L"Model_PBR_CNMRA_PS");
+					}
+					else if (material->albedoMap != L"" && material->normalMap != L"" && material->metallicMap == L"" && material->roughnessMap != L""
+						&& material->AOMap == L"" && material->emissiveMap != L"")
+					{
+						gameObject->GetComponent<MeshRenderer>()->SetPixelShader(L"Model_PBR_CNRE_PS");
 					}
 					else if (material->albedoMap != L"" && material->normalMap != L"" && material->metallicMap == L"" && material->roughnessMap == L""
 						&& material->AOMap != L"" && material->emissiveMap == L"")
@@ -1035,6 +1045,11 @@ std::vector<std::shared_ptr<GameObject>> Resources::LoadFBXBinary(std::string pa
 					{
 						gameObject->GetComponent<MeshRenderer>()->SetPixelShader(L"Model_PBR_CNMRA_PS");
 					}
+					else if (material->albedoMap != L"" && material->normalMap != L"" && material->metallicMap == L"" && material->roughnessMap != L""
+						&& material->AOMap == L"" && material->emissiveMap != L"")
+					{
+						gameObject->GetComponent<MeshRenderer>()->SetPixelShader(L"Model_PBR_CNRE_PS");
+					}
 					else if (material->albedoMap != L"" && material->normalMap != L"" && material->metallicMap == L"" && material->roughnessMap == L""
 						&& material->AOMap != L"" && material->emissiveMap == L"")
 					{
@@ -1165,6 +1180,11 @@ std::vector<std::shared_ptr<GameObject>> Resources::LoadFBXBinary(std::string pa
 						&& material->AOMap != L"" && material->emissiveMap == L"")
 					{
 						gameObject->GetComponent<MeshRenderer>()->SetPixelShader(L"Model_PBR_CNMRA_PS");
+					}
+					else if (material->albedoMap != L"" && material->normalMap != L"" && material->metallicMap == L"" && material->roughnessMap != L""
+						&& material->AOMap == L"" && material->emissiveMap != L"")
+					{
+						gameObject->GetComponent<MeshRenderer>()->SetPixelShader(L"Model_PBR_CNRE_PS");
 					}
 					else if (material->albedoMap != L"" && material->normalMap != L"" && material->metallicMap == L"" && material->roughnessMap == L""
 						&& material->AOMap != L"" && material->emissiveMap == L"")
