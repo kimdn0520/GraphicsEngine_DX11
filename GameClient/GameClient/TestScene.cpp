@@ -104,8 +104,8 @@ void TestScene::Initialize()
 	crate->gameObject->GetTransform()->SetLocalRotation(Vector3(0.f, 180.f, 0.f));
 	AddGameObject(crate->gameObject);
 
-	/*shared_ptr<TestAnimPrefab> wolf = make_shared<TestAnimPrefab>(Vector3(-5.f, 5.f, 0.f));
+	shared_ptr<TestAnimPrefab> wolf = make_shared<TestAnimPrefab>(Vector3(-2.f, 0.f, 0.f));
 	wolf->gameObject->GetTransform()->SetLocalRotation(Vector3(0.f, 180.f, 0.f));
 	wolf->gameObject->AddComponent<Player>();
-	AddGameObject(wolf->gameObject);*/
+	AddGameObject(wolf->gameObject);
 }

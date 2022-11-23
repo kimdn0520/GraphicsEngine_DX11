@@ -138,6 +138,27 @@ void FBXParser::LoadMesh(fbxsdk::FbxNode* node, fbxsdk::FbxMesh* mesh)
 
 	DirectX::SimpleMath::Matrix nodeMatrix = ConvertMatrix(nodeTransform);
 
+	DirectX::XMVECTOR det = XMMatrixDeterminant(nodeMatrix);
+
+	// 음수면 네거리브~
+	if (det.m128_f32[0] < 0)
+	{
+		// Decompose 했다가 scale -주고 다시 합쳐야함..
+		DirectX::XMVECTOR scale;
+		DirectX::XMVECTOR rotQuat;
+		DirectX::XMVECTOR trans;
+		DirectX::XMMatrixDecompose(&scale, &rotQuat, &trans, nodeMatrix);
+		DirectX::XMVECTOR minusScale = { -scale.m128_f32[0], -scale.m128_f32[1], -scale.m128_f32[2] };
+		scale = minusScale;
+
+		// 다시 SRT 조립
+		nodeMatrix = DirectX::XMMatrixScaling(scale.m128_f32[0], scale.m128_f32[1], scale.m128_f32[2]) *
+			DirectX::XMMatrixRotationQuaternion(rotQuat) *
+			DirectX::XMMatrixTranslation(trans.m128_f32[0], trans.m128_f32[1], trans.m128_f32[2]);
+
+		isNegativeScale = true;
+	}
+
 	const auto roll = -90.0f * DirectX::XM_PI / 180.0f;
 
 	const auto pitch = 180.0f * DirectX::XM_PI / 180.0f;
@@ -158,7 +179,10 @@ void FBXParser::LoadMesh(fbxsdk::FbxNode* node, fbxsdk::FbxMesh* mesh)
 	meshInfo->parentName = parentName;
 
 	const int vertexCount = mesh->GetControlPointsCount();
-	meshInfo->meshVertexList.resize(vertexCount);
+	//meshInfo->meshVertexList.resize(vertexCount);
+
+	std::vector<Vertex> tmpMeshVertexList;
+	tmpMeshVertexList.resize(vertexCount);
 
 	// Position정보를 가져옴(축 바꿔서 가져옴)
 	FbxVector4* controlPoints = mesh->GetControlPoints();
@@ -174,9 +198,9 @@ void FBXParser::LoadMesh(fbxsdk::FbxNode* node, fbxsdk::FbxMesh* mesh)
 		meshInfo->meshVertexList[i].position.y = static_cast<float>(vertex.y);
 		meshInfo->meshVertexList[i].position.z = static_cast<float>(vertex.z);*/
 
-		meshInfo->meshVertexList[i].position.x = static_cast<float>(controlPoints[i].mData[0]);
-		meshInfo->meshVertexList[i].position.y = static_cast<float>(controlPoints[i].mData[2]);
-		meshInfo->meshVertexList[i].position.z = static_cast<float>(controlPoints[i].mData[1]);
+		tmpMeshVertexList[i].position.x = static_cast<float>(controlPoints[i].mData[0]);
+		tmpMeshVertexList[i].position.y = static_cast<float>(controlPoints[i].mData[2]);
+		tmpMeshVertexList[i].position.z = static_cast<float>(controlPoints[i].mData[1]);
 	}
 	 
 	const int deformerCount = mesh->GetDeformerCount(FbxDeformer::eSkin);
@@ -221,11 +245,11 @@ void FBXParser::LoadMesh(fbxsdk::FbxNode* node, fbxsdk::FbxMesh* mesh)
 						// 돌면서 빈곳에 넣고 break 함
 						for (int weightIdx = 0; weightIdx < 8; weightIdx++)
 						{
-							if (meshInfo->meshVertexList[vtxIdx].boneIndices[weightIdx] == -1)
+							if (tmpMeshVertexList[vtxIdx].boneIndices[weightIdx] == -1)
 							{
-								meshInfo->meshVertexList[vtxIdx].weights[weightIdx] = weight;
+								tmpMeshVertexList[vtxIdx].weights[weightIdx] = weight;
 
-								meshInfo->meshVertexList[vtxIdx].boneIndices[weightIdx] = boneIdx;
+								tmpMeshVertexList[vtxIdx].boneIndices[weightIdx] = boneIdx;
 
 								break;
 							}
@@ -308,9 +332,35 @@ void FBXParser::LoadMesh(fbxsdk::FbxNode* node, fbxsdk::FbxMesh* mesh)
 				}
 
 				FbxVector4 vec = normal->GetDirectArray().GetAt(normalIdx);
-				fbxNormal.x = static_cast<float>(vec.mData[0]);
-				fbxNormal.y = static_cast<float>(vec.mData[2]);
-				fbxNormal.z = static_cast<float>(vec.mData[1]);
+
+				if (isNegativeScale)
+				{
+					fbxNormal.x = static_cast<float>(-vec.mData[0]);
+					fbxNormal.y = static_cast<float>(-vec.mData[2]);
+					fbxNormal.z = static_cast<float>(-vec.mData[1]);
+				}
+				else
+				{
+					fbxNormal.x = static_cast<float>(vec.mData[0]);
+					fbxNormal.y = static_cast<float>(vec.mData[2]);
+					fbxNormal.z = static_cast<float>(vec.mData[1]);
+				}
+			}
+
+			float uvX = -1.f;
+			float uvY = -1.f;
+
+			if (uvIndex != -1)
+			{
+				FbxVector2 fbxUV = mesh->GetElementUV()->GetDirectArray().GetAt(uvIndex);
+
+				uvX = static_cast<float>(fbxUV.mData[0]);
+				uvY = 1.f - static_cast<float>(fbxUV.mData[1]);
+
+				if (uvX < 0)
+				{
+					uvX += 1;
+				}
 			}
 
 			const auto indexPair = std::make_tuple(controlPointIndex, uvIndex, fbxNormal.x, fbxNormal.y, fbxNormal.z);
@@ -321,24 +371,17 @@ void FBXParser::LoadMesh(fbxsdk::FbxNode* node, fbxsdk::FbxMesh* mesh)
 			if (iter == indexMap.end())
 			{
 				Vertex vertex;
-				vertex.position = meshInfo->meshVertexList[controlPointIndex].position;	// 포지션은 동일
+				vertex.position = tmpMeshVertexList[controlPointIndex].position;	// 포지션은 동일
 
 				// 가중치 정보 동일
 				for (int weightIdx = 0; weightIdx < 8; weightIdx++)
 				{
-					vertex.weights[weightIdx] = meshInfo->meshVertexList[controlPointIndex].weights[weightIdx];
+					vertex.weights[weightIdx] = tmpMeshVertexList[controlPointIndex].weights[weightIdx];
 
-					vertex.boneIndices[weightIdx] = meshInfo->meshVertexList[controlPointIndex].boneIndices[weightIdx];
+					vertex.boneIndices[weightIdx] = tmpMeshVertexList[controlPointIndex].boneIndices[weightIdx];
 				}
 
-				vertex.uv = { -1.f, -1.f };
-
-				if (uvIndex != -1)
-				{
-					FbxVector2 fbxUV = mesh->GetElementUV()->GetDirectArray().GetAt(uvIndex);
-
-					vertex.uv = DirectX::SimpleMath::Vector2(static_cast<float>(fbxUV.mData[0]), 1.f - static_cast<float>(fbxUV.mData[1]));
-				}
+				vertex.uv = DirectX::SimpleMath::Vector2(uvX, uvY);
 
 				vertex.normal = fbxNormal;
 
@@ -367,6 +410,9 @@ void FBXParser::LoadMesh(fbxsdk::FbxNode* node, fbxsdk::FbxMesh* mesh)
 	// tangent 정보를 가져온다.
 	if (mesh->GetElementNormalCount() >= 1)
 		GetTangent(meshInfo);
+
+	// 네거티브 bool 초기화
+	isNegativeScale = false;
 }
 
 /// <summary>

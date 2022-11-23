@@ -26,6 +26,8 @@ private:
 
 	FbxArray<FbxString*> animNames;
 
+	bool isNegativeScale = false;
+
 public:
 	FBXParser();
 	~FBXParser();

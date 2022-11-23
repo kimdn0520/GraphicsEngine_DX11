@@ -180,8 +180,8 @@ void DeferredPass::Render(std::vector<std::shared_ptr<ObjectInfo>> objInfos, std
 			if (_mat->albedoMap != L"")
 				_model_PBR_PS->SetResourceViewBuffer(_mat->albedoMap, "AlbedoMap");
 
-			if (_mat->normalMap != L"")
-				_model_PBR_PS->SetResourceViewBuffer(_mat->normalMap, "NormalMap");
+			/*if (_mat->normalMap != L"")
+				_model_PBR_PS->SetResourceViewBuffer(_mat->normalMap, "NormalMap");*/
 
 			if (_mat->metallicMap != L"")
 				_model_PBR_PS->SetResourceViewBuffer(_mat->metallicMap, "MetallicMap");
