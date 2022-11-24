@@ -31,6 +31,9 @@
       <FullPath>C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\Quad_VS.cso</FullPath>
     </ContentFile>
     <ContentFile>
+      <FullPath>C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\Sampling_PS.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
       <FullPath>C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\Shadow_VS.cso</FullPath>
     </ContentFile>
     <ContentFile>

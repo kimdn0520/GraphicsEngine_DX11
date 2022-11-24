@@ -208,7 +208,7 @@ void GaussianBlur::DownSampling2x(std::shared_ptr<RenderTargetView>& screen)
 
 	quad_VS->Update();
 
-	sampling_PS->SetResourceViewBuffer(screen->GetSRV().Get(), "Sampling_PS");
+	sampling_PS->SetResourceViewBuffer(screen->GetSRV().Get(), "SampleTexture");
 
 	sampling_PS->Update();
 
@@ -236,7 +236,7 @@ void GaussianBlur::DownSampling4x(std::shared_ptr<RenderTargetView>& screen)
 
 	quad_VS->Update();
 
-	sampling_PS->SetResourceViewBuffer(screen->GetSRV().Get(), "Sampling_PS");
+	sampling_PS->SetResourceViewBuffer(screen->GetSRV().Get(), "SampleTexture");
 
 	sampling_PS->Update();
 
@@ -264,7 +264,7 @@ void GaussianBlur::DownSampling8x(std::shared_ptr<RenderTargetView>& screen)
 
 	quad_VS->Update();
 
-	sampling_PS->SetResourceViewBuffer(screen->GetSRV().Get(), "Sampling_PS");
+	sampling_PS->SetResourceViewBuffer(screen->GetSRV().Get(), "SampleTexture");
 
 	sampling_PS->Update();
 
@@ -292,7 +292,7 @@ void GaussianBlur::DownSampling16x(std::shared_ptr<RenderTargetView>& screen)
 
 	quad_VS->Update();
 
-	sampling_PS->SetResourceViewBuffer(screen->GetSRV().Get(), "Sampling_PS");
+	sampling_PS->SetResourceViewBuffer(screen->GetSRV().Get(), "SampleTexture");
 
 	sampling_PS->Update();
 

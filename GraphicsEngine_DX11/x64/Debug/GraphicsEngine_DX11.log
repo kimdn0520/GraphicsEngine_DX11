@@ -1,2 +1,123 @@
-﻿  GraphicsEngine_DX11.vcxproj -> C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\GraphicsEngine_DX11.dll
+﻿  compilation object save succeeded; see C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\Debug_PS.cso
+  compilation object save succeeded; see C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\GaussianBlur_PS.cso
+C:\Users\��????\Desktop\GraphicsEngine_DX11\GameClient\GameClient\Data\Shader\Light_PBR_PS.hlsl(99,9-60): warning X3206: implicit truncation of vector type
+  
+  compilation object save succeeded; see C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\Light_PBR_PS.cso
+C:\Users\��????\Desktop\GraphicsEngine_DX11\GameClient\GameClient\Data\Shader\Light_PS.hlsl(85,12): warning X3078: 'i': loop control variable conflicts with a previous declaration in the outer scope; most recent declaration will be used
+C:\Users\��????\Desktop\GraphicsEngine_DX11\GameClient\GameClient\Data\Shader\Light_PS.hlsl(97,12): warning X3078: 'i': loop control variable conflicts with a previous declaration in the outer scope; most recent declaration will be used
+  
+  compilation object save succeeded; see C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\Light_PS.cso
+C:\Users\��????\Desktop\GraphicsEngine_DX11\GameClient\GameClient\Data\Shader\Model_PBR_PS.hlsl(35,19-51): warning X3576: semantics in type overridden by variable/function or enclosing type
+  
+  compilation object save succeeded; see C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\Model_PBR_PS.cso
+  compilation object save succeeded; see C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\Model_PBR_VS.cso
+  compilation object save succeeded; see C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\Model_VS.cso
+C:\Users\��????\Desktop\GraphicsEngine_DX11\GameClient\GameClient\Data\Shader\Quad_VS.hlsl(21,21-41): warning X3578: Output value 'Quad_VS' is not completely initialized
+  
+  compilation object save succeeded; see C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\Quad_VS.cso
+  compilation object save succeeded; see C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\Sampling_PS.cso
+  compilation object save succeeded; see C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\Shadow_VS.cso
+C:\Users\��????\Desktop\GraphicsEngine_DX11\GameClient\GameClient\Data\Shader\Skybox_PS.hlsl(23,16-49): warning X3576: semantics in type overridden by variable/function or enclosing type
+C:\Users\��????\Desktop\GraphicsEngine_DX11\GameClient\GameClient\Data\Shader\Skybox_PS.hlsl(23,16-49): warning X3578: Output value 'Skybox_PS' is not completely initialized
+  
+  compilation object save succeeded; see C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\Skybox_PS.cso
+  compilation object save succeeded; see C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\Skybox_VS.cso
+  compilation object save succeeded; see C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\ToneMapping_PS.cso
+  pch.cpp
+  BlendState.cpp
+  BloomPass.cpp
+  DebugPass.cpp
+C:\Users\김동민\Desktop\GraphicsEngine_DX11\GraphicsEngine_DX11\WindowInfo.h(4,1): warning C4099: 'WindowInfo': 처음에는 'class'을(를) 사용하여 형식 이름을 표시했는데 이제는 'struct'을(를) 사용하여 표시합니다.
+C:\Users\김동민\Desktop\GraphicsEngine_DX11\GraphicsEngine_DX11\WindowInfo.h(3): message : 'WindowInfo' 선언을 참조하십시오.
+  DeferredPass.cpp
+C:\Users\김동민\Desktop\GraphicsEngine_DX11\GraphicsEngine_DX11\WindowInfo.h(4,1): warning C4099: 'WindowInfo': 처음에는 'class'을(를) 사용하여 형식 이름을 표시했는데 이제는 'struct'을(를) 사용하여 표시합니다.
+C:\Users\김동민\Desktop\GraphicsEngine_DX11\GraphicsEngine_DX11\WindowInfo.h(3): message : 'WindowInfo' 선언을 참조하십시오.
+  DepthStencilState.cpp
+  DepthStencilView.cpp
+  Device.cpp
+  dllmain.cpp
+  EnginePch.cpp
+  FinalPass.cpp
+C:\Users\김동민\Desktop\GraphicsEngine_DX11\GraphicsEngine_DX11\WindowInfo.h(4,1): warning C4099: 'WindowInfo': 처음에는 'class'을(를) 사용하여 형식 이름을 표시했는데 이제는 'struct'을(를) 사용하여 표시합니다.
+C:\Users\김동민\Desktop\GraphicsEngine_DX11\GraphicsEngine_DX11\WindowInfo.h(3): message : 'WindowInfo' 선언을 참조하십시오.
+  GaussianBlurPass.cpp
+C:\Users\김동민\Desktop\GraphicsEngine_DX11\GraphicsEngine_DX11\WindowInfo.h(4,1): warning C4099: 'WindowInfo': 처음에는 'class'을(를) 사용하여 형식 이름을 표시했는데 이제는 'struct'을(를) 사용하여 표시합니다.
+C:\Users\김동민\Desktop\GraphicsEngine_DX11\GraphicsEngine_DX11\WindowInfo.h(3): message : 'WindowInfo' 선언을 참조하십시오.
+C:\Users\김동민\Desktop\GraphicsEngine_DX11\GraphicsEngine_DX11\GaussianBlurPass.cpp(142,45): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\김동민\Desktop\GraphicsEngine_DX11\GraphicsEngine_DX11\GaussianBlurPass.cpp(141,44): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  GraphicsEngine_DX11.cpp
+C:\Users\김동민\Desktop\GraphicsEngine_DX11\GraphicsEngine_DX11\WindowInfo.h(4,1): warning C4099: 'WindowInfo': 처음에는 'class'을(를) 사용하여 형식 이름을 표시했는데 이제는 'struct'을(를) 사용하여 표시합니다.
+C:\Users\김동민\Desktop\GraphicsEngine_DX11\GraphicsEngine_DX11\WindowInfo.h(3): message : 'WindowInfo' 선언을 참조하십시오.
+C:\Users\김동민\Desktop\GraphicsEngine_DX11\GraphicsEngine_DX11\ResourceManager.h(70,1): warning C4267: '인수': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\김동민\Desktop\GraphicsEngine_DX11\GraphicsEngine_DX11\GraphicsEngine_DX11.cpp(238): message : 컴파일되는 함수 템플릿 인스턴스화 'size_t ResourceManager::CreateMesh<StaticMeshVertex>(std::vector<StaticMeshVertex,std::allocator<StaticMeshVertex>>,std::vector<std::seed_seq::result_type,std::allocator<std::seed_seq::result_type>>,int,int)'에 대한 참조를 확인하세요.
+C:\Users\김동민\Desktop\GraphicsEngine_DX11\GraphicsEngine_DX11\Mesh.h(55,1): warning C4267: '=': 'size_t'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\김동민\Desktop\GraphicsEngine_DX11\GraphicsEngine_DX11\ResourceManager.h(68): message : 컴파일되는 함수 템플릿 인스턴스화 'void Mesh::CreateVertexBuffer<StaticMeshVertex>(const std::vector<StaticMeshVertex,std::allocator<StaticMeshVertex>> &)'에 대한 참조를 확인하세요.
+C:\Users\김동민\Desktop\GraphicsEngine_DX11\GraphicsEngine_DX11\GraphicsEngine_DX11.cpp(238): message : 컴파일되는 함수 템플릿 인스턴스화 'size_t ResourceManager::CreateMesh<StaticMeshVertex>(std::vector<StaticMeshVertex,std::allocator<StaticMeshVertex>>,std::vector<std::seed_seq::result_type,std::allocator<std::seed_seq::result_type>>,int,int)'에 대한 참조를 확인하세요.
+  Graphics_Interface.cpp
+C:\Users\김동민\Desktop\GraphicsEngine_DX11\GraphicsEngine_DX11\WindowInfo.h(4,1): warning C4099: 'WindowInfo': 처음에는 'class'을(를) 사용하여 형식 이름을 표시했는데 이제는 'struct'을(를) 사용하여 표시합니다.
+C:\Users\김동민\Desktop\GraphicsEngine_DX11\GraphicsEngine_DX11\WindowInfo.h(3): message : 'WindowInfo' 선언을 참조하십시오.
+  LightManager.cpp
+C:\Users\김동민\Desktop\GraphicsEngine_DX11\GraphicsEngine_DX11\LightManager.cpp(81,47): warning C4267: '=': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\김동민\Desktop\GraphicsEngine_DX11\GraphicsEngine_DX11\LightManager.cpp(82,51): warning C4267: '=': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\김동민\Desktop\GraphicsEngine_DX11\GraphicsEngine_DX11\LightManager.cpp(83,49): warning C4267: '=': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  LightPass.cpp
+C:\Users\김동민\Desktop\GraphicsEngine_DX11\GraphicsEngine_DX11\WindowInfo.h(4,1): warning C4099: 'WindowInfo': 처음에는 'class'을(를) 사용하여 형식 이름을 표시했는데 이제는 'struct'을(를) 사용하여 표시합니다.
+C:\Users\김동민\Desktop\GraphicsEngine_DX11\GraphicsEngine_DX11\WindowInfo.h(3): message : 'WindowInfo' 선언을 참조하십시오.
+C:\Users\김동민\Desktop\GraphicsEngine_DX11\GraphicsEngine_DX11\LightPass.cpp(78,45): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\김동민\Desktop\GraphicsEngine_DX11\GraphicsEngine_DX11\LightPass.cpp(77,44): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  Mesh.cpp
+C:\Users\김동민\Desktop\GraphicsEngine_DX11\GraphicsEngine_DX11\WindowInfo.h(4,1): warning C4099: 'WindowInfo': 처음에는 'class'을(를) 사용하여 형식 이름을 표시했는데 이제는 'struct'을(를) 사용하여 표시합니다.
+C:\Users\김동민\Desktop\GraphicsEngine_DX11\GraphicsEngine_DX11\WindowInfo.h(3): message : 'WindowInfo' 선언을 참조하십시오.
+C:\Users\김동민\Desktop\GraphicsEngine_DX11\GraphicsEngine_DX11\Mesh.cpp(11,67): warning C4267: '=': 'size_t'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\김동민\Desktop\GraphicsEngine_DX11\GraphicsEngine_DX11\Mesh.cpp(21,35): warning C4267: '=': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  PassBase.cpp
+C:\Users\김동민\Desktop\GraphicsEngine_DX11\GraphicsEngine_DX11\WindowInfo.h(4,1): warning C4099: 'WindowInfo': 처음에는 'class'을(를) 사용하여 형식 이름을 표시했는데 이제는 'struct'을(를) 사용하여 표시합니다.
+C:\Users\김동민\Desktop\GraphicsEngine_DX11\GraphicsEngine_DX11\WindowInfo.h(3): message : 'WindowInfo' 선언을 참조하십시오.
+  PixelShader.cpp
+C:\Users\김동민\Desktop\GraphicsEngine_DX11\GraphicsEngine_DX11\WindowInfo.h(4,1): warning C4099: 'WindowInfo': 처음에는 'class'을(를) 사용하여 형식 이름을 표시했는데 이제는 'struct'을(를) 사용하여 표시합니다.
+C:\Users\김동민\Desktop\GraphicsEngine_DX11\GraphicsEngine_DX11\WindowInfo.h(3): message : 'WindowInfo' 선언을 참조하십시오.
+C:\Users\김동민\Desktop\GraphicsEngine_DX11\GraphicsEngine_DX11\PixelShader.cpp(52,20): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+  RasterizerState.cpp
+  RenderManager.cpp
+  코드를 생성하고 있습니다...
+  컴파일하고 있습니다...
+  RenderTargetView.cpp
+  ResourceManager.cpp
+  ShaderBase.cpp
+C:\Users\김동민\Desktop\GraphicsEngine_DX11\GraphicsEngine_DX11\WindowInfo.h(4,1): warning C4099: 'WindowInfo': 처음에는 'class'을(를) 사용하여 형식 이름을 표시했는데 이제는 'struct'을(를) 사용하여 표시합니다.
+C:\Users\김동민\Desktop\GraphicsEngine_DX11\GraphicsEngine_DX11\WindowInfo.h(3): message : 'WindowInfo' 선언을 참조하십시오.
+  ShaderManager.cpp
+C:\Users\김동민\Desktop\GraphicsEngine_DX11\GraphicsEngine_DX11\WindowInfo.h(4,1): warning C4099: 'WindowInfo': 처음에는 'class'을(를) 사용하여 형식 이름을 표시했는데 이제는 'struct'을(를) 사용하여 표시합니다.
+C:\Users\김동민\Desktop\GraphicsEngine_DX11\GraphicsEngine_DX11\WindowInfo.h(3): message : 'WindowInfo' 선언을 참조하십시오.
+  ShaderResource.cpp
+  ShadowPass.cpp
+C:\Users\김동민\Desktop\GraphicsEngine_DX11\GraphicsEngine_DX11\WindowInfo.h(4,1): warning C4099: 'WindowInfo': 처음에는 'class'을(를) 사용하여 형식 이름을 표시했는데 이제는 'struct'을(를) 사용하여 표시합니다.
+C:\Users\김동민\Desktop\GraphicsEngine_DX11\GraphicsEngine_DX11\WindowInfo.h(3): message : 'WindowInfo' 선언을 참조하십시오.
+  SwapChain.cpp
+  Texture.cpp
+C:\Users\김동민\Desktop\GraphicsEngine_DX11\GraphicsEngine_DX11\WindowInfo.h(4,1): warning C4099: 'WindowInfo': 처음에는 'class'을(를) 사용하여 형식 이름을 표시했는데 이제는 'struct'을(를) 사용하여 표시합니다.
+C:\Users\김동민\Desktop\GraphicsEngine_DX11\GraphicsEngine_DX11\WindowInfo.h(3): message : 'WindowInfo' 선언을 참조하십시오.
+  VertexShader.cpp
+C:\Users\김동민\Desktop\GraphicsEngine_DX11\GraphicsEngine_DX11\WindowInfo.h(4,1): warning C4099: 'WindowInfo': 처음에는 'class'을(를) 사용하여 형식 이름을 표시했는데 이제는 'struct'을(를) 사용하여 표시합니다.
+C:\Users\김동민\Desktop\GraphicsEngine_DX11\GraphicsEngine_DX11\WindowInfo.h(3): message : 'WindowInfo' 선언을 참조하십시오.
+C:\Users\김동민\Desktop\GraphicsEngine_DX11\GraphicsEngine_DX11\VertexShader.cpp(101,20): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+  ViewPort.cpp
+  코드를 생성하고 있습니다...
+     C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\GraphicsEngine_DX11.lib 라이브러리 및 C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\GraphicsEngine_DX11.exp 개체를 생성하고 있습니다.
+DirectXTex_x64_Debug.lib(BC.obj) : warning LNK4099: 'DirectXTex.pdb' PDB를 'DirectXTex_x64_Debug.lib(BC.obj)' 또는 'C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\DirectXTex.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
+DirectXTex_x64_Debug.lib(BC4BC5.obj) : warning LNK4099: 'DirectXTex.pdb' PDB를 'DirectXTex_x64_Debug.lib(BC4BC5.obj)' 또는 'C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\DirectXTex.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
+DirectXTex_x64_Debug.lib(BC6HBC7.obj) : warning LNK4099: 'DirectXTex.pdb' PDB를 'DirectXTex_x64_Debug.lib(BC6HBC7.obj)' 또는 'C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\DirectXTex.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
+DirectXTex_x64_Debug.lib(DirectXTexCompress.obj) : warning LNK4099: '' PDB를 'DirectXTex_x64_Debug.lib(DirectXTexCompress.obj)' 또는 ''에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
+DirectXTex_x64_Debug.lib(DirectXTexConvert.obj) : warning LNK4099: 'DirectXTex.pdb' PDB를 'DirectXTex_x64_Debug.lib(DirectXTexConvert.obj)' 또는 'C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\DirectXTex.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
+DirectXTex_x64_Debug.lib(DirectXTexD3D11.obj) : warning LNK4099: 'DirectXTex.pdb' PDB를 'DirectXTex_x64_Debug.lib(DirectXTexD3D11.obj)' 또는 'C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\DirectXTex.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
+DirectXTex_x64_Debug.lib(DirectXTexDDS.obj) : warning LNK4099: 'DirectXTex.pdb' PDB를 'DirectXTex_x64_Debug.lib(DirectXTexDDS.obj)' 또는 'C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\DirectXTex.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
+DirectXTex_x64_Debug.lib(DirectXTexHDR.obj) : warning LNK4099: 'DirectXTex.pdb' PDB를 'DirectXTex_x64_Debug.lib(DirectXTexHDR.obj)' 또는 'C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\DirectXTex.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
+DirectXTex_x64_Debug.lib(DirectXTexImage.obj) : warning LNK4099: 'DirectXTex.pdb' PDB를 'DirectXTex_x64_Debug.lib(DirectXTexImage.obj)' 또는 'C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\DirectXTex.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
+DirectXTex_x64_Debug.lib(DirectXTexMipMaps.obj) : warning LNK4099: 'DirectXTex.pdb' PDB를 'DirectXTex_x64_Debug.lib(DirectXTexMipMaps.obj)' 또는 'C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\DirectXTex.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
+DirectXTex_x64_Debug.lib(DirectXTexTGA.obj) : warning LNK4099: 'DirectXTex.pdb' PDB를 'DirectXTex_x64_Debug.lib(DirectXTexTGA.obj)' 또는 'C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\DirectXTex.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
+DirectXTex_x64_Debug.lib(DirectXTexUtil.obj) : warning LNK4099: 'DirectXTex.pdb' PDB를 'DirectXTex_x64_Debug.lib(DirectXTexUtil.obj)' 또는 'C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\DirectXTex.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
+DirectXTex_x64_Debug.lib(DirectXTexWIC.obj) : warning LNK4099: 'DirectXTex.pdb' PDB를 'DirectXTex_x64_Debug.lib(DirectXTexWIC.obj)' 또는 'C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\DirectXTex.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
+DirectXTK_x64_Debug.lib(pch.obj) : warning LNK4099: 'DirectXTK.pdb' PDB를 'DirectXTK_x64_Debug.lib(pch.obj)' 또는 'C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\DirectXTK.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
+DirectXTK_x64_Debug.lib(SimpleMath.obj) : warning LNK4099: 'DirectXTK.pdb' PDB를 'DirectXTK_x64_Debug.lib(SimpleMath.obj)' 또는 'C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\DirectXTK.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
+  GraphicsEngine_DX11.vcxproj -> C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\GraphicsEngine_DX11.dll
           1개 파일이 복사되었습니다.

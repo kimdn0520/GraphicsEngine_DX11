@@ -180,7 +180,7 @@ void DeferredPass::Render(std::vector<std::shared_ptr<ObjectInfo>> objInfos, std
 			if (_mat->albedoMap != L"")
 				_model_PBR_PS->SetResourceViewBuffer(_mat->albedoMap, "AlbedoMap");
 
-			if (_mat->normalMap != L"")
+			/*if (_mat->normalMap != L"")
 				_model_PBR_PS->SetResourceViewBuffer(_mat->normalMap, "NormalMap");
 
 			if (_mat->metallicMap != L"")
@@ -193,7 +193,7 @@ void DeferredPass::Render(std::vector<std::shared_ptr<ObjectInfo>> objInfos, std
 				_model_PBR_PS->SetResourceViewBuffer(_mat->AOMap, "AmbientOcclusionMap");
 
 			if (_mat->emissiveMap != L"")
-				_model_PBR_PS->SetResourceViewBuffer(_mat->emissiveMap, "EmissiveMap");
+				_model_PBR_PS->SetResourceViewBuffer(_mat->emissiveMap, "EmissiveMap");*/
 				
 			_model_PBR_PS->ConstantBufferUpdate(&cbMaterialBuffer, "cbMaterial");
 

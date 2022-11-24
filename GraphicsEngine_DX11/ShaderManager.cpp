@@ -90,6 +90,8 @@ void ShaderManager::CreateAllShaders()
 	CreateShader(SHADER_TYPE::PIXEL, L"GaussianBlur_PS.hlsl", _filepath, "BlurX_PS", L"BlurX_PS", nullptr);
 	CreateShader(SHADER_TYPE::PIXEL, L"GaussianBlur_PS.hlsl", _filepath, "BlurY_PS", L"BlurY_PS", nullptr);
 
+	CreateShader(SHADER_TYPE::PIXEL, L"Sampling_PS.hlsl", _filepath, "Sampling_PS", L"Sampling_PS", nullptr);
+
 	SetInfo();
 	AddConstantBuffer();
 	AddSamplerBuffer();

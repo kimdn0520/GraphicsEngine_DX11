@@ -140,25 +140,6 @@ void FBXParser::LoadMesh(fbxsdk::FbxNode* node, fbxsdk::FbxMesh* mesh)
 
 	DirectX::XMVECTOR det = XMMatrixDeterminant(nodeMatrix);
 
-	// 음수면 네거리브~
-	if (det.m128_f32[0] < 0)
-	{
-		// Decompose 했다가 scale -주고 다시 합쳐야함..
-		DirectX::XMVECTOR scale;
-		DirectX::XMVECTOR rotQuat;
-		DirectX::XMVECTOR trans;
-		DirectX::XMMatrixDecompose(&scale, &rotQuat, &trans, nodeMatrix);
-		DirectX::XMVECTOR minusScale = { -scale.m128_f32[0], -scale.m128_f32[1], -scale.m128_f32[2] };
-		scale = minusScale;
-
-		// 다시 SRT 조립
-		nodeMatrix = DirectX::XMMatrixScaling(scale.m128_f32[0], scale.m128_f32[1], scale.m128_f32[2]) *
-			DirectX::XMMatrixRotationQuaternion(rotQuat) *
-			DirectX::XMMatrixTranslation(trans.m128_f32[0], trans.m128_f32[1], trans.m128_f32[2]);
-
-		isNegativeScale = true;
-	}
-
 	const auto roll = -90.0f * DirectX::XM_PI / 180.0f;
 
 	const auto pitch = 180.0f * DirectX::XM_PI / 180.0f;
@@ -333,18 +314,9 @@ void FBXParser::LoadMesh(fbxsdk::FbxNode* node, fbxsdk::FbxMesh* mesh)
 
 				FbxVector4 vec = normal->GetDirectArray().GetAt(normalIdx);
 
-				if (isNegativeScale)
-				{
-					fbxNormal.x = static_cast<float>(-vec.mData[0]);
-					fbxNormal.y = static_cast<float>(-vec.mData[2]);
-					fbxNormal.z = static_cast<float>(-vec.mData[1]);
-				}
-				else
-				{
-					fbxNormal.x = static_cast<float>(vec.mData[0]);
-					fbxNormal.y = static_cast<float>(vec.mData[2]);
-					fbxNormal.z = static_cast<float>(vec.mData[1]);
-				}
+				fbxNormal.x = static_cast<float>(vec.mData[0]);
+				fbxNormal.y = static_cast<float>(vec.mData[2]);
+				fbxNormal.z = static_cast<float>(vec.mData[1]);
 			}
 
 			float uvX = -1.f;
@@ -410,9 +382,6 @@ void FBXParser::LoadMesh(fbxsdk::FbxNode* node, fbxsdk::FbxMesh* mesh)
 	// tangent 정보를 가져온다.
 	if (mesh->GetElementNormalCount() >= 1)
 		GetTangent(meshInfo);
-
-	// 네거티브 bool 초기화
-	isNegativeScale = false;
 }
 
 /// <summary>
