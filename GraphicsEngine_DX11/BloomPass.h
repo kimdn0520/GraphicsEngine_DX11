@@ -23,5 +23,9 @@ private:
 
 public:
 	void Render(std::shared_ptr<RenderTargetView> targetScreen);
+
+	void BloomCurveTarget(std::shared_ptr<RenderTargetView> targetScreen);
+
+
 };
 

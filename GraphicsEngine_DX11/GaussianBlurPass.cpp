@@ -125,6 +125,8 @@ void GaussianBlur::RenderStart(std::shared_ptr<RenderTargetView>& screen)
 
 void GaussianBlur::Render(std::shared_ptr<RenderTargetView>& screen)
 {
+	RenderStart(screen);
+
 	/// <summary>
 	/// 수평 블러
 	/// </summary>
@@ -185,6 +187,8 @@ void GaussianBlur::Render(std::shared_ptr<RenderTargetView>& screen)
 	g_deviceContext->IASetIndexBuffer(ResourceManager::Get()->GetMesh(SCREEN_MESH)->GetIndexBuffer().Get(), DXGI_FORMAT_R32_UINT, 0);
 
 	g_deviceContext->DrawIndexed(ResourceManager::Get()->GetMesh(SCREEN_MESH)->GetIdxBufferSize(), 0, 0);
+
+	RenderEnd();
 }
 
 void GaussianBlur::RenderEnd()
