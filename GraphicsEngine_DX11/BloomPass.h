@@ -3,6 +3,7 @@
 class RenderTargetView;
 class GaussianBlurPass;
 class ViewPort;
+class PixelShader;
 
 /// <summary>
 /// 1. Target을 받아 Bloom Curve를 통해 Bloom이 될 곳을 찾는다.
@@ -19,7 +20,9 @@ private:
 
 	std::shared_ptr<GaussianBlurPass> blurPass;
 
-	std::shared_ptr<RenderTargetView> _bloomOutput;
+	std::shared_ptr<RenderTargetView> bloomSample;
+
+	std::shared_ptr<PixelShader> bloomCurve_PS;
 
 public:
 	void Render(std::shared_ptr<RenderTargetView> targetScreen);
