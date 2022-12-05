@@ -335,6 +335,12 @@
     <FxCompile Include="..\GameClient\GameClient\Data\Shader\Sampling_PS.hlsl">
       <Filter>Shader\HLSL</Filter>
     </FxCompile>
+    <FxCompile Include="..\GameClient\GameClient\Data\Shader\BloomCurve_PS.hlsl">
+      <Filter>Shader\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="..\GameClient\GameClient\Data\Shader\BloomAddUp_PS.hlsl">
+      <Filter>Shader\HLSL</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\GameClient\GameClient\Data\Shader\LightHeader.hlsli">

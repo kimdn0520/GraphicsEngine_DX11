@@ -9,6 +9,7 @@
 #include "PixelShader.h"
 #include "DeferredPass.h"
 #include "ShadowPass.h"
+#include "BloomPass.h"
 
 #include "RenderManager.h"
 #include "ShaderManager.h"
@@ -21,6 +22,7 @@ void DebugPass::Start()
 
 	_deferredPass = RenderManager::Get()->GetDeferredpass();
 	_shadowPass = RenderManager::Get()->GetShadowPass();
+	_bloomPass = RenderManager::Get()->GetBloomPass();
 }
 
 void DebugPass::Release()
@@ -43,7 +45,7 @@ void DebugPass::Render()
 	_debug_PS->SetResourceViewBuffer(_deferredPass->gBuffers[2]->GetSRV().Get(), "Normal");
 	_debug_PS->SetResourceViewBuffer(_deferredPass->gBuffers[3]->GetSRV().Get(), "Position");
 	_debug_PS->SetResourceViewBuffer(_shadowPass->shadowDSV->GetShaderResourceView().Get(), "Shadow");
-	_debug_PS->SetResourceViewBuffer(_deferredPass->gBuffers[4]->GetSRV().Get(), "Emissive");
+	_debug_PS->SetResourceViewBuffer(_bloomPass->bloomOutput->GetSRV().Get(), "Emissive");
 
 	_debug_PS->Update();
 

@@ -95,6 +95,8 @@ void ShaderManager::CreateAllShaders()
 	CreateShader(SHADER_TYPE::PIXEL, L"GaussianBlur_PS.hlsl", _filepath, "BlurY_PS", L"BlurY_PS", nullptr);
 
 	CreateShader(SHADER_TYPE::PIXEL, L"Sampling_PS.hlsl", _filepath, "Sampling_PS", L"Sampling_PS", nullptr);
+	CreateShader(SHADER_TYPE::PIXEL, L"BloomCurve_PS.hlsl", _filepath, "BloomCurve_PS", L"BloomCurve_PS", nullptr);
+	CreateShader(SHADER_TYPE::PIXEL, L"BloomAddUp_PS.hlsl", _filepath, "BloomAddUp_PS", L"BloomAddUp_PS", nullptr);
 
 	SetInfo();
 	AddConstantBuffer();

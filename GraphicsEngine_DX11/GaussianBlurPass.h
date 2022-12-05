@@ -13,11 +13,11 @@ struct Material;
 /// <summary>
 /// 다운샘플링과 블러를 담당하는 패스
 /// </summary>
-class GaussianBlur : public PassBase
+class GaussianBlurPass : public PassBase
 {
 public:
-	GaussianBlur() = default;
-	~GaussianBlur() = default;
+	GaussianBlurPass() = default;
+	~GaussianBlurPass() = default;
 
 private:
 	std::shared_ptr<ViewPort> _screenViewPort;
@@ -50,6 +50,8 @@ private:
 
 	std::shared_ptr<PixelShader> blurY_PS;
 
+	friend class BloomPass;
+
 public:
 	void Start() override;
 
@@ -57,11 +59,15 @@ public:
 
 	void OnResize(int width, int height) override;
 
+	void ResizeBlurTexture(int width, int height);
+
 	void RenderStart(std::shared_ptr<RenderTargetView>& screen);
 
 	void Render(std::shared_ptr<RenderTargetView>& screen);
 
 	void RenderEnd();
+
+	void ProcessDownSampling(std::shared_ptr<RenderTargetView>& screen);
 
 	void DownSampling2x(std::shared_ptr<RenderTargetView>& screen);
 

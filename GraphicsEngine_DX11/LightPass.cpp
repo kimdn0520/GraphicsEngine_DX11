@@ -65,7 +65,7 @@ void LightPass::RenderStart()
 	_screenViewPort->SetViewPort(g_deviceContext);
 }
 
-void LightPass::Render(const std::vector<std::shared_ptr<RenderTargetView>> gBuffers, std::shared_ptr<DepthStencilView> shadowDSV, std::shared_ptr<RenderTargetView> ssaoMap)
+void LightPass::Render(const std::vector<std::shared_ptr<RenderTargetView>> gBuffers, std::shared_ptr<DepthStencilView> shadowDSV, std::shared_ptr<RenderTargetView> emissiveBuffer, std::shared_ptr<RenderTargetView> ssaoMap)
 {
 	RenderStart();
 
@@ -89,7 +89,7 @@ void LightPass::Render(const std::vector<std::shared_ptr<RenderTargetView>> gBuf
 		_light_PBR_PS3->SetResourceViewBuffer(gBuffers[1]->GetSRV().Get(), "DMRAO");
 		_light_PBR_PS3->SetResourceViewBuffer(gBuffers[2]->GetSRV().Get(), "Normal");
 		_light_PBR_PS3->SetResourceViewBuffer(gBuffers[3]->GetSRV().Get(), "Position");
-		_light_PBR_PS3->SetResourceViewBuffer(gBuffers[4]->GetSRV().Get(), "Emissive");
+		_light_PBR_PS3->SetResourceViewBuffer(emissiveBuffer->GetSRV().Get(), "Emissive");
 		_light_PBR_PS3->AddShaderResourceViewData("Shadow", 5);
 		_light_PBR_PS3->AddShaderResourceViewData("SSAO", 6);
 		_light_PBR_PS3->SetResourceViewBuffer(shadowDSV->GetShaderResourceView().Get(), "Shadow");
@@ -105,7 +105,7 @@ void LightPass::Render(const std::vector<std::shared_ptr<RenderTargetView>> gBuf
 		_light_PBR_PS2->SetResourceViewBuffer(gBuffers[1]->GetSRV().Get(), "DMRAO");
 		_light_PBR_PS2->SetResourceViewBuffer(gBuffers[2]->GetSRV().Get(), "Normal");
 		_light_PBR_PS2->SetResourceViewBuffer(gBuffers[3]->GetSRV().Get(), "Position");
-		_light_PBR_PS2->SetResourceViewBuffer(gBuffers[4]->GetSRV().Get(), "Emissive");
+		_light_PBR_PS2->SetResourceViewBuffer(emissiveBuffer->GetSRV().Get(), "Emissive");
 		_light_PBR_PS2->AddShaderResourceViewData("SSAO", 6);
 		_light_PBR_PS2->SetResourceViewBuffer(ssaoMap->GetSRV().Get(), "SSAO");
 		_light_PBR_PS2->ConstantBufferUpdate(&LightManager::cbLightBuffer, "cbLight");
@@ -119,7 +119,7 @@ void LightPass::Render(const std::vector<std::shared_ptr<RenderTargetView>> gBuf
 		_light_PBR_PS1->SetResourceViewBuffer(gBuffers[1]->GetSRV().Get(), "DMRAO");
 		_light_PBR_PS1->SetResourceViewBuffer(gBuffers[2]->GetSRV().Get(), "Normal");
 		_light_PBR_PS1->SetResourceViewBuffer(gBuffers[3]->GetSRV().Get(), "Position");
-		_light_PBR_PS1->SetResourceViewBuffer(gBuffers[4]->GetSRV().Get(), "Emissive");
+		_light_PBR_PS1->SetResourceViewBuffer(emissiveBuffer->GetSRV().Get(), "Emissive");
 		_light_PBR_PS1->AddShaderResourceViewData("Shadow", 5);
 		_light_PBR_PS1->SetResourceViewBuffer(shadowDSV->GetShaderResourceView().Get(), "Shadow");
 		_light_PBR_PS1->ConstantBufferUpdate(&LightManager::cbLightBuffer, "cbLight");
@@ -139,7 +139,7 @@ void LightPass::Render(const std::vector<std::shared_ptr<RenderTargetView>> gBuf
 		_light_PBR_PS->SetResourceViewBuffer(gBuffers[1]->GetSRV().Get(), "DMRAO");
 		_light_PBR_PS->SetResourceViewBuffer(gBuffers[2]->GetSRV().Get(), "Normal");
 		_light_PBR_PS->SetResourceViewBuffer(gBuffers[3]->GetSRV().Get(), "Position");
-		_light_PBR_PS->SetResourceViewBuffer(gBuffers[4]->GetSRV().Get(), "Emissive");
+		_light_PBR_PS->SetResourceViewBuffer(emissiveBuffer->GetSRV().Get(), "Emissive");
 		//_light_PBR_PS->ConstantBufferUpdate(&cbTextureBuf, "cbTexture");
 
 		_light_PBR_PS->Update();

@@ -8,7 +8,7 @@
 #include "RenderTargetView.h"
 #include "ResourceManager.h"
 
-void GaussianBlur::Start()
+void GaussianBlurPass::Start()
 {
 	blurOutput = std::make_shared<RenderTargetView>();
 
@@ -48,7 +48,7 @@ void GaussianBlur::Start()
 	downSixteenTexture->RenderTargetTextureInit(g_device, Graphics_Interface::Get()->GetScreenWidth() / 16, Graphics_Interface::Get()->GetScreenHeight() / 16, DXGI_FORMAT_R32G32B32A32_FLOAT);
 }
 
-void GaussianBlur::Release()
+void GaussianBlurPass::Release()
 {
 	blurOutput->Release();
 
@@ -77,16 +77,8 @@ void GaussianBlur::Release()
 	downSixteenTexture->Release();
 }
 
-void GaussianBlur::OnResize(int width, int height)
+void GaussianBlurPass::OnResize(int width, int height)
 {
-	blurOutput->Release();
-
-	blurOutput->RenderTargetTextureInit(g_device, width, height, DXGI_FORMAT_R32G32B32A32_FLOAT);
-
-	blurX_Texture->Release();
-
-	blurX_Texture->RenderTargetTextureInit(g_device, width, height, DXGI_FORMAT_R32G32B32A32_FLOAT);
-
 	// move를 하면 새로 메모리를 할당하지 않아도 되고 이미 메모리에 할당된것을 소유권만 넘겨주기때문에 copy동작보다 빠르다.
 	auto&& halfWidth = std::move(width / 2);
 	auto&& halfHeight = std::move(height / 2);
@@ -117,13 +109,24 @@ void GaussianBlur::OnResize(int width, int height)
 	downSixteenTexture->RenderTargetTextureInit(g_device, sixteenWidth, sixteenHeight, DXGI_FORMAT_R32G32B32A32_FLOAT);
 }
 
-void GaussianBlur::RenderStart(std::shared_ptr<RenderTargetView>& screen)
+void GaussianBlurPass::ResizeBlurTexture(int width, int height)
 {
-	if (screen->GetWidth() != Graphics_Interface::Get()->GetScreenWidth() || screen->GetHeight() != Graphics_Interface::Get()->GetScreenHeight())
-		OnResize(screen->GetWidth(), screen->GetHeight());
+	blurOutput->Release();
+
+	blurOutput->RenderTargetTextureInit(g_device, width, height, DXGI_FORMAT_R32G32B32A32_FLOAT);
+
+	blurX_Texture->Release();
+
+	blurX_Texture->RenderTargetTextureInit(g_device, width, height, DXGI_FORMAT_R32G32B32A32_FLOAT);
 }
 
-void GaussianBlur::Render(std::shared_ptr<RenderTargetView>& screen)
+void GaussianBlurPass::RenderStart(std::shared_ptr<RenderTargetView>& screen)
+{
+	if (screen->GetWidth() != Graphics_Interface::Get()->GetScreenWidth() || screen->GetHeight() != Graphics_Interface::Get()->GetScreenHeight())
+		ResizeBlurTexture(screen->GetWidth(), screen->GetHeight());
+}
+
+void GaussianBlurPass::Render(std::shared_ptr<RenderTargetView>& screen)
 {
 	RenderStart(screen);
 
@@ -191,14 +194,22 @@ void GaussianBlur::Render(std::shared_ptr<RenderTargetView>& screen)
 	RenderEnd();
 }
 
-void GaussianBlur::RenderEnd()
+void GaussianBlurPass::RenderEnd()
 {
 	ID3D11ShaderResourceView* nullSRV[1] = { nullptr };
 
 	g_deviceContext->PSSetShaderResources(0, 1, nullSRV);
 }
 
-void GaussianBlur::DownSampling2x(std::shared_ptr<RenderTargetView>& screen)
+void GaussianBlurPass::ProcessDownSampling(std::shared_ptr<RenderTargetView>& screen)
+{
+	DownSampling2x(screen);
+	DownSampling4x(screen);
+	DownSampling8x(screen);
+	DownSampling16x(screen);
+}
+
+void GaussianBlurPass::DownSampling2x(std::shared_ptr<RenderTargetView>& screen)
 {
 	downHalfTexture->ClearRenderTarget(g_deviceContext, Vector4(0.0f, 0.0f, 0.0f, 1.0f));
 
@@ -226,7 +237,7 @@ void GaussianBlur::DownSampling2x(std::shared_ptr<RenderTargetView>& screen)
 	g_deviceContext->DrawIndexed(ResourceManager::Get()->GetMesh(SCREEN_MESH)->GetIdxBufferSize(), 0, 0);
 }
 
-void GaussianBlur::DownSampling4x(std::shared_ptr<RenderTargetView>& screen)
+void GaussianBlurPass::DownSampling4x(std::shared_ptr<RenderTargetView>& screen)
 {
 	downQuarterTexture->ClearRenderTarget(g_deviceContext, Vector4(0.0f, 0.0f, 0.0f, 1.0f));
 
@@ -254,7 +265,7 @@ void GaussianBlur::DownSampling4x(std::shared_ptr<RenderTargetView>& screen)
 	g_deviceContext->DrawIndexed(ResourceManager::Get()->GetMesh(SCREEN_MESH)->GetIdxBufferSize(), 0, 0);
 }
 
-void GaussianBlur::DownSampling8x(std::shared_ptr<RenderTargetView>& screen)
+void GaussianBlurPass::DownSampling8x(std::shared_ptr<RenderTargetView>& screen)
 {
 	downOctarTexture->ClearRenderTarget(g_deviceContext, Vector4(0.0f, 0.0f, 0.0f, 1.0f));
 
@@ -282,7 +293,7 @@ void GaussianBlur::DownSampling8x(std::shared_ptr<RenderTargetView>& screen)
 	g_deviceContext->DrawIndexed(ResourceManager::Get()->GetMesh(SCREEN_MESH)->GetIdxBufferSize(), 0, 0);
 }
 
-void GaussianBlur::DownSampling16x(std::shared_ptr<RenderTargetView>& screen)
+void GaussianBlurPass::DownSampling16x(std::shared_ptr<RenderTargetView>& screen)
 {
 	downSixteenTexture->ClearRenderTarget(g_deviceContext, Vector4(0.0f, 0.0f, 0.0f, 1.0f));
 

@@ -5,6 +5,7 @@
 class ShadowPass;
 class DeferredPass;
 class LightPass;
+class BloomPass;
 class FinalPass;
 
 class RenderManager
@@ -28,6 +29,8 @@ private:
 
 	std::shared_ptr<LightPass> _lightPass;
 
+	std::shared_ptr<BloomPass> _bloomPass;
+
 	std::shared_ptr<FinalPass> _finalPass;
 
 	std::vector<std::shared_ptr<ObjectInfo>> _renderData;
@@ -49,9 +52,11 @@ public:
 	void Render();
 
 public:
-	std::shared_ptr<DeferredPass> GetDeferredpass() { return _deferredPass; }
+	const std::shared_ptr<DeferredPass>& GetDeferredpass() { return _deferredPass; }
 
-	std::shared_ptr<ShadowPass> GetShadowPass() { return _shadowPass; }
+	const std::shared_ptr<ShadowPass>& GetShadowPass() { return _shadowPass; }
+
+	const std::shared_ptr<BloomPass>& GetBloomPass() { return _bloomPass; }
 };
 
 

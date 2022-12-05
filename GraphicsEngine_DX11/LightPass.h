@@ -46,7 +46,7 @@ public:
 
 	void RenderStart();
 
-	void Render(const std::vector<std::shared_ptr<RenderTargetView>> gBuffers, std::shared_ptr<DepthStencilView> shadowDSV, std::shared_ptr<RenderTargetView> ssaoMap);
+	void Render(const std::vector<std::shared_ptr<RenderTargetView>> gBuffers, std::shared_ptr<DepthStencilView> shadowDSV, std::shared_ptr<RenderTargetView> emissiveBuffer, std::shared_ptr<RenderTargetView> ssaoMap);
 
 	void RenderEnd();
 };
