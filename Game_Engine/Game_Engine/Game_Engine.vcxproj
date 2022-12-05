@@ -189,6 +189,7 @@
     <ClInclude Include="TimeManager.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="UI.h" />
+    <ClInclude Include="YAMLParser.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Animator.cpp" />
@@ -216,6 +217,7 @@
     <ClCompile Include="TimeManager.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="UI.cpp" />
+    <ClCompile Include="YAMLParser.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />

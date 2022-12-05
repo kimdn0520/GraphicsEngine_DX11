@@ -42,6 +42,8 @@
 #include <boost/iostreams/filter/zlib.hpp>
 #include <boost/iostreams/device/file.hpp>
 
+#include "yaml-cpp/yaml.h"
+
 #include "SimpleMath.h"
 
 // using
