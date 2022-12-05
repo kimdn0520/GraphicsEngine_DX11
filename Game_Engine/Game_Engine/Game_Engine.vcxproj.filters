@@ -1,9 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="pch">
-      <UniqueIdentifier>{1d9f32b0-213e-401e-aa2f-05eccf53267c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="dllmain">
       <UniqueIdentifier>{2526430b-3841-4214-83fd-de1e81075edd}</UniqueIdentifier>
     </Filter>
@@ -51,6 +48,12 @@
     </Filter>
     <Filter Include="Components\Animator">
       <UniqueIdentifier>{8b29c4a3-aaf7-41c0-b66e-87f07410d52a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="YAML">
+      <UniqueIdentifier>{dd87938b-4375-4ae5-b41d-634bd10e0dff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pch">
+      <UniqueIdentifier>{1d9f32b0-213e-401e-aa2f-05eccf53267c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -120,6 +123,9 @@
     <ClInclude Include="StructDefine.h">
       <Filter>Utils</Filter>
     </ClInclude>
+    <ClInclude Include="YAMLParser.h">
+      <Filter>YAML</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -181,6 +187,9 @@
     </ClCompile>
     <ClCompile Include="Animator.cpp">
       <Filter>Components\Animator</Filter>
+    </ClCompile>
+    <ClCompile Include="YAMLParser.cpp">
+      <Filter>YAML</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
