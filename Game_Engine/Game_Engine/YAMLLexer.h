@@ -1,7 +1,7 @@
 #pragma once
 
 #define	TOKEND_NOTDEFINED	65536
-#define	NUMBER_OF_RESERVEDWORD	10
+#define	NUMBER_OF_RESERVEDWORD	13
 
 class YAMLLexer
 {
