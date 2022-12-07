@@ -126,10 +126,7 @@
     <ClInclude Include="YAMLParser.h">
       <Filter>YAML</Filter>
     </ClInclude>
-    <ClInclude Include="YAMLToken.h">
-      <Filter>YAML</Filter>
-    </ClInclude>
-    <ClInclude Include="YAMLLexer.h">
+    <ClInclude Include="YAMLBinaryLayout.h">
       <Filter>YAML</Filter>
     </ClInclude>
   </ItemGroup>
@@ -195,9 +192,6 @@
       <Filter>Components\Animator</Filter>
     </ClCompile>
     <ClCompile Include="YAMLParser.cpp">
-      <Filter>YAML</Filter>
-    </ClCompile>
-    <ClCompile Include="YAMLLexer.cpp">
       <Filter>YAML</Filter>
     </ClCompile>
   </ItemGroup>

@@ -189,9 +189,8 @@
     <ClInclude Include="TimeManager.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="UI.h" />
-    <ClInclude Include="YAMLLexer.h" />
+    <ClInclude Include="YAMLBinaryLayout.h" />
     <ClInclude Include="YAMLParser.h" />
-    <ClInclude Include="YAMLToken.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Animator.cpp" />
@@ -219,7 +218,6 @@
     <ClCompile Include="TimeManager.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="UI.cpp" />
-    <ClCompile Include="YAMLLexer.cpp" />
     <ClCompile Include="YAMLParser.cpp" />
   </ItemGroup>
   <ItemGroup>
