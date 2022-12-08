@@ -1,19 +1,5 @@
-﻿  YAMLLexer.cpp
-D:\GraphicsEngine_DX11\Game_Engine\Game_Engine\YAMLLexer.cpp(35,15): error C2065: '_ch_Index': 선언되지 않은 식별자입니다.
-D:\GraphicsEngine_DX11\Game_Engine\Game_Engine\YAMLLexer.cpp(35,41): error C2065: '_ch_Index': 선언되지 않은 식별자입니다.
-D:\GraphicsEngine_DX11\Game_Engine\Game_Engine\YAMLLexer.cpp(35,68): error C2065: '_ch_Index': 선언되지 않은 식별자입니다.
-D:\GraphicsEngine_DX11\Game_Engine\Game_Engine\YAMLLexer.cpp(35,94): error C2065: '_ch_Index': 선언되지 않은 식별자입니다.
-D:\GraphicsEngine_DX11\Game_Engine\Game_Engine\YAMLLexer.cpp(35,120): error C2065: '_ch_Index': 선언되지 않은 식별자입니다.
-D:\GraphicsEngine_DX11\Game_Engine\Game_Engine\YAMLLexer.cpp(37,35): error C2065: '_ch_Index': 선언되지 않은 식별자입니다.
-D:\GraphicsEngine_DX11\Game_Engine\Game_Engine\YAMLLexer.cpp(38,4): error C2065: '_ch_Index': 선언되지 않은 식별자입니다.
-D:\GraphicsEngine_DX11\Game_Engine\Game_Engine\YAMLLexer.cpp(41,23): error C2065: 'NUMBER_OF_RESERVEDWORD': 선언되지 않은 식별자입니다.
-D:\GraphicsEngine_DX11\Game_Engine\Game_Engine\YAMLLexer.cpp(43,26): error C2065: 'ASEToken': 선언되지 않은 식별자입니다.
-D:\GraphicsEngine_DX11\Game_Engine\Game_Engine\YAMLLexer.cpp(43,7): error C2660: 'strcmp': 함수는 1개의 인수를 사용하지 않습니다.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\string.h(100,13): message : 'strcmp' 선언을 참조하십시오.
-D:\GraphicsEngine_DX11\Game_Engine\Game_Engine\YAMLLexer.cpp(54,16): error C2065: '_ch_Index': 선언되지 않은 식별자입니다.
-D:\GraphicsEngine_DX11\Game_Engine\Game_Engine\YAMLLexer.cpp(54,42): error C2065: '_ch_Index': 선언되지 않은 식별자입니다.
-D:\GraphicsEngine_DX11\Game_Engine\Game_Engine\YAMLLexer.cpp(54,68): error C2065: '_ch_Index': 선언되지 않은 식별자입니다.
-D:\GraphicsEngine_DX11\Game_Engine\Game_Engine\YAMLLexer.cpp(61,17): error C2065: '_ch_Index': 선언되지 않은 식별자입니다.
-D:\GraphicsEngine_DX11\Game_Engine\Game_Engine\YAMLLexer.cpp(73,15): error C2065: '_ch_Index': 선언되지 않은 식별자입니다.
-D:\GraphicsEngine_DX11\Game_Engine\Game_Engine\YAMLLexer.cpp(73,41): error C2065: '_ch_Index': 선언되지 않은 식별자입니다.
-D:\GraphicsEngine_DX11\Game_Engine\Game_Engine\YAMLLexer.cpp(75,4): error C2065: '_ch_Index': 선언되지 않은 식별자입니다.
+﻿  YAMLParser.cpp
+  LINK : D:\GraphicsEngine_DX11\Library\lib\Game_Engine.dll을(를) 찾을 수 없거나 마지막 증분 링크에 의해 빌드되지 않았습니다. 전체 링크를 수행하고 있습니다.
+     D:\GraphicsEngine_DX11\Library\lib\Game_Engine.lib 라이브러리 및 D:\GraphicsEngine_DX11\Library\lib\Game_Engine.exp 개체를 생성하고 있습니다.
+  Game_Engine.vcxproj -> D:\GraphicsEngine_DX11\Library\lib\Game_Engine.dll
+          1개 파일이 복사되었습니다.
