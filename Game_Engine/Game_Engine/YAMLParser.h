@@ -3,8 +3,6 @@
 class YAMLParser
 {
 private:
-	YAML::Emitter emitter;				// 출력스트림 역할
-
 	std::vector<YAML::Node> nodeList;
 
 public:
@@ -12,7 +10,7 @@ public:
 	~YAMLParser() {};
 
 public:
-	
+	void OpenFile(const std::string& path);
 
 };
 

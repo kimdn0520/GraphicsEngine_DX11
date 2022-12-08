@@ -1,5 +1,74 @@
-﻿  YAMLParser.cpp
-  LINK : D:\GraphicsEngine_DX11\Library\lib\Game_Engine.dll을(를) 찾을 수 없거나 마지막 증분 링크에 의해 빌드되지 않았습니다. 전체 링크를 수행하고 있습니다.
-     D:\GraphicsEngine_DX11\Library\lib\Game_Engine.lib 라이브러리 및 D:\GraphicsEngine_DX11\Library\lib\Game_Engine.exp 개체를 생성하고 있습니다.
+﻿  pch.cpp
+  Defining YAML_CPP_API for DLL import
+D:\GraphicsEngine_DX11\Library\inc\yaml-cpp\parser.h(85,28): warning C4251: 'YAML::Parser::m_pScanner': class 'std::unique_ptr<YAML::Scanner,std::default_delete<YAML::Scanner>>'에서는 class 'YAML::Parser'의 클라이언트에서 DLL 인터페이스를 사용하도록 지정해야 합니다.
+D:\GraphicsEngine_DX11\Library\inc\yaml-cpp\parser.h(85): message : 'std::unique_ptr<YAML::Scanner,std::default_delete<YAML::Scanner>>' 선언을 참조하십시오.
+D:\GraphicsEngine_DX11\Library\inc\yaml-cpp\parser.h(86,31): warning C4251: 'YAML::Parser::m_pDirectives': class 'std::unique_ptr<YAML::Directives,std::default_delete<YAML::Directives>>'에서는 class 'YAML::Parser'의 클라이언트에서 DLL 인터페이스를 사용하도록 지정해야 합니다.
+D:\GraphicsEngine_DX11\Library\inc\yaml-cpp\parser.h(86): message : 'std::unique_ptr<YAML::Directives,std::default_delete<YAML::Directives>>' 선언을 참조하십시오.
+D:\GraphicsEngine_DX11\Library\inc\yaml-cpp\binary.h(65,30): warning C4251: 'YAML::Binary::m_data': class 'std::vector<unsigned char,std::allocator<unsigned char>>'에서는 class 'YAML::Binary'의 클라이언트에서 DLL 인터페이스를 사용하도록 지정해야 합니다.
+D:\GraphicsEngine_DX11\Library\lib\boost\boost\serialization\vector.hpp(231): message : 'std::vector<unsigned char,std::allocator<unsigned char>>' 선언을 참조하십시오.
+D:\GraphicsEngine_DX11\Library\inc\yaml-cpp\ostream_wrapper.h(49,29): warning C4251: 'YAML::ostream_wrapper::m_buffer': class 'std::vector<char,std::allocator<char>>'에서는 class 'YAML::ostream_wrapper'의 클라이언트에서 DLL 인터페이스를 사용하도록 지정해야 합니다.
+D:\GraphicsEngine_DX11\Library\lib\boost\boost\serialization\vector.hpp(231): message : 'std::vector<char,std::allocator<char>>' 선언을 참조하십시오.
+D:\GraphicsEngine_DX11\Library\inc\yaml-cpp\emitter.h(132,33): warning C4251: 'YAML::Emitter::m_pState': class 'std::unique_ptr<YAML::EmitterState,std::default_delete<YAML::EmitterState>>'에서는 class 'YAML::Emitter'의 클라이언트에서 DLL 인터페이스를 사용하도록 지정해야 합니다.
+D:\GraphicsEngine_DX11\Library\inc\yaml-cpp\emitter.h(132): message : 'std::unique_ptr<YAML::EmitterState,std::default_delete<YAML::EmitterState>>' 선언을 참조하십시오.
+D:\GraphicsEngine_DX11\Library\inc\yaml-cpp\exceptions.h(153,58): warning C4275: DLL 인터페이스가 아닌 class 'std::runtime_error'이(가) DLL 인터페이스 class 'YAML::Exception'의 기본으로 사용되었습니다.
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30133\include\stdexcept(101): message : 'std::runtime_error' 선언을 참조하십시오.
+D:\GraphicsEngine_DX11\Library\inc\yaml-cpp\exceptions.h(153): message : 'YAML::Exception' 선언을 참조하십시오.
+D:\GraphicsEngine_DX11\Library\inc\yaml-cpp\exceptions.h(162,15): warning C4251: 'YAML::Exception::msg': class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'에서는 class 'YAML::Exception'의 클라이언트에서 DLL 인터페이스를 사용하도록 지정해야 합니다.
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30133\include\xstring(4871): message : 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' 선언을 참조하십시오.
+D:\GraphicsEngine_DX11\Library\inc\yaml-cpp\node\node.h(135,15): warning C4251: 'YAML::Node::m_invalidKey': class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'에서는 class 'YAML::Node'의 클라이언트에서 DLL 인터페이스를 사용하도록 지정해야 합니다.
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30133\include\xstring(4871): message : 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' 선언을 참조하십시오.
+D:\GraphicsEngine_DX11\Library\inc\yaml-cpp\node\node.h(136,40): warning C4251: 'YAML::Node::m_pMemory': class 'std::shared_ptr<YAML::detail::memory_holder>'에서는 class 'YAML::Node'의 클라이언트에서 DLL 인터페이스를 사용하도록 지정해야 합니다.
+D:\GraphicsEngine_DX11\Library\inc\yaml-cpp\node\ptr.h(23): message : 'std::shared_ptr<YAML::detail::memory_holder>' 선언을 참조하십시오.
+D:\GraphicsEngine_DX11\Library\inc\yaml-cpp\node\detail\memory.h(31,9): warning C4251: 'YAML::detail::memory::m_nodes': class 'std::set<YAML::detail::shared_node,std::less<YAML::detail::shared_node>,std::allocator<YAML::detail::shared_node>>'에서는 class 'YAML::detail::memory'의 클라이언트에서 DLL 인터페이스를 사용하도록 지정해야 합니다.
+D:\GraphicsEngine_DX11\Library\inc\yaml-cpp\node\detail\memory.h(30): message : 'std::set<YAML::detail::shared_node,std::less<YAML::detail::shared_node>,std::allocator<YAML::detail::shared_node>>' 선언을 참조하십시오.
+D:\GraphicsEngine_DX11\Library\inc\yaml-cpp\node\detail\memory.h(42,17): warning C4251: 'YAML::detail::memory_holder::m_pMemory': class 'std::shared_ptr<YAML::detail::memory>'에서는 class 'YAML::detail::memory_holder'의 클라이언트에서 DLL 인터페이스를 사용하도록 지정해야 합니다.
+D:\GraphicsEngine_DX11\Library\inc\yaml-cpp\node\ptr.h(24): message : 'std::shared_ptr<YAML::detail::memory>' 선언을 참조하십시오.
+D:\GraphicsEngine_DX11\Library\inc\yaml-cpp\node\detail\node_data.h(104,15): warning C4251: 'YAML::detail::node_data::m_tag': class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'에서는 class 'YAML::detail::node_data'의 클라이언트에서 DLL 인터페이스를 사용하도록 지정해야 합니다.
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30133\include\xstring(4871): message : 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' 선언을 참조하십시오.
+D:\GraphicsEngine_DX11\Library\inc\yaml-cpp\node\detail\node_data.h(108,15): warning C4251: 'YAML::detail::node_data::m_scalar': class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'에서는 class 'YAML::detail::node_data'의 클라이언트에서 DLL 인터페이스를 사용하도록 지정해야 합니다.
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30133\include\xstring(4871): message : 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' 선언을 참조하십시오.
+D:\GraphicsEngine_DX11\Library\inc\yaml-cpp\node\detail\node_data.h(112,12): warning C4251: 'YAML::detail::node_data::m_sequence': class 'std::vector<YAML::detail::node *,std::allocator<YAML::detail::node *>>'에서는 class 'YAML::detail::node_data'의 클라이언트에서 DLL 인터페이스를 사용하도록 지정해야 합니다.
+D:\GraphicsEngine_DX11\Library\inc\yaml-cpp\node\detail\node_iterator.h(39): message : 'std::vector<YAML::detail::node *,std::allocator<YAML::detail::node *>>' 선언을 참조하십시오.
+D:\GraphicsEngine_DX11\Library\inc\yaml-cpp\node\detail\node_data.h(118,12): warning C4251: 'YAML::detail::node_data::m_map': class 'std::vector<std::pair<YAML::detail::node *,YAML::detail::node *>,std::allocator<std::pair<YAML::detail::node *,YAML::detail::node *>>>'에서는 class 'YAML::detail::node_data'의 클라이언트에서 DLL 인터페이스를 사용하도록 지정해야 합니다.
+D:\GraphicsEngine_DX11\Library\inc\yaml-cpp\node\detail\node_iterator.h(40): message : 'std::vector<std::pair<YAML::detail::node *,YAML::detail::node *>,std::allocator<std::pair<YAML::detail::node *,YAML::detail::node *>>>' 선언을 참조하십시오.
+D:\GraphicsEngine_DX11\Library\inc\yaml-cpp\node\detail\node_data.h(122,20): warning C4251: 'YAML::detail::node_data::m_undefinedPairs': class 'std::list<YAML::detail::node_data::kv_pair,std::allocator<std::pair<YAML::detail::node *,YAML::detail::node *>>>'에서는 class 'YAML::detail::node_data'의 클라이언트에서 DLL 인터페이스를 사용하도록 지정해야 합니다.
+D:\GraphicsEngine_DX11\Library\inc\yaml-cpp\node\detail\node_data.h(121): message : 'std::list<YAML::detail::node_data::kv_pair,std::allocator<std::pair<YAML::detail::node *,YAML::detail::node *>>>' 선언을 참조하십시오.
+  Animator.cpp
+D:\GraphicsEngine_DX11\Game_Engine\Game_Engine\Animator.cpp(87,48): warning C4267: '=': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\GraphicsEngine_DX11\Game_Engine\Game_Engine\Animator.cpp(88,49): warning C4267: '=': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  Camera.cpp
+  Component.cpp
+  GameEngine.cpp
+  GameEngine_Interface.cpp
+  GameObject.cpp
+  GraphicsManager.cpp
+  InputManager.cpp
+  Light.cpp
+  MeshRenderer.cpp
+  MonoBehaviour.cpp
+  Resources.cpp
+D:\GraphicsEngine_DX11\FBXParser\FBXParser\inc\ParserData\ParserData.h(114,1): warning C4099: 'FBXModel': 처음에는 'struct'을(를) 사용하여 형식 이름을 표시했는데 이제는 'class'을(를) 사용하여 표시합니다.
+D:\GraphicsEngine_DX11\FBXParser\FBXParser\inc\ParserData\ParserData.h(113): message : 'FBXModel' 선언을 참조하십시오.
+  Scene.cpp
+  SceneManager.cpp
+  Text.cpp
+  TimeManager.cpp
+  Transform.cpp
+D:\GraphicsEngine_DX11\Game_Engine\Game_Engine\Transform.cpp(96,20): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\GraphicsEngine_DX11\Game_Engine\Game_Engine\Transform.cpp(102,16): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\GraphicsEngine_DX11\Game_Engine\Game_Engine\Transform.cpp(104,15): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\GraphicsEngine_DX11\Game_Engine\Game_Engine\Transform.cpp(105,15): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\GraphicsEngine_DX11\Game_Engine\Game_Engine\Transform.cpp(225,15): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\GraphicsEngine_DX11\Game_Engine\Game_Engine\Transform.cpp(226,15): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\GraphicsEngine_DX11\Game_Engine\Game_Engine\Transform.cpp(238,15): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\GraphicsEngine_DX11\Game_Engine\Game_Engine\Transform.cpp(239,15): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\GraphicsEngine_DX11\Game_Engine\Game_Engine\Transform.cpp(259,15): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\GraphicsEngine_DX11\Game_Engine\Game_Engine\Transform.cpp(260,15): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\GraphicsEngine_DX11\Game_Engine\Game_Engine\Transform.cpp(261,15): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\GraphicsEngine_DX11\Game_Engine\Game_Engine\Transform.cpp(247,11): warning C4101: 'localRotationVec' :참조되지 않은 지역 변수입니다.
+  UI.cpp
+  YAMLParser.cpp
+  dllmain.cpp
+  코드를 생성하고 있습니다...
   Game_Engine.vcxproj -> D:\GraphicsEngine_DX11\Library\lib\Game_Engine.dll
           1개 파일이 복사되었습니다.
