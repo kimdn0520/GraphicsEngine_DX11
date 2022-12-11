@@ -13,11 +13,14 @@
 #include "Player.h"
 #include "CameraScript.h"
 #include "TestAnimPrefab.h"
+#include "Resources.h"
 
 void TestScene::Initialize()
 {
 	if (!DataManager::Get()->isDataLoad)
 		DataManager::Get()->DataLoad();
+
+	Resources::Get()->LoadUnityScene("Data/Scene/SampleScene.unity");
 
 	//---------------------------------------------------------------------------------------------------------
 	// Main Camera

@@ -42,8 +42,9 @@
 #include <boost/iostreams/filter/zlib.hpp>
 #include <boost/iostreams/device/file.hpp>
 
+#define YAML_CPP_STATIC_DEFINE
+#pragma comment(lib, "yaml-cppd.lib")
 #include "yaml-cpp/yaml.h"
-
 #include "SimpleMath.h"
 
 // using

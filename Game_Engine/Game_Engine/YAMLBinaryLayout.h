@@ -1,7 +1,7 @@
 #pragma once
 #include "pch.h"
 
-namespace FBXBinaryData
+namespace YAMLBinaryData
 {
 	struct Float2
 	{

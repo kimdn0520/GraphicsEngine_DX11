@@ -6,6 +6,8 @@
 #include "MonoBehaviour.h"
 #include "Transform.h"
 #include "MeshRenderer.h"
+#include "YAMLParser.h"
+//#include "YAMLBinaryLayout.h"
 
 #include "ParserBase.h"
 #include "ParserData.h"
@@ -1252,6 +1254,15 @@ std::vector<std::shared_ptr<GameObject>> Resources::LoadFBXBinary(std::string pa
 	}
 
 	return gameObjects;
+}
+
+void Resources::LoadUnityScene(std::string path)
+{
+	// UnityScene 
+	shared_ptr<YAMLParser> unityScene = make_shared<YAMLParser>();
+
+	// 씬을 불러와서 데이터를 바이너리화해서 저장
+	unityScene->OpenFile(path);
 }
 
 void Resources::MaterialReconstruction(std::string materialName, std::string textureName, std::string info)

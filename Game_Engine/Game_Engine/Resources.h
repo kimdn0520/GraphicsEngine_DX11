@@ -49,6 +49,9 @@ public:
 
 	GameEngine_DLL std::vector<std::shared_ptr<GameObject>> LoadFBXBinary(std::string path, int topology, int rasterizerState);
 
+	// ** Test : ¿œ¥‹ void ∑Œ.. ** 
+	GameEngine_DLL void LoadUnityScene(std::string path);
+
 	GameEngine_DLL void MaterialReconstruction(std::string materialName, std::string textureName, std::string info);
 };
 

@@ -80,13 +80,13 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)Library\lib\</OutDir>
     <IncludePath>$(SolutionDir)FBXParser\FBXParser\FBXBinaryLayout.h;$(SolutionDir)Library\lib\boost;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Library\lib\boost\stage\lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)Library\lib\yaml-cpp;$(SolutionDir)Library\lib\boost\stage\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)Library\lib\</OutDir>
     <IncludePath>$(SolutionDir)FBXParser\FBXParser\FBXBinaryLayout.h;$(SolutionDir)Library\lib\boost;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Library\lib\boost\stage\lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)Library\lib\yaml-cpp;$(SolutionDir)Library\lib\boost\stage\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -137,6 +137,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalDependencies>$(SolutionDir)Library\lib\GraphicsEngine_DX11.lib;$(SolutionDir)Library\lib\ASEParser.lib;$(SolutionDir)Library\lib\FBXParser.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>copy "$(TargetDir)Game_Engine.dll" "$(SolutionDir)Output"</Command>
@@ -161,6 +162,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalDependencies>$(SolutionDir)Library\lib\GraphicsEngine_DX11.lib;$(SolutionDir)Library\lib\ASEParser.lib;$(SolutionDir)Library\lib\FBXParser.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>copy "$(TargetDir)Game_Engine.dll" "$(SolutionDir)Output"</Command>
@@ -218,7 +220,10 @@
     <ClCompile Include="TimeManager.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="UI.cpp" />
-    <ClCompile Include="YAMLParser.cpp" />
+    <ClCompile Include="YAMLParser.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />
