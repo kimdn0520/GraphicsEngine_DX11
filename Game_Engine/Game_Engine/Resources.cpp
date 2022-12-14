@@ -1258,11 +1258,42 @@ std::vector<std::shared_ptr<GameObject>> Resources::LoadFBXBinary(std::string pa
 
 void Resources::LoadUnityScene(std::string path)
 {
-	// UnityScene 
-	shared_ptr<YAMLParser> unityScene = make_shared<YAMLParser>();
+	// test 중
+	shared_ptr<YAMLParser> yaml = make_shared<YAMLParser>();
 
-	// 씬을 불러와서 데이터를 바이너리화해서 저장
-	unityScene->OpenFile(path);
+	yaml->OpenFile(path);
+
+	YAMLBinaryData::Scene scene;
+
+	for (int i = 0; i < yaml->nodeList.size(); i++)
+	{
+		if (yaml->nodeList[i]->keyName.compare("GameObject") == 0)
+		{
+			YAMLBinaryData::GameObject gameObject;
+
+			scene.gameObjects.push_back(gameObject);
+		}
+		else if (yaml->nodeList[i]->keyName.compare("Transform") == 0)
+		{
+
+		}
+		else if (yaml->nodeList[i]->keyName.compare("BoxCollider") == 0)
+		{
+
+		}
+		else if (yaml->nodeList[i]->keyName.compare("Camera") == 0)
+		{
+
+		}
+		else if (yaml->nodeList[i]->keyName.compare("Light") == 0)
+		{
+
+		}
+		else if (yaml->nodeList[i]->keyName.compare("Prefab") == 0)
+		{
+
+		}
+	}
 }
 
 void Resources::MaterialReconstruction(std::string materialName, std::string textureName, std::string info)

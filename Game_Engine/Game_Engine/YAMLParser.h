@@ -1,16 +1,26 @@
 #pragma once
 #include "YAMLBinaryLayout.h"
 
-/// <summary>
-/// nodeList에 node들을 담아준다 (앞에 공백이 없던 최상위 노드들이 담긴다)
-/// 
-/// </summary>
+struct YAMLNode
+{
+	std::string keyName = "none";
+
+	std::string value = "none";
+
+	std::vector<std::shared_ptr<YAMLNode>> childNodeList;
+};
+
 class YAMLParser
 {
 private:
-	std::vector<YAML::Node> nodeList;
+	bool isCheck = false;
 
-	
+public:
+	// TopNode 정보들을 LoadAll 한다.
+	std::vector<YAML::Node> yamlNodeList;
+
+	// OpenFile 하면 여기에 이제 모든 정보가 담긴다.
+	std::vector<std::shared_ptr<YAMLNode>> nodeList;	
 
 public:
 	YAMLParser() {};
@@ -19,11 +29,9 @@ public:
 public:
 	void OpenFile(const std::string& path);
 
-	void ReadNode(YAML::Node node);
+	void ReadNode(YAML::Node yamlNode, std::shared_ptr<YAMLNode> nodeData);
 
-	void MapNode(YAML::const_iterator node_it);
+	std::string ScalarNode(YAML::const_iterator node_it);
 
-	void ScalarNode(YAML::const_iterator node_it);
-
-	void SequenceNode(YAML::const_iterator node_it);
+	void SequenceNode(YAML::const_iterator node_it, std::shared_ptr<YAMLNode> nodeData);
 };

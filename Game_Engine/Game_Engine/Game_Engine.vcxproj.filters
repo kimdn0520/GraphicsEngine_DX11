@@ -129,6 +129,9 @@
     <ClInclude Include="YAMLBinaryLayout.h">
       <Filter>YAML</Filter>
     </ClInclude>
+    <ClInclude Include="LoadUnityScene.h">
+      <Filter>YAML</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -192,6 +195,9 @@
       <Filter>Components\Animator</Filter>
     </ClCompile>
     <ClCompile Include="YAMLParser.cpp">
+      <Filter>YAML</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadUnityScene.cpp">
       <Filter>YAML</Filter>
     </ClCompile>
   </ItemGroup>

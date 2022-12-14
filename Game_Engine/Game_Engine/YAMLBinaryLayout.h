@@ -77,8 +77,6 @@ namespace YAMLBinaryData
 	public:
 		friend boost::serialization::access;
 
-		Transform() = default;
-
 		Transform(
 			Float3 _localPosition = { 0.f, 0.f, 0.f }, 
 			Float3 _localRotation = { 0.f, 0.f, 0.f },

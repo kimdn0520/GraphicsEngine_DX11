@@ -4,29 +4,29 @@
 void YAMLParser::OpenFile(const std::string& path)
 {
 	// 모든 TopNode를 담는다.
-	nodeList = YAML::LoadAllFromFile(path);
+	yamlNodeList = YAML::LoadAllFromFile(path);
 
-	// TopNode를 읽으면서 정보를 담자
-	for (int i = 0; i < nodeList.size(); i++)
-	{
-		YAML::Node node = nodeList[i];
-
-		ReadNode(node);
+	for (int i = 0; i < yamlNodeList.size(); i++)
+	{	
+		ReadNode(yamlNodeList[i], nullptr);
 	}
 }
 
-void YAMLParser::ReadNode(YAML::Node node)
+void YAMLParser::ReadNode(YAML::Node yamlNode, std::shared_ptr<YAMLNode> nodeData)
 {
-	YAML::const_iterator node_it = node.begin();
+	YAML::const_iterator node_it = yamlNode.begin();
 
 	// 노드를 순회한다.
-	for (node_it; node_it != node.end(); node_it++)
+	for (node_it; node_it != yamlNode.end(); node_it++)
 	{
+		// 새로운 노드 생성
+		std::shared_ptr<YAMLNode> node = std::make_shared<YAMLNode>();
+
 		YAML::Node key = node_it->first;
 
 		YAML::Node value = node_it->second;
-
-		string keyName = key.as<std::string>();
+		
+		node->keyName = key.as<std::string>();
 
 		// value 값에 따라 switch!
 		switch (value.Type())
@@ -37,17 +37,31 @@ void YAMLParser::ReadNode(YAML::Node node)
 			break;
 		case YAML::NodeType::Map:			// key, value값
 		{
-			MapNode(node_it);
+			// childNode로 넣어준다
+			if(nodeData != nullptr)
+				nodeData->childNodeList.push_back(node);
+			else
+				nodeList.push_back(node);					// Top Node
+
+			ReadNode(value, node);
 		}
 		break;
 		case YAML::NodeType::Scalar:		// 숫자, 문자
 		{
-			ScalarNode(node_it);
+			node->value = ScalarNode(node_it);
+
+			// childNode로 넣어준다
+			if (nodeData != nullptr)
+				nodeData->childNodeList.push_back(node);
 		}
 		break;
 		case YAML::NodeType::Sequence:		// 배열, 리스트
 		{
-			SequenceNode(node_it);
+			// childNode로 넣어준다
+			if (nodeData != nullptr)
+				nodeData->childNodeList.push_back(node);
+
+			SequenceNode(node_it, node);
 		}
 		break;
 		default:
@@ -56,44 +70,23 @@ void YAMLParser::ReadNode(YAML::Node node)
 	}
 }
 
-void YAMLParser::MapNode(YAML::const_iterator node_it)
+std::string YAMLParser::ScalarNode(YAML::const_iterator node_it)
 {
-	YAML::Node value = node_it->second;
-
-	ReadNode(value);
+	return node_it->second.as<std::string>();
 }
 
-void YAMLParser::ScalarNode(YAML::const_iterator node_it)
+void YAMLParser::SequenceNode(YAML::const_iterator node_it, std::shared_ptr<YAMLNode> nodeData)
 {
-	string stringData = node_it->second.as<std::string>();
-}
+	// 배열
+	YAML::Node arr = node_it->second;
 
-void YAMLParser::SequenceNode(YAML::const_iterator node_it)
-{
-	YAML::Node value = node_it->second;
-
-	int size = (int)value.size();
-	
-	for (int i = 0; i < size; i++)
+	for (int i = 0; i < (int)arr.size(); i++)
 	{
-		YAML::Node temp = value[i];
+		YAML::Node tmpNode = arr[i];
 		
-		YAML::const_iterator Nowit = temp.begin();
-		
-		for (Nowit; Nowit != temp.end(); ++Nowit)
-		{
-			if (temp.IsScalar() == true) 
-			{
-				ScalarNode(Nowit);
-			}
-			else if (temp.IsMap() == true)
-			{
-				MapNode(Nowit);
-			}
-			else if (temp.IsSequence() == true)
-			{
-				SequenceNode(Nowit);
-			}
-		}
+		// 객체 배열
+		// 배열을 넘겨줄때 tmp_it 을 넘겨주면 문제가 생김..
+		// node 자체를 넘겨주는 것으로 했다.
+		ReadNode(tmpNode, nodeData);
 	}
 }
