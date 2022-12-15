@@ -108,8 +108,6 @@ namespace YAMLBinaryData
 	public:
 		friend boost::serialization::access;
 
-		BoxCollider() = default;
-
 		BoxCollider(
 			Float3 _size = { 1.f, 1.f, 1.f },
 			Float3 _center = { 0.f, 0.f, 0.f }
@@ -130,6 +128,32 @@ namespace YAMLBinaryData
 			ar& center;
 		}
 
+	};
+
+	class Light
+	{
+	public:
+		friend boost::serialization::access;
+
+		Light(
+			int _type = 0,
+			Float4 _color = { 0.f, 0.f, 0.f, 0.f }
+		)
+			: type(std::move(_type))
+			, color(std::move(_color))
+		{}
+
+	public:
+		int type;
+		Float4 color;
+
+	private:
+		template<typename Archive>
+		void serialize(Archive& ar, const unsigned int version)
+		{
+			ar& type;
+			ar& color;
+		}
 	};
 
 	class GameObject

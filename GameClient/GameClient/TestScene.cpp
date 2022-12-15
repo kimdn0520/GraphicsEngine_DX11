@@ -20,7 +20,7 @@ void TestScene::Initialize()
 	if (!DataManager::Get()->isDataLoad)
 		DataManager::Get()->DataLoad();
 
-	Resources::Get()->LoadUnityScene("Data/Scene/SampleScene.unity");
+	Resources::Get()->LoadSceneData("Data/Scene/SampleScene.unity");
 
 	//---------------------------------------------------------------------------------------------------------
 	// Main Camera

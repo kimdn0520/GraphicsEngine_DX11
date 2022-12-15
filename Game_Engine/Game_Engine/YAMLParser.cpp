@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "YAMLParser.h"
+#include "LoadUnityScene.h"
 
 void YAMLParser::OpenFile(const std::string& path)
 {
@@ -89,4 +90,9 @@ void YAMLParser::SequenceNode(YAML::const_iterator node_it, std::shared_ptr<YAML
 		// node 자체를 넘겨주는 것으로 했다.
 		ReadNode(tmpNode, nodeData);
 	}
+}
+
+void YAMLParser::Release()
+{
+
 }

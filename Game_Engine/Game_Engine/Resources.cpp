@@ -7,7 +7,7 @@
 #include "Transform.h"
 #include "MeshRenderer.h"
 #include "YAMLParser.h"
-//#include "YAMLBinaryLayout.h"
+#include "LoadUnityScene.h"
 
 #include "ParserBase.h"
 #include "ParserData.h"
@@ -1256,44 +1256,13 @@ std::vector<std::shared_ptr<GameObject>> Resources::LoadFBXBinary(std::string pa
 	return gameObjects;
 }
 
-void Resources::LoadUnityScene(std::string path)
+void Resources::LoadSceneData(std::string path)
 {
 	// test Сп
-	shared_ptr<YAMLParser> yaml = make_shared<YAMLParser>();
+	shared_ptr<LoadUnityScene> load = make_shared<LoadUnityScene>();
 
-	yaml->OpenFile(path);
+	load->LoadScene(path);
 
-	YAMLBinaryData::Scene scene;
-
-	for (int i = 0; i < yaml->nodeList.size(); i++)
-	{
-		if (yaml->nodeList[i]->keyName.compare("GameObject") == 0)
-		{
-			YAMLBinaryData::GameObject gameObject;
-
-			scene.gameObjects.push_back(gameObject);
-		}
-		else if (yaml->nodeList[i]->keyName.compare("Transform") == 0)
-		{
-
-		}
-		else if (yaml->nodeList[i]->keyName.compare("BoxCollider") == 0)
-		{
-
-		}
-		else if (yaml->nodeList[i]->keyName.compare("Camera") == 0)
-		{
-
-		}
-		else if (yaml->nodeList[i]->keyName.compare("Light") == 0)
-		{
-
-		}
-		else if (yaml->nodeList[i]->keyName.compare("Prefab") == 0)
-		{
-
-		}
-	}
 }
 
 void Resources::MaterialReconstruction(std::string materialName, std::string textureName, std::string info)

@@ -34,4 +34,6 @@ public:
 	std::string ScalarNode(YAML::const_iterator node_it);
 
 	void SequenceNode(YAML::const_iterator node_it, std::shared_ptr<YAMLNode> nodeData);
+
+	void Release();
 };
