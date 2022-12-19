@@ -53,7 +53,7 @@ struct ObjectInfo
 
 	std::wstring vsName;
 
-	std::wstring psName;
+	std::vector<std::wstring> psName;
 
 	bool isSkinned = false;
 

@@ -177,7 +177,7 @@ void DeferredPass::Render(std::vector<std::shared_ptr<ObjectInfo>> objInfos, std
 				cbMaterialBuffer.emissiveColor = Vector3(_mat->material_Emissive.x, _mat->material_Emissive.y, _mat->material_Emissive.z);
 				cbMaterialBuffer.emissionFactor = _mat->emissionFactor;
 
-				_model_PBR_PS = dynamic_pointer_cast<PixelShader>(ShaderManager::Get()->GetShader(objInfo->psName));
+				_model_PBR_PS = dynamic_pointer_cast<PixelShader>(ShaderManager::Get()->GetShader(objInfo->psName[i]));
 
 				// ÀÏ´Ü..
 				if (_mat->albedoMap != L"")
