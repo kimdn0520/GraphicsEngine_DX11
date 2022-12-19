@@ -9,14 +9,15 @@ public:
 public:
 	ComPtr<ID3D11Buffer> vertexBuffer;
 
-	ComPtr<ID3D11Buffer> indexBuffer;
+	std::vector<ComPtr<ID3D11Buffer>> indexBuffers;
+
+	std::vector<unsigned int> indexBuffersSize;
 
 	unsigned int stride = 0;
 
 	int rasterNum = 0;
 
 private:
-	unsigned int _indexBufferSize;
 
 	ComPtr<ID3D11RasterizerState> _rasterState;
 
@@ -28,11 +29,9 @@ public:
 
 	void CreateIndexBuffer(const std::vector<unsigned int>& indexBuffer);
 
-	unsigned int& GetIdxBufferSize() { return _indexBufferSize; }
-
 	const ComPtr<ID3D11Buffer>& GetVertexBuffer() { return vertexBuffer; }
 
-	const ComPtr<ID3D11Buffer>& GetIndexBuffer() { return indexBuffer; }
+	const std::vector<ComPtr<ID3D11Buffer>> GetIndexBuffers() { return indexBuffers; }
 
 	const ComPtr<ID3D11RasterizerState>& GetRasterState() { return _rasterState; }
 
@@ -41,8 +40,6 @@ public:
 	void SetRenderState(ComPtr<ID3D11RasterizerState> rasterState) { _rasterState = rasterState; }
 
 	void SetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY topology) { _topology = topology; }
-
-	void SetIndexBufferSize(unsigned int indexBufferSize) { _indexBufferSize = indexBufferSize; }
 };
 
 template<typename T>

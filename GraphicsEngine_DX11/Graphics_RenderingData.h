@@ -49,7 +49,7 @@ struct ObjectInfo
 	DirectX::SimpleMath::Vector3 worldPos;
 	DirectX::SimpleMath::Matrix finalBoneListMatrix[96];
 	
-	std::string materialName;
+	std::vector<std::string> materials;
 
 	std::wstring vsName;
 

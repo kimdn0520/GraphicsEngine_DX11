@@ -42,7 +42,7 @@ void BinarySerializer::SaveBinaryFile(std::shared_ptr<FBXModel> fbxModel, std::s
 			vertexDataList.emplace_back(vertexdata);
 		}
 
-		FBXBinaryData::MeshData meshData(mesh->meshName, mesh->parentName, mesh->materialName, vertexDataList, mesh->indices, ConvertFloat4x4(mesh->nodeTM), mesh->isSkinned);
+		FBXBinaryData::MeshData meshData(mesh->meshName, mesh->parentName, mesh->materials, vertexDataList, mesh->indices, ConvertFloat4x4(mesh->nodeTM), mesh->isSkinned);
 
 		meshInfoList.emplace_back(meshData);
 	}

@@ -58,7 +58,7 @@ void DebugPass::Render()
 
 	g_deviceContext->IASetVertexBuffers(0, 1, ResourceManager::Get()->GetMesh(DEBUG_SCREEN_MESH)->GetVertexBuffer().GetAddressOf(), &stride, &offset);
 
-	g_deviceContext->IASetIndexBuffer(ResourceManager::Get()->GetMesh(DEBUG_SCREEN_MESH)->GetIndexBuffer().Get(), DXGI_FORMAT_R32_UINT, 0);
+	g_deviceContext->IASetIndexBuffer(ResourceManager::Get()->GetMesh(DEBUG_SCREEN_MESH)->indexBuffers[0].Get(), DXGI_FORMAT_R32_UINT, 0);
 
-	g_deviceContext->DrawIndexed(ResourceManager::Get()->GetMesh(DEBUG_SCREEN_MESH)->GetIdxBufferSize(), 0, 0);
+	g_deviceContext->DrawIndexed(ResourceManager::Get()->GetMesh(DEBUG_SCREEN_MESH)->indexBuffersSize[0], 0, 0);
 }

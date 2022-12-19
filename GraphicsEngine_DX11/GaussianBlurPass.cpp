@@ -160,9 +160,9 @@ void GaussianBlurPass::Render(std::shared_ptr<RenderTargetView>& screen)
 
 	g_deviceContext->IASetVertexBuffers(0, 1, ResourceManager::Get()->GetMesh(SCREEN_MESH)->GetVertexBuffer().GetAddressOf(), &stride, &offset);
 
-	g_deviceContext->IASetIndexBuffer(ResourceManager::Get()->GetMesh(SCREEN_MESH)->GetIndexBuffer().Get(), DXGI_FORMAT_R32_UINT, 0);
+	g_deviceContext->IASetIndexBuffer(ResourceManager::Get()->GetMesh(SCREEN_MESH)->indexBuffers[0].Get(), DXGI_FORMAT_R32_UINT, 0);
 
-	g_deviceContext->DrawIndexed(ResourceManager::Get()->GetMesh(SCREEN_MESH)->GetIdxBufferSize(), 0, 0);
+	g_deviceContext->DrawIndexed(ResourceManager::Get()->GetMesh(SCREEN_MESH)->indexBuffersSize[0], 0, 0);
 
 	/// <summary>
 	/// 수직 블러
@@ -187,9 +187,9 @@ void GaussianBlurPass::Render(std::shared_ptr<RenderTargetView>& screen)
 
 	g_deviceContext->IASetVertexBuffers(0, 1, ResourceManager::Get()->GetMesh(SCREEN_MESH)->GetVertexBuffer().GetAddressOf(), &stride, &offset);
 
-	g_deviceContext->IASetIndexBuffer(ResourceManager::Get()->GetMesh(SCREEN_MESH)->GetIndexBuffer().Get(), DXGI_FORMAT_R32_UINT, 0);
+	g_deviceContext->IASetIndexBuffer(ResourceManager::Get()->GetMesh(SCREEN_MESH)->indexBuffers[0].Get(), DXGI_FORMAT_R32_UINT, 0);
 
-	g_deviceContext->DrawIndexed(ResourceManager::Get()->GetMesh(SCREEN_MESH)->GetIdxBufferSize(), 0, 0);
+	g_deviceContext->DrawIndexed(ResourceManager::Get()->GetMesh(SCREEN_MESH)->indexBuffersSize[0], 0, 0);
 
 	RenderEnd();
 }
@@ -232,9 +232,9 @@ void GaussianBlurPass::DownSampling2x(std::shared_ptr<RenderTargetView>& screen)
 
 	g_deviceContext->IASetVertexBuffers(0, 1, ResourceManager::Get()->GetMesh(SCREEN_MESH)->GetVertexBuffer().GetAddressOf(), &stride, &offset);
 
-	g_deviceContext->IASetIndexBuffer(ResourceManager::Get()->GetMesh(SCREEN_MESH)->GetIndexBuffer().Get(), DXGI_FORMAT_R32_UINT, 0);
+	g_deviceContext->IASetIndexBuffer(ResourceManager::Get()->GetMesh(SCREEN_MESH)->indexBuffers[0].Get(), DXGI_FORMAT_R32_UINT, 0);
 
-	g_deviceContext->DrawIndexed(ResourceManager::Get()->GetMesh(SCREEN_MESH)->GetIdxBufferSize(), 0, 0);
+	g_deviceContext->DrawIndexed(ResourceManager::Get()->GetMesh(SCREEN_MESH)->indexBuffersSize[0], 0, 0);
 }
 
 void GaussianBlurPass::DownSampling4x(std::shared_ptr<RenderTargetView>& screen)
@@ -260,9 +260,9 @@ void GaussianBlurPass::DownSampling4x(std::shared_ptr<RenderTargetView>& screen)
 
 	g_deviceContext->IASetVertexBuffers(0, 1, ResourceManager::Get()->GetMesh(SCREEN_MESH)->GetVertexBuffer().GetAddressOf(), &stride, &offset);
 
-	g_deviceContext->IASetIndexBuffer(ResourceManager::Get()->GetMesh(SCREEN_MESH)->GetIndexBuffer().Get(), DXGI_FORMAT_R32_UINT, 0);
+	g_deviceContext->IASetIndexBuffer(ResourceManager::Get()->GetMesh(SCREEN_MESH)->indexBuffers[0].Get(), DXGI_FORMAT_R32_UINT, 0);
 
-	g_deviceContext->DrawIndexed(ResourceManager::Get()->GetMesh(SCREEN_MESH)->GetIdxBufferSize(), 0, 0);
+	g_deviceContext->DrawIndexed(ResourceManager::Get()->GetMesh(SCREEN_MESH)->indexBuffersSize[0], 0, 0);
 }
 
 void GaussianBlurPass::DownSampling8x(std::shared_ptr<RenderTargetView>& screen)
@@ -288,9 +288,9 @@ void GaussianBlurPass::DownSampling8x(std::shared_ptr<RenderTargetView>& screen)
 
 	g_deviceContext->IASetVertexBuffers(0, 1, ResourceManager::Get()->GetMesh(SCREEN_MESH)->GetVertexBuffer().GetAddressOf(), &stride, &offset);
 
-	g_deviceContext->IASetIndexBuffer(ResourceManager::Get()->GetMesh(SCREEN_MESH)->GetIndexBuffer().Get(), DXGI_FORMAT_R32_UINT, 0);
+	g_deviceContext->IASetIndexBuffer(ResourceManager::Get()->GetMesh(SCREEN_MESH)->indexBuffers[0].Get(), DXGI_FORMAT_R32_UINT, 0);
 
-	g_deviceContext->DrawIndexed(ResourceManager::Get()->GetMesh(SCREEN_MESH)->GetIdxBufferSize(), 0, 0);
+	g_deviceContext->DrawIndexed(ResourceManager::Get()->GetMesh(SCREEN_MESH)->indexBuffersSize[0], 0, 0);
 }
 
 void GaussianBlurPass::DownSampling16x(std::shared_ptr<RenderTargetView>& screen)
@@ -316,7 +316,7 @@ void GaussianBlurPass::DownSampling16x(std::shared_ptr<RenderTargetView>& screen
 
 	g_deviceContext->IASetVertexBuffers(0, 1, ResourceManager::Get()->GetMesh(SCREEN_MESH)->GetVertexBuffer().GetAddressOf(), &stride, &offset);
 
-	g_deviceContext->IASetIndexBuffer(ResourceManager::Get()->GetMesh(SCREEN_MESH)->GetIndexBuffer().Get(), DXGI_FORMAT_R32_UINT, 0);
+	g_deviceContext->IASetIndexBuffer(ResourceManager::Get()->GetMesh(SCREEN_MESH)->indexBuffers[0].Get(), DXGI_FORMAT_R32_UINT, 0);
 
-	g_deviceContext->DrawIndexed(ResourceManager::Get()->GetMesh(SCREEN_MESH)->GetIdxBufferSize(), 0, 0);
+	g_deviceContext->DrawIndexed(ResourceManager::Get()->GetMesh(SCREEN_MESH)->indexBuffersSize[0], 0, 0);
 }

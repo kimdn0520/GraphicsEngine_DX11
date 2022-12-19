@@ -43,13 +43,13 @@ public:
 	void AddMaterial(std::shared_ptr<Material> material);
 
 	template <typename T>
-	size_t CreateMesh(std::vector<T> vertices, std::vector<unsigned int> indices, int topology, int rasterizerState);
+	size_t CreateMesh(std::vector<T> vertices, std::vector<std::vector<unsigned int>> indices, int topology, int rasterizerState);
 
 	void MaterialReconstruction(std::string materialName, std::string textureName, std::string info);
 };
 
 template<typename T>
-inline size_t ResourceManager::CreateMesh(std::vector<T> vertices, std::vector<unsigned int> indices, int topology, int rasterizerState)
+inline size_t ResourceManager::CreateMesh(std::vector<T> vertices, std::vector<std::vector<unsigned int>> indices, int topology, int rasterizerState)
 {
 	std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>();
 
@@ -66,8 +66,12 @@ inline size_t ResourceManager::CreateMesh(std::vector<T> vertices, std::vector<u
 		mesh->SetRenderState(Graphics_Interface::Get()->GetSolid()->GetrasterizerState());
 
 	mesh->CreateVertexBuffer(vertices);
-	mesh->CreateIndexBuffer(indices);
-	mesh->SetIndexBufferSize(indices.size());
+
+	for (int i = 0; i < indices.size(); i++)
+	{
+		mesh->CreateIndexBuffer(indices[i]);
+	}
+
 	mesh->stride = sizeof(T);
 	
 	mesh->meshID = meshID++;

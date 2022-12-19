@@ -80,12 +80,12 @@ void GraphicsManager::SendMaterialData(std::shared_ptr<Material> material)
 	graphicsEngine->SendMaterialData(material);
 }
 
-size_t GraphicsManager::CreateMesh(std::vector<StaticMeshVertex> vertices, std::vector<unsigned int> indicies, int topology, int rasterState)
+size_t GraphicsManager::CreateMesh(std::vector<StaticMeshVertex> vertices, std::vector<std::vector<unsigned int>> indicies, int topology, int rasterState)
 {
 	return graphicsEngine->CreateMesh(vertices, indicies, topology, rasterState);
 }
 
-size_t GraphicsManager::CreateMesh(std::vector<SkinnedMeshVertex> vertices, std::vector<unsigned int> indicies, int topology, int rasterState)
+size_t GraphicsManager::CreateMesh(std::vector<SkinnedMeshVertex> vertices, std::vector<std::vector<unsigned int>> indicies, int topology, int rasterState)
 {
 	return graphicsEngine->CreateMesh(vertices, indicies, topology, rasterState);
 }

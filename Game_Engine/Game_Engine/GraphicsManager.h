@@ -45,9 +45,9 @@ public:
 
 	GameEngine_DLL void SendMaterialData(std::shared_ptr<Material> material);
 
-	size_t CreateMesh(std::vector<StaticMeshVertex> vertices, std::vector<unsigned int> indicies, int topology, int rasterState);
+	size_t CreateMesh(std::vector<StaticMeshVertex> vertices, std::vector<std::vector<unsigned int>> indicies, int topology, int rasterState);
 
-	size_t CreateMesh(std::vector<SkinnedMeshVertex> vertices, std::vector<unsigned int> indicies, int topology, int rasterState);
+	size_t CreateMesh(std::vector<SkinnedMeshVertex> vertices, std::vector<std::vector<unsigned int>> indicies, int topology, int rasterState);
 
 	void MaterialReconstruction(std::string materialName, std::string textureName, std::string info);
 };

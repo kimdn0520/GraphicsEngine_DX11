@@ -88,9 +88,9 @@ public:
 
 	virtual void SendMaterialData(std::shared_ptr<Material> material) override;
 
-	virtual size_t CreateMesh(std::vector<StaticMeshVertex> vertices, std::vector<unsigned int> indicies, int topology, int rasterState) override;
+	virtual size_t CreateMesh(std::vector<StaticMeshVertex> vertices, std::vector<std::vector<unsigned int>> indicies, int topology, int rasterState) override;
 	
-	virtual size_t CreateMesh(std::vector<SkinnedMeshVertex> vertices, std::vector<unsigned int> indicies, int topology, int rasterState) override;
+	virtual size_t CreateMesh(std::vector<SkinnedMeshVertex> vertices, std::vector<std::vector<unsigned int>> indicies, int topology, int rasterState) override;
 
 	virtual void MaterialReconstruction(std::string materialName, std::string textureName, std::string info) override;
 };

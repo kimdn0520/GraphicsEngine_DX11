@@ -117,7 +117,7 @@ void PixelShader::Update()
 	}
 
 	// PS에 리소스 설정
-	if (!_shaderResourceViews.empty())
+	if (!_shaderResourceViewData.empty())
 	{
 		Graphics_Interface::Get()->GetDeviceClass()->GetDeviceContext()->
 			PSSetShaderResources(0, (UINT)_shaderResourceViews.size(), _shaderResourceViews[0].GetAddressOf());

@@ -37,11 +37,11 @@ public:
 
 	void ProcessMesh(fbxsdk::FbxNode* node, FbxNodeAttribute::EType attribute);
 
-	void LoadMesh(fbxsdk::FbxNode* node, fbxsdk::FbxMesh* mesh);
+	void LoadMesh(fbxsdk::FbxNode* node, fbxsdk::FbxMesh* mesh, std::shared_ptr<FBXMeshInfo>& meshData, int meshCnt);
 
 	void ProcessBones(fbxsdk::FbxNode* node, int idx, int parentIdx);
 	
-	void LoadMaterial(fbxsdk::FbxSurfaceMaterial* surfaceMaterial);
+	void LoadMaterial(fbxsdk::FbxSurfaceMaterial* surfaceMaterial, std::shared_ptr<FBXMeshInfo>& meshData);
 
 	void LoadAnimation();
 
@@ -53,7 +53,7 @@ public:
 	
 	void GetNormal(fbxsdk::FbxMesh* mesh, std::shared_ptr<FBXMeshInfo>& meshInfo, int idx, int vertexCounter);
 	
-	void GetTangent(std::shared_ptr<FBXMeshInfo>& meshInfo);
+	void GetTangent(std::shared_ptr<FBXMeshInfo>& meshInfo, int meshCnt);
 
 	void GetUV(fbxsdk::FbxMesh* mesh, std::shared_ptr<FBXMeshInfo>& meshInfo, int idx, int uvIndex);
 

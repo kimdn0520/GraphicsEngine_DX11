@@ -233,12 +233,12 @@ void GraphicsEngine_DX11::SendMaterialData(std::shared_ptr<Material> material)
 	ResourceManager::Get()->AddMaterial(material);
 }
 
-size_t GraphicsEngine_DX11::CreateMesh(std::vector<StaticMeshVertex> vertices, std::vector<unsigned int> indicies, int topology, int rasterState)
+size_t GraphicsEngine_DX11::CreateMesh(std::vector<StaticMeshVertex> vertices, std::vector<std::vector<unsigned int>> indicies, int topology, int rasterState)
 {
 	return ResourceManager::Get()->CreateMesh(vertices, indicies, topology, rasterState);
 }
 
-size_t GraphicsEngine_DX11::CreateMesh(std::vector<SkinnedMeshVertex> vertices, std::vector<unsigned int> indicies, int topology, int rasterState)
+size_t GraphicsEngine_DX11::CreateMesh(std::vector<SkinnedMeshVertex> vertices, std::vector<std::vector<unsigned int>> indicies, int topology, int rasterState)
 {
 	return ResourceManager::Get()->CreateMesh(vertices, indicies, topology, rasterState);
 }

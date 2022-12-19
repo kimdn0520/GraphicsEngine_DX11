@@ -43,7 +43,7 @@ void LoadUnityScene::LoadScene(const std::string& path)
 
 			std::shared_ptr<YAMLNode> m_LocalRotation;
 			FindNode(yaml->nodeList[i], "m_LocalRotation", m_LocalRotation);
-			float rot[3];
+			float rot[4];
 
 			for (int i = 0; i < m_LocalRotation->childNodeList.size(); i++)
 			{

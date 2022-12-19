@@ -226,11 +226,11 @@ namespace FBXBinaryData
 
 		MeshData() = default;
 
-		MeshData(std::string _meshName, std::string _parentName, std::string _materialName, std::vector<VertexData> _meshVertexList
-			, std::vector<unsigned int> _indices, Float4x4 _nodeTM, bool _isSkinned = false)
+		MeshData(std::string _meshName, std::string _parentName, std::vector<std::string> _materials, std::vector<VertexData> _meshVertexList
+			, std::vector<std::vector<unsigned int>> _indices, Float4x4 _nodeTM, bool _isSkinned = false)
 			: meshName(std::move(_meshName))
 			, parentName(std::move(_parentName))
-			, materialName(std::move(_materialName))
+			, materials(std::move(_materials))
 			, meshVertexList(std::move(_meshVertexList))
 			, indices(std::move(_indices))
 			, nodeTM(std::move(_nodeTM))
@@ -240,9 +240,9 @@ namespace FBXBinaryData
 	public:
 		std::string						meshName = "";
 		std::string						parentName = "";
-		std::string						materialName = "";
+		std::vector<std::string>		materials;
 		std::vector<VertexData>			meshVertexList;
-		std::vector<unsigned int>		indices;
+		std::vector<std::vector<unsigned int>>		indices;
 
 		Float4x4 nodeTM;
 
@@ -254,7 +254,7 @@ namespace FBXBinaryData
 		{
 			ar& meshName;
 			ar& parentName;
-			ar& materialName;
+			ar& materials;
 			ar& meshVertexList;
 			ar& indices;
 			ar& nodeTM;

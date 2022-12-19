@@ -148,10 +148,10 @@ void ShadowPass::Render(std::vector<std::shared_ptr<ObjectInfo>> meshs)
 			g_deviceContext->IASetVertexBuffers(0, 1, ResourceManager::Get()->GetMesh(mesh->meshID)->GetVertexBuffer().GetAddressOf(), &stride, &offset);
 
 			// 인덱스 버퍼 설정
-			g_deviceContext->IASetIndexBuffer(ResourceManager::Get()->GetMesh(mesh->meshID)->GetIndexBuffer().Get(), DXGI_FORMAT_R32_UINT, 0);
+			g_deviceContext->IASetIndexBuffer(ResourceManager::Get()->GetMesh(mesh->meshID)->indexBuffers[0].Get(), DXGI_FORMAT_R32_UINT, 0);
 
 			// 그린다
-			g_deviceContext->DrawIndexed(ResourceManager::Get()->GetMesh(mesh->meshID)->GetIdxBufferSize(), 0, 0);
+			g_deviceContext->DrawIndexed(ResourceManager::Get()->GetMesh(mesh->meshID)->indexBuffersSize[0], 0, 0);
 		}
 		default:
 			break;

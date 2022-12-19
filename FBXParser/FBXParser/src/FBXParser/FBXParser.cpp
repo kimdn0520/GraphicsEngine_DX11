@@ -98,11 +98,45 @@ void FBXParser::ProcessMesh(fbxsdk::FbxNode* node, FbxNodeAttribute::EType attri
 	if (nodeAttribute && nodeAttribute->GetAttributeType() == attribute)
 	{
 		// SplitMeshesPerMaterial 함수로 인해 메시가 분리된 경우 
-		for (int meshCnt = 0; meshCnt < node->GetNodeAttributeCount(); meshCnt++)
+		if (node->GetNodeAttributeCount() > 1)
 		{
-			fbxsdk::FbxMesh* mesh = (fbxsdk::FbxMesh*)node->GetNodeAttributeByIndex(meshCnt);
+			// mesh는 하나로 쓸거임 이 mesh의 vertexList에 vertex들 다담고 material이랑 indexBuffer를 여러개 둘거임
+			std::shared_ptr<FBXMeshInfo> fbxMeshInfo = std::make_shared<FBXMeshInfo>();
 
-			LoadMesh(node, mesh);
+			fbxMeshInfo->indices.resize(node->GetNodeAttributeCount());
+
+			for (int meshCnt = 0; meshCnt < node->GetNodeAttributeCount(); meshCnt++)
+			{
+				fbxsdk::FbxMesh* mesh = (fbxsdk::FbxMesh*)node->GetNodeAttributeByIndex(meshCnt);
+
+				LoadMesh(node, mesh, fbxMeshInfo, meshCnt);
+
+				fbxsdk::FbxLayerElementMaterial* findMatIndex = mesh->GetElementMaterial(0);
+
+				if (findMatIndex != nullptr)
+				{
+					int index = findMatIndex->GetIndexArray().GetAt(0);
+
+					fbxsdk::FbxSurfaceMaterial* surfaceMaterial = mesh->GetNode()->GetSrcObject<fbxsdk::FbxSurfaceMaterial>(index);
+
+					LoadMaterial(surfaceMaterial, fbxMeshInfo);
+				}
+			}
+
+			fbxModel->fbxMeshInfoList.push_back(fbxMeshInfo);
+		}
+		// 메시가 한개일 경우
+		else
+		{
+			fbxsdk::FbxMesh* mesh = (fbxsdk::FbxMesh*)node->GetNodeAttributeByIndex(0);
+
+			std::shared_ptr<FBXMeshInfo> fbxMeshInfo = std::make_shared<FBXMeshInfo>();
+
+			fbxMeshInfo->indices.resize(1);
+
+			LoadMesh(node, mesh, fbxMeshInfo, 0);
+
+			fbxModel->fbxMeshInfoList.push_back(fbxMeshInfo);
 
 			fbxsdk::FbxLayerElementMaterial* findMatIndex = mesh->GetElementMaterial(0);
 
@@ -112,7 +146,7 @@ void FBXParser::ProcessMesh(fbxsdk::FbxNode* node, FbxNodeAttribute::EType attri
 
 				fbxsdk::FbxSurfaceMaterial* surfaceMaterial = mesh->GetNode()->GetSrcObject<fbxsdk::FbxSurfaceMaterial>(index);
 
-				LoadMaterial(surfaceMaterial);
+				LoadMaterial(surfaceMaterial, fbxMeshInfo);
 			}
 		}
 	}		
@@ -125,13 +159,11 @@ void FBXParser::ProcessMesh(fbxsdk::FbxNode* node, FbxNodeAttribute::EType attri
 }
 
 
-void FBXParser::LoadMesh(fbxsdk::FbxNode* node, fbxsdk::FbxMesh* mesh)
+void FBXParser::LoadMesh(fbxsdk::FbxNode* node, fbxsdk::FbxMesh* mesh, std::shared_ptr<FBXMeshInfo>& meshData, int meshCnt)
 {
-	std::shared_ptr<FBXMeshInfo> fbxMeshInfo = std::make_shared<FBXMeshInfo>();
+	std::shared_ptr<FBXMeshInfo> meshInfo = meshData;
 
-	fbxModel->fbxMeshInfoList.push_back(fbxMeshInfo);
-
-	std::shared_ptr<FBXMeshInfo>& meshInfo = fbxModel->fbxMeshInfoList.back();
+	int addSize = meshInfo->meshVertexList.size();
 
 	// Node TM 넣기
 	FbxAMatrix nodeTransform = scene->GetAnimationEvaluator()->GetNodeGlobalTransform(node);
@@ -374,14 +406,14 @@ void FBXParser::LoadMesh(fbxsdk::FbxNode* node, fbxsdk::FbxMesh* mesh)
 			vertexCounter++;
 		}
 
-		meshInfo->indices.push_back(arrIdx[0]);
-		meshInfo->indices.push_back(arrIdx[2]);
-		meshInfo->indices.push_back(arrIdx[1]);
+		meshInfo->indices[meshCnt].push_back(arrIdx[0]);
+		meshInfo->indices[meshCnt].push_back(arrIdx[2]);
+		meshInfo->indices[meshCnt].push_back(arrIdx[1]);
 	}
 
 	// tangent 정보를 가져온다.
 	if (mesh->GetElementNormalCount() >= 1)
-		GetTangent(meshInfo);
+		GetTangent(meshInfo, meshCnt);
 }
 
 /// <summary>
@@ -425,12 +457,14 @@ void FBXParser::ProcessBones(fbxsdk::FbxNode* node, int idx, int parentIdx)
 		ProcessBones(node->GetChild(i), static_cast<int>(fbxModel->fbxBoneInfoList.size()), idx);
 }
 
-void FBXParser::LoadMaterial(fbxsdk::FbxSurfaceMaterial* surfaceMaterial)
+void FBXParser::LoadMaterial(fbxsdk::FbxSurfaceMaterial* surfaceMaterial, std::shared_ptr<FBXMeshInfo>& meshData)
 {
 	std::string matName = surfaceMaterial->GetName();
 
+	std::shared_ptr<FBXMeshInfo> meshInfo = meshData;
+
 	// 메시에는 머터리얼 이름만
-	fbxModel->fbxMeshInfoList.back()->materialName = matName;
+	meshInfo->materials.emplace_back(matName);
 
 	auto it = find_if(fbxModel->materialList.begin(), fbxModel->materialList.end(), [&name = matName](const std::shared_ptr<FBXMaterialInfo>& s)->bool {return (s->materialName == name); });
 
@@ -681,13 +715,13 @@ void FBXParser::GetNormal(fbxsdk::FbxMesh* mesh, std::shared_ptr<FBXMeshInfo>& m
 	meshInfo->meshVertexList[idx].normal.z = static_cast<float>(vec.mData[1]);
 }
 
-void FBXParser::GetTangent(std::shared_ptr<FBXMeshInfo>& meshInfo)
+void FBXParser::GetTangent(std::shared_ptr<FBXMeshInfo>& meshInfo, int meshCnt)
 {
-	for (int i = 0; i < meshInfo->indices.size(); i += 3) // 삼각형의 개수
+	for (int i = 0; i < meshInfo->indices[meshCnt].size(); i += 3) // 삼각형의 개수
 	{
-		int i0 = meshInfo->indices[i];
-		int i1 = meshInfo->indices[i + 1];
-		int i2 = meshInfo->indices[i + 2];
+		int i0 = meshInfo->indices[meshCnt][i];
+		int i1 = meshInfo->indices[meshCnt][i + 1];
+		int i2 = meshInfo->indices[meshCnt][i + 2];
 
 		// e1 = p1 - p0, e2 = p2 - p0
 		DirectX::SimpleMath::Vector3 e1 = meshInfo->meshVertexList[i1].position - meshInfo->meshVertexList[i0].position;

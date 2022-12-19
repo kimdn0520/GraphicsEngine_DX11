@@ -21,7 +21,7 @@ MeshRenderer::~MeshRenderer()
 
 void MeshRenderer::SetMaterial(std::string name)
 {
-	_objectInfo->materialName = name;
+	_objectInfo->materials.push_back(name);
 }
 
 void MeshRenderer::Update()

@@ -162,9 +162,9 @@ void BloomPass::BloomCurveTarget(std::shared_ptr<RenderTargetView> targetScreen)
 
 	g_deviceContext->IASetVertexBuffers(0, 1, ResourceManager::Get()->GetMesh(SCREEN_MESH)->GetVertexBuffer().GetAddressOf(), &stride, &offset);
 
-	g_deviceContext->IASetIndexBuffer(ResourceManager::Get()->GetMesh(SCREEN_MESH)->GetIndexBuffer().Get(), DXGI_FORMAT_R32_UINT, 0);
+	g_deviceContext->IASetIndexBuffer(ResourceManager::Get()->GetMesh(SCREEN_MESH)->indexBuffers[0].Get(), DXGI_FORMAT_R32_UINT, 0);
 
-	g_deviceContext->DrawIndexed(ResourceManager::Get()->GetMesh(SCREEN_MESH)->GetIdxBufferSize(), 0, 0);
+	g_deviceContext->DrawIndexed(ResourceManager::Get()->GetMesh(SCREEN_MESH)->indexBuffersSize[0], 0, 0);
 }
 
 void BloomPass::Blur16XAddUp8X()
@@ -192,9 +192,9 @@ void BloomPass::Blur16XAddUp8X()
 
 	g_deviceContext->IASetVertexBuffers(0, 1, ResourceManager::Get()->GetMesh(SCREEN_MESH)->GetVertexBuffer().GetAddressOf(), &stride, &offset);
 
-	g_deviceContext->IASetIndexBuffer(ResourceManager::Get()->GetMesh(SCREEN_MESH)->GetIndexBuffer().Get(), DXGI_FORMAT_R32_UINT, 0);
+	g_deviceContext->IASetIndexBuffer(ResourceManager::Get()->GetMesh(SCREEN_MESH)->indexBuffers[0].Get(), DXGI_FORMAT_R32_UINT, 0);
 
-	g_deviceContext->DrawIndexed(ResourceManager::Get()->GetMesh(SCREEN_MESH)->GetIdxBufferSize(), 0, 0);
+	g_deviceContext->DrawIndexed(ResourceManager::Get()->GetMesh(SCREEN_MESH)->indexBuffersSize[0], 0, 0);
 }
 
 void BloomPass::Blur8XAddUp4X()
@@ -222,9 +222,9 @@ void BloomPass::Blur8XAddUp4X()
 
 	g_deviceContext->IASetVertexBuffers(0, 1, ResourceManager::Get()->GetMesh(SCREEN_MESH)->GetVertexBuffer().GetAddressOf(), &stride, &offset);
 
-	g_deviceContext->IASetIndexBuffer(ResourceManager::Get()->GetMesh(SCREEN_MESH)->GetIndexBuffer().Get(), DXGI_FORMAT_R32_UINT, 0);
+	g_deviceContext->IASetIndexBuffer(ResourceManager::Get()->GetMesh(SCREEN_MESH)->indexBuffers[0].Get(), DXGI_FORMAT_R32_UINT, 0);
 
-	g_deviceContext->DrawIndexed(ResourceManager::Get()->GetMesh(SCREEN_MESH)->GetIdxBufferSize(), 0, 0);
+	g_deviceContext->DrawIndexed(ResourceManager::Get()->GetMesh(SCREEN_MESH)->indexBuffersSize[0], 0, 0);
 }
 
 void BloomPass::Blur4XAddUp2X()
@@ -252,9 +252,9 @@ void BloomPass::Blur4XAddUp2X()
 
 	g_deviceContext->IASetVertexBuffers(0, 1, ResourceManager::Get()->GetMesh(SCREEN_MESH)->GetVertexBuffer().GetAddressOf(), &stride, &offset);
 
-	g_deviceContext->IASetIndexBuffer(ResourceManager::Get()->GetMesh(SCREEN_MESH)->GetIndexBuffer().Get(), DXGI_FORMAT_R32_UINT, 0);
+	g_deviceContext->IASetIndexBuffer(ResourceManager::Get()->GetMesh(SCREEN_MESH)->indexBuffers[0].Get(), DXGI_FORMAT_R32_UINT, 0);
 
-	g_deviceContext->DrawIndexed(ResourceManager::Get()->GetMesh(SCREEN_MESH)->GetIdxBufferSize(), 0, 0);
+	g_deviceContext->DrawIndexed(ResourceManager::Get()->GetMesh(SCREEN_MESH)->indexBuffersSize[0], 0, 0);
 }
 
 void BloomPass::Blur2XAddUpOrigin(std::shared_ptr<RenderTargetView> targetScreen)
@@ -282,7 +282,7 @@ void BloomPass::Blur2XAddUpOrigin(std::shared_ptr<RenderTargetView> targetScreen
 
 	g_deviceContext->IASetVertexBuffers(0, 1, ResourceManager::Get()->GetMesh(SCREEN_MESH)->GetVertexBuffer().GetAddressOf(), &stride, &offset);
 
-	g_deviceContext->IASetIndexBuffer(ResourceManager::Get()->GetMesh(SCREEN_MESH)->GetIndexBuffer().Get(), DXGI_FORMAT_R32_UINT, 0);
+	g_deviceContext->IASetIndexBuffer(ResourceManager::Get()->GetMesh(SCREEN_MESH)->indexBuffers[0].Get(), DXGI_FORMAT_R32_UINT, 0);
 
-	g_deviceContext->DrawIndexed(ResourceManager::Get()->GetMesh(SCREEN_MESH)->GetIdxBufferSize(), 0, 0);
+	g_deviceContext->DrawIndexed(ResourceManager::Get()->GetMesh(SCREEN_MESH)->indexBuffersSize[0], 0, 0);
 }
