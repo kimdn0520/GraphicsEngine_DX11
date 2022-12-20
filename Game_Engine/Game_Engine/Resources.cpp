@@ -582,8 +582,17 @@ std::vector<std::shared_ptr<GameObject>> Resources::LoadFBX(std::string path, in
 				}
 			}
 
-			if(mesh->materials.empty())
+			if (mesh->materials.empty())
+			{
+				shared_ptr<Material> tempMat = std::make_shared<Material>();
+				tempMat->name = "default";
+				tempMat->metallic = 0.1f;
+				tempMat->roughness = 0.0f;
+				GraphicsManager::Get()->SendMaterialData(tempMat);
+
+				gameObject->GetComponent<MeshRenderer>()->SetMaterial("default");
 				gameObject->GetComponent<MeshRenderer>()->SetPixelShader(L"Model_PBR_PS");
+			}
 
 			gameObjects.push_back(gameObject);
 		}
@@ -719,7 +728,16 @@ std::vector<std::shared_ptr<GameObject>> Resources::LoadFBX(std::string path, in
 			}
 
 			if (mesh->materials.empty())
+			{
+				shared_ptr<Material> tempMat = std::make_shared<Material>();
+				tempMat->name = "default";
+				tempMat->metallic = 0.1f;
+				tempMat->roughness = 0.0f;
+				GraphicsManager::Get()->SendMaterialData(tempMat);
+
+				gameObject->GetComponent<MeshRenderer>()->SetMaterial("default");
 				gameObject->GetComponent<MeshRenderer>()->SetPixelShader(L"Model_PBR_PS");
+			}
 
 			gameObjects.push_back(gameObject);
 		}
@@ -1014,7 +1032,16 @@ std::vector<std::shared_ptr<GameObject>> Resources::LoadFBXBinary(std::string pa
 			}
 
 			if (mesh.materials.empty())
+			{
+				shared_ptr<Material> tempMat = std::make_shared<Material>();
+				tempMat->name = "default";
+				tempMat->metallic = 0.1f;
+				tempMat->roughness = 0.0f;
+				GraphicsManager::Get()->SendMaterialData(tempMat);
+
+				gameObject->GetComponent<MeshRenderer>()->SetMaterial("default");
 				gameObject->GetComponent<MeshRenderer>()->SetPixelShader(L"Model_PBR_PS");
+			}
 
 			gameObjects.push_back(gameObject);
 		}
@@ -1158,7 +1185,16 @@ std::vector<std::shared_ptr<GameObject>> Resources::LoadFBXBinary(std::string pa
 			}
 
 			if (mesh.materials.empty())
+			{
+				shared_ptr<Material> tempMat = std::make_shared<Material>();
+				tempMat->name = "default";
+				tempMat->metallic = 0.1f;
+				tempMat->roughness = 0.0f;
+				GraphicsManager::Get()->SendMaterialData(tempMat);
+
+				gameObject->GetComponent<MeshRenderer>()->SetMaterial("default");
 				gameObject->GetComponent<MeshRenderer>()->SetPixelShader(L"Model_PBR_PS");
+			}
 
 			gameObjects.push_back(gameObject);
 		}

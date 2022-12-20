@@ -1,13 +1,2 @@
-﻿  pch.cpp
-  ASEParser.cpp
-C:\Users\김동민\Desktop\GraphicsEngine_DX11\ASEParser\ASEParser\ASEParser.cpp(796,15): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\김동민\Desktop\GraphicsEngine_DX11\ASEParser\ASEParser\ASEParser.cpp(797,15): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\김동민\Desktop\GraphicsEngine_DX11\ASEParser\ASEParser\ASEParser.cpp(798,15): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\김동민\Desktop\GraphicsEngine_DX11\ASEParser\ASEParser\ASEParser.cpp(784,11): warning C4101: 'localRotationVec' :참조되지 않은 지역 변수입니다.
-  Lexer.cpp
-  dllmain.cpp
-  코드를 생성하고 있습니다...
-  LINK : C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\ASEParser.dll을(를) 찾을 수 없거나 마지막 증분 링크에 의해 빌드되지 않았습니다. 전체 링크를 수행하고 있습니다.
-     C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\ASEParser.lib 라이브러리 및 C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\ASEParser.exp 개체를 생성하고 있습니다.
-  ASEParser.vcxproj -> C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\ASEParser.dll
+﻿  ASEParser.vcxproj -> D:\GraphicsEngine_DX11\Library\lib\ASEParser.dll
           1개 파일이 복사되었습니다.

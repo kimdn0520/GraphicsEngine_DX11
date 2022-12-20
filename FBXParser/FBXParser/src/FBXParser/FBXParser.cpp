@@ -163,8 +163,6 @@ void FBXParser::LoadMesh(fbxsdk::FbxNode* node, fbxsdk::FbxMesh* mesh, std::shar
 {
 	std::shared_ptr<FBXMeshInfo> meshInfo = meshData;
 
-	int addSize = meshInfo->meshVertexList.size();
-
 	// Node TM ³Ö±â
 	FbxAMatrix nodeTransform = scene->GetAnimationEvaluator()->GetNodeGlobalTransform(node);
 
