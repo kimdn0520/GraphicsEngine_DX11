@@ -97,46 +97,16 @@ void FBXParser::ProcessMesh(fbxsdk::FbxNode* node, FbxNodeAttribute::EType attri
 
 	if (nodeAttribute && nodeAttribute->GetAttributeType() == attribute)
 	{
-		// SplitMeshesPerMaterial 함수로 인해 메시가 분리된 경우 
-		if (node->GetNodeAttributeCount() > 1)
+		// mesh는 하나로 쓸거임 이 mesh의 vertexList에 vertex들 다담고 material이랑 indexBuffer를 여러개 둘거임
+		std::shared_ptr<FBXMeshInfo> fbxMeshInfo = std::make_shared<FBXMeshInfo>();
+
+		fbxMeshInfo->indices.resize(node->GetNodeAttributeCount());
+
+		for (int meshCnt = 0; meshCnt < node->GetNodeAttributeCount(); meshCnt++)
 		{
-			// mesh는 하나로 쓸거임 이 mesh의 vertexList에 vertex들 다담고 material이랑 indexBuffer를 여러개 둘거임
-			std::shared_ptr<FBXMeshInfo> fbxMeshInfo = std::make_shared<FBXMeshInfo>();
+			fbxsdk::FbxMesh* mesh = (fbxsdk::FbxMesh*)node->GetNodeAttributeByIndex(meshCnt);
 
-			fbxMeshInfo->indices.resize(node->GetNodeAttributeCount());
-
-			for (int meshCnt = 0; meshCnt < node->GetNodeAttributeCount(); meshCnt++)
-			{
-				fbxsdk::FbxMesh* mesh = (fbxsdk::FbxMesh*)node->GetNodeAttributeByIndex(meshCnt);
-
-				LoadMesh(node, mesh, fbxMeshInfo, meshCnt);
-
-				fbxsdk::FbxLayerElementMaterial* findMatIndex = mesh->GetElementMaterial(0);
-
-				if (findMatIndex != nullptr)
-				{
-					int index = findMatIndex->GetIndexArray().GetAt(0);
-
-					fbxsdk::FbxSurfaceMaterial* surfaceMaterial = mesh->GetNode()->GetSrcObject<fbxsdk::FbxSurfaceMaterial>(index);
-
-					LoadMaterial(surfaceMaterial, fbxMeshInfo);
-				}
-			}
-
-			fbxModel->fbxMeshInfoList.push_back(fbxMeshInfo);
-		}
-		// 메시가 한개일 경우
-		else
-		{
-			fbxsdk::FbxMesh* mesh = (fbxsdk::FbxMesh*)node->GetNodeAttributeByIndex(0);
-
-			std::shared_ptr<FBXMeshInfo> fbxMeshInfo = std::make_shared<FBXMeshInfo>();
-
-			fbxMeshInfo->indices.resize(1);
-
-			LoadMesh(node, mesh, fbxMeshInfo, 0);
-
-			fbxModel->fbxMeshInfoList.push_back(fbxMeshInfo);
+			LoadMesh(node, mesh, fbxMeshInfo, meshCnt);
 
 			fbxsdk::FbxLayerElementMaterial* findMatIndex = mesh->GetElementMaterial(0);
 
@@ -149,6 +119,8 @@ void FBXParser::ProcessMesh(fbxsdk::FbxNode* node, FbxNodeAttribute::EType attri
 				LoadMaterial(surfaceMaterial, fbxMeshInfo);
 			}
 		}
+
+		fbxModel->fbxMeshInfoList.push_back(fbxMeshInfo);
 	}		
 
 	// Tree 구조 재귀 호출
