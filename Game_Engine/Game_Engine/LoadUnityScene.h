@@ -12,6 +12,6 @@ public:
 public:
 	void LoadScene(const std::string& path);
 
-	std::shared_ptr<YAMLNode>& FindNode(std::shared_ptr<YAMLNode> findNode, std::string nodeName);
+	void FindNode(std::shared_ptr<YAMLNode> findNode, std::string nodeName, std::shared_ptr<YAMLNode>& node);
 };
 

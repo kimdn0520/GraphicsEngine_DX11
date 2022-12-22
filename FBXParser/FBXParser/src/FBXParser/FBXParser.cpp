@@ -31,7 +31,7 @@ std::shared_ptr<FBXModel> FBXParser::LoadFbx(const std::string& path)
 
 	std::shared_ptr<BinarySerializer> s = std::make_shared<BinarySerializer>();
 
-	//s->SaveBinaryFile(fbxModel, "test", path);
+	s->SaveBinaryFile(fbxModel, "test", path);
 
 	return fbxModel;
 }
@@ -133,8 +133,6 @@ void FBXParser::ProcessMesh(fbxsdk::FbxNode* node, FbxNodeAttribute::EType attri
 
 void FBXParser::LoadMesh(fbxsdk::FbxNode* node, fbxsdk::FbxMesh* mesh, std::shared_ptr<FBXMeshInfo>& meshData, int meshCnt)
 {
-	std::shared_ptr<FBXMeshInfo> meshInfo = meshData;
-
 	// Node TM 넣기
 	FbxAMatrix nodeTransform = scene->GetAnimationEvaluator()->GetNodeGlobalTransform(node);
 
@@ -150,16 +148,16 @@ void FBXParser::LoadMesh(fbxsdk::FbxNode* node, fbxsdk::FbxMesh* mesh, std::shar
 
 	nodeMatrix *= XMMatrixRotationQuaternion(q);
 
-	meshInfo->nodeTM = nodeMatrix;
+	meshData->nodeTM = nodeMatrix;
 
 	// mesh 이름 넣기
-	meshInfo->meshName = mesh->GetName();
+	meshData->meshName = mesh->GetName();
 
 	// Node Parent 찾기
 	std::string parentName = node->GetParent()->GetName();
 
 	// 부모 이름 넣기
-	meshInfo->parentName = parentName;
+	meshData->parentName = parentName;
 
 	const int vertexCount = mesh->GetControlPointsCount();
 	
@@ -190,7 +188,7 @@ void FBXParser::LoadMesh(fbxsdk::FbxNode* node, fbxsdk::FbxMesh* mesh, std::shar
 
 	for (int i = 0; i < deformerCount; i++)
 	{
-		meshInfo->isSkinned = true;
+		meshData->isSkinned = true;
 
 		fbxModel->isSkinnedAnimation = true;	// 일단 여기서..
 
@@ -274,7 +272,7 @@ void FBXParser::LoadMesh(fbxsdk::FbxNode* node, fbxsdk::FbxMesh* mesh, std::shar
 
 	const int triCount = mesh->GetPolygonCount(); // 메쉬의 삼각형 개수를 가져온다
 
-	std::map<std::tuple<unsigned, unsigned, float, float, float>, unsigned> indexMap;
+	std::map<std::tuple<unsigned, float, float, float, float, float>, unsigned> indexMap;
 
 	for (int i = 0; i < triCount; i++) // 삼각형의 개수
 	{
@@ -284,10 +282,8 @@ void FBXParser::LoadMesh(fbxsdk::FbxNode* node, fbxsdk::FbxMesh* mesh, std::shar
 
 			arrIdx[j] = controlPointIndex;
 
-			int uvIndex = -1;
-
-			if (mesh->GetElementUVCount() >= 1)
-				uvIndex = mesh->GetTextureUVIndex(i, j);
+			/*if (mesh->GetElementUVCount() >= 1)
+				uvIndex = mesh->GetTextureUVIndex(i, j);*/
 
 			DirectX::SimpleMath::Vector3 fbxNormal = { -1.f, -1.f, -1.f };
 
@@ -321,23 +317,11 @@ void FBXParser::LoadMesh(fbxsdk::FbxNode* node, fbxsdk::FbxMesh* mesh, std::shar
 				fbxNormal.z = static_cast<float>(vec.mData[1]);
 			}
 
-			float uvX = -1.f;
-			float uvY = -1.f;
+			DirectX::SimpleMath::Vector2 uv;
 
-			if (uvIndex != -1)
-			{
-				FbxVector2 fbxUV = mesh->GetElementUV()->GetDirectArray().GetAt(uvIndex);
+			uv = GetUV(mesh, controlPointIndex, vertexCounter);
 
-				uvX = static_cast<float>(fbxUV.mData[0]);
-				uvY = 1.f - static_cast<float>(fbxUV.mData[1]);
-
-				if (uvX < 0)
-				{
-					uvX += 1;
-				}
-			}
-
-			const auto indexPair = std::make_tuple(controlPointIndex, uvIndex, fbxNormal.x, fbxNormal.y, fbxNormal.z);
+			const auto indexPair = std::make_tuple(controlPointIndex, uv.x, uv.y, fbxNormal.x, fbxNormal.y, fbxNormal.z);
 
 			const auto iter = indexMap.find(indexPair);
 
@@ -355,13 +339,13 @@ void FBXParser::LoadMesh(fbxsdk::FbxNode* node, fbxsdk::FbxMesh* mesh, std::shar
 					vertex.boneIndices[weightIdx] = tmpMeshVertexList[controlPointIndex].boneIndices[weightIdx];
 				}
 
-				vertex.uv = DirectX::SimpleMath::Vector2(uvX, uvY);
+				vertex.uv = uv;
 
 				vertex.normal = fbxNormal;
 
-				meshInfo->meshVertexList.push_back(vertex);								// 새로운 버텍스 삽입
+				meshData->meshVertexList.push_back(vertex);								// 새로운 버텍스 삽입
 
-				controlPointIndex = meshInfo->meshVertexList.size() - 1;				// index 새로운 버텍스 껄로 바꾸기
+				controlPointIndex = meshData->meshVertexList.size() - 1;				// index 새로운 버텍스 껄로 바꾸기
 
 				arrIdx[j] = controlPointIndex;
 
@@ -376,14 +360,14 @@ void FBXParser::LoadMesh(fbxsdk::FbxNode* node, fbxsdk::FbxMesh* mesh, std::shar
 			vertexCounter++;
 		}
 
-		meshInfo->indices[meshCnt].push_back(arrIdx[0]);
-		meshInfo->indices[meshCnt].push_back(arrIdx[2]);
-		meshInfo->indices[meshCnt].push_back(arrIdx[1]);
+		meshData->indices[meshCnt].push_back(arrIdx[0]);
+		meshData->indices[meshCnt].push_back(arrIdx[2]);
+		meshData->indices[meshCnt].push_back(arrIdx[1]);
 	}
 
 	// tangent 정보를 가져온다.
 	if (mesh->GetElementNormalCount() >= 1)
-		GetTangent(meshInfo, meshCnt);
+		GetTangent(meshData, meshCnt);
 }
 
 /// <summary>
@@ -714,12 +698,43 @@ void FBXParser::GetTangent(std::shared_ptr<FBXMeshInfo>& meshInfo, int meshCnt)
 	}
 }
 
-void FBXParser::GetUV(fbxsdk::FbxMesh* mesh, std::shared_ptr<FBXMeshInfo>& meshInfo, int idx, int uvIndex)
+DirectX::SimpleMath::Vector2 FBXParser::GetUV(fbxsdk::FbxMesh* mesh, int controlPointIndex, int vertexCounter)
 {
-	FbxVector2 uv = mesh->GetElementUV()->GetDirectArray().GetAt(uvIndex);
+	DirectX::SimpleMath::Vector2 fbxUV;
+	
+	if (mesh->GetElementUVCount() >= 1)
+	{
+		int uvIndex;
 
-	meshInfo->meshVertexList[idx].uv.x = static_cast<float>(uv.mData[0]);
-	meshInfo->meshVertexList[idx].uv.y = 1.f - static_cast<float>(uv.mData[1]);
+		FbxGeometryElementUV* uv = mesh->GetLayer(0)->GetUVs(); 
+
+		if (uv->GetMappingMode() == FbxGeometryElement::eByPolygonVertex)
+		{
+			if (uv->GetReferenceMode() == FbxGeometryElement::eDirect)
+				uvIndex = vertexCounter;
+			else
+				uvIndex = uv->GetIndexArray().GetAt(vertexCounter);
+		}
+		else if (uv->GetMappingMode() == FbxGeometryElement::eByControlPoint)
+		{
+			if (uv->GetReferenceMode() == FbxGeometryElement::eDirect)
+				uvIndex = controlPointIndex;
+			else
+				uvIndex = uv->GetIndexArray().GetAt(controlPointIndex);
+		}
+
+		fbxUV.x = static_cast<float>(uv->GetDirectArray().GetAt(uvIndex).mData[0]);
+		fbxUV.y = 1.f - static_cast<float>(uv->GetDirectArray().GetAt(uvIndex).mData[1]);
+
+		if (fbxUV.x < 0)
+			fbxUV.x += 1;
+
+		return fbxUV;
+	}
+
+	fbxUV = { 0.f, 0.f };
+	
+	return fbxUV;
 }
 
 std::wstring FBXParser::GetTextureRelativeName(fbxsdk::FbxSurfaceMaterial* surface, const char* materialProperty)

@@ -55,7 +55,7 @@ public:
 	
 	void GetTangent(std::shared_ptr<FBXMeshInfo>& meshInfo, int meshCnt);
 
-	void GetUV(fbxsdk::FbxMesh* mesh, std::shared_ptr<FBXMeshInfo>& meshInfo, int idx, int uvIndex);
+	DirectX::SimpleMath::Vector2 GetUV(fbxsdk::FbxMesh* mesh, int controlPointIndex, int vertexCounter);
 
 	std::wstring GetTextureRelativeName(fbxsdk::FbxSurfaceMaterial* surface, const char* materialProperty);
 
