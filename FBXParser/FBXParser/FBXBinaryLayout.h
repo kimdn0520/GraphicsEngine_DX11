@@ -328,7 +328,7 @@ namespace FBXBinaryData
 	};
 
 	class AnimationClipData
-	{
+	{ 
 	public:
 		friend boost::serialization::access;
 
