@@ -51,7 +51,7 @@ public:
 
 	DirectX::SimpleMath::Matrix GetNodeTM(fbxsdk::FbxNode* node);
 	
-	void GetNormal(fbxsdk::FbxMesh* mesh, std::shared_ptr<FBXMeshInfo>& meshInfo, int idx, int vertexCounter);
+	DirectX::SimpleMath::Vector3 GetNormal(fbxsdk::FbxMesh* mesh, int controlPointIndex, int vertexCounter);
 	
 	void GetTangent(std::shared_ptr<FBXMeshInfo>& meshInfo, int meshCnt);
 

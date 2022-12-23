@@ -31,7 +31,7 @@ std::shared_ptr<FBXModel> FBXParser::LoadFbx(const std::string& path)
 
 	std::shared_ptr<BinarySerializer> s = std::make_shared<BinarySerializer>();
 
-	s->SaveBinaryFile(fbxModel, "test", path);
+	//s->SaveBinaryFile(fbxModel, "test", path);
 
 	return fbxModel;
 }
@@ -282,46 +282,15 @@ void FBXParser::LoadMesh(fbxsdk::FbxNode* node, fbxsdk::FbxMesh* mesh, std::shar
 
 			arrIdx[j] = controlPointIndex;
 
-			/*if (mesh->GetElementUVCount() >= 1)
-				uvIndex = mesh->GetTextureUVIndex(i, j);*/
+			DirectX::SimpleMath::Vector3 normal;
 
-			DirectX::SimpleMath::Vector3 fbxNormal = { -1.f, -1.f, -1.f };
-
-			if (mesh->GetElementNormalCount() >= 1)
-			{
-				FbxGeometryElementNormal* normal = mesh->GetElementNormal();
-				int normalIdx = 0;
-
-				// 인덱스를 기준으로 노멀 값이 들어간다
-				// 버텍스 스플릿이 필요하다.
-				if (normal->GetMappingMode() == FbxGeometryElement::eByPolygonVertex)
-				{
-					if (normal->GetReferenceMode() == FbxGeometryElement::eDirect)
-						normalIdx = vertexCounter;
-					else
-						normalIdx = normal->GetIndexArray().GetAt(vertexCounter);
-				}
-				// 정점을 기준으로 노멀 값이 들어간다.
-				else if (normal->GetMappingMode() == FbxGeometryElement::eByControlPoint)
-				{
-					if (normal->GetReferenceMode() == FbxGeometryElement::eDirect)
-						normalIdx = controlPointIndex;
-					else
-						normalIdx = normal->GetIndexArray().GetAt(controlPointIndex);
-				}
-
-				FbxVector4 vec = normal->GetDirectArray().GetAt(normalIdx);
-
-				fbxNormal.x = static_cast<float>(vec.mData[0]);
-				fbxNormal.y = static_cast<float>(vec.mData[2]);
-				fbxNormal.z = static_cast<float>(vec.mData[1]);
-			}
+			normal = GetNormal(mesh, controlPointIndex, vertexCounter);
 
 			DirectX::SimpleMath::Vector2 uv;
 
 			uv = GetUV(mesh, controlPointIndex, vertexCounter);
 
-			const auto indexPair = std::make_tuple(controlPointIndex, uv.x, uv.y, fbxNormal.x, fbxNormal.y, fbxNormal.z);
+			const auto indexPair = std::make_tuple(controlPointIndex, uv.x, uv.y, normal.x, normal.y, normal.z);
 
 			const auto iter = indexMap.find(indexPair);
 
@@ -341,7 +310,7 @@ void FBXParser::LoadMesh(fbxsdk::FbxNode* node, fbxsdk::FbxMesh* mesh, std::shar
 
 				vertex.uv = uv;
 
-				vertex.normal = fbxNormal;
+				vertex.normal = normal;
 
 				meshData->meshVertexList.push_back(vertex);								// 새로운 버텍스 삽입
 
@@ -408,7 +377,16 @@ void FBXParser::ProcessBones(fbxsdk::FbxNode* node, int idx, int parentIdx)
 	const int childCount = node->GetChildCount();
 
 	for (int i = 0; i < childCount; i++)
-		ProcessBones(node->GetChild(i), static_cast<int>(fbxModel->fbxBoneInfoList.size()), idx);
+	{
+		if (attribute && attribute->GetAttributeType() == fbxsdk::FbxNodeAttribute::eSkeleton)
+		{
+			ProcessBones(node->GetChild(i), static_cast<int>(fbxModel->fbxBoneInfoList.size()), idx);
+		}
+		else
+		{
+			ProcessBones(node->GetChild(i), static_cast<int>(fbxModel->fbxBoneInfoList.size()), parentIdx);
+		}
+	}
 }
 
 void FBXParser::LoadMaterial(fbxsdk::FbxSurfaceMaterial* surfaceMaterial, std::shared_ptr<FBXMeshInfo>& meshData)
@@ -636,37 +614,45 @@ DirectX::SimpleMath::Matrix FBXParser::GetNodeTM(fbxsdk::FbxNode* node)
 	return localTM;
 }
 
-void FBXParser::GetNormal(fbxsdk::FbxMesh* mesh, std::shared_ptr<FBXMeshInfo>& meshInfo, int idx, int vertexCounter)
+DirectX::SimpleMath::Vector3 FBXParser::GetNormal(fbxsdk::FbxMesh* mesh, int controlPointIndex, int vertexCounter)
 {
-	if (mesh->GetElementNormalCount() == 0)
-		return;
+	DirectX::SimpleMath::Vector3 fbxNormal;
 
-	FbxGeometryElementNormal* normal = mesh->GetElementNormal();
-	int normalIdx = 0;
-
-	// 인덱스를 기준으로 노멀 값이 들어간다
-	// 버텍스 스플릿이 필요하다.
-	if (normal->GetMappingMode() == FbxGeometryElement::eByPolygonVertex)
+	if (mesh->GetElementNormalCount() >= 1)
 	{
-		if (normal->GetReferenceMode() == FbxGeometryElement::eDirect)
-			normalIdx = vertexCounter;
-		else
-			normalIdx = normal->GetIndexArray().GetAt(vertexCounter);
-	}
-	// 정점을 기준으로 노멀 값이 들어간다.
-	else if (normal->GetMappingMode() == FbxGeometryElement::eByControlPoint)
-	{
-		if (normal->GetReferenceMode() == FbxGeometryElement::eDirect)
-			normalIdx = idx;
-		else
-			normalIdx = normal->GetIndexArray().GetAt(idx);
+		FbxGeometryElementNormal* normal = mesh->GetElementNormal();
+		int normalIdx = 0;
+
+		// 인덱스를 기준으로 노멀 값이 들어간다
+		// 버텍스 스플릿이 필요하다.
+		if (normal->GetMappingMode() == FbxGeometryElement::eByPolygonVertex)
+		{
+			if (normal->GetReferenceMode() == FbxGeometryElement::eDirect)
+				normalIdx = vertexCounter;
+			else
+				normalIdx = normal->GetIndexArray().GetAt(vertexCounter);
+		}
+		// 정점을 기준으로 노멀 값이 들어간다.
+		else if (normal->GetMappingMode() == FbxGeometryElement::eByControlPoint)
+		{
+			if (normal->GetReferenceMode() == FbxGeometryElement::eDirect)
+				normalIdx = controlPointIndex;
+			else
+				normalIdx = normal->GetIndexArray().GetAt(controlPointIndex);
+		}
+
+		FbxVector4 vec = normal->GetDirectArray().GetAt(normalIdx);
+
+		fbxNormal.x = static_cast<float>(vec.mData[0]);
+		fbxNormal.y = static_cast<float>(vec.mData[2]);
+		fbxNormal.z = static_cast<float>(vec.mData[1]);
+
+		return fbxNormal;
 	}
 
-	FbxVector4 vec = normal->GetDirectArray().GetAt(normalIdx);
+	fbxNormal = { -1.f, -1.f, -1.f };
 
-	meshInfo->meshVertexList[idx].normal.x = static_cast<float>(vec.mData[0]);
-	meshInfo->meshVertexList[idx].normal.y = static_cast<float>(vec.mData[2]);
-	meshInfo->meshVertexList[idx].normal.z = static_cast<float>(vec.mData[1]);
+	return fbxNormal;
 }
 
 void FBXParser::GetTangent(std::shared_ptr<FBXMeshInfo>& meshInfo, int meshCnt)
