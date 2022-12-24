@@ -35,5 +35,5 @@ public:
 
 	void SequenceNode(YAML::const_iterator node_it, std::shared_ptr<YAMLNode> nodeData);
 
-	void Release();
+	void Release(std::vector<std::shared_ptr<YAMLNode>> list);
 };

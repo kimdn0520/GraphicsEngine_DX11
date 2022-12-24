@@ -79,7 +79,7 @@ namespace YAMLBinaryData
 
 		Transform(
 			Float3 _localPosition = { 0.f, 0.f, 0.f }, 
-			Float3 _localRotation = { 0.f, 0.f, 0.f },
+			Float4 _localRotation = { 0.f, 0.f, 0.f, 0.f },
 			Float3 _localScale = { 1.f, 1.f, 1.f }
 			)
 			: localPosition(std::move(_localPosition))
@@ -89,7 +89,7 @@ namespace YAMLBinaryData
 
 	public:
 		Float3 localPosition;
-		Float3 localRotation;
+		Float4 localRotation;
 		Float3 localScale;
 
 	private:
@@ -110,15 +110,18 @@ namespace YAMLBinaryData
 
 		BoxCollider(
 			Float3 _size = { 1.f, 1.f, 1.f },
-			Float3 _center = { 0.f, 0.f, 0.f }
+			Float3 _center = { 0.f, 0.f, 0.f },
+			bool _isTrigger = false
 		)
 			: size(std::move(_size))
 			, center(std::move(_center))
+			, isTrigger(_isTrigger)
 		{}
 
 	public:
 		Float3 size;
 		Float3 center;
+		bool isTrigger;
 
 	private:
 		template<typename Archive>
@@ -126,8 +129,38 @@ namespace YAMLBinaryData
 		{
 			ar& size;
 			ar& center;
+			ar& isTrigger;
 		}
+	};
 
+	class SphereCollider
+	{
+	public:
+		friend boost::serialization::access;
+
+		SphereCollider(
+			float _radius = 0.f,
+			Float3 _center = { 0.f, 0.f, 0.f },
+			bool _isTrigger = false
+		)
+			: radius(std::move(_radius))
+			, center(std::move(_center))
+			, isTrigger(_isTrigger)
+		{}
+
+	public:
+		float radius;
+		Float3 center;
+		bool isTrigger;
+
+	private:
+		template<typename Archive>
+		void serialize(Archive& ar, const unsigned int version)
+		{
+			ar& radius;
+			ar& center;
+			ar& isTrigger;
+		}
 	};
 
 	class Light
@@ -153,6 +186,25 @@ namespace YAMLBinaryData
 		{
 			ar& type;
 			ar& color;
+		}
+	};
+
+	class Camera
+	{
+	public:
+		friend boost::serialization::access;
+
+		Camera()
+		{}
+
+	public:
+		// ...
+
+	private:
+		template<typename Archive>
+		void serialize(Archive& ar, const unsigned int version)
+		{
+
 		}
 	};
 

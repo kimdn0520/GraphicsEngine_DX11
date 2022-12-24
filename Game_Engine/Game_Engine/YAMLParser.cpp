@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "YAMLParser.h"
-#include "LoadUnityScene.h"
 
 void YAMLParser::OpenFile(const std::string& path)
 {
@@ -92,7 +91,15 @@ void YAMLParser::SequenceNode(YAML::const_iterator node_it, std::shared_ptr<YAML
 	}
 }
 
-void YAMLParser::Release()
+void YAMLParser::Release(std::vector<std::shared_ptr<YAMLNode>> list)
 {
+	for (auto& node : list)
+	{
+		if (!node->childNodeList.empty())
+		{
+			Release(node->childNodeList);
+		}
 
+		node.reset();
+	}
 }
