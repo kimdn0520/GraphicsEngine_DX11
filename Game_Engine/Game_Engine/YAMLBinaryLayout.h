@@ -208,6 +208,28 @@ namespace YAMLBinaryData
 		}
 	};
 
+	class MeshFilter
+	{
+	public:
+		friend boost::serialization::access;
+
+		MeshFilter() = default;
+
+		MeshFilter(std::string _meshName)
+			: meshName(std::move(_meshName))
+		{}
+
+	public:
+		std::string meshName = "";
+
+	private:
+		template<typename Archive>
+		void serialize(Archive& ar, const unsigned int version)
+		{
+			ar& meshName;
+		}
+	};
+
 	class GameObject
 	{
 	public:
@@ -222,7 +244,13 @@ namespace YAMLBinaryData
 
 	public:
 		std::string name = "";
+
 		Transform transform;
+		Camera camera;
+		Light light;
+		BoxCollider boxCollider;
+		SphereCollider sphereCollider;
+		MeshFilter meshFilter;
 
 	private:
 		template<typename Archive>
@@ -230,6 +258,11 @@ namespace YAMLBinaryData
 		{
 			ar& name;
 			ar& transform;
+			ar& camera;
+			ar& light;
+			ar& boxCollider;
+			ar& sphereCollider;
+			ar& meshFilter;
 		}
 	};
 
@@ -274,7 +307,7 @@ namespace YAMLBinaryData
 		{}
 
 	public:
-		// 근데 거의 카메라 정도가 끝일듯?
+		// CubeMesh, SphereMesh.. , Camera, Light
 		vector<GameObject> gameObjects;
 
 		vector<Prefab> prefabs;

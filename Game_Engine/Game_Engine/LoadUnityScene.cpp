@@ -50,7 +50,32 @@ void LoadUnityScene::LoadScene(const std::string& path)
 		}
 		else if (yaml->yamlNodeList[i]["MeshFilter"])
 		{
-			// m_Mesh 10202=Cube, 10207=Sphere
+			// m_Mesh 10202 = Cube, 10207 = Sphere
+			YAMLBinaryData::MeshFilter meshFilter;
+
+			YAML::Node MeshFilter = yaml->yamlNodeList[i]["MeshFilter"];
+
+			YAML::Node m_Mesh = MeshFilter["m_Mesh"];
+
+			int meshID = m_Mesh["fileID"].as<int>();
+
+			switch (meshID)
+			{
+			case 10202:
+			{
+				meshFilter.meshName = "CubeMesh";
+			}
+			break;
+			case 10207:
+			{
+				meshFilter.meshName = "SphereMesh";
+			}
+			break;
+			default:
+				break;
+			}
+
+			scene.gameObjects.back().meshFilter = meshFilter;
 		}
 		else if (yaml->yamlNodeList[i]["Camera"])
 		{
@@ -62,7 +87,25 @@ void LoadUnityScene::LoadScene(const std::string& path)
 		}
 		else if (yaml->yamlNodeList[i]["BoxCollider"])
 		{
+			YAMLBinaryData::BoxCollider boxCollider;
 
+			YAML::Node BoxCollider = yaml->yamlNodeList[i]["BoxCollider"];
+
+			boxCollider.isTrigger = BoxCollider["m_IsTrigger"].as<bool>();
+
+			YAML::Node m_Size = BoxCollider["m_Size"];
+
+			boxCollider.size.x = m_Size["x"].as<float>();
+			boxCollider.size.y = m_Size["y"].as<float>();
+			boxCollider.size.z = m_Size["z"].as<float>();
+
+			YAML::Node m_Center = BoxCollider["m_Center"];
+
+			boxCollider.center.x = m_Center["x"].as<float>();
+			boxCollider.center.y = m_Center["y"].as<float>();
+			boxCollider.center.z = m_Center["z"].as<float>();
+
+			scene.gameObjects.back().boxCollider = boxCollider;
 		}
 		else if (yaml->yamlNodeList[i]["SphereCollider"])
 		{
@@ -70,6 +113,8 @@ void LoadUnityScene::LoadScene(const std::string& path)
 		}
 		else if (yaml->yamlNodeList[i]["PrefabInstance"])
 		{
+			YAMLBinaryData::Prefab prefab;
+
 
 		}
 	}
