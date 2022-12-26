@@ -4,12 +4,22 @@
 void YAMLParser::OpenFile(const std::string& path)
 {
 	// 모든 TopNode를 담는다.
-	yamlNodeList = YAML::LoadAllFromFile(path);
 
-	for (int i = 0; i < yamlNodeList.size(); i++)
-	{	
-		ReadNode(yamlNodeList[i], nullptr);
+	try
+	{
+		yamlNodeList = YAML::LoadAllFromFile(path);
 	}
+	catch (YAML::Exception& e)
+	{
+		std::cerr << "Error parsing YAML document : " << e.what() << std::endl;
+	}
+	
+	
+	// 할필요가..?
+	/*for (int i = 0; i < yamlNodeList.size(); i++)
+	{
+		ReadNode(yamlNodeList[i], nullptr);
+	}*/
 }
 
 void YAMLParser::ReadNode(YAML::Node yamlNode, std::shared_ptr<YAMLNode> nodeData)

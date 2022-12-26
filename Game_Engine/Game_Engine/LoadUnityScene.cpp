@@ -33,12 +33,11 @@ void LoadUnityScene::LoadScene(const std::string& path)
 			transform.localPosition.y = m_LocalPosition["y"].as<float>();
 			transform.localPosition.z = m_LocalPosition["z"].as<float>();
 
-			YAML::Node m_LocalRotation = Transform["m_LocalRotation"];
+			YAML::Node m_LocalEulerAnglesHint = Transform["m_LocalEulerAnglesHint"];
 
-			transform.localRotation.x = m_LocalRotation["x"].as<float>();
-			transform.localRotation.y = m_LocalRotation["y"].as<float>();
-			transform.localRotation.z = m_LocalRotation["z"].as<float>();
-			transform.localRotation.w = m_LocalRotation["w"].as<float>();
+			transform.localRotation.x = m_LocalEulerAnglesHint["x"].as<float>();
+			transform.localRotation.y = m_LocalEulerAnglesHint["y"].as<float>();
+			transform.localRotation.z = m_LocalEulerAnglesHint["z"].as<float>();
 
 			YAML::Node m_LocalScale = Transform["m_LocalScale"];
 
@@ -71,6 +70,11 @@ void LoadUnityScene::LoadScene(const std::string& path)
 				meshFilter.meshName = "SphereMesh";
 			}
 			break;
+			case 10209:
+			{
+				meshFilter.meshName = "PlaneMesh";
+			}
+			break;
 			default:
 				break;
 			}
@@ -80,6 +84,14 @@ void LoadUnityScene::LoadScene(const std::string& path)
 		else if (yaml->yamlNodeList[i]["Camera"])
 		{
 			YAMLBinaryData::Camera camera;
+			
+			YAML::Node Camera = yaml->yamlNodeList[i]["Camera"];
+
+			camera.nearPlane = Camera["near clip plane"].as<float>();
+
+			camera.farPlane = Camera["far clip plane"].as<float>();
+
+			scene.gameObjects.back().camera = camera;
 		}
 		else if (yaml->yamlNodeList[i]["Light"])
 		{
@@ -109,13 +121,69 @@ void LoadUnityScene::LoadScene(const std::string& path)
 		}
 		else if (yaml->yamlNodeList[i]["SphereCollider"])
 		{
+			YAMLBinaryData::SphereCollider sphereCollider;
 
+			YAML::Node SphereCollider = yaml->yamlNodeList[i]["SphereCollider"];
+
+			sphereCollider.isTrigger = SphereCollider["m_IsTrigger"].as<bool>();
+
+			sphereCollider.radius = SphereCollider["m_Radius"].as<float>();
+
+			YAML::Node m_Center = SphereCollider["m_Center"];
+
+			sphereCollider.center.x = m_Center["x"].as<float>();
+			sphereCollider.center.y = m_Center["y"].as<float>();
+			sphereCollider.center.z = m_Center["z"].as<float>();
+
+			scene.gameObjects.back().sphereCollider = sphereCollider;
 		}
 		else if (yaml->yamlNodeList[i]["PrefabInstance"])
 		{
-			YAMLBinaryData::Prefab prefab;
+			YAMLBinaryData::Prefab prefabInstance;
 
+			YAMLBinaryData::Transform transform;
 
+			YAML::Node PrefabInstance = yaml->yamlNodeList[i]["PrefabInstance"];
+
+			YAML::Node m_Modification = PrefabInstance["m_Modification"];
+
+			YAML::Node m_Modifications = m_Modification["m_Modifications"];
+
+			for (YAML::const_iterator it = m_Modifications.begin(); it != m_Modifications.end(); ++it)
+			{
+				if (it->operator[]("propertyPath").as<std::string>().compare("m_Name") == 0)
+				{
+					prefabInstance.name = it->operator[]("value").as<std::string>();
+				}
+				else if (it->operator[]("propertyPath").as<std::string>().compare("m_LocalPosition.x") == 0)
+				{
+					transform.localPosition.x = it->operator[]("value").as<float>();
+				}
+				else if (it->operator[]("propertyPath").as<std::string>().compare("m_LocalPosition.y") == 0)
+				{
+					transform.localPosition.y = it->operator[]("value").as<float>();
+				}
+				else if (it->operator[]("propertyPath").as<std::string>().compare("m_LocalPosition.z") == 0)
+				{
+					transform.localPosition.z = it->operator[]("value").as<float>();
+				}
+				else if (it->operator[]("propertyPath").as<std::string>().compare("m_LocalEulerAnglesHint.x") == 0)
+				{
+					transform.localRotation.x = it->operator[]("value").as<float>();
+				}
+				else if (it->operator[]("propertyPath").as<std::string>().compare("m_LocalEulerAnglesHint.y") == 0)
+				{
+					transform.localRotation.y = it->operator[]("value").as<float>();
+				}
+				else if (it->operator[]("propertyPath").as<std::string>().compare("m_LocalEulerAnglesHint.z") == 0)
+				{
+					transform.localRotation.z = it->operator[]("value").as<float>();
+				}
+			}
+
+			prefabInstance.transform = transform;
+
+			scene.prefabs.emplace_back(prefabInstance);
 		}
 	}
 

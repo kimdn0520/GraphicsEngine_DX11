@@ -79,7 +79,7 @@ namespace YAMLBinaryData
 
 		Transform(
 			Float3 _localPosition = { 0.f, 0.f, 0.f }, 
-			Float4 _localRotation = { 0.f, 0.f, 0.f, 0.f },
+			Float3 _localRotation = { 0.f, 0.f, 0.f },
 			Float3 _localScale = { 1.f, 1.f, 1.f }
 			)
 			: localPosition(std::move(_localPosition))
@@ -89,7 +89,7 @@ namespace YAMLBinaryData
 
 	public:
 		Float3 localPosition;
-		Float4 localRotation;
+		Float3 localRotation;
 		Float3 localScale;
 
 	private:
@@ -194,17 +194,21 @@ namespace YAMLBinaryData
 	public:
 		friend boost::serialization::access;
 
-		Camera()
+		Camera(float _nearPlane = 0.f, float _farPlane = 1000.f)
+			: nearPlane(_nearPlane)
+			, farPlane(_farPlane)
 		{}
 
 	public:
-		// ...
+		float nearPlane;
+		float farPlane;
 
 	private:
 		template<typename Archive>
 		void serialize(Archive& ar, const unsigned int version)
 		{
-
+			ar& nearPlane;
+			ar& farPlane;
 		}
 	};
 
