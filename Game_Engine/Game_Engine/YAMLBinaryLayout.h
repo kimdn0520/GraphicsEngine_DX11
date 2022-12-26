@@ -217,14 +217,12 @@ namespace YAMLBinaryData
 	public:
 		friend boost::serialization::access;
 
-		MeshFilter() = default;
-
-		MeshFilter(std::string _meshName)
+		MeshFilter(std::string _meshName = "")
 			: meshName(std::move(_meshName))
 		{}
 
 	public:
-		std::string meshName = "";
+		std::string meshName;
 
 	private:
 		template<typename Archive>
@@ -239,22 +237,25 @@ namespace YAMLBinaryData
 	public:
 		friend boost::serialization::access;
 
-		GameObject() = default;
-
-		GameObject(std::string _name, Transform _transform)
+		GameObject(std::string _name = "")
 			: name(std::move(_name))
-			, transform(std::move(_transform))
+			, transform(nullptr)
+			, camera(nullptr)
+			, light(nullptr)
+			, boxCollider(nullptr)
+			, sphereCollider(nullptr)
+			, meshFilter(nullptr)
 		{}
 
 	public:
 		std::string name = "";
 
-		Transform transform;
-		Camera camera;
-		Light light;
-		BoxCollider boxCollider;
-		SphereCollider sphereCollider;
-		MeshFilter meshFilter;
+		std::shared_ptr<Transform> transform;
+		std::shared_ptr<Camera> camera;
+		std::shared_ptr<Light> light;
+		std::shared_ptr<BoxCollider> boxCollider;
+		std::shared_ptr<SphereCollider> sphereCollider;
+		std::shared_ptr<MeshFilter> meshFilter;
 
 	private:
 		template<typename Archive>

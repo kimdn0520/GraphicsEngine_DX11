@@ -3,7 +3,7 @@
 
 void LoadUnityScene::LoadScene(const std::string& path)
 {
-	shared_ptr<YAMLParser> yaml = make_shared<YAMLParser>();
+	shared_ptr<YAMLParser> yaml = std::make_shared<YAMLParser>();
 
 	yaml->OpenFile(path);
 
@@ -23,34 +23,34 @@ void LoadUnityScene::LoadScene(const std::string& path)
 		}
 		else if (yaml->yamlNodeList[i]["Transform"])
 		{
-			YAMLBinaryData::Transform transform;
+			std::shared_ptr<YAMLBinaryData::Transform> transform = std::make_shared<YAMLBinaryData::Transform>();
 
 			YAML::Node Transform = yaml->yamlNodeList[i]["Transform"]; 
 			
 			YAML::Node m_LocalPosition = Transform["m_LocalPosition"];
 
-			transform.localPosition.x = m_LocalPosition["x"].as<float>();
-			transform.localPosition.y = m_LocalPosition["y"].as<float>();
-			transform.localPosition.z = m_LocalPosition["z"].as<float>();
+			transform->localPosition.x = m_LocalPosition["x"].as<float>();
+			transform->localPosition.y = m_LocalPosition["y"].as<float>();
+			transform->localPosition.z = m_LocalPosition["z"].as<float>();
 
 			YAML::Node m_LocalEulerAnglesHint = Transform["m_LocalEulerAnglesHint"];
 
-			transform.localRotation.x = m_LocalEulerAnglesHint["x"].as<float>();
-			transform.localRotation.y = m_LocalEulerAnglesHint["y"].as<float>();
-			transform.localRotation.z = m_LocalEulerAnglesHint["z"].as<float>();
+			transform->localRotation.x = m_LocalEulerAnglesHint["x"].as<float>();
+			transform->localRotation.y = m_LocalEulerAnglesHint["y"].as<float>();
+			transform->localRotation.z = m_LocalEulerAnglesHint["z"].as<float>();
 
 			YAML::Node m_LocalScale = Transform["m_LocalScale"];
 
-			transform.localScale.x = m_LocalScale["x"].as<float>();
-			transform.localScale.y = m_LocalScale["y"].as<float>();
-			transform.localScale.z = m_LocalScale["z"].as<float>();
+			transform->localScale.x = m_LocalScale["x"].as<float>();
+			transform->localScale.y = m_LocalScale["y"].as<float>();
+			transform->localScale.z = m_LocalScale["z"].as<float>();
 
 			scene.gameObjects.back().transform = transform;
 		}
 		else if (yaml->yamlNodeList[i]["MeshFilter"])
 		{
 			// m_Mesh 10202 = Cube, 10207 = Sphere
-			YAMLBinaryData::MeshFilter meshFilter;
+			std::shared_ptr<YAMLBinaryData::MeshFilter> meshFilter = std::make_shared<YAMLBinaryData::MeshFilter>();
 
 			YAML::Node MeshFilter = yaml->yamlNodeList[i]["MeshFilter"];
 
@@ -62,17 +62,17 @@ void LoadUnityScene::LoadScene(const std::string& path)
 			{
 			case 10202:
 			{
-				meshFilter.meshName = "CubeMesh";
+				meshFilter->meshName = "CubeMesh";
 			}
 			break;
 			case 10207:
 			{
-				meshFilter.meshName = "SphereMesh";
+				meshFilter->meshName = "SphereMesh";
 			}
 			break;
 			case 10209:
 			{
-				meshFilter.meshName = "PlaneMesh";
+				meshFilter->meshName = "PlaneMesh";
 			}
 			break;
 			default:
@@ -83,57 +83,57 @@ void LoadUnityScene::LoadScene(const std::string& path)
 		}
 		else if (yaml->yamlNodeList[i]["Camera"])
 		{
-			YAMLBinaryData::Camera camera;
+			std::shared_ptr<YAMLBinaryData::Camera> camera = std::make_shared<YAMLBinaryData::Camera>();
 			
 			YAML::Node Camera = yaml->yamlNodeList[i]["Camera"];
 
-			camera.nearPlane = Camera["near clip plane"].as<float>();
+			camera->nearPlane = Camera["near clip plane"].as<float>();
 
-			camera.farPlane = Camera["far clip plane"].as<float>();
+			camera->farPlane = Camera["far clip plane"].as<float>();
 
 			scene.gameObjects.back().camera = camera;
 		}
 		else if (yaml->yamlNodeList[i]["Light"])
 		{
-			YAMLBinaryData::Light light;
+			std::shared_ptr<YAMLBinaryData::Light> light = std::make_shared<YAMLBinaryData::Light>();
 		}
 		else if (yaml->yamlNodeList[i]["BoxCollider"])
 		{
-			YAMLBinaryData::BoxCollider boxCollider;
+			std::shared_ptr<YAMLBinaryData::BoxCollider> boxCollider = std::make_shared<YAMLBinaryData::BoxCollider>();
 
 			YAML::Node BoxCollider = yaml->yamlNodeList[i]["BoxCollider"];
 
-			boxCollider.isTrigger = BoxCollider["m_IsTrigger"].as<bool>();
+			boxCollider->isTrigger = BoxCollider["m_IsTrigger"].as<bool>();
 
 			YAML::Node m_Size = BoxCollider["m_Size"];
 
-			boxCollider.size.x = m_Size["x"].as<float>();
-			boxCollider.size.y = m_Size["y"].as<float>();
-			boxCollider.size.z = m_Size["z"].as<float>();
+			boxCollider->size.x = m_Size["x"].as<float>();
+			boxCollider->size.y = m_Size["y"].as<float>();
+			boxCollider->size.z = m_Size["z"].as<float>();
 
 			YAML::Node m_Center = BoxCollider["m_Center"];
 
-			boxCollider.center.x = m_Center["x"].as<float>();
-			boxCollider.center.y = m_Center["y"].as<float>();
-			boxCollider.center.z = m_Center["z"].as<float>();
+			boxCollider->center.x = m_Center["x"].as<float>();
+			boxCollider->center.y = m_Center["y"].as<float>();
+			boxCollider->center.z = m_Center["z"].as<float>();
 
 			scene.gameObjects.back().boxCollider = boxCollider;
 		}
 		else if (yaml->yamlNodeList[i]["SphereCollider"])
 		{
-			YAMLBinaryData::SphereCollider sphereCollider;
+			shared_ptr<YAMLBinaryData::SphereCollider> sphereCollider = std::make_shared<YAMLBinaryData::SphereCollider>();
 
 			YAML::Node SphereCollider = yaml->yamlNodeList[i]["SphereCollider"];
 
-			sphereCollider.isTrigger = SphereCollider["m_IsTrigger"].as<bool>();
+			sphereCollider->isTrigger = SphereCollider["m_IsTrigger"].as<bool>();
 
-			sphereCollider.radius = SphereCollider["m_Radius"].as<float>();
+			sphereCollider->radius = SphereCollider["m_Radius"].as<float>();
 
 			YAML::Node m_Center = SphereCollider["m_Center"];
 
-			sphereCollider.center.x = m_Center["x"].as<float>();
-			sphereCollider.center.y = m_Center["y"].as<float>();
-			sphereCollider.center.z = m_Center["z"].as<float>();
+			sphereCollider->center.x = m_Center["x"].as<float>();
+			sphereCollider->center.y = m_Center["y"].as<float>();
+			sphereCollider->center.z = m_Center["z"].as<float>();
 
 			scene.gameObjects.back().sphereCollider = sphereCollider;
 		}
@@ -186,6 +186,16 @@ void LoadUnityScene::LoadScene(const std::string& path)
 			scene.prefabs.emplace_back(prefabInstance);
 		}
 	}
+
+	std::string sceneName = "SampleScene";
+
+	std::ofstream ofs(sceneName + ".noob", std::ios_base::binary);
+	boost::iostreams::filtering_stream<boost::iostreams::output> buffer;
+	buffer.push(boost::iostreams::zlib_compressor());
+	buffer.push(ofs);
+	boost::archive::binary_oarchive oa(buffer);
+
+	oa << scene;
 
 	yaml.reset();
 }
