@@ -7,7 +7,7 @@ void LoadUnityScene::LoadScene(const std::string& path)
 
 	yaml->OpenFile(path);
 
-	YAMLBinaryData::Scene scene;
+	shared_ptr<YAMLBinaryData::Scene> scene = std::make_shared<YAMLBinaryData::Scene>();
 
 	for (int i = 0; i < yaml->yamlNodeList.size(); i++)
 	{
@@ -19,7 +19,7 @@ void LoadUnityScene::LoadScene(const std::string& path)
 
 			gameObject.name = GameObject["m_Name"].as<std::string>();
 
-			scene.gameObjects.emplace_back(gameObject);
+			scene->gameObjects.emplace_back(gameObject);
 		}
 		else if (yaml->yamlNodeList[i]["Transform"])
 		{
@@ -45,7 +45,7 @@ void LoadUnityScene::LoadScene(const std::string& path)
 			transform->localScale.y = m_LocalScale["y"].as<float>();
 			transform->localScale.z = m_LocalScale["z"].as<float>();
 
-			scene.gameObjects.back().transform = transform;
+			scene->gameObjects.back().transform = transform;
 		}
 		else if (yaml->yamlNodeList[i]["MeshFilter"])
 		{
@@ -79,7 +79,7 @@ void LoadUnityScene::LoadScene(const std::string& path)
 				break;
 			}
 
-			scene.gameObjects.back().meshFilter = meshFilter;
+			scene->gameObjects.back().meshFilter = meshFilter;
 		}
 		else if (yaml->yamlNodeList[i]["Camera"])
 		{
@@ -91,7 +91,7 @@ void LoadUnityScene::LoadScene(const std::string& path)
 
 			camera->farPlane = Camera["far clip plane"].as<float>();
 
-			scene.gameObjects.back().camera = camera;
+			scene->gameObjects.back().camera = camera;
 		}
 		else if (yaml->yamlNodeList[i]["Light"])
 		{
@@ -117,7 +117,7 @@ void LoadUnityScene::LoadScene(const std::string& path)
 			boxCollider->center.y = m_Center["y"].as<float>();
 			boxCollider->center.z = m_Center["z"].as<float>();
 
-			scene.gameObjects.back().boxCollider = boxCollider;
+			scene->gameObjects.back().boxCollider = boxCollider;
 		}
 		else if (yaml->yamlNodeList[i]["SphereCollider"])
 		{
@@ -135,7 +135,7 @@ void LoadUnityScene::LoadScene(const std::string& path)
 			sphereCollider->center.y = m_Center["y"].as<float>();
 			sphereCollider->center.z = m_Center["z"].as<float>();
 
-			scene.gameObjects.back().sphereCollider = sphereCollider;
+			scene->gameObjects.back().sphereCollider = sphereCollider;
 		}
 		else if (yaml->yamlNodeList[i]["PrefabInstance"])
 		{
@@ -183,7 +183,7 @@ void LoadUnityScene::LoadScene(const std::string& path)
 
 			prefabInstance.transform = transform;
 
-			scene.prefabs.emplace_back(prefabInstance);
+			scene->prefabs.emplace_back(prefabInstance);
 		}
 	}
 
