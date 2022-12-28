@@ -26,7 +26,19 @@ void LoadUnityScene::LoadScene(const std::string& path)
 			std::shared_ptr<YAMLBinaryData::Transform> transform = std::make_shared<YAMLBinaryData::Transform>();
 
 			YAML::Node Transform = yaml->yamlNodeList[i]["Transform"]; 
+
+			YAML::Node m_GameObject = Transform["m_GameObject"];
+
+			scene->gameObjects.back().fileID = m_GameObject["fileID"].as<int>();		// 여기서 GameObject fileID를 넣어준다.
 			
+			YAML::Node m_Children = Transform["m_Children"];
+
+			// 칠드런이.. 그게 트랜스폼의 아이디를 얻어와서 문제다.. 흑
+			for (int childCnt = 0; childCnt < m_Children.size(); childCnt++)
+			{
+				scene->gameObjects.back().childIDList.push_back(m_Children[childCnt]["fileID"].as<int>());
+			}
+
 			YAML::Node m_LocalPosition = Transform["m_LocalPosition"];
 
 			transform->localPosition.x = m_LocalPosition["x"].as<float>();
@@ -87,6 +99,8 @@ void LoadUnityScene::LoadScene(const std::string& path)
 			
 			YAML::Node Camera = yaml->yamlNodeList[i]["Camera"];
 
+			camera->projectionMatrixMode = Camera["m_projectionMatrixMode"].as<int>();
+
 			camera->nearPlane = Camera["near clip plane"].as<float>();
 
 			camera->farPlane = Camera["far clip plane"].as<float>();
@@ -103,7 +117,7 @@ void LoadUnityScene::LoadScene(const std::string& path)
 
 			YAML::Node BoxCollider = yaml->yamlNodeList[i]["BoxCollider"];
 
-			boxCollider->isTrigger = BoxCollider["m_IsTrigger"].as<bool>();
+			boxCollider->isTrigger = BoxCollider["m_IsTrigger"].as<int>();
 
 			YAML::Node m_Size = BoxCollider["m_Size"];
 
