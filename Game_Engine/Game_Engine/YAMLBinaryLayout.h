@@ -92,6 +92,9 @@ namespace YAMLBinaryData
 		Float3 localRotation;
 		Float3 localScale;
 
+		std::string transformID;
+		std::vector<std::string> childIDList;
+
 	private:
 		template<typename Archive>
 		void serialize(Archive & ar, const unsigned int version)
@@ -99,6 +102,9 @@ namespace YAMLBinaryData
 			ar& localPosition;
 			ar& localRotation;
 			ar& localScale;
+
+			ar& transformID;
+			ar& childIDList;
 		}
 		
 	};
@@ -243,7 +249,6 @@ namespace YAMLBinaryData
 
 		GameObject(std::string _name = "")
 			: name(std::move(_name))
-			, fileID(0)
 			, transform(nullptr)
 			, camera(nullptr)
 			, light(nullptr)
@@ -254,9 +259,6 @@ namespace YAMLBinaryData
 
 	public:
 		std::string name = "";
-
-		int fileID;
-		std::vector<int> childIDList;
 
 		std::shared_ptr<Transform> transform;
 		std::shared_ptr<Camera> camera;
@@ -270,8 +272,7 @@ namespace YAMLBinaryData
 		void serialize(Archive& ar, const unsigned int version)
 		{
 			ar& name;
-			ar& fileID;
-			ar& childIDList;
+
 			ar& transform;
 			ar& camera;
 			ar& light;

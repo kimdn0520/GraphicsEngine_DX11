@@ -29,14 +29,16 @@ void LoadUnityScene::LoadScene(const std::string& path)
 
 			YAML::Node m_GameObject = Transform["m_GameObject"];
 
-			scene->gameObjects.back().fileID = m_GameObject["fileID"].as<int>();		// 여기서 GameObject fileID를 넣어준다.
+			//scene->gameObjects.back().fileID = m_GameObject["fileID"].as<int>();		// 여기서 GameObject fileID를 넣어준다.
 			
 			YAML::Node m_Children = Transform["m_Children"];
 
-			// 칠드런이.. 그게 트랜스폼의 아이디를 얻어와서 문제다.. 흑
+			// 트랜스폼의 아이디만 넣어주자
+			transform->transformID = yaml->fildIDList[i];
+
 			for (int childCnt = 0; childCnt < m_Children.size(); childCnt++)
 			{
-				scene->gameObjects.back().childIDList.push_back(m_Children[childCnt]["fileID"].as<int>());
+				transform->childIDList.push_back(m_Children[childCnt]["fileID"].as<string>());
 			}
 
 			YAML::Node m_LocalPosition = Transform["m_LocalPosition"];
@@ -200,9 +202,6 @@ void LoadUnityScene::LoadScene(const std::string& path)
 			scene->prefabs.emplace_back(prefabInstance);
 		}
 	}
-
-	// 게임오브젝트들을 돌면서 해당 게임오브젝트의 트랜스폼을 가져와서 트랜스폼이 저장하고 있는 children fileID를 돈다
-	// 그걸 돌면서 게임오브젝트들이 갖고있는 컴포넌트들(fileID)를 돌면서 
 
 	std::string sceneName = "SampleScene";
 
