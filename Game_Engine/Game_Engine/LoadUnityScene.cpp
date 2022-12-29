@@ -201,6 +201,9 @@ void LoadUnityScene::LoadScene(const std::string& path)
 		}
 	}
 
+	// 게임오브젝트들을 돌면서 해당 게임오브젝트의 트랜스폼을 가져와서 트랜스폼이 저장하고 있는 children fileID를 돈다
+	// 그걸 돌면서 게임오브젝트들이 갖고있는 컴포넌트들(fileID)를 돌면서 
+
 	std::string sceneName = "SampleScene";
 
 	std::ofstream ofs(sceneName + ".noob", std::ios_base::binary);
