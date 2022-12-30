@@ -24,7 +24,7 @@ void Player::Update()
 {
 	if (InputManager::Get()->GetButtonDown(KEY_TYPE::KEY_1))
 	{
-		GetGameObject()->PlayAnim(GetGameObject(), "Armature|Armature|mixamo.com|Layer0", true);
+		GetGameObject()->PlayAnim(GetGameObject(), "Armature|Armature.001|mixamo.com|Layer0", true);
 	}
 	else if (InputManager::Get()->GetButton(KEY_TYPE::KEY_2))
 	{
