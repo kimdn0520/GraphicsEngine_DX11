@@ -82,29 +82,34 @@ namespace YAMLBinaryData
 			Float3 _localRotation = { 0.f, 0.f, 0.f },
 			Float3 _localScale = { 1.f, 1.f, 1.f }
 			)
-			: localPosition(std::move(_localPosition))
+			: gameObjectID("")
+			, componentID("")
+			, localPosition(std::move(_localPosition))
 			, localRotation(std::move(_localRotation))
 			, localScale(std::move(_localScale))
 		{}
 
 	public:
+		std::string gameObjectID;
+		std::string componentID;
+		std::vector<std::string> childIDList;
+
 		Float3 localPosition;
 		Float3 localRotation;
 		Float3 localScale;
 
-		std::string transformID;
-		std::vector<std::string> childIDList;
 
 	private:
 		template<typename Archive>
 		void serialize(Archive & ar, const unsigned int version)
 		{
+			ar& gameObjectID;
+			ar& componentID;
+			ar& childIDList;
+			
 			ar& localPosition;
 			ar& localRotation;
 			ar& localScale;
-
-			ar& transformID;
-			ar& childIDList;
 		}
 		
 	};
@@ -119,12 +124,17 @@ namespace YAMLBinaryData
 			Float3 _center = { 0.f, 0.f, 0.f },
 			bool _isTrigger = false
 		)
-			: size(std::move(_size))
+			: componentID("")
+			, gameObjectID("")
+			, size(std::move(_size))
 			, center(std::move(_center))
 			, isTrigger(_isTrigger)
 		{}
 
 	public:
+		std::string componentID;
+		std::string gameObjectID;
+
 		Float3 size;
 		Float3 center;
 		bool isTrigger;
@@ -133,6 +143,9 @@ namespace YAMLBinaryData
 		template<typename Archive>
 		void serialize(Archive& ar, const unsigned int version)
 		{
+			ar& componentID;
+			ar& gameObjectID;
+
 			ar& size;
 			ar& center;
 			ar& isTrigger;
@@ -149,12 +162,17 @@ namespace YAMLBinaryData
 			Float3 _center = { 0.f, 0.f, 0.f },
 			bool _isTrigger = false
 		)
-			: radius(std::move(_radius))
+			: componentID("")
+			, gameObjectID("")
+			, radius(std::move(_radius))
 			, center(std::move(_center))
 			, isTrigger(_isTrigger)
 		{}
 
 	public:
+		std::string componentID;
+		std::string gameObjectID;
+
 		float radius;
 		Float3 center;
 		bool isTrigger;
@@ -163,6 +181,9 @@ namespace YAMLBinaryData
 		template<typename Archive>
 		void serialize(Archive& ar, const unsigned int version)
 		{
+			ar& componentID;
+			ar& gameObjectID;
+
 			ar& radius;
 			ar& center;
 			ar& isTrigger;
@@ -178,11 +199,16 @@ namespace YAMLBinaryData
 			int _type = 0,
 			Float4 _color = { 0.f, 0.f, 0.f, 0.f }
 		)
-			: type(std::move(_type))
+			: componentID("")
+			, gameObjectID("")
+			, type(std::move(_type))
 			, color(std::move(_color))
 		{}
 
 	public:
+		std::string componentID;
+		std::string gameObjectID;
+
 		int type;
 		Float4 color;
 
@@ -190,6 +216,9 @@ namespace YAMLBinaryData
 		template<typename Archive>
 		void serialize(Archive& ar, const unsigned int version)
 		{
+			ar& componentID;
+			ar& gameObjectID;
+
 			ar& type;
 			ar& color;
 		}
@@ -201,14 +230,18 @@ namespace YAMLBinaryData
 		friend boost::serialization::access;
 
 		Camera(float _nearPlane = 0.1f, float _farPlane = 1000.f)
-			: projectionMatrixMode(0)
+			: componentID("")
+			, gameObjectID("")
+			, projectionMatrixMode(0)
 			, nearPlane(_nearPlane)
 			, farPlane(_farPlane)
 		{}
 
 	public:
-		int projectionMatrixMode;
+		std::string componentID;
+		std::string gameObjectID;
 
+		int projectionMatrixMode;
 		float nearPlane;
 		float farPlane;
 
@@ -216,6 +249,9 @@ namespace YAMLBinaryData
 		template<typename Archive>
 		void serialize(Archive& ar, const unsigned int version)
 		{
+			ar& componentID;
+			ar& gameObjectID;
+
 			ar& projectionMatrixMode;
 			ar& nearPlane;
 			ar& farPlane;
@@ -228,16 +264,24 @@ namespace YAMLBinaryData
 		friend boost::serialization::access;
 
 		MeshFilter(std::string _meshName = "")
-			: meshName(std::move(_meshName))
+			: componentID("")
+			, gameObjectID("")
+			, meshName(std::move(_meshName))
 		{}
 
 	public:
+		std::string componentID;
+		std::string gameObjectID;
+
 		std::string meshName;
 
 	private:
 		template<typename Archive>
 		void serialize(Archive& ar, const unsigned int version)
 		{
+			ar& componentID;
+			ar& gameObjectID;
+
 			ar& meshName;
 		}
 	};
@@ -249,6 +293,7 @@ namespace YAMLBinaryData
 
 		GameObject(std::string _name = "")
 			: name(std::move(_name))
+			, gameObjectID("")
 			, transform(nullptr)
 			, camera(nullptr)
 			, light(nullptr)
@@ -258,7 +303,8 @@ namespace YAMLBinaryData
 		{}
 
 	public:
-		std::string name = "";
+		std::string name;
+		std::string gameObjectID;
 
 		std::shared_ptr<Transform> transform;
 		std::shared_ptr<Camera> camera;
@@ -272,6 +318,7 @@ namespace YAMLBinaryData
 		void serialize(Archive& ar, const unsigned int version)
 		{
 			ar& name;
+			ar& gameObjectID;
 
 			ar& transform;
 			ar& camera;
@@ -291,11 +338,14 @@ namespace YAMLBinaryData
 
 		Prefab(std::string _name, Transform _transform)
 			: name(std::move(_name))
+			, prefabID("")
 			, transform(std::move(_transform))
 		{}
 
 	public:
 		std::string name = "";
+		std::string prefabID;
+
 		Transform transform;
 
 	private:
@@ -303,6 +353,8 @@ namespace YAMLBinaryData
 		void serialize(Archive& ar, const unsigned int version)
 		{
 			ar& name;
+			ar& prefabID;
+
 			ar& transform;
 		}
 	};

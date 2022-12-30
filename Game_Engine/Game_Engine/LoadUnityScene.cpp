@@ -15,6 +15,8 @@ void LoadUnityScene::LoadScene(const std::string& path)
 		{
 			YAMLBinaryData::GameObject gameObject;
 
+			gameObject.gameObjectID = yaml->fildIDList[i];
+
 			YAML::Node GameObject = yaml->yamlNodeList[i]["GameObject"];
 
 			gameObject.name = GameObject["m_Name"].as<std::string>();
@@ -25,16 +27,16 @@ void LoadUnityScene::LoadScene(const std::string& path)
 		{
 			std::shared_ptr<YAMLBinaryData::Transform> transform = std::make_shared<YAMLBinaryData::Transform>();
 
+			transform->componentID = yaml->fildIDList[i];
+
 			YAML::Node Transform = yaml->yamlNodeList[i]["Transform"]; 
 
 			YAML::Node m_GameObject = Transform["m_GameObject"];
 
-			//scene->gameObjects.back().fileID = m_GameObject["fileID"].as<int>();		// 여기서 GameObject fileID를 넣어준다.
+			transform->gameObjectID = m_GameObject["fileID"].as<string>();		
 			
 			YAML::Node m_Children = Transform["m_Children"];
 
-			// 트랜스폼의 아이디만 넣어주자
-			transform->transformID = yaml->fildIDList[i];
 
 			for (int childCnt = 0; childCnt < m_Children.size(); childCnt++)
 			{
@@ -63,10 +65,15 @@ void LoadUnityScene::LoadScene(const std::string& path)
 		}
 		else if (yaml->yamlNodeList[i]["MeshFilter"])
 		{
-			// m_Mesh 10202 = Cube, 10207 = Sphere
 			std::shared_ptr<YAMLBinaryData::MeshFilter> meshFilter = std::make_shared<YAMLBinaryData::MeshFilter>();
 
+			meshFilter->componentID = yaml->fildIDList[i];
+
 			YAML::Node MeshFilter = yaml->yamlNodeList[i]["MeshFilter"];
+
+			YAML::Node m_GameObject = MeshFilter["m_GameObject"];
+
+			meshFilter->gameObjectID = m_GameObject["fileID"].as<string>();
 
 			YAML::Node m_Mesh = MeshFilter["m_Mesh"];
 
@@ -98,8 +105,14 @@ void LoadUnityScene::LoadScene(const std::string& path)
 		else if (yaml->yamlNodeList[i]["Camera"])
 		{
 			std::shared_ptr<YAMLBinaryData::Camera> camera = std::make_shared<YAMLBinaryData::Camera>();
+
+			camera->componentID = yaml->fildIDList[i];
 			
 			YAML::Node Camera = yaml->yamlNodeList[i]["Camera"];
+
+			YAML::Node m_GameObject = Camera["m_GameObject"];
+
+			camera->gameObjectID = m_GameObject["fileID"].as<string>();
 
 			camera->projectionMatrixMode = Camera["m_projectionMatrixMode"].as<int>();
 
@@ -112,12 +125,26 @@ void LoadUnityScene::LoadScene(const std::string& path)
 		else if (yaml->yamlNodeList[i]["Light"])
 		{
 			std::shared_ptr<YAMLBinaryData::Light> light = std::make_shared<YAMLBinaryData::Light>();
+
+			light->componentID = yaml->fildIDList[i];
+
+			YAML::Node Light = yaml->yamlNodeList[i]["Light"];
+
+			YAML::Node m_GameObject = Light["m_GameObject"];
+
+			light->gameObjectID = m_GameObject["fileID"].as<string>();
 		}
 		else if (yaml->yamlNodeList[i]["BoxCollider"])
 		{
 			std::shared_ptr<YAMLBinaryData::BoxCollider> boxCollider = std::make_shared<YAMLBinaryData::BoxCollider>();
 
+			boxCollider->componentID = yaml->fildIDList[i];
+
 			YAML::Node BoxCollider = yaml->yamlNodeList[i]["BoxCollider"];
+
+			YAML::Node m_GameObject = BoxCollider["m_GameObject"];
+
+			boxCollider->gameObjectID = m_GameObject["fileID"].as<string>();
 
 			boxCollider->isTrigger = BoxCollider["m_IsTrigger"].as<int>();
 
@@ -139,7 +166,13 @@ void LoadUnityScene::LoadScene(const std::string& path)
 		{
 			shared_ptr<YAMLBinaryData::SphereCollider> sphereCollider = std::make_shared<YAMLBinaryData::SphereCollider>();
 
+			sphereCollider->componentID = yaml->fildIDList[i];
+
 			YAML::Node SphereCollider = yaml->yamlNodeList[i]["SphereCollider"];
+
+			YAML::Node m_GameObject = SphereCollider["m_GameObject"];
+
+			sphereCollider->gameObjectID = m_GameObject["fileID"].as<string>();
 
 			sphereCollider->isTrigger = SphereCollider["m_IsTrigger"].as<bool>();
 
@@ -160,6 +193,8 @@ void LoadUnityScene::LoadScene(const std::string& path)
 			YAMLBinaryData::Transform transform;
 
 			YAML::Node PrefabInstance = yaml->yamlNodeList[i]["PrefabInstance"];
+
+			prefabInstance.prefabID = yaml->fildIDList[i];
 
 			YAML::Node m_Modification = PrefabInstance["m_Modification"];
 
