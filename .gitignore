@@ -46,3 +46,9 @@ Library/lib/Game_Engine.lib
 Library/lib/yaml-cpp.lib
 Library/lib/yaml-cpp/yaml-cpp.lib
 Library/lib/yaml-cpp/yaml-cppd.lib
+Library/lib/FBXParser.exp
+Library/lib/FBXParser.lib
+Library/lib/FBXParser.pdb
+Library/lib/Game_Engine.exp
+Library/lib/Game_Engine.lib
+Library/lib/Game_Engine.pdb

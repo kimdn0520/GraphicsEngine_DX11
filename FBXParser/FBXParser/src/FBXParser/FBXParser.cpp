@@ -526,10 +526,10 @@ void FBXParser::ProcessAnimationData(FbxNode* node)
 {
 	const int animCount = fbxModel->animationClipList.size();
 
-	std::vector<std::shared_ptr<FBXKeyFrameInfo>> keyFrameList;
-
 	for (int animIdx = 0; animIdx < animCount; animIdx++)
 	{
+		std::vector<std::shared_ptr<FBXKeyFrameInfo>> keyFrameList;
+
 		std::shared_ptr<FBXKeyFrameInfo> fbxKeyFrameInfo = std::make_shared<FBXKeyFrameInfo>();
 
 		FbxTime::EMode timeMode = scene->GetGlobalSettings().GetTimeMode();

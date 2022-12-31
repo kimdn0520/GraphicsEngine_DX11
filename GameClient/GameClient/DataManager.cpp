@@ -24,7 +24,7 @@ void DataManager::DataLoad()
 
 	//_dataResources.insert(std::make_pair("Joy", Resources::Get()->LoadFBXBinary("test.noob", TOPOLOGY_TRIANGLELIST, RasterState_SOLID)));
 
-	_dataResources.insert(std::make_pair("Joy", Resources::Get()->LoadFBX("Data/FBX/TestJoy.fbx", TOPOLOGY_TRIANGLELIST, RasterState_SOLID)));
+	_dataResources.insert(std::make_pair("Joy", Resources::Get()->LoadFBX("Data/FBX/Test.fbx", TOPOLOGY_TRIANGLELIST, RasterState_SOLID)));
 	
 	MaterialReconstruction();
 }

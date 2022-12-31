@@ -368,15 +368,15 @@ std::vector<std::shared_ptr<GameObject>> Resources::LoadFBX(std::string path, in
 			boneObject->AddComponent<Transform>();
 			boneObject->GetComponent<Transform>()->SetBoneOffsetMatrix(fbxModel->fbxBoneInfoList[boneIdx]->offsetMatrix);
 			boneObject->GetComponent<Transform>()->SetNodeTM(fbxModel->fbxBoneInfoList[boneIdx]->nodeMatrix);
-			boneObject->AddComponent<MeshRenderer>();
-			boneObject->GetComponent<MeshRenderer>()->SetMeshID(0);				// cube´Â 0
-			shared_ptr<Material> boneMaterial = make_shared<Material>();
-			boneMaterial->name = "BoneMaterial";
-			boneMaterial->metallic = 0.0f;
-			boneMaterial->roughness = 0.0f;
-			GraphicsManager::Get()->SendMaterialData(boneMaterial);
-			boneObject->GetComponent<MeshRenderer>()->SetMaterial(boneMaterial->name);
-			boneObject->GetComponent<MeshRenderer>()->SetPixelShader(L"Model_PBR_PS");
+			//boneObject->AddComponent<MeshRenderer>();
+			//boneObject->GetComponent<MeshRenderer>()->SetMeshID(0);				// cube´Â 0
+			//shared_ptr<Material> boneMaterial = make_shared<Material>();
+			//boneMaterial->name = "BoneMaterial";
+			//boneMaterial->metallic = 0.0f;
+			//boneMaterial->roughness = 0.0f;
+			//GraphicsManager::Get()->SendMaterialData(boneMaterial);
+			//boneObject->GetComponent<MeshRenderer>()->SetMaterial(boneMaterial->name);
+			//boneObject->GetComponent<MeshRenderer>()->SetPixelShader(L"Model_PBR_PS");
 
 			Vector3 localScale = { 1.0f, 1.0f, 1.0f };
 			Vector3 localRotation = { 0.f, 0.f, 0.f };
