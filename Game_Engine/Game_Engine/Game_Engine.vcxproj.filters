@@ -55,6 +55,9 @@
     <Filter Include="pch">
       <UniqueIdentifier>{1d9f32b0-213e-401e-aa2f-05eccf53267c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="LoadScript">
+      <UniqueIdentifier>{d6c2a1c1-1c3c-4212-b0c9-66414b94de99}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -132,6 +135,9 @@
     <ClInclude Include="LoadUnityScene.h">
       <Filter>YAML</Filter>
     </ClInclude>
+    <ClInclude Include="LoadScript.h">
+      <Filter>LoadScript</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -199,6 +205,9 @@
     </ClCompile>
     <ClCompile Include="LoadUnityScene.cpp">
       <Filter>YAML</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadScript.cpp">
+      <Filter>LoadScript</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
