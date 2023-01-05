@@ -504,8 +504,8 @@ std::vector<std::shared_ptr<GameObject>> Resources::LoadFBX(std::string path, in
 
 						material->name = mat->materialName;
 
-						material->metallic = 0.1f;
-						material->roughness = 0.0f;
+						material->metallic = mat->metallic;
+						material->roughness = mat->roughness;
 
 						material->albedoMap = mat->albedoMap;
 						material->normalMap = mat->normalMap;
@@ -649,8 +649,8 @@ std::vector<std::shared_ptr<GameObject>> Resources::LoadFBX(std::string path, in
 
 						material->name = mat->materialName;
 
-						material->metallic = 0.1f;
-						material->roughness = 0.0f;
+						material->metallic = mat->metallic;
+						material->roughness = mat->roughness;
 
 						material->albedoMap = mat->albedoMap;
 						material->normalMap = mat->normalMap;
