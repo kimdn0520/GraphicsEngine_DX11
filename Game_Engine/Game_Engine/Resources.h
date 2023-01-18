@@ -13,7 +13,7 @@ class Resources
 {	
 public:
 	GameEngine_DLL Resources() = default;
-	~Resources() = default;
+	GameEngine_DLL ~Resources() = default;
 
 private:
 	static std::shared_ptr<Resources> resources;
