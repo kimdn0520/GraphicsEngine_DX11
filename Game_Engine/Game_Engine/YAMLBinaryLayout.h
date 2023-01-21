@@ -203,6 +203,9 @@ namespace YAMLBinaryData
 			, gameObjectID("")
 			, type(std::move(_type))
 			, color(std::move(_color))
+			, intensity(1.f)
+			, range(10.f)
+			, spotAngle(30.f)
 		{}
 
 	public:
@@ -211,6 +214,9 @@ namespace YAMLBinaryData
 
 		int type;
 		Float4 color;
+		float intensity;
+		float range;
+		float spotAngle;
 
 	private:
 		template<typename Archive>
@@ -221,6 +227,9 @@ namespace YAMLBinaryData
 
 			ar& type;
 			ar& color;
+			ar& intensity;
+			ar& range;
+			ar& spotAngle;
 		}
 	};
 

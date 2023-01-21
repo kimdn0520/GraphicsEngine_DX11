@@ -37,7 +37,6 @@ void LoadUnityScene::LoadScene(const std::string& path)
 			
 			YAML::Node m_Children = Transform["m_Children"];
 
-
 			for (int childCnt = 0; childCnt < m_Children.size(); childCnt++)
 			{
 				transform->childIDList.push_back(m_Children[childCnt]["fileID"].as<string>());
@@ -124,6 +123,7 @@ void LoadUnityScene::LoadScene(const std::string& path)
 		}
 		else if (yaml->yamlNodeList[i]["Light"])
 		{
+			// spot = 0, directional = 1, point = 2
 			std::shared_ptr<YAMLBinaryData::Light> light = std::make_shared<YAMLBinaryData::Light>();
 
 			light->componentID = yaml->fildIDList[i];
@@ -133,6 +133,23 @@ void LoadUnityScene::LoadScene(const std::string& path)
 			YAML::Node m_GameObject = Light["m_GameObject"];
 
 			light->gameObjectID = m_GameObject["fileID"].as<string>();
+
+			light->type = Light["m_Type"].as<int>();
+
+			YAML::Node m_Color = Light["m_Color"];
+
+			light->color.x = m_Color["r"].as<float>();
+			light->color.y = m_Color["g"].as<float>();
+			light->color.z = m_Color["b"].as<float>();
+			light->color.w = m_Color["a"].as<float>();
+
+			light->intensity = Light["m_Intensity"].as<float>();
+
+			light->range = Light["m_Range"].as<float>();
+
+			light->spotAngle = Light["m_SpotAngle"].as<float>();
+
+			scene->gameObjects.back().light = light;
 		}
 		else if (yaml->yamlNodeList[i]["BoxCollider"])
 		{
