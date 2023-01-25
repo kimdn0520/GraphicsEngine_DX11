@@ -21,6 +21,8 @@ void LoadUnityScene::LoadScene(const std::string& path)
 
 			gameObject.name = GameObject["m_Name"].as<std::string>();
 
+			gameObject.tag = GameObject["m_TagString"].as<std::string>();
+
 			scene->gameObjects.emplace_back(gameObject);
 		}
 		else if (yaml->yamlNodeList[i]["Transform"])

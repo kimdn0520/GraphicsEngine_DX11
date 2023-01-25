@@ -302,6 +302,7 @@ namespace YAMLBinaryData
 
 		GameObject(std::string _name = "")
 			: name(std::move(_name))
+			, tag("")
 			, gameObjectID("")
 			, transform(nullptr)
 			, camera(nullptr)
@@ -313,6 +314,7 @@ namespace YAMLBinaryData
 
 	public:
 		std::string name;
+		std::string tag;
 		std::string gameObjectID;
 
 		std::shared_ptr<Transform> transform;
@@ -327,6 +329,7 @@ namespace YAMLBinaryData
 		void serialize(Archive& ar, const unsigned int version)
 		{
 			ar& name;
+			ar& tag;
 			ar& gameObjectID;
 
 			ar& transform;

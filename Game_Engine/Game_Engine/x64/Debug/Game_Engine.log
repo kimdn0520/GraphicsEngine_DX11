@@ -1,24 +1,2 @@
-﻿  LoadUnityScene.cpp
-     C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\Game_Engine.lib 라이브러리 및 C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\Game_Engine.exp 개체를 생성하고 있습니다.
-yaml-cppd.lib(convert.obj) : warning LNK4099: 'yaml-cppd.pdb' PDB를 'yaml-cppd.lib(convert.obj)' 또는 'C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\yaml-cppd.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-yaml-cppd.lib(depthguard.obj) : warning LNK4099: 'yaml-cppd.pdb' PDB를 'yaml-cppd.lib(depthguard.obj)' 또는 'C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\yaml-cppd.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-yaml-cppd.lib(directives.obj) : warning LNK4099: 'yaml-cppd.pdb' PDB를 'yaml-cppd.lib(directives.obj)' 또는 'C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\yaml-cppd.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-yaml-cppd.lib(exceptions.obj) : warning LNK4099: 'yaml-cppd.pdb' PDB를 'yaml-cppd.lib(exceptions.obj)' 또는 'C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\yaml-cppd.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-yaml-cppd.lib(exp.obj) : warning LNK4099: 'yaml-cppd.pdb' PDB를 'yaml-cppd.lib(exp.obj)' 또는 'C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\yaml-cppd.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-yaml-cppd.lib(memory.obj) : warning LNK4099: 'yaml-cppd.pdb' PDB를 'yaml-cppd.lib(memory.obj)' 또는 'C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\yaml-cppd.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-yaml-cppd.lib(node_data.obj) : warning LNK4099: 'yaml-cppd.pdb' PDB를 'yaml-cppd.lib(node_data.obj)' 또는 'C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\yaml-cppd.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-yaml-cppd.lib(nodebuilder.obj) : warning LNK4099: 'yaml-cppd.pdb' PDB를 'yaml-cppd.lib(nodebuilder.obj)' 또는 'C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\yaml-cppd.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-yaml-cppd.lib(null.obj) : warning LNK4099: 'yaml-cppd.pdb' PDB를 'yaml-cppd.lib(null.obj)' 또는 'C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\yaml-cppd.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-yaml-cppd.lib(parse.obj) : warning LNK4099: 'yaml-cppd.pdb' PDB를 'yaml-cppd.lib(parse.obj)' 또는 'C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\yaml-cppd.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-yaml-cppd.lib(parser.obj) : warning LNK4099: 'yaml-cppd.pdb' PDB를 'yaml-cppd.lib(parser.obj)' 또는 'C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\yaml-cppd.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-yaml-cppd.lib(regex_yaml.obj) : warning LNK4099: 'yaml-cppd.pdb' PDB를 'yaml-cppd.lib(regex_yaml.obj)' 또는 'C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\yaml-cppd.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-yaml-cppd.lib(scanner.obj) : warning LNK4099: 'yaml-cppd.pdb' PDB를 'yaml-cppd.lib(scanner.obj)' 또는 'C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\yaml-cppd.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-yaml-cppd.lib(scanscalar.obj) : warning LNK4099: 'yaml-cppd.pdb' PDB를 'yaml-cppd.lib(scanscalar.obj)' 또는 'C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\yaml-cppd.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-yaml-cppd.lib(scantag.obj) : warning LNK4099: 'yaml-cppd.pdb' PDB를 'yaml-cppd.lib(scantag.obj)' 또는 'C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\yaml-cppd.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-yaml-cppd.lib(scantoken.obj) : warning LNK4099: 'yaml-cppd.pdb' PDB를 'yaml-cppd.lib(scantoken.obj)' 또는 'C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\yaml-cppd.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-yaml-cppd.lib(simplekey.obj) : warning LNK4099: 'yaml-cppd.pdb' PDB를 'yaml-cppd.lib(simplekey.obj)' 또는 'C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\yaml-cppd.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-yaml-cppd.lib(singledocparser.obj) : warning LNK4099: 'yaml-cppd.pdb' PDB를 'yaml-cppd.lib(singledocparser.obj)' 또는 'C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\yaml-cppd.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-yaml-cppd.lib(stream.obj) : warning LNK4099: 'yaml-cppd.pdb' PDB를 'yaml-cppd.lib(stream.obj)' 또는 'C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\yaml-cppd.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-yaml-cppd.lib(tag.obj) : warning LNK4099: 'yaml-cppd.pdb' PDB를 'yaml-cppd.lib(tag.obj)' 또는 'C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\yaml-cppd.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-  Game_Engine.vcxproj -> C:\Users\김동민\Desktop\GraphicsEngine_DX11\Library\lib\Game_Engine.dll
+﻿  Game_Engine.vcxproj -> D:\GraphicsEngine_DX11\Library\lib\Game_Engine.dll
           1개 파일이 복사되었습니다.
